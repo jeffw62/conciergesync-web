@@ -255,6 +255,11 @@
     color: #fff;
     border-color: #bfa14a;
   }
+  .hint-wrap {
+    width: 75%;
+    margin: 4px auto 0;
+    text-align: center;
+  }
   @media (max-width: 600px) {
     .card-options {
       flex-direction: column;
@@ -464,9 +469,11 @@
         </select>
       </div>
 
-      <small class="hint">
-        Select “Exact Date” to search only that day, or “Flexible” to include a ±-day window.
-      </small>
+        <div class="hint-wrap">
+          <small class="hint">
+            Select “Exact Date” to search only that day, or “Flexible” to include a ±-day window.
+          </small>
+        </div>
     </div>
   </div>
 
