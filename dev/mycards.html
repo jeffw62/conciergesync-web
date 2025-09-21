@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ConciergeSync™ My Cards</title>
+  <link rel="stylesheet" href="/dev/style.css">
+  <style>
+    body {
+      font-family: system-ui, sans-serif;
+      margin: 0;
+      background: #f7f9fb;
+      color: #222;
+    }
+    header {
+      background: #0b0f14;
+      color: #fff;
+      padding: 12px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+    header nav a {
+      color: #fff;
+      text-decoration: none;
+      margin-left: 18px;
+    }
+    main {
+      padding: 24px;
+      max-width: 1100px;
+      margin: 0 auto;
+    }
+    h1 {
+      margin-bottom: 8px;
+    }
+    .overview {
+      display: flex;
+      justify-content: space-around;
+      margin: 20px 0;
+      padding: 16px;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    .overview div {
+      text-align: center;
+    }
+    .legend {
+      text-align: center;
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+    .legend span {
+      margin: 0 10px;
+    }
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 18px;
+    }
+    .card {
+      background: #fff;
+      border-radius: 8px;
+      padding: 16px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      position: relative;
+    }
+    .corner {
+      position: absolute;
+      top: 0; right: 0;
+      width: 0; height: 0;
+      border-left: 40px solid transparent;
+      border-top: 40px solid transparent;
+    }
+    .green { border-top-color: #2ecc71; }
+    .yellow { border-top-color: #f1c40f; }
+    .red { border-top-color: #e74c3c; }
+    footer {
+      background: #0b0f14;
+      color: #fff;
+      text-align: center;
+      padding: 12px;
+      margin-top: 40px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div>ConciergeSync™ My Cards</div>
+    <nav>
+      <a href="console.html">Console</a>
+      <a href="redemption.html">Redemption Engine</a>
+      <a href="mycards.html">My Cards</a>
+      <a href="programs.html">My Programs</a>
+      <a href="hints.html">Helpful Hints</a>
+      <a href="settings.html">Settings</a>
+    </nav>
+  </header>
+
+  <main>
+    <h1>My Cards</h1>
+    <p>Track balances, limits, utilization, rewards, and due dates across all your cards.</p>
+
+    <div class="overview">
+      <div>
+        <div>Total Credit Limit</div>
+        <strong>$61,000</strong>
+      </div>
+      <div>
+        <div>Total Balance</div>
+        <strong>$1,194</strong>
+      </div>
+      <div>
+        <div>Utilization</div>
+        <strong style="color:#2ecc71;">1.95%</strong>
+      </div>
+    </div>
+
+    <div class="legend">
+      <span style="color:#2ecc71;">■ Green: Excellent utilization</span>
+      <span style="color:#f1c40f;">■ Yellow: Moderate — watch this</span>
+      <span style="color:#e74c3c;">■ Red: High — could hurt credit</span>
+    </div>
+
+    <div class="cards">
+      <div class="card">
+        <div class="corner green"></div>
+        <h3>Capital One Venture X</h3>
+        <p><strong>Credit Limit:</strong> $20,000</p>
+        <p><strong>Balance:</strong> $332</p>
+        <p><strong>Utilization:</strong> 1.6%</p>
+        <p><strong>Rewards Balance:</strong> 82,500 miles (~$1,650)</p>
+        <p><strong>Due Date:</strong> Oct 10, 2025</p>
+        <p><strong>Status:</strong> Autopay</p>
+      </div>
+
+      <div class="card">
+        <div class="corner yellow"></div>
+        <h3>AmEx Gold</h3>
+        <p><strong>Credit Limit:</strong> $25,000</p>
+        <p><strong>Balance:</strong> $3,000</p>
+        <p><strong>Utilization:</strong> 12%</p>
+        <p><strong>Rewards Balance:</strong> 65,000 MR (~$1,300)</p>
+        <p><strong>Due Date:</strong> Sep 25, 2025</p>
+        <p><strong>Status:</strong> Manual payment</p>
+      </div>
+
+      <div class="card">
+        <div class="corner green"></div>
+        <h3>Chase Sapphire Preferred</h3>
+        <p><strong>Credit Limit:</strong> $16,000</p>
+        <p><strong>Balance:</strong> $0</p>
+        <p><strong>Utilization:</strong> 0%</p>
+        <p><strong>Rewards Balance:</strong> 92,000 UR (~$1,150)</p>
+        <p><strong>Due Date:</strong> Sep 21, 2025</p>
+        <p><strong>Status:</strong> Autopay</p>
+      </div>
+    </div>
+  </main>
+
+  <footer>
+    Solving What Matters… <em>Beautifully</em> • © 2025 ConciergeSync™
+  </footer>
+</body>
+</html>

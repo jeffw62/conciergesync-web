@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConciergeSync™ – Intake Start</title>
+  <link rel="stylesheet" href="/dev/style.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      background: #fff;
+      color: #222;
+      line-height: 1.5;
+    }
+
+    /* --- Header Bar --- */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 16px 20px;
+      background: #0a1a33;
+      color: #fff;
+      position: relative;
+      z-index: 1000;
+    }
+    header .logo {
+      font-weight: 700;
+      font-size: 1.2rem;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    header .logo img {
+      height: 32px;
+    }
+    header .logo a {
+      color: inherit;          /* matches the header text color */
+      text-decoration: none;   /* removes underline */
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    
+    header .logo a:hover {
+      opacity: 0.85;           /* subtle hover fade */
+    }
+
+
+    /* nav hidden by default */
+    header nav {
+      display: none;
+      gap: 24px;
+    }
+    header nav a {
+      text-decoration: none;
+      color: #fff;
+      font-weight: 500;
+      transition: opacity 0.2s ease;
+    }
+    header nav a:hover {
+      opacity: 0.75;
+    }
+
+    /* desktop: show nav always */
+    @media (min-width: 769px) {
+      header nav {
+        display: flex;
+      }
+      .menu-toggle {
+        display: none !important;
+      }
+    }
+
+    /* --- Hamburger --- */
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 4px;
+      padding: 10px;
+      margin-left: auto;
+      user-select: none;
+    }
+    .menu-toggle span {
+      display: block;
+      width: 24px;
+      height: 3px;
+      background: #fff;
+      border-radius: 2px;
+    }
+
+    /* --- Hero Section --- */
+    .hero {
+      background: #0a1a33;
+      color: #fff;
+      text-align: center;
+      padding: 60px 20px;
+      position: relative;
+    }
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 6px;
+      background: #bfa14a;
+    }
+    .hero h1 {
+      font-size: 2.2rem;
+      margin-bottom: 12px;
+    }
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 600px;
+      margin: 0 auto;
+      color: #e0e6f0;
+    }
+
+    /* --- Content Section --- */
+    .content {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      gap: 40px;
+      max-width: 1100px;
+      margin: 60px auto;
+      padding: 0 20px;
+    }
+    .content-left {
+      flex: 1;
+    }
+    .content-left h2 {
+      color: #0a1a33;
+      margin-top: 0;
+      font-size: 1.3rem;
+    }
+    .content-left p {
+      margin-bottom: 20px;
+    }
+
+    /* --- Registration Box --- */
+    .registration-box {
+      background: #fff;
+      padding: 30px;        /* increased inner padding */
+      border-radius: 8px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 360px;
+      margin: 0 auto;
+    }
+    .registration-box h3 {
+      margin-top: 0;
+      margin-bottom: 16px;
+      color: #0a1a33;
+    }
+    .registration-box label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #0a1a33;
+    }
+    .registration-box input {
+      margin-bottom: 15px;
+      padding: 12px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 1rem;
+      width: 100%;
+      box-sizing: border-box;
+    }
+    .registration-box button {
+      width: 100%;
+      padding: 14px;
+      font-size: 1rem;
+      font-weight: bold;
+      background: #bfa14a;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    .registration-box button:hover {
+      opacity: 0.9;
+    }
+
+    /* --- Footer --- */
+    .site-footer {
+      background: #0b0f14;
+      color: #fff;
+      text-align: center;
+      padding: 20px;
+      font-size: 0.9rem;
+    }
+    .site-footer p {
+      margin: 4px 0;
+    }
+    /* --- Intake Left Column Typography --- */
+    .content-left {
+      max-width: 600px;
+      line-height: 1.65;
+    }
+
+    .content-left h2 {
+      font-size: 1.35rem;
+      margin-top: 24px;
+      margin-bottom: 8px;
+      color: #0a1a33;
+      position: relative;
+    }
+
+    .content-left h2::after {
+      content: "";
+      display: block;
+      width: 40px;
+      height: 3px;
+      background: #bfa14a;
+      margin-top: 6px;
+    }
+
+    .content-left p {
+      margin-bottom: 18px;
+    }
+
+
+    /* --- Mobile Responsive --- */
+    @media (max-width: 768px) {
+      header nav {
+        display: flex;               /* keep it in the DOM */
+        flex-direction: column;
+        background: #0a1a33;
+        position: absolute;
+        top: 100%;
+        right: 0;
+        left: 0;
+        border-radius: 0 0 6px 6px;
+        box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        z-index: 9999;
+
+    /* hidden state */
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        padding: 0 20px;
+        transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
+      }
+      header nav.active {
+        max-height: 400px;
+        opacity: 1;
+        padding: 20px;
+      }
+      .menu-toggle {
+        display: flex;
+      }
+      header nav a {
+        color: #fff;
+        font-size: 1rem;
+        text-decoration: none;
+        padding: 8px 0;
+        display: block;
+      }
+      header nav a:hover {
+        opacity: 0.75;
+      }
+      .content {
+        flex-direction: column;
+      }
+      .registration-box {
+        max-width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo">
+      <a href="/dev/home.html">
+        <img src="/dev/asset/CS_Logo_Premium_2x.png" alt="ConciergeSync Logo">
+        ConciergeSync™
+      </a>
+    </div>
+    <div class="menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+    <nav>
+      <a href="/dev/index.html">About</a>
+      <a href="/dev/betap.html">Beta Program</a>
+      <a href="#">Helpful Hints</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <section class="hero">
+    <h1>Welcome to ConciergeSync™ Beta</h1>
+    <p>You’re just a few steps away from beginning your journey. Complete the intake process so we can personalize your experience.</p>
+  </section>
+
+  <section class="content">
+    <!-- Left: Explanatory Text -->
+    <div class="content-left">
+      <h2>Registration</h2>
+      <p>This establishes your account inside ConciergeSync™.</p>
+
+      <h2>What is Onboarding?</h2>
+      <p>Onboarding is the setup process that personalizes ConciergeSync™ for you. 
+      Think of it like your flight check-in — we confirm a few details, then you’re cleared for takeoff.</p>
+      <p>By completing onboarding, we’ll know which cards and loyalty programs you use, 
+      so we can show you the most valuable redemption options that are best for you.</p>
+
+      <h2>Why It’s Necessary</h2>
+      <p>Without onboarding, ConciergeSync™ would just be a blank console. 
+      With it, the platform becomes your personalized co-pilot — guiding you toward smarter decisions, 
+      better redemptions, and maximum travel value.</p>
+      <p>This step ensures you don’t see generic advice — everything is tailored to your profile, your cards, and your goals.</p>
+    </div>
+
+    <!-- Right: Registration Form -->
+    <div class="registration-box">
+      <h3>Create Your Account</h3>
+      <form>
+        <label for="first-name">First Name</label>
+        <input type="text" id="first-name" name="first-name" required>
+
+        <label for="last-name">Last Name</label>
+        <input type="text" id="last-name" name="last-name" required>
+
+        <label for="email">Email Address</label>
+        <input type="email" id="email" name="email" required>
+
+        <button type="submit">Create Account</button>
+      </form>
+    </div>
+  </section>
+
+  <div id="footer"></div>
+    <script>
+      fetch("/dev/footer.html")
+        .then(response => response.text())
+        .then(html => {
+          document.getElementById("footer").innerHTML = html;
+        })
+        .catch(err => console.error("Footer failed to load:", err));
+    </script>
+
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggle = document.querySelector(".menu-toggle");
+      const nav = document.querySelector("header nav");
+
+      if (toggle && nav) {
+        toggle.addEventListener("click", () => {
+          nav.classList.toggle("active");
+        });
+      }
+    });
+  </script>
+</body>
+</html>

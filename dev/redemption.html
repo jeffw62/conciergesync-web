@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>ConciergeSync™ – Redemption Engine</title>
+<link rel="stylesheet" href="/dev/style.css">
+<style>
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+    background: #fff;
+    color: #222;
+  }
+
+  /* ---------- Header ---------- */
+  header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    background: #0a1a33;
+    color: #fff;
+    position: relative;
+    z-index: 1000;
+  }
+  header .logo a {
+    font-weight: 700;
+    font-size: 1.2rem;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: inherit;
+    text-decoration: none;
+  }
+  header .logo img { height: 32px; }
+  header nav { display: none; gap: 24px; }
+  header nav a {
+    text-decoration: none;
+    color: #fff;
+    font-weight: 500;
+    transition: opacity 0.2s ease;
+  }
+  header nav a:hover { opacity: 0.75; }
+  @media (min-width: 769px) {
+    header nav { display: flex; }
+    .menu-toggle { display: none !important; }
+  }
+
+  /* ---------- Hamburger ---------- */
+  .menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 4px;
+    padding: 10px;
+    margin-left: auto;
+    user-select: none;
+  }
+  .menu-toggle span {
+    display: block;
+    width: 24px;
+    height: 3px;
+    background: #fff;
+    border-radius: 2px;
+  }
+  @media (max-width: 768px) {
+    header nav {
+      display: flex;
+      flex-direction: column;
+      background: #0a1a33;
+      position: absolute;
+      top: 100%;
+      right: 0; left: 0;
+      border-radius: 0 0 6px 6px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+      max-height: 0; overflow: hidden; opacity: 0;
+      padding: 0 20px;
+      transition: max-height .3s ease, opacity .3s ease, padding .3s ease;
+    }
+    header nav.active { max-height: 400px; opacity: 1; padding: 20px; }
+    .menu-toggle { display: flex; }
+    header nav a { font-size: 1rem; padding: 8px 0; display: block; }
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    background: url('/dev/asset/hero-bg.png') center/cover no-repeat;
+    color: #fff;
+    text-align: center;
+    padding: 200px 20px 120px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: "";
+    position: absolute;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background: rgba(0,0,0,0.65);
+    z-index: 0;
+  }
+  .hero::after {
+    content: "";
+    position: absolute;
+    left: 0; right: 0; bottom: 0;
+    height: 6px;
+    background: #bfa14a;
+    z-index: 1;
+  }
+  .hero h1,
+  .hero p {
+    position: relative;
+    z-index: 2;
+  }
+
+  /* ---------- Guided Search Panel ---------- */
+   .search-panel {
+    max-width: 900px;
+    margin: -80px auto 40px;
+    background: rgba(255,255,255,0.95);
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    padding: 24px 20px;
+    display: grid;
+    grid-template-columns: auto auto;
+    gap: 60px;
+    justify-content: center;
+    justify-items: start;
+    position: relative;
+    z-index: 3;
+  }
+
+  @media (max-width: 980px) {
+    .search-panel { grid-template-columns: 1fr; }
+  }
+
+  .step {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .step h3 {
+    margin: 0 0 4px 0;
+    color: #0a1a33;
+    font-size: 1.1rem;
+  }
+  .step label {
+    display: block;
+    margin: 4px 0;
+    font-weight: 500;
+    font-size: 0.95rem;
+  }
+  .step input, .step select {
+    width: 75%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-family: inherit;
+    font-size: 1rem;
+    color: #333;
+    box-sizing: border-box;
+  }
+  .step input[type="date"] {
+    appearance: none;
+    -webkit-appearance: none;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px;
+    font-size: 1rem;
+    color: #333;
+    width: 75%;
+    box-sizing: border-box;
+  }
+
+  .search-btn {
+    width: 75%;
+    background: #bfa14a;
+    color: #fff;
+    padding: 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: block;
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  #searchWarning {
+    font-size: 0.85rem;
+    color: #a00;
+    margin-top: 6px;
+    text-align: left;
+    opacity: 1;
+    transition: opacity 0.3s ease; /* fade in/out */
+  }
+  #searchWarning.hidden {
+    opacity: 0;
+  }
+
+  .date-wrap .hint {
+    font-size: 0.8rem;
+    color: #555;
+    display: block;
+    width: 75%;
+    margin-top: 4px;
+    line-height: 1.3;
+  }
+
+  /* ---------- Option Card ---------- */
+  .card-options {
+    display: flex;
+    gap: 8px;
+    width: 75%;
+    margin-top: 16px;
+  }
+  .option-btn {
+    flex: 1;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f7f7f7;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.2s ease;
+  }
+  .option-btn.active {
+    background: #bfa14a;
+    color: #fff;
+    border-color: #bfa14a;
+  }
+  @media (max-width: 600px) {
+    .card-options {
+      flex-direction: column;
+      width: 75%;
+    }
+    .option-btn {
+      width: 100%;
+    }
+  }
+
+  /* ---------- Toggle Group Buttons (Yes/No) ---------- */
+  .toggle-group {
+    display: flex;
+    gap: 10px;
+  }
+  .toggle-group button {
+    flex: 0 0 auto;
+    padding: 4px 12px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: #f7f7f7;
+    color: #0a1a33;
+    font-size: 0.85rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+  }
+  .toggle-group button:hover {
+    background: #e6e6e6;
+  }
+  .toggle-group button.active {
+    background: #bfa14a;
+    color: #fff;
+    border-color: #bfa14a;
+  }
+  /* Autocomplete dropdown */
+  .suggestions {
+    position: absolute;
+    background: #fff;
+    border: 1px solid #ccc;
+    max-height: 200px;
+    overflow-y: auto;
+    z-index: 1000;
+    width: 200px;   /* adjust to match your input width */
+    border-radius: 4px;
+  }
+  
+  .suggestion-item {
+    cursor: pointer !important;   /* hand cursor */
+    user-select: none;            /* stop text selection */
+    display: block;               /* whole row clickable */
+    padding: 6px 10px;
+  }
+  
+  .suggestion-item:hover {
+    background: #f0f0f0;
+  }
+    .iata {
+    font-weight: bold;     /* IATA code always bold */
+  }
+  
+  .airport {
+    font-weight: normal;   /* Airport name always regular */
+  }
+
+  /* ---------- Table ---------- */
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 40px 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    background: #fff;
+    border: 1px solid #ddd;
+  }
+  th, td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+  }
+  th { background: #f0f0f0; cursor: pointer; }
+  tr:hover { background: #fafafa; }
+  .highlight { background: #fff8e1; }
+  .btn {
+    background: #bfa14a;
+    color: #fff;
+    padding: 8px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+
+  @media (max-width: 768px) {
+    table, thead, tbody, th, td, tr { display: block; }
+    thead { display: none; }
+    tr {
+      margin-bottom: 20px;
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+      padding: 12px;
+      box-sizing: border-box;
+    }
+    td {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 8px 10px;
+      margin: 6px 0;
+      background: transparent;
+      border-radius: 0;
+      box-sizing: border-box;
+    }
+    td:last-child { border-bottom: none; }
+    td::before {
+      content: attr(data-label);
+      font-weight: bold;
+    }
+    td .btn {
+      width: 100%;
+      padding: 10px;
+      margin-top: 8px;
+      font-size: 0.95rem;
+    }
+    table {
+      border: 1px solid #ddd;
+      border-radius: 6px;
+      background: #fff;
+      margin: 12px auto;
+      padding: 12px;
+      box-sizing: border-box;
+      width: calc(100% - 24px);
+    }
+  }
+
+  /* ---------- Footer ---------- */
+  #footer {
+    position: relative;
+    z-index: 0;
+    margin-top: 60px;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="logo">
+    <a href="/dev/home.html">
+      <img src="/dev/asset/CS_Logo_Premium_2x.png" alt="ConciergeSync Logo">
+      ConciergeSync™
+    </a>
+  </div>
+  <div class="menu-toggle"><span></span><span></span><span></span></div>
+  <nav>
+    <a href="/dev/index.html">About</a>
+    <a href="/dev/betap.html">Beta Program</a>
+    <a href="#">Helpful Hints</a>
+    <a href="#">Contact</a>
+  </nav>
+</header>
+
+<section class="hero">
+  <h1>Redemption Engine</h1>
+  <p>Scan and compare the best redemption opportunities across your programs. Sort, filter, and act with confidence.</p>
+</section>
+
+<!-- Guided Search Panel -->
+<div class="search-panel" id="searchPanel">
+  <!-- Step 1 -->
+  <div class="step">
+    <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
+    <label for="origin">Origin</label>
+    <input type="text" id="origin" placeholder="e.g. DFW">
+    <div id="origin-suggestions"></div>
+    <label for="destination">Destination</label>
+    <input type="text" id="destination" placeholder="e.g. LHR">
+    <div id="destination-suggestions"></div>
+    <div class="date-wrap">
+      <label for="departDate">Departure Date (Tap To Select Date)</label>
+      <input type="date" id="departDate" />
+
+      <div class="card-options">
+        <button class="option-btn active" id="exactBtn">Exact Date</button>
+        <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
+      </div>
+
+      <div id="flexPicker" class="flex-picker">
+        <label for="flexDays">Search Days +/- Date Selected:</label>
+        <select id="flexDays">
+          <option value="1">1 day</option>
+          <option value="2">2 days</option>
+          <option value="3">3 days</option>
+          <option value="4">4 days</option>
+          <option value="5">5 days</option>
+          <option value="6">6 days</option>
+          <option value="7">7 days</option>
+          <option value="8">8 days</option>
+          <option value="9">9 days</option>
+          <option value="10">10 days</option>
+          <option value="11">11 days</option>
+          <option value="12">12 days</option>
+          <option value="13">13 days</option>
+          <option value="14">14 days</option>
+        </select>
+      </div>
+
+      <small class="hint">
+        Select “Exact Date” to search only that day, or “Flexible” to include a ±-day window.
+      </small>
+    </div>
+  </div>
+
+  <!-- Step 2 + Step 3 stacked -->
+  <div class="step routing">
+    <h3>Step 2:&nbsp;Routing Preferences</h3>
+    <label>Direct Non-stop</label>
+    <div class="toggle-group" id="directStop">
+      <button data-val="yes">Yes</button>
+      <button data-val="no">No</button>
+    </div>
+    <label>Multiple Connections</label>
+    <div class="toggle-group" id="multiConn">
+      <button data-val="yes">Yes</button>
+      <button data-val="no">No</button>
+    </div>
+    <label>Positioning Flight Allowed</label>
+    <div class="toggle-group" id="posFlight">
+      <button data-val="yes">Yes</button>
+      <button data-val="no">No</button>
+    </div>
+    <h3 style="margin-top:20px;">Step 3:&nbsp;Search</h3>
+    <button class="search-btn" disabled>Search</button>
+    <p id="searchWarning">Complete Step 2 to continue.</p>
+  </div>
+</div>
+
+<main class="container">
+  <table>
+    <thead>
+      <tr>
+        <th>Route</th>
+        <th>Program</th>
+        <th>Points Needed</th>
+        <th>Cash Price</th>
+        <th>Fees</th>
+        <th>Value (¢/mile)</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody id="resultsBody"></tbody>
+  </table>
+</main>
+
+<div id="footer"></div>
+
+<script>
+  // Footer loader
+  fetch("/dev/footer.html")
+    .then(res => res.text())
+    .then(html => { document.getElementById("footer").innerHTML = html; })
+    .catch(err => console.error("Footer failed to load:", err));
+
+  // Hamburger toggle
+  const toggleBtn = document.querySelector(".menu-toggle");
+  const nav = document.querySelector("header nav");
+  toggleBtn.addEventListener("click", () => nav.classList.toggle("active"));
+
+  // Date selection card logic
+  const exactBtn = document.getElementById('exactBtn');
+  const flexBtn = document.getElementById('flexBtn');
+  const flexPicker = document.getElementById('flexPicker');
+  
+  function setMode(mode) {
+    if (mode === 'exact') {
+      exactBtn.classList.add('active');
+      flexBtn.classList.remove('active');
+      flexPicker.style.display = 'none';
+    } else {
+      flexBtn.classList.add('active');
+      exactBtn.classList.remove('active');
+      flexPicker.style.display = 'block';
+    }
+  }
+  
+  exactBtn.addEventListener('click', () => setMode('exact'));
+  flexBtn.addEventListener('click', () => setMode('flexible'));
+  
+  document.addEventListener('DOMContentLoaded', () => {
+    setMode('exact');
+    initRoutingLogic();
+  });
+
+  // Routing Preferences Logic
+  function initRoutingLogic() {
+    const directGroup = document.getElementById('directStop');
+    const multiGroup = document.getElementById('multiConn');
+    const posGroup   = document.getElementById('posFlight');
+    const searchBtn  = document.querySelector('.search-btn');
+    const warning    = document.getElementById('searchWarning');
+
+    function activate(btn, group) {
+      group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      checkSelections();
+    }
+
+    // Direct Non-stop
+    directGroup.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activate(btn, directGroup);
+        if (btn.dataset.val === 'yes') {
+          const noBtn = multiGroup.querySelector('button[data-val="no"]');
+          activate(noBtn, multiGroup);
+        }
+      });
+    });
+
+    // Multiple Connections
+    multiGroup.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activate(btn, multiGroup);
+        if (btn.dataset.val === 'yes') {
+          const noBtn = directGroup.querySelector('button[data-val="no"]');
+          activate(noBtn, directGroup);
+        }
+      });
+    });
+
+    // Positioning Flight Allowed
+    posGroup.querySelectorAll('button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        activate(btn, posGroup);
+      });
+    });
+
+    // Validate before search
+    function checkSelections() {
+    const allGroups = [directGroup, multiGroup, posGroup];
+    const allSelected = allGroups.every(g => g.querySelector('.active'));
+    const warning = document.getElementById('searchWarning');
+  
+    if (allSelected) {
+      searchBtn.disabled = false;
+      searchBtn.style.opacity = "1";
+      searchBtn.style.cursor = "pointer";
+      warning.classList.add('hidden');
+    } else {
+      searchBtn.disabled = true;
+      searchBtn.style.opacity = "0.6";
+      searchBtn.style.cursor = "not-allowed";
+      warning.classList.remove('hidden');
+    }
+  }
+
+    // Initial state
+    checkSelections();
+  }
+
+  // Sample redemption data
+  const redemptions = [
+    { route: "DFW → LHR", program: "AA", points: 57500, cashFare: 7950, fees: 737 },
+    { route: "CUN → DFW", program: "Avios", points: 12000, cashFare: 540, fees: 90 },
+    { route: "LAS → JFK", program: "JetBlue", points: 15000, cashFare: 585, fees: 30 }
+  ];
+  redemptions.forEach(r => { r.cpm = ((r.cashFare - r.fees) / r.points).toFixed(2); });
+
+  function renderTable(data) {
+    const tbody = document.getElementById("resultsBody");
+    tbody.innerHTML = "";
+    data.forEach(r => {
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td data-label="Route">${r.route}</td>
+        <td data-label="Program">${r.program}</td>
+        <td data-label="Points Needed">${r.points.toLocaleString()}</td>
+        <td data-label="Cash Price">$${r.cashFare.toLocaleString()}</td>
+        <td data-label="Fees">$${r.fees.toLocaleString()}</td>
+        <td data-label="Value (¢/mile)"><strong>${r.cpm}</strong></td>
+        <td data-label=""><button class="btn">Book</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    if (data.length > 0) {
+      const best = data.reduce((a, b) => parseFloat(a.cpm) > parseFloat(b.cpm) ? a : b);
+      [...tbody.rows].forEach(row => {
+        if (row.cells[0].innerText === best.route) {
+          row.classList.add("highlight");
+        }
+      });
+    }
+  }
+  renderTable(redemptions);
+  // --- Airport Autocomplete ---
+
+  let airports = [];
+  
+  // Load the airport JSON once when page loads
+  fetch('/dev/asset/iata-icao.json')
+    .then(res => res.json())
+    .then(data => {
+      airports = data;
+    });
+  
+  // Function to set up autocomplete for a field
+  function setupAutocomplete(inputId, suggestionsId) {
+    const input = document.getElementById(inputId);
+    const suggestions = document.getElementById(suggestionsId);
+  
+    input.addEventListener('input', () => {
+      const query = input.value.toLowerCase();
+      suggestions.innerHTML = '';
+  
+      if (query.length < 2) return; // only search if 2+ chars
+  
+      const matches = airports.filter(a =>
+        a.iata.toLowerCase().includes(query) ||
+        a.airport.toLowerCase().includes(query) ||
+        (a.region_name && a.region_name.toLowerCase().includes(query))
+      ).slice(0, 10); // limit to 10 results
+  
+      matches.forEach(match => {
+        const div = document.createElement('div');
+        div.innerHTML = `<span class="suggestion-item">${match.iata} – ${match.airport}</span>`;
+        div.classList.add("suggestion-item");
+        div.innerHTML = `<span class="iata">${match.iata}</span> – <span class="airport">${match.airport}</span>`;
+
+        div.addEventListener('click', () => {
+          input.value = match.iata; // put the IATA code in the box
+          suggestions.innerHTML = '';
+        });
+        suggestions.appendChild(div);
+      });
+    });
+  
+    // Hide suggestions if user clicks away
+    document.addEventListener('click', (e) => {
+      if (!suggestions.contains(e.target) && e.target !== input) {
+        suggestions.innerHTML = '';
+      }
+    });
+  }
+  
+  // Initialize for both fields
+  setupAutocomplete('origin', 'origin-suggestions');
+  setupAutocomplete('destination', 'destination-suggestions');
+
+    // --- Seats.aero API Hook ---
+    document.querySelector('.search-btn').addEventListener('click', () => {
+      const origin = document.getElementById('origin').value.trim().toUpperCase();
+      const destination = document.getElementById('destination').value.trim().toUpperCase();
+    
+      if (!origin || !destination) {
+        alert("Please enter both origin and destination airports.");
+        return;
+      }
+    
+      fetch(`/api/seats?origin=${origin}&destination=${destination}`)
+        .then(res => {
+          if (!res.ok) throw new Error(`Proxy error: ${res.status}`);
+          return res.json();
+        })
+        .then(data => {
+          console.log("✅ Seats.aero via proxy:", data);
+    
+          // map Seats.aero fields into table rows
+          const mapped = data.map(r => ({
+            route: `${r.OriginAirport} → ${r.DestinationAirport}`,
+            program: r.Source,                 // "united", "jetblue", etc.
+            points: r.Points || "—",           // adjust once we see full schema
+            cashFare: r.Cash || 0,
+            fees: r.Fees || 0,
+            cpm: r.Points && r.Cash
+              ? ((r.Cash - (r.Fees || 0)) / r.Points).toFixed(2)
+              : "—"
+          }));
+    
+          renderTable(mapped);  // reuse your existing renderTable()
+        })
+        .catch(err => {
+          console.error("❌ Seats.aero API/proxy error:", err);
+        });
+    });
+
+
+</script>
+</body>
+</html>
