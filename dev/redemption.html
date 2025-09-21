@@ -130,8 +130,12 @@
     z-index: 3;
   }
 
-  @media (max-width: 980px) {
-    .search-panel { grid-template-columns: 1fr; }
+    @media (max-width: 980px) {
+    .search-panel {
+      grid-template-columns: 1fr;
+      justify-items: center;   /* centers child steps horizontally */
+      text-align: center;      /* centers text + labels */
+    }
   }
 
   .step {
@@ -172,7 +176,24 @@
     width: 75%;
     box-sizing: border-box;
   }
-
+  @media (max-width: 980px) {
+  .search-panel {
+    grid-template-columns: 1fr;
+    justify-items: center;   /* centers horizontally */
+    text-align: center;      /* centers text */
+  }
+  .step input,
+  .step select,
+  .search-btn,
+  .card-options,
+  .toggle-group {
+    width: 100% !important;
+    max-width: 320px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+}
+  
   .search-btn {
     width: 75%;
     background: #bfa14a;
@@ -375,7 +396,7 @@
   }
 </style>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col items-center justify-start px-4 py-6">
+<body>
 
 <header>
   <div class="logo">
