@@ -388,6 +388,18 @@
       box-sizing: border-box;
       width: calc(100% - 24px);
     }
+    .date-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin-top: 12px;
+    }
+    .date-note {
+      text-align: center;   /* centers text under the buttons */
+      margin-top: 6px;      /* breathing room */
+      font-size: 0.9rem;
+      color: #444;
+    }
   }
 
   /* ---------- Footer ---------- */
@@ -436,35 +448,37 @@
       <label for="departDate">Departure Date (Tap To Select Date)</label>
       <input type="date" id="departDate" />
 
-      <div class="card-options">
-        <button class="option-btn active" id="exactBtn">Exact Date</button>
-        <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
-      </div>
+      <div class="form-row">
+  <div class="card-options">
+    <button class="option-btn active" id="exactBtn">Exact Date</button>
+    <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
+  </div>
 
-      <div id="flexPicker" class="flex-picker">
-        <label for="flexDays">Search Days +/- Date Selected:</label>
-        <select id="flexDays">
-          <option value="1">1 day</option>
-          <option value="2">2 days</option>
-          <option value="3">3 days</option>
-          <option value="4">4 days</option>
-          <option value="5">5 days</option>
-          <option value="6">6 days</option>
-          <option value="7">7 days</option>
-          <option value="8">8 days</option>
-          <option value="9">9 days</option>
-          <option value="10">10 days</option>
-          <option value="11">11 days</option>
-          <option value="12">12 days</option>
-          <option value="13">13 days</option>
-          <option value="14">14 days</option>
-        </select>
-      </div>
+  <div id="flexPicker" class="flex-picker">
+    <label for="flexDays">Search Days +/- Date Selected:</label>
+    <select id="flexDays">
+      <option value="1">1 day</option>
+      <option value="2">2 days</option>
+      <option value="3">3 days</option>
+      <option value="4">4 days</option>
+      <option value="5">5 days</option>
+      <option value="6">6 days</option>
+      <option value="7">7 days</option>
+      <option value="8">8 days</option>
+      <option value="9">9 days</option>
+      <option value="10">10 days</option>
+      <option value="11">11 days</option>
+      <option value="12">12 days</option>
+      <option value="13">13 days</option>
+      <option value="14">14 days</option>
+    </select>
+  </div>
 
-      <small class="hint">
-        Select “Exact Date” to search only that day, or “Flexible” to include a ±-day window.
-      </small>
-    </div>
+  <div class="date-note">
+    Select “Exact Date” to search only that day, or “Flexible” to include a ±-day window.
+  </div>
+</div>
+
   </div>
 
   <!-- Step 2 + Step 3 stacked -->
