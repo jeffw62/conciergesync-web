@@ -224,15 +224,14 @@
     font-size: 0.8rem;
     color: #555;
     display: block;
-    width: 75%;           /* ✅ matches the button row width */
-    margin: 4px auto 0;   /* ✅ centers the block itself */
+    margin-top: 4px;
     line-height: 1.3;
-    text-align: center;   /* ✅ centers text inside */
-  }
-  .date-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;   /* ✅ centers child elements together */
+    text-align: center;
+    
+    /* ✅ anchor alignment with buttons above */
+    position: relative;
+    left: 0;
+    right: 0;
 }
 
   /* ---------- Option Card ---------- */
