@@ -373,6 +373,24 @@
     z-index: 0;
     margin-top: 60px;
   }
+  
+  /* ---------- Row (Passengers + Cabin) ---------- */
+  .row {
+    display: flex;
+    gap: 12px;
+    margin-top: 8px;
+  }
+  
+  .row .field {
+    flex: 1;
+  }
+  
+  .row label {
+    display: block;
+    margin-bottom: 4px;
+    font-size: 0.9rem;
+  }
+
 </style>
 </head>
 <body>
@@ -409,6 +427,21 @@
     <label for="destination">Destination</label>
     <input type="text" id="destination" placeholder="e.g. LHR">
     <div id="destination-suggestions"></div>
+    <div class="row">
+      <div class="field">
+        <label for="passengers">Passengers</label>
+        <input type="number" id="passengers" name="passengers" min="1" max="10" value="1" required>
+      </div>
+      <div class="field">
+        <label for="cabin">Service Class</label>
+        <select id="cabin" name="cabin" required>
+          <option value="economy">Economy</option>
+          <option value="premium_economy">Premium Economy</option>
+          <option value="business">Business</option>
+          <option value="first">First</option>
+        </select>
+      </div>
+    </div>
     <div class="date-wrap">
       <label for="departDate">Departure Date (Tap To Select Date)</label>
       <input type="date" id="departDate" />
