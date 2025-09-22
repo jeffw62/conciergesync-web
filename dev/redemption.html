@@ -619,22 +619,22 @@
 
     // Validate before search
     function checkSelections() {
-    const allGroups = [directGroup, multiGroup, posGroup];
-    const allSelected = allGroups.every(g => g.querySelector('.active'));
-    const warning = document.getElementById('searchWarning');
-  
-    if (allSelected) {
-      searchBtn.disabled = false;
-      searchBtn.style.opacity = "1";
-      searchBtn.style.cursor = "pointer";
-      warning.classList.add('hidden');
-    } else {
-      searchBtn.disabled = true;
-      searchBtn.style.opacity = "0.6";
-      searchBtn.style.cursor = "not-allowed";
-      warning.classList.remove('hidden');
+      const allGroups = [directGroup, multiGroup, posGroup];
+      const allSelected = allGroups.every(g => g.querySelector('.active'));
+      const warning = document.getElementById('searchWarning');
+    
+      if (allSelected) {
+        searchBtn.disabled = false;
+        searchBtn.style.opacity = "1";
+        searchBtn.style.cursor = "pointer";
+        warning.classList.add('hidden');
+      } else {
+        searchBtn.disabled = true;
+        searchBtn.style.opacity = "0.6";
+        searchBtn.style.cursor = "not-allowed";
+        warning.classList.remove('hidden');
+      }
     }
-  }
 
     // Initial state
     checkSelections();
@@ -664,8 +664,8 @@
       `;
       tbody.appendChild(tr);
     });
+  } // ✅ properly closed
 
-// add this right after
   function displayResults(data) {
     const tbody = document.getElementById("resultsBody");
     tbody.innerHTML = "";
@@ -700,30 +700,18 @@
       tbody.appendChild(tr);
     });
   }
-    /*
-    if (data.length > 0) {
-      const best = data.reduce((a, b) => parseFloat(a.cpm) > parseFloat(b.cpm) ? a : b);
-      [...tbody.rows].forEach(row => {
-        if (row.cells[0].innerText === best.route) {
-          row.classList.add("highlight");
-        }
-      });
-    }
-    */
 
-  // renderTable(redemptions);
   // --- Airport Autocomplete ---
-
   let airports = [];
   
   // Load the airport JSON once when page loads
- fetch('/dev/asset/iata-icao.json')
-  .then(res => res.json())
-  .then(data => {
-    airports = data;
-    console.log(`✅ Loaded ${airports.length} airports into memory`);
-  })
-  .catch(err => console.error("❌ Failed to load airports:", err));
+  fetch('/dev/asset/iata-icao.json')
+    .then(res => res.json())
+    .then(data => {
+      airports = data;
+      console.log(`✅ Loaded ${airports.length} airports into memory`);
+    })
+    .catch(err => console.error("❌ Failed to load airports:", err));
   
   // Function to set up autocomplete for a field
   function setupAutocomplete(inputId, suggestionsId) {
@@ -744,10 +732,8 @@
   
       matches.forEach(match => {
         const div = document.createElement('div');
-        div.innerHTML = `<span class="suggestion-item">${match.iata} – ${match.airport}</span>`;
         div.classList.add("suggestion-item");
         div.innerHTML = `<span class="iata">${match.iata}</span> – <span class="airport">${match.airport}</span>`;
-
         div.addEventListener('click', () => {
           input.value = match.iata; // put the IATA code in the box
           suggestions.innerHTML = '';
@@ -768,60 +754,60 @@
   setupAutocomplete('origin', 'origin-suggestions');
   setupAutocomplete('destination', 'destination-suggestions');
 
-    // --- Seats.aero API Hook ---
-    document.querySelector('.search-btn').addEventListener('click', () => {
-      const origin = document.getElementById('origin').value.trim().toUpperCase();
-      const destination = document.getElementById('destination').value.trim().toUpperCase();
-      const date = document.getElementById('departDate').value;
-      const passengers = document.getElementById('passengers').value;
-      const cabin = document.getElementById('cabin').value;
-      const flexMode = document.getElementById('flexBtn').classList.contains('active') ? 'flexible' : 'exact';
-      const flexDays = document.getElementById('flexDays').value;
-      const directPref = document.querySelector('#directStop .active')?.dataset.val;
-      const multiPref = document.querySelector('#multiConn .active')?.dataset.val;
-      const positioning = document.querySelector('#posFlight .active')?.dataset.val;
-    
-      if (!origin || !destination || !date) {
-        alert("Please complete origin, destination, and date.");
-        return;
+  // --- Seats.aero API Hook ---
+  document.querySelector('.search-btn').addEventListener('click', () => {
+    const origin = document.getElementById('origin').value.trim().toUpperCase();
+    const destination = document.getElementById('destination').value.trim().toUpperCase();
+    const date = document.getElementById('departDate').value;
+    const passengers = document.getElementById('passengers').value;
+    const cabin = document.getElementById('cabin').value;
+    const flexMode = document.getElementById('flexBtn').classList.contains('active') ? 'flexible' : 'exact';
+    const flexDays = document.getElementById('flexDays').value;
+    const directPref = document.querySelector('#directStop .active')?.dataset.val;
+    const multiPref = document.querySelector('#multiConn .active')?.dataset.val;
+    const positioning = document.querySelector('#posFlight .active')?.dataset.val;
+  
+    if (!origin || !destination || !date) {
+      alert("Please complete origin, destination, and date.");
+      return;
+    }
+  
+    const payload = {
+      origin,
+      destination,
+      date,
+      passengers,
+      cabin,
+      flexMode,
+      flexDays,
+      routing: {
+        direct: directPref,
+        multi: multiPref,
+        positioning
       }
-    
-      const payload = {
-        origin,
-        destination,
-        date,
-        passengers,
-        cabin,
-        flexMode,
-        flexDays,
-        routing: {
-          direct: directPref,
-          multi: multiPref,
-          positioning
-        }
-      };
-    
-      console.log("🚀 Search payload:", payload);
-    
-      // For now send to our backend API
-      fetch("/api/redemption", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+    };
+  
+    console.log("🚀 Search payload:", payload);
+  
+    // For now send to our backend API
+    fetch("/api/redemption", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then(res => {
+        if (!res.ok) throw new Error(`Backend error: ${res.status}`);
+        return res.json();
       })
-        .then(res => {
-          if (!res.ok) throw new Error(`Backend error: ${res.status}`);
-          return res.json();
-        })
-        .then(data => {
-          console.log("✅ Redemption API response:", data);
-    
-         displayResults(data);
-          
-        })
-        .catch(err => {
-          console.error("❌ Redemption API error:", err);
-        });
+      .then(data => {
+        console.log("✅ Redemption API response:", data);
+        displayResults(data);
+      })
+      .catch(err => {
+        console.error("❌ Redemption API error:", err);
+      });
+  });
 </script>
+
 </body>
 </html>
