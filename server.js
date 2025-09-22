@@ -19,7 +19,7 @@ app.get("/", (req, res) => {
 app.post("/api/redemption", async (req, res) => {
   console.log("🔔 Redemption request received:", req.body);
 
-  const { origin, destination } = req.body; // keep it simple first
+  const { origin, destination } = req.body; // for now keep it simple
 
   try {
     const url = `https://seats.aero/partnerapi/routes?origin=${origin}&destination=${destination}`;
@@ -44,7 +44,6 @@ app.post("/api/redemption", async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
-
 
 app.listen(PORT, () => {
   console.log(`ConciergeSync Web running on port ${PORT}`);
