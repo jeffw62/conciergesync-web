@@ -13,38 +13,27 @@ app.use('/dev', express.static(path.join(__dirname, 'dev')));
 // POST /api/redemption
 app.post("/api/redemption", async (req, res) => {
   try {
-    const { origin, destination, date, passengers, cabin, flexMode, flexDays, routing } = req.body;
+    const { origin, destination, date } = req.body;
 
-    // Validation
     if (!origin || !destination) {
       return res.status(400).json({
         error: "missing_airports",
         message: "Origin and destination are required.",
-        received: { origin, destination }
       });
     }
 
-    // ---- Seats.aero API call ----
-   const seatsRes = await fetch("https://seats.aero/api/v1/search", {
-      method: "POST",
+    // Call Seats.aero Partner API
+    const seatsRes = await fetch("https://seats.aero/partnerapi/routes", {
+      method: "GET",
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.SEATSAERO_KEY}`
-      },
-      body: JSON.stringify({
-        origin,
-        destination,
-        date,
-        passengers,
-        cabin,
-        flexMode,
-        flexDays,
-        routing
-      }),
+        "Partner-Authorization": process.env.SEATSAERO_KEY,
+        "accept": "application/json"
+      }
     });
+
     if (!seatsRes.ok) {
-      const text = await seatsRes.text(); // log raw text for debugging
-      console.error("❌ Seats.aero API error:", seatsRes.status, text);
+      const text = await seatsRes.text();
+      console.error("❌ Seats.aero Partner API error:", seatsRes.status, text);
       return res.status(seatsRes.status).json({
         error: "seats_api_error",
         status: seatsRes.status,
@@ -53,12 +42,10 @@ app.post("/api/redemption", async (req, res) => {
     }
 
     const data = await seatsRes.json();
-
-    // ✅ Always return JSON to frontend
     return res.json({ results: data });
 
   } catch (err) {
-    console.error("❌ Redemption API error:", err); // will print full object, not just message
+    console.error("❌ Redemption API error:", err);
     return res.status(500).json({
       error: "server_error",
       message: err.message,
@@ -66,6 +53,7 @@ app.post("/api/redemption", async (req, res) => {
     });
   }
 });
+
 app.listen(PORT, () => {
   console.log(`ConciergeSync Web running on port ${PORT}`);
 });
