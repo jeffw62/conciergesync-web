@@ -139,9 +139,9 @@
     flex-direction: column;
     gap: 6px;
   }
-  .step label + input,
-  .step label + select {
-    margin-top: -6px;   /* cancel out the flex gap between label and its field */
+  .step > label + input,
+  .step > label + select {
+    margin-top: -6px;   /* cancel gap only for direct label/input pairs */
   }
   .step h3 {
     margin: 0 0 4px 0;
