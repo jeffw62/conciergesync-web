@@ -19,10 +19,11 @@ app.get("/", (req, res) => {
 app.post("/api/redemption", async (req, res) => {
   console.log("🔔 Redemption request received:", req.body);
 
-  const { origin, destination } = req.body; // for now keep it simple
+  const { origin, destination } = req.body;
 
   try {
     const url = `https://seats.aero/partnerapi/routes?origin=${origin}&destination=${destination}`;
+    console.log("📡 Calling Seats.aero URL:", url);
 
     const response = await fetch(url, {
       method: "GET",
@@ -34,8 +35,16 @@ app.post("/api/redemption", async (req, res) => {
 
     console.log("📡 Seats.aero status:", response.status);
 
-    const results = await response.json();
-    console.log("✅ Seats.aero response JSON:", results);
+    const raw = await response.text();
+    console.log("📡 Seats.aero raw response:", raw);
+
+    // Try parsing only if it's JSON
+    let results;
+    try {
+      results = JSON.parse(raw);
+    } catch (e) {
+      throw new Error(`Seats.aero did not return valid JSON: ${raw.substring(0, 200)}...`);
+    }
 
     res.json({ success: true, results });
 
@@ -44,6 +53,7 @@ app.post("/api/redemption", async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`ConciergeSync Web running on port ${PORT}`);
