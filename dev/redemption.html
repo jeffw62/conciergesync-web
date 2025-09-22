@@ -665,6 +665,33 @@
       tbody.appendChild(tr);
     });
 
+    }   // ← end of renderTable (line 667)
+
+// add this right after
+function displayResults(data) {
+  const tbody = document.getElementById("resultsBody");
+  tbody.innerHTML = "";
+
+  if (!data.results || data.results.length === 0) {
+    tbody.innerHTML = `<tr><td colspan="7">No results found</td></tr>`;
+    return;
+  }
+
+  data.results.forEach(r => {
+    const tr = document.createElement("tr");
+    tr.innerHTML = `
+      <td data-label="Route">${r.origin} → ${r.destination}</td>
+      <td data-label="Program">${r.airline}</td>
+      <td data-label="Points Needed">${r.miles.toLocaleString()}</td>
+      <td data-label="Cash Price">—</td>
+      <td data-label="Fees">$${r.taxes.toLocaleString()}</td>
+      <td data-label="Value (¢/mile)">—</td>
+      <td data-label=""><button class="btn">Book</button></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
     if (data.length > 0) {
       const best = data.reduce((a, b) => parseFloat(a.cpm) > parseFloat(b.cpm) ? a : b);
       [...tbody.rows].forEach(row => {
@@ -777,14 +804,8 @@
         .then(data => {
           console.log("✅ Redemption API response:", data);
     
-          // Simple display while we wire backend
-          const resultsDiv = document.getElementById("results");
-          resultsDiv.innerHTML = `
-            <div class="mt-6 bg-gray-100 p-4 rounded-lg shadow-inner">
-              <h2 class="text-lg font-semibold mb-2">🎯 Redemption Summary</h2>
-              <pre>${JSON.stringify(data, null, 2)}</pre>
-            </div>
-          `;
+         displayResults(data);
+          
         })
         .catch(err => {
           console.error("❌ Redemption API error:", err);
