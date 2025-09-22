@@ -22,33 +22,18 @@ app.post("/api/redemption", async (req, res) => {
   const { origin, destination, date, passengers, cabin } = req.body;
 
   try {
-    const response = await fetch("https://seats.aero/api/search", {
-      method: "POST",
+    const response = await fetch("https://seats.aero/partnerapi/routes", {
+      method: "GET",  // Their docs show GET for routes
       headers: {
-        "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.SEATSAERO_KEY}`
-      },
-      body: JSON.stringify({
-        origin,
-        destination,
-        date,
-        passengers,
-        cabin
-      })
+        "Accept": "application/json",
+        "Partner-Authorization": process.env.SEATSAERO_KEY
+      }
     });
 
     console.log("📡 Seats.aero status:", response.status);
 
-    const text = await response.text();
-    console.log("📡 Seats.aero raw response:", text);
-
-    // Try to parse JSON safely
-    let results;
-    try {
-      results = JSON.parse(text);
-    } catch (parseErr) {
-      throw new Error("Seats.aero did not return JSON: " + text);
-    }
+    const results = await response.json();
+    console.log("✅ Seats.aero response JSON:", results);
 
     res.json({ success: true, results });
 
@@ -57,7 +42,6 @@ app.post("/api/redemption", async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
-
 
 app.listen(PORT, () => {
   console.log(`ConciergeSync Web running on port ${PORT}`);
