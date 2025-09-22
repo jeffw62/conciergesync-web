@@ -707,7 +707,7 @@ function displayResults(data) {
   let airports = [];
   
   // Load the airport JSON once when page loads
-  fetch('/dev/asset/iata-icao.json')
+ fetch('/dev/asset/iata-icao.json')
   .then(res => res.json())
   .then(data => {
     airports = data;
