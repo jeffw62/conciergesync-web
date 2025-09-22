@@ -692,22 +692,6 @@
       tbody.appendChild(tr);
     });
   }
-
-  data.results.forEach(r => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td data-label="Route">${r.origin} → ${r.destination}</td>
-      <td data-label="Program">${r.airline}</td>
-      <td data-label="Points Needed">${r.miles.toLocaleString()}</td>
-      <td data-label="Cash Price">—</td>
-      <td data-label="Fees">$${r.taxes.toLocaleString()}</td>
-      <td data-label="Value (¢/mile)">—</td>
-      <td data-label=""><button class="btn">Book</button></td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
-
     /*
     if (data.length > 0) {
       const best = data.reduce((a, b) => parseFloat(a.cpm) > parseFloat(b.cpm) ? a : b);
