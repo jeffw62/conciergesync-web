@@ -25,7 +25,7 @@ app.post("/api/redemption", async (req, res) => {
     }
 
     // ---- Seats.aero API call ----
-    const seatsRes = await fetch("https://api.seats.aero/v1/search", {
+   const seatsRes = await fetch("https://seats.aero/api/v1/search", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -42,7 +42,6 @@ app.post("/api/redemption", async (req, res) => {
         routing
       }),
     });
-
     if (!seatsRes.ok) {
       const text = await seatsRes.text(); // log raw text for debugging
       console.error("❌ Seats.aero API error:", seatsRes.status, text);
