@@ -19,11 +19,13 @@ app.get("/", (req, res) => {
 app.post("/api/redemption", async (req, res) => {
   console.log("🔔 Redemption request received:", req.body);
 
-  const { origin, destination, date, passengers, cabin } = req.body;
+  const { origin, destination } = req.body; // keep it simple first
 
   try {
-    const response = await fetch("https://seats.aero/partnerapi/routes", {
-      method: "GET",  // Their docs show GET for routes
+    const url = `https://seats.aero/partnerapi/routes?origin=${origin}&destination=${destination}`;
+
+    const response = await fetch(url, {
+      method: "GET",
       headers: {
         "Accept": "application/json",
         "Partner-Authorization": process.env.SEATSAERO_KEY
@@ -42,6 +44,7 @@ app.post("/api/redemption", async (req, res) => {
     res.status(500).json({ success: false, error: err.message });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`ConciergeSync Web running on port ${PORT}`);
