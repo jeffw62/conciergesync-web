@@ -233,9 +233,9 @@
   /* ---------- Option Card ---------- */
   .card-options {
     display: flex;
-    justify-content: center;
-    gap: 12px;
-    position: relative;   /* add this */
+    gap: 8px;
+    width: 75%;
+    margin-top: 16px;
   }
   .option-btn {
     flex: 1;
@@ -389,20 +389,6 @@
       width: calc(100% - 24px);
     }
   }
-    .info-field {
-      display: block;
-      width: 100%;              /* span full column width like inputs */
-      padding: 10px 12px;        /* match your input padding */
-      box-sizing: border-box;
-      font-size: 0.9rem;
-      color: #444;
-      text-align: center;
-    
-      /* Optional: makes it look exactly like a disabled input */
-      border: 1px solid #ccc;
-      border-radius: 4px;
-      background-color: #f9f9f9;
-    }
 
   /* ---------- Footer ---------- */
   #footer {
@@ -475,9 +461,9 @@
         </select>
       </div>
 
-      <div class="info-field">
+      <small class="hint">
         Select “Exact Date” to search only that day, or “Flexible” to include a ±-day window.
-      </div>
+      </small>
     </div>
   </div>
 
