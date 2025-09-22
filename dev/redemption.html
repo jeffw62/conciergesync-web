@@ -380,11 +380,11 @@
     gap: 12px;
     margin-top: 8px;
   }
-  
   .row .field {
-    flex: 1;
+    flex: 1 1 0;       /* share space evenly, shrink if needed */
+    max-width: 50%;    /* each field capped at half width */
+    box-sizing: border-box;
   }
-  
   .row label {
     display: block;
     margin-bottom: 4px;
