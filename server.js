@@ -1,6 +1,5 @@
 const express = require("express");
 const path = require("path");
-const fetch = require("node-fetch"); // ensure installed if Node < 18
 const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
