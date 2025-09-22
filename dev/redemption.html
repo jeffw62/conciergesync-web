@@ -733,36 +733,63 @@
     document.querySelector('.search-btn').addEventListener('click', () => {
       const origin = document.getElementById('origin').value.trim().toUpperCase();
       const destination = document.getElementById('destination').value.trim().toUpperCase();
+      const date = document.getElementById('departDate').value;
+      const passengers = document.getElementById('passengers').value;
+      const cabin = document.getElementById('cabin').value;
+      const flexMode = document.getElementById('flexBtn').classList.contains('active') ? 'flexible' : 'exact';
+      const flexDays = document.getElementById('flexDays').value;
+      const directPref = document.querySelector('#directStop .active')?.dataset.val;
+      const multiPref = document.querySelector('#multiConn .active')?.dataset.val;
+      const positioning = document.querySelector('#posFlight .active')?.dataset.val;
     
-      if (!origin || !destination) {
-        alert("Please enter both origin and destination airports.");
+      if (!origin || !destination || !date) {
+        alert("Please complete origin, destination, and date.");
         return;
       }
     
-      fetch(`https://portal.conciergesync.ai/api/seats?origin=${origin}&destination=${destination}`)
+      const payload = {
+        origin,
+        destination,
+        date,
+        passengers,
+        cabin,
+        flexMode,
+        flexDays,
+        routing: {
+          direct: directPref,
+          multi: multiPref,
+          positioning
+        }
+      };
+    
+      console.log("🚀 Search payload:", payload);
+    
+      // For now send to our backend API
+      fetch("/api/redemption", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
         .then(res => {
-          if (!res.ok) throw new Error(`Proxy error: ${res.status}`);
+          if (!res.ok) throw new Error(`Backend error: ${res.status}`);
           return res.json();
         })
         .then(data => {
-          console.log("✅ Seats.aero stub:", data);
-      
-          // Display stub result directly
+          console.log("✅ Redemption API response:", data);
+    
+          // Simple display while we wire backend
           const resultsDiv = document.getElementById("results");
           resultsDiv.innerHTML = `
             <div class="mt-6 bg-gray-100 p-4 rounded-lg shadow-inner">
-              <h2 class="text-lg font-semibold mb-2">🎯 Redemption Summary (Stub)</h2>
-              <p><strong>Origin:</strong> ${data.origin}</p>
-              <p><strong>Destination:</strong> ${data.destination}</p>
-              <p class="mt-2 font-bold text-blue-600">${data.message}</p>
+              <h2 class="text-lg font-semibold mb-2">🎯 Redemption Summary</h2>
+              <pre>${JSON.stringify(data, null, 2)}</pre>
             </div>
           `;
         })
         .catch(err => {
-          console.error("❌ Seats.aero API/proxy error:", err);
+          console.error("❌ Redemption API error:", err);
         });
     });
-
 
 </script>
 </body>
