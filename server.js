@@ -15,36 +15,43 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// Redemption API route (live Seats.Aero)
+// Example Express backend for /api/redemption
   app.post("/api/redemption", async (req, res) => {
-    console.log("🔔 Redemption request received:", req.body);
-  
-    const { origin, destination, date, cabin } = req.body;
-  
     try {
-      // Build Seats.aero Cached Search URL
-      const url = `https://seats.aero/partnerapi/search?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
+      const { origin, destination, date } = req.body;
   
-      console.log("📡 Calling Seats.aero:", url);
+      // Validation check
+      if (!origin || !destination) {
+        return res.status(400).json({
+          error: "missing_airports",
+          message: "Origin and destination are required.",
+        });
+      }
   
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Accept": "application/json",
-          "Partner-Authorization": process.env.SEATSAERO_KEY
-        }
+      // ---- Seats.aero call (simplified) ----
+      const seatsRes = await fetch("https://seats.aero/api/whatever", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(req.body),
       });
   
-      console.log("📡 Seats.aero status:", response.status);
+      if (!seatsRes.ok) {
+        return res.status(500).json({
+          error: "seats_api_error",
+          status: seatsRes.status,
+        });
+      }
   
-      const results = await response.json();
-      console.log("✅ Seats.aero response sample:", results[0] || results);
+      const data = await seatsRes.json();
   
-      res.json({ success: true, results });
-  
+      // Send results back to frontend
+      return res.json({ results: data });
     } catch (err) {
-      console.error("❌ Redemption API error:", err);
-      res.status(500).json({ success: false, error: err.message });
+      console.error("Redemption API error:", err);
+      return res.status(500).json({
+        error: "server_error",
+        message: err.message,
+      });
     }
   });
   
