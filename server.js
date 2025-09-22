@@ -29,7 +29,7 @@ app.post("/api/redemption", async (req, res) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.SEATSAERO_KEY}` // <-- use your key
+        "Authorization": `Bearer ${process.env.SEATSAERO_KEY}`
       },
       body: JSON.stringify({
         origin,
@@ -59,10 +59,11 @@ app.post("/api/redemption", async (req, res) => {
     return res.json({ results: data });
 
   } catch (err) {
-    console.error("❌ Redemption API error:", err);
+    console.error("❌ Redemption API error:", err); // will print full object, not just message
     return res.status(500).json({
       error: "server_error",
-      message: err.message
+      message: err.message,
+      stack: err.stack
     });
   }
 });
