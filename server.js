@@ -1,49 +1,69 @@
 const express = require("express");
 const path = require("path");
+const fetch = require("node-fetch"); // ensure installed if Node < 18
 const app = express();
-app.use(express.json()); // <-- add this so we can read JSON bodies
+app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
-// Serve everything in repo (index.html, /dev/, /assets/, etc.)
-app.use(express.static(path.join(__dirname)));
+// --- Service class for Seats.aero Partner API ---
+class SeatsAeroService {
+  constructor(apiKey) {
+    this.apiKey = apiKey;
+    this.baseUrl = "https://seats.aero/partnerapi";
+  }
 
-// Explicitly serve /dev folder
-app.use('/dev', express.static(path.join(__dirname, 'dev')));
-
-// POST /api/redemption
-app.post("/api/redemption", async (req, res) => {
-  try {
-    const { origin, destination, date } = req.body;
-
-    if (!origin || !destination) {
-      return res.status(400).json({
-        error: "missing_airports",
-        message: "Origin and destination are required.",
-      });
-    }
-
-    // Call Seats.aero Partner API
-    const seatsRes = await fetch("https://seats.aero/partnerapi/routes", {
-      method: "GET",
+  async liveSearch({ origin, destination, date, program, passengers = 1 }) {
+    const response = await fetch(`${this.baseUrl}/live`, {
+      method: "POST",
       headers: {
-        "Partner-Authorization": process.env.SEATSAERO_KEY,
-        "accept": "application/json"
-      }
+        "Partner-Authorization": this.apiKey,
+        "accept": "application/json",
+        "content-type": "application/json"
+      },
+      body: JSON.stringify({
+        origin_airport: origin,
+        destination_airport: destination,
+        departure_date: date,
+        source: program, // e.g. "united", "delta", "aeroplan"
+        seat_count: passengers,
+        disable_filters: false,
+        show_dynamic_pricing: false
+      })
     });
 
-    if (!seatsRes.ok) {
-      const text = await seatsRes.text();
-      console.error("❌ Seats.aero Partner API error:", seatsRes.status, text);
-      return res.status(seatsRes.status).json({
-        error: "seats_api_error",
-        status: seatsRes.status,
-        message: text
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Seats.aero error ${response.status}: ${text}`);
+    }
+
+    return response.json();
+  }
+}
+
+// Initialize service
+const seatsService = new SeatsAeroService(process.env.SEATSAERO_KEY);
+
+// --- Serve static files ---
+app.use(express.static(path.join(__dirname)));
+app.use('/dev', express.static(path.join(__dirname, 'dev')));
+
+// --- Redemption route ---
+app.post("/api/redemption", async (req, res) => {
+  try {
+    const { origin, destination, date, program, passengers } = req.body;
+
+    if (!origin || !destination || !date || !program) {
+      return res.status(400).json({
+        error: "missing_parameters",
+        message: "Origin, destination, date, and program are required."
       });
     }
 
-    const data = await seatsRes.json();
-    return res.json({ results: data });
+    // Step 2 integration stub: later we’ll replace `program` with user’s profile data
+    // For now, just use the program passed from frontend
+    const results = await seatsService.liveSearch({ origin, destination, date, program, passengers });
 
+    return res.json({ results });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     return res.status(500).json({
@@ -54,6 +74,7 @@ app.post("/api/redemption", async (req, res) => {
   }
 });
 
+// --- Start server ---
 app.listen(PORT, () => {
   console.log(`ConciergeSync Web running on port ${PORT}`);
 });
