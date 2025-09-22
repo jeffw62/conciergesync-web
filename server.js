@@ -66,3 +66,6 @@ app.post("/api/redemption", async (req, res) => {
     });
   }
 });
+app.listen(PORT, () => {
+  console.log(`ConciergeSync Web running on port ${PORT}`);
+});
