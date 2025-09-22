@@ -26,7 +26,7 @@ app.post("/api/redemption", async (req, res) => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "Authorization": `Bearer ${process.env.SEATSAERO_KEY}`  // <-- your API key in Render
+        "Authorization": `Bearer ${process.env.SEATSAERO_KEY}`
       },
       body: JSON.stringify({
         origin,
@@ -37,20 +37,27 @@ app.post("/api/redemption", async (req, res) => {
       })
     });
 
-    if (!response.ok) {
-      throw new Error(`Seats.aero API error: ${response.status}`);
-    }
+    console.log("📡 Seats.aero status:", response.status);
 
-    const results = await response.json();
-    console.log("✅ Seats.aero response:", results);
+    const text = await response.text();
+    console.log("📡 Seats.aero raw response:", text);
+
+    // Try to parse JSON safely
+    let results;
+    try {
+      results = JSON.parse(text);
+    } catch (parseErr) {
+      throw new Error("Seats.aero did not return JSON: " + text);
+    }
 
     res.json({ success: true, results });
 
   } catch (err) {
     console.error("❌ Redemption API error:", err);
-    res.status(500).json({ success: false, error: "Seats.aero request failed" });
+    res.status(500).json({ success: false, error: err.message });
   }
 });
+
 
 app.listen(PORT, () => {
   console.log(`ConciergeSync Web running on port ${PORT}`);
