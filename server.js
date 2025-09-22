@@ -4,8 +4,11 @@ const app = express();
 app.use(express.json()); // <-- add this so we can read JSON bodies
 const PORT = process.env.PORT || 3000;
 
-// Serve everything in repo (index.html, /dev, /assets, etc.)
+// Serve everything in repo (index.html, /dev/, /assets/, etc.)
 app.use(express.static(path.join(__dirname)));
+
+// Explicitly serve /dev folder
+app.use('/dev', express.static(path.join(__dirname, 'dev')));
 
 // Default route
 app.get("/", (req, res) => {
