@@ -139,6 +139,10 @@
     flex-direction: column;
     gap: 6px;
   }
+  .step label + input,
+  .step label + select {
+    margin-top: -6px;   /* cancel out the flex gap between label and its field */
+  }
   .step h3 {
     margin: 0 0 4px 0;
     color: #0a1a33;
@@ -147,7 +151,7 @@
   .step label {
     display: block;
     margin-top: 0;        /* remove top gap */
-    margin-bottom: 0px;   /* match Passengers/Service Class */
+    margin-bottom: 4px;   /* match Passengers/Service Class */
     font-weight: 500;
     font-size: 0.95rem;
   }
