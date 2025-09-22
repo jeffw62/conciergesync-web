@@ -16,45 +16,38 @@ app.get("/", (req, res) => {
 });
 
 // Redemption API route (live Seats.Aero)
-app.post("/api/redemption", async (req, res) => {
-  console.log("🔔 Redemption request received:", req.body);
-
-  const { origin, destination } = req.body;
-
-  try {
-    const url = `https://seats.aero/partnerapi/routes?origin=${origin}&destination=${destination}`;
-    console.log("📡 Calling Seats.aero URL:", url);
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Accept": "application/json",
-        "Partner-Authorization": process.env.SEATSAERO_KEY
-      }
-    });
-
-    console.log("📡 Seats.aero status:", response.status);
-
-    const raw = await response.text();
-    console.log("📡 Seats.aero raw response:", raw);
-
-    // Try parsing only if it's JSON
-    let results;
+  app.post("/api/redemption", async (req, res) => {
+    console.log("🔔 Redemption request received:", req.body);
+  
+    const { origin, destination, date, cabin } = req.body;
+  
     try {
-      results = JSON.parse(raw);
-    } catch (e) {
-      throw new Error(`Seats.aero did not return valid JSON: ${raw.substring(0, 200)}...`);
+      // Build Seats.aero Cached Search URL
+      const url = `https://seats.aero/partnerapi/search?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
+  
+      console.log("📡 Calling Seats.aero:", url);
+  
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Accept": "application/json",
+          "Partner-Authorization": process.env.SEATSAERO_KEY
+        }
+      });
+  
+      console.log("📡 Seats.aero status:", response.status);
+  
+      const results = await response.json();
+      console.log("✅ Seats.aero response sample:", results[0] || results);
+  
+      res.json({ success: true, results });
+  
+    } catch (err) {
+      console.error("❌ Redemption API error:", err);
+      res.status(500).json({ success: false, error: err.message });
     }
-
-    res.json({ success: true, results });
-
-  } catch (err) {
-    console.error("❌ Redemption API error:", err);
-    res.status(500).json({ success: false, error: err.message });
-  }
-});
-
-
-app.listen(PORT, () => {
-  console.log(`ConciergeSync Web running on port ${PORT}`);
-});
+  });
+  
+  app.listen(PORT, () => {
+    console.log(`ConciergeSync Web running on port ${PORT}`);
+  });
