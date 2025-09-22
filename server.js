@@ -15,45 +15,41 @@ app.get("/", (req, res) => {
   res.sendFile(path.join(__dirname, "index.html"));
 });
 
-// Redemption API route (mock response for now)
-app.post("/api/redemption", (req, res) => {
+// Redemption API route (live Seats.Aero)
+app.post("/api/redemption", async (req, res) => {
   console.log("🔔 Redemption request received:", req.body);
 
-  // Mock Seats.aero-style results
-  const mockResults = [
-    {
-      airline: "American Airlines",
-      flightNumber: "AA50",
-      origin: req.body.origin,
-      destination: req.body.destination,
-      date: req.body.date,
-      cabin: req.body.cabin,
-      miles: 57500,
-      taxes: 737
-    },
-    {
-      airline: "British Airways",
-      flightNumber: "BA192",
-      origin: req.body.origin,
-      destination: req.body.destination,
-      date: req.body.date,
-      cabin: req.body.cabin,
-      miles: 60000,
-      taxes: 850
-    },
-    {
-      airline: "Lufthansa",
-      flightNumber: "LH439",
-      origin: req.body.origin,
-      destination: req.body.destination,
-      date: req.body.date,
-      cabin: req.body.cabin,
-      miles: 70000,
-      taxes: 950
-    }
-  ];
+  const { origin, destination, date, passengers, cabin } = req.body;
 
-  res.json({ success: true, results: mockResults });
+  try {
+    const response = await fetch("https://seats.aero/api/search", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": `Bearer ${process.env.SEATSAERO_KEY}`  // <-- your API key in Render
+      },
+      body: JSON.stringify({
+        origin,
+        destination,
+        date,
+        passengers,
+        cabin
+      })
+    });
+
+    if (!response.ok) {
+      throw new Error(`Seats.aero API error: ${response.status}`);
+    }
+
+    const results = await response.json();
+    console.log("✅ Seats.aero response:", results);
+
+    res.json({ success: true, results });
+
+  } catch (err) {
+    console.error("❌ Redemption API error:", err);
+    res.status(500).json({ success: false, error: "Seats.aero request failed" });
+  }
 });
 
 app.listen(PORT, () => {
