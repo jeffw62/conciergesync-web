@@ -781,6 +781,8 @@
       return;
     }
   
+    const program = document.getElementById("program").value;
+
     const payload = {
       origin,
       destination,
@@ -794,11 +796,11 @@
         multi: multiPref,
         positioning
       },
-      program: "united" // 👈 temporary hardcode
+      program  // 👈 new field added here
     };
-  
+    
     console.log("🚀 Search payload:", payload);
-  
+
     // For now send to our backend API
     fetch("/api/redemption", {
       method: "POST",
