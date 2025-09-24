@@ -741,7 +741,7 @@
     .then(res => res.json())
     .then(data => {
       airports = data;
-      console.log(`✅ Loaded ${airports.length} airports into memory`);
+      console.log(`Loaded ${airports.length} airports into memory`);
     })
     .catch(err => console.error("❌ Failed to load airports:", err));
   
