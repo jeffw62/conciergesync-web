@@ -79,11 +79,23 @@ app.post("/api/redemption", async (req, res) => {
       });
     }
 
-    const results = await seatsService.availabilitySearch({
+    const apiResponse = await seatsService.availabilitySearch({
       origin,
       destination,
       date,
       cabin: cabin || "economy"
+    });
+
+    // ✅ Fix fees: divide by 100 and ensure two decimals
+    const results = (apiResponse.results || []).map((item) => {
+      let fees = "0.00";
+      if (item.fees !== undefined && item.fees !== null) {
+        fees = (Number(item.fees) / 100).toFixed(2);
+      }
+      return {
+        ...item,
+        fees
+      };
     });
 
     return res.json({ results });
@@ -96,7 +108,6 @@ app.post("/api/redemption", async (req, res) => {
     });
   }
 });
-
 
 // --- Start server ---
 app.listen(PORT, () => {
