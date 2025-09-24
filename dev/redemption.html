@@ -678,6 +678,9 @@
   function displayResults(data) {
   const tbody = document.getElementById("resultsBody");
   tbody.innerHTML = "";
+  console.log("Full API response:", data);
+  console.log("Type of data.results:", typeof data.results);
+  console.log("Keys in data.results:", Object.keys(data.results));
 
   // Normalize results shape
   let results;
