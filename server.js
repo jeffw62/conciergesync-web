@@ -86,17 +86,23 @@ app.post("/api/redemption", async (req, res) => {
       cabin: cabin || "economy"
     });
 
-    // ✅ Fix fees: divide by 100 and ensure two decimals
+    // ✅ Safer fees fix
     const results = (apiResponse.results || []).map((item) => {
-      let fees = "0.00";
-      if (item.fees !== undefined && item.fees !== null) {
-        fees = (Number(item.fees) / 100).toFixed(2);
+      const newItem = { ...item };
+
+      if (newItem.fees !== undefined && newItem.fees !== null) {
+        newItem.fees = (Number(newItem.fees) / 100).toFixed(2);
       }
-      return {
-        ...item,
-        fees
-      };
+
+      return newItem;
     });
+
+    // Debug: log first record to confirm structure
+    if (results.length > 0) {
+      console.log("Sample Seats.aero record after mapping:", results[0]);
+    } else {
+      console.log("No results returned from Seats.aero.");
+    }
 
     return res.json({ results });
   } catch (err) {
