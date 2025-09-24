@@ -680,20 +680,29 @@
     tbody.innerHTML = "";
   
     // Normalize results shape
-    const results = Array.isArray(data) ? data : data.results;
+    let results;
+    if (Array.isArray(data)) {
+      results = data;                // backend returned array directly
+    } else if (Array.isArray(data.results)) {
+      results = data.results;        // backend wrapped in { results: [...] }
+    } else {
+      console.error("Unexpected API shape:", data);
+      tbody.innerHTML = `<tr><td colspan="7">Unexpected response format</td></tr>`;
+      return;
+    }
   
-    if (!results || results.length === 0) {
+    if (results.length === 0) {
       tbody.innerHTML = `<tr><td colspan="7">No results found</td></tr>`;
       return;
     }
   
-    // Debug preview: log the first record so we see the shape
     console.log("🔎 First SA result:", results[0]);
   
     results.slice(0, 20).forEach(r => {
-      // existing row rendering logic
+      // existing row rendering
     });
   }
+
     
     // Only show first 20 to avoid flooding
     data.results.slice(0, 20).forEach(r => {
