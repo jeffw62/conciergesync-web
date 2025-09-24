@@ -4,6 +4,7 @@ const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
+console.log("🔑 SA key on boot:", process.env.SEATSAERO_KEY ? "Loaded" : "Missing");
 // --- Service class for Seats.aero Partner API ---
 class SeatsAeroService {
   constructor(apiKey) {
