@@ -692,23 +692,25 @@
     console.log("🔎 First SA record:", results[0]); // Debug preview
   
     results.slice(0, 20).forEach(r => {
-      const route = `${r.origin_airport || "—"} → ${r.destination_airport || "—"}`;
-      const program = r.source || "—";
-      const points = r.mileage_cost || "—";
-      const fees = r.taxes ? `$${r.taxes}` : "—";
-  
-      let cpm = "—"; // value calculation can come later
-      if (points && r.taxes) {
-        cpm = ((r.taxes / points) * 100).toFixed(2);
+      // Map Business cabin fields (D)
+      const airline = r.DAirlinesRaw || "—";
+      const points = r.DMileageCostRaw || "—";
+      const taxes = r.DTotalTaxesRaw || "—";
+      const seats = r.DRemainingSeatsRaw || "—";
+    
+      // Compute value if you want (for now, leave blank or based on taxes vs miles)
+      let cpm = "—";
+      if (points !== "—" && taxes !== "—") {
+        cpm = ((taxes / points) * 100).toFixed(2);
       }
-  
+    
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td data-label="Route">${route}</td>
-        <td data-label="Program">${program}</td>
+        <td data-label="Route">${airline}</td>
+        <td data-label="Program">${payload?.program || "—"}</td>
         <td data-label="Points Needed">${points}</td>
         <td data-label="Cash Price">—</td>
-        <td data-label="Fees">${fees}</td>
+        <td data-label="Fees">$${taxes}</td>
         <td data-label="Value (¢/mile)">${cpm}</td>
         <td data-label=""><button class="btn">Book</button></td>
       `;
