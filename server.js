@@ -86,25 +86,8 @@ app.post("/api/redemption", async (req, res) => {
       cabin: cabin || "economy"
     });
 
-    // ✅ Safer fees fix
-    const results = (apiResponse.results || []).map((item) => {
-      const newItem = { ...item };
-
-      if (newItem.fees !== undefined && newItem.fees !== null) {
-        newItem.fees = (Number(newItem.fees) / 100).toFixed(2);
-      }
-
-      return newItem;
-    });
-
-    // Debug: log first record to confirm structure
-    if (results.length > 0) {
-      console.log("Sample Seats.aero record after mapping:", results[0]);
-    } else {
-      console.log("No results returned from Seats.aero.");
-    }
-
-    return res.json({ results });
+    // 🔄 Revert: just return raw results as-is
+    return res.json({ results: apiResponse.results });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     return res.status(500).json({
