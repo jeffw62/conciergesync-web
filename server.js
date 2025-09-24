@@ -11,6 +11,27 @@ class SeatsAeroService {
     this.baseUrl = "https://seats.aero/partnerapi";
   }
 
+  // Cached availability search (Pro users can use this)
+  async availabilitySearch({ origin, destination, date, cabin }) {
+    const url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Partner-Authorization": this.apiKey,
+        "accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Seats.aero error ${response.status}: ${text}`);
+    }
+
+    return response.json();
+  }
+
+  // Your old liveSearch stays here for later if you ever get access
   async liveSearch({ origin, destination, date, program, passengers = 1 }) {
     const response = await fetch(`${this.baseUrl}/live`, {
       method: "POST",
@@ -23,7 +44,7 @@ class SeatsAeroService {
         origin_airport: origin,
         destination_airport: destination,
         departure_date: date,
-        source: program, // e.g. "united", "delta", "aeroplan"
+        source: program,
         seat_count: passengers,
         disable_filters: false,
         show_dynamic_pricing: false
@@ -49,18 +70,21 @@ app.use('/dev', express.static(path.join(__dirname, 'dev')));
 // --- Redemption route ---
 app.post("/api/redemption", async (req, res) => {
   try {
-    const { origin, destination, date, program, passengers } = req.body;
+    const { origin, destination, date, cabin } = req.body;
 
-    if (!origin || !destination || !date || !program) {
+    if (!origin || !destination || !date || !cabin) {
       return res.status(400).json({
         error: "missing_parameters",
-        message: "Origin, destination, date, and program are required."
+        message: "Origin, destination, date, and cabin are required."
       });
     }
 
-    // Step 2 integration stub: later we’ll replace `program` with user’s profile data
-    // For now, just use the program passed from frontend
-    const results = await seatsService.liveSearch({ origin, destination, date, program, passengers });
+    const results = await seatsService.availabilitySearch({
+      origin,
+      destination,
+      date,
+      cabin: cabin || "economy"
+    });
 
     return res.json({ results });
   } catch (err) {
@@ -72,6 +96,7 @@ app.post("/api/redemption", async (req, res) => {
     });
   }
 });
+
 
 // --- Start server ---
 app.listen(PORT, () => {
