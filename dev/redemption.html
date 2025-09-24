@@ -663,14 +663,14 @@
     data.forEach(r => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td data-label="Route">${r.route}</td>
-        <td data-label="Program">${r.program}</td>
-        <td data-label="Points Needed">${r.points.toLocaleString()}</td>
-        <td data-label="Cash Price">$${r.cashFare.toLocaleString()}</td>
-        <td data-label="Fees">$${r.fees.toLocaleString()}</td>
-        <td data-label="Value (¢/mile)"><strong>${r.cpm}</strong></td>
-        <td data-label=""><button class="btn">Book</button></td>
-      `;
+      <td data-label="Route">${airline}</td>
+      <td data-label="Program">${r.source || "—"}</td>
+      <td data-label="Points Needed">${points ? points.toLocaleString() : "—"}</td>
+      <td data-label="Cash Price">—</td>
+      <td data-label="Fees">${taxes ? "$" + taxes.toLocaleString() : "—"}</td>
+      <td data-label="Value (¢/mile)">—</td>
+      <td data-label=""><button class="btn">Book</button></td>
+    `;
       tbody.appendChild(tr);
     });
   } // ✅ properly closed
@@ -694,9 +694,9 @@
     results.slice(0, 20).forEach(r => {
       // Map Business cabin fields (D)
       const airline = r.DAirlinesRaw || "—";
-      const points = r.DMileageCostRaw || "—";
-      const taxes = r.DTotalTaxesRaw || "—";
-      const seats = r.DRemainingSeatsRaw || "—";
+      const points = r.DMileageCostRaw || null;
+      const taxes = r.DTotalTaxesRaw || null;
+      const seats = r.DRemainingSeatsRaw || null;
     
       // Compute value if you want (for now, leave blank or based on taxes vs miles)
       let cpm = "—";
