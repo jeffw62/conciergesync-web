@@ -86,7 +86,7 @@ app.post("/api/redemption", async (req, res) => {
       cabin: cabin || "economy"
     });
 
-    console.log("➡️ Raw SA response:", JSON.stringify(apiResponse, null, 2));
+   console.log("➡️ Full SA response object:", apiResponse);
 
     
     // 🔄 Revert: just return raw results as-is
