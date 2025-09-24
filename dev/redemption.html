@@ -537,6 +537,7 @@
         <th>Cash Price</th>
         <th>Fees</th>
         <th>Value (¢/mile)</th>
+        <th>Seats Available</th>
         <th></th>
       </tr>
     </thead>
@@ -669,17 +670,28 @@
       <td data-label="Cash Price">—</td>
       <td data-label="Fees">${taxes ? "$" + taxes.toLocaleString() : "—"}</td>
       <td data-label="Value (¢/mile)">—</td>
+      <td data-label="Seats Available">${seats != null ? seats : "—"}</td>
       <td data-label=""><button class="btn">Book</button></td>
     `;
       tbody.appendChild(tr);
     });
   } // ✅ properly closed
 
-  function displayResults(data) {
+  function displayResults(data, selectedCabin) {
     const tbody = document.getElementById("resultsBody");
     tbody.innerHTML = "";
   
-    // Normalize to array
+    // Map fields dynamically by cabin
+    const cabinPrefixMap = {
+      economy: "Y",
+      premium: "J",
+      business: "D",
+      first: "F"
+    };
+  
+    const prefix = cabinPrefixMap[selectedCabin] || "Y"; // fallback to economy
+  
+    // Normalize results
     const results = Array.isArray(data) ? data :
                     Array.isArray(data.results) ? data.results :
                     Array.isArray(data.results?.data) ? data.results.data : [];
@@ -689,30 +701,33 @@
       return;
     }
   
-    console.log("🔎 First SA record:", results[0]); // Debug preview
+    console.log("🔎 First SA record:", results[0]);
   
     results.slice(0, 20).forEach(r => {
-      // Map Business cabin fields (D)
-      const airline = r.DAirlinesRaw || "—";
-      const points  = r.DMileageCostRaw != null ? r.DMileageCostRaw : "—";
-      const taxes   = r.DTotalTaxesRaw != null ? r.DTotalTaxesRaw : "—";
-      const seats   = r.DRemainingSeatsRaw != null ? r.DRemainingSeatsRaw : "—";
-    
-      // Compute value if you want (for now, leave blank or based on taxes vs miles)
+      const airline = r[`${prefix}DirectAirlinesRaw`] || r[`${prefix}AirlinesRaw`] || "—";
+      const points  = r[`${prefix}DirectMileageCostRaw`] || r[`${prefix}MileageCostRaw`] || null;
+      const taxes   = r[`${prefix}DirectTotalTaxesRaw`] || r[`${prefix}TotalTaxesRaw`] || null;
+      const seats   = r[`${prefix}DirectRemainingSeatsRaw`] || r[`${prefix}RemainingSeatsRaw`] || null;
+  
       let cpm = "—";
-      if (typeof points === "number" && typeof taxes === "number") {
+      if (typeof points === "number" && typeof taxes === "number" && points > 0) {
         cpm = ((taxes / points) * 100).toFixed(2);
       }
-    
+  
       const tr = document.createElement("tr");
       tr.innerHTML = `
-      <td data-label="Route">${airline}</td>
-      <td data-label="Program">${r.source || "—"}</td>
-      <td data-label="Points Needed">${points !== "—" ? points.toLocaleString() : "—"}</td>
-      <td data-label="Cash Price">—</td>
-      <td data-label="Fees">${taxes !== "—" ? "$" + taxes.toLocaleString() : "—"}</td>
-      <td data-label="Value (¢/mile)">${cpm}</td>
-      <td data-label=""><button class="btn">Book</button></td>
+        <td data-label="Route">${airline}</td>
+        <td data-label="Program">${r.source || "—"}</td>
+        <td data-label="Points Needed">${points != null ? points.toLocaleString() : "—"}</td>
+        <td data-label="Cash Price">—</td>
+        <td data-label="Fees">${taxes != null ? "$" + taxes.toLocaleString() : "—"}</td>
+        <td data-label="Value (¢/mile)">${cpm}</td>
+        <td data-label=""><button class="btn">Book</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
+
       `;
       tbody.appendChild(tr);
     });
@@ -821,7 +836,7 @@
       })
       .then(data => {
         console.log("✅ Redemption API response:", data);
-        displayResults(data);
+        displayResults(data, cabin);
       })
       .catch(err => {
         console.error("❌ Redemption API error:", err);
