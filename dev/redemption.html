@@ -707,7 +707,7 @@
       const tr = document.createElement("tr");
       tr.innerHTML = `
         <td data-label="Route">${airline}</td>
-        <td data-label="Program">${payload?.program || "—"}</td>
+        <td data-label="Program">${r.source || "—"}</td>
         <td data-label="Points Needed">${points}</td>
         <td data-label="Cash Price">—</td>
         <td data-label="Fees">$${taxes}</td>
