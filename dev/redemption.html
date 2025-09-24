@@ -688,11 +688,14 @@
     results = data;
   } else if (Array.isArray(data.results)) {
     results = data.results;
+  } else if (Array.isArray(data.results.data)) {
+    results = data.results.data;   // 👈 this is the real flights array
   } else {
     console.error("Unexpected API shape:", data);
     tbody.innerHTML = `<tr><td colspan="7">Unexpected response format</td></tr>`;
     return;
   }
+
 
   if (results.length === 0) {
     tbody.innerHTML = `<tr><td colspan="7">No results found</td></tr>`;
