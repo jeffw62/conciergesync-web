@@ -676,59 +676,45 @@
   } // ✅ properly closed
 
   function displayResults(data) {
-  const tbody = document.getElementById("resultsBody");
-  tbody.innerHTML = "";
-  console.log("Full API response:", data);
-  console.log("Type of data.results:", typeof data.results);
-  console.log("Keys in data.results:", Object.keys(data.results));
-
-  // Normalize results shape
-  let results;
-  if (Array.isArray(data)) {
-    results = data;
-  } else if (Array.isArray(data.results)) {
-    results = data.results;
-  } else if (Array.isArray(data.results.data)) {
-    results = data.results.data;   // 👈 this is the real flights array
-  } else {
-    console.error("Unexpected API shape:", data);
-    tbody.innerHTML = `<tr><td colspan="7">Unexpected response format</td></tr>`;
-    return;
-  }
-    // 🔎 Debug: show the first record to confirm field names
-    console.log("🔎 First flight record:", results[0]);
-
-  if (results.length === 0) {
-    tbody.innerHTML = `<tr><td colspan="7">No results found</td></tr>`;
-    return;
-  }
-
-  console.log("🔎 First SA result:", results[0]);
-
-  // Only show first 20 to avoid flooding
-  results.slice(0, 20).forEach(r => {
-    const points = r.PointsPrice || r.miles || null;
-    const cash = r.CashPrice || null;
-    const taxes = r.Taxes || null;
-
-    let cpm = "—";
-    if (points && cash) {
-      cpm = ((cash / points) * 100).toFixed(2);
+    const tbody = document.getElementById("resultsBody");
+    tbody.innerHTML = "";
+  
+    // Normalize to array
+    const results = Array.isArray(data) ? data :
+                    Array.isArray(data.results) ? data.results :
+                    Array.isArray(data.results?.data) ? data.results.data : [];
+  
+    if (results.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7">No results found</td></tr>`;
+      return;
     }
-
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td data-label="Route">${r.OriginAirport || r.origin} → ${r.DestinationAirport || r.destination}</td>
-      <td data-label="Program">${r.Program || r.Source || "—"}</td>
-      <td data-label="Points Needed">${points ? points.toLocaleString() : "—"}</td>
-      <td data-label="Cash Price">${cash ? "$" + cash.toLocaleString() : "—"}</td>
-      <td data-label="Fees">${taxes ? "$" + taxes.toLocaleString() : "—"}</td>
-      <td data-label="Value (¢/mile)">${cpm}</td>
-      <td data-label=""><button class="btn">Book</button></td>
-    `;
-    tbody.appendChild(tr);
-  });
-}
+  
+    console.log("🔎 First SA record:", results[0]); // Debug preview
+  
+    results.slice(0, 20).forEach(r => {
+      const route = `${r.origin_airport || "—"} → ${r.destination_airport || "—"}`;
+      const program = r.source || "—";
+      const points = r.mileage_cost || "—";
+      const fees = r.taxes ? `$${r.taxes}` : "—";
+  
+      let cpm = "—"; // value calculation can come later
+      if (points && r.taxes) {
+        cpm = ((r.taxes / points) * 100).toFixed(2);
+      }
+  
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td data-label="Route">${route}</td>
+        <td data-label="Program">${program}</td>
+        <td data-label="Points Needed">${points}</td>
+        <td data-label="Cash Price">—</td>
+        <td data-label="Fees">${fees}</td>
+        <td data-label="Value (¢/mile)">${cpm}</td>
+        <td data-label=""><button class="btn">Book</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+  }
 
   // --- Airport Autocomplete ---
   let airports = [];
