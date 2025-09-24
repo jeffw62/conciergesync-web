@@ -701,7 +701,7 @@
       return;
     }
   
-    console.log("🔎 First SA record:", results[0]);
+    console.log("First SA record:", results[0]);
   
     results.slice(0, 20).forEach(r => {
       const airline = r[`${prefix}DirectAirlinesRaw`] || r[`${prefix}AirlinesRaw`] || "—";
