@@ -32,6 +32,7 @@ TEST_DATA = {
 # Setup Driver
 # ---------------------------
 options = webdriver.ChromeOptions()
+options.binary_location = r"C:\path\to\chrome-win64\chrome.exe"  # Chrome for Testing
 options.add_argument("--start-maximized")   # open full screen
 driver = webdriver.Chrome(service=Service(), options=options)
 
