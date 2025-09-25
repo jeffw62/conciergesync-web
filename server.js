@@ -4,7 +4,6 @@ const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
-console.log("🔑 SA key on boot:", process.env.SEATSAERO_KEY ? "Loaded" : "Missing");
 // --- Service class for Seats.aero Partner API ---
 class SeatsAeroService {
   constructor(apiKey) {
@@ -15,6 +14,8 @@ class SeatsAeroService {
   // Cached availability search (Pro users can use this)
   async availabilitySearch({ origin, destination, date, cabin }) {
     const url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
+
+    console.log("➡️ SA request URL:", url);
 
     const response = await fetch(url, {
       method: "GET",
@@ -89,8 +90,12 @@ app.post("/api/redemption", async (req, res) => {
 
     console.log("➡️ Full SA response object:", apiResponse);
 
-    // FIX: return apiResponse directly
-    return res.json(apiResponse);
+    // ✅ Always wrap SA response in results so frontend sees it
+    const results = Array.isArray(apiResponse)
+      ? apiResponse
+      : apiResponse.results || apiResponse.data || [];
+
+    return res.json({ results });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     return res.status(500).json({
