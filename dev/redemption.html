@@ -665,7 +665,9 @@
       const tr = document.createElement("tr");
       tr.innerHTML = `
       <td data-label="Route">${airline}</td>
-      <td data-label="Program">${r.Source || "—"}</td>
+      <td data-label="Program">
+        ${r.Source || r.source || (r.Route ? r.Route.Source : "") || "—"}
+      </td>
       <td data-label="Points Needed">${points ? points.toLocaleString() : "—"}</td>
       <td data-label="Cash Price">—</td>
       <td data-label="Fees">${taxes != null ? "$" + (taxes / 100).toFixed(2) : "—"}</td>
