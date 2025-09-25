@@ -12,8 +12,8 @@ class SeatsAeroService {
   }
 
   // Cached availability search (Pro users can use this)
-  async availabilitySearch({ origin, destination, date, cabin, page = 1 }) {
-    const url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}&page=${page}`;
+  async availabilitySearch({ origin, destination, date, cabin }) {
+    const url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
 
     console.log("➡️ SA request URL:", url);
 
@@ -81,27 +81,21 @@ app.post("/api/redemption", async (req, res) => {
       });
     }
 
-    let page = 1;
-    let allResults = [];
+    const apiResponse = await seatsService.availabilitySearch({
+      origin,
+      destination,
+      date,
+      cabin: cabin || "economy"
+    });
 
-    while (true) {
-      const data = await seatsService.availabilitySearch({
-        origin,
-        destination,
-        date,
-        cabin: cabin || "economy",
-        page
-      });
+    console.log("➡️ Full SA response object:", apiResponse);
 
-      if (!data.results || data.results.length === 0) break;
+    // ✅ Always wrap SA response in results so frontend sees it
+    const results = Array.isArray(apiResponse)
+      ? apiResponse
+      : apiResponse.results || apiResponse.data || [];
 
-      allResults = allResults.concat(data.results);
-      page++;
-    }
-
-    console.log(`➡️ Pulled ${allResults.length} results across ${page - 1} pages`);
-    return res.json({ results: allResults });
-
+    return res.json({ results });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     return res.status(500).json({
