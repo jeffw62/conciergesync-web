@@ -12,8 +12,8 @@ class SeatsAeroService {
   }
 
   // Cached availability search (Pro users can use this)
-  async availabilitySearch({ origin, destination, date, cabin }) {
-    const url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
+  async availabilitySearch({ origin, destination, date, cabin, page = 1 }) {
+    const url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}&page=${page}`;
 
     console.log("➡️ SA request URL:", url);
 
@@ -81,19 +81,9 @@ app.post("/api/redemption", async (req, res) => {
       });
     }
 
-    const apiResponse = await seatsService.availabilitySearch({
-      origin,
-      destination,
-      date,
-      cabin: cabin || "economy"
-    });
-
-    console.log("➡️ Full SA response object:", apiResponse);
-
-    // ✅ Always wrap SA response in results so frontend sees it
     let page = 1;
     let allResults = [];
-    
+
     while (true) {
       const data = await seatsService.availabilitySearch({
         origin,
@@ -102,13 +92,13 @@ app.post("/api/redemption", async (req, res) => {
         cabin: cabin || "economy",
         page
       });
-    
+
       if (!data.results || data.results.length === 0) break;
-    
+
       allResults = allResults.concat(data.results);
       page++;
     }
-    
+
     console.log(`➡️ Pulled ${allResults.length} results across ${page - 1} pages`);
     return res.json({ results: allResults });
 
