@@ -91,11 +91,34 @@ app.post("/api/redemption", async (req, res) => {
     console.log("➡️ Full SA response object:", apiResponse);
 
     // ✅ Always wrap SA response in results so frontend sees it
-    const results = Array.isArray(apiResponse)
-      ? apiResponse
-      : apiResponse.results || apiResponse.data || [];
+    let page = 1;
+    let allResults = [];
+    
+    while (true) {
+      const response = await fetch(
+        `${seatsService.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}&page=${page}`,
+        {
+          headers: {
+            "Partner-Authorization": process.env.SEATSAERO_KEY,
+            "accept": "application/json"
+          }
+        }
+      );
+    
+      if (!response.ok) {
+        throw new Error(`Seats.aero API error: ${response.status}`);
+      }
+    
+      const data = await response.json();
+      if (!data.results || data.results.length === 0) break;
+    
+      allResults = allResults.concat(data.results);
+      page++;
+    }
+    
+    console.log(`➡️ Pulled ${allResults.length} results across ${page - 1} pages`);
+    return res.json({ results: allResults });
 
-    return res.json({ results });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     return res.status(500).json({
