@@ -95,21 +95,14 @@ app.post("/api/redemption", async (req, res) => {
     let allResults = [];
     
     while (true) {
-      const response = await fetch(
-        `${seatsService.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}&page=${page}`,
-        {
-          headers: {
-            "Partner-Authorization": process.env.SEATSAERO_KEY,
-            "accept": "application/json"
-          }
-        }
-      );
+      const data = await seatsService.availabilitySearch({
+        origin,
+        destination,
+        date,
+        cabin: cabin || "economy",
+        page
+      });
     
-      if (!response.ok) {
-        throw new Error(`Seats.aero API error: ${response.status}`);
-      }
-    
-      const data = await response.json();
       if (!data.results || data.results.length === 0) break;
     
       allResults = allResults.concat(data.results);
