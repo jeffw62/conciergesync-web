@@ -704,6 +704,7 @@
     console.log("First SA record:", results[0]);
   
     results.slice(0, 20).forEach(r => {
+      console.log("Row record:", r);  // 👈 add this line
       const airline = r[`${prefix}DirectAirlinesRaw`] || r[`${prefix}AirlinesRaw`] || "—";
       const points  = r[`${prefix}DirectMileageCostRaw`] || r[`${prefix}MileageCostRaw`] || null;
       const taxes   = r[`${prefix}DirectTotalTaxesRaw`] || r[`${prefix}TotalTaxesRaw`] || null;
