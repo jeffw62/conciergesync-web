@@ -531,7 +531,7 @@
   <table>
     <thead>
       <tr>
-        <th>Route</th>
+        <th>Airlines</th>
         <th>Program</th>
         <th>Points Needed</th>
         <th>Cash Price</th>
@@ -665,10 +665,10 @@
       const tr = document.createElement("tr");
       tr.innerHTML = `
       <td data-label="Route">${airline}</td>
-      <td data-label="Program">${r.source || "—"}</td>
+      <td data-label="Program">${r.Source || "—"}</td>
       <td data-label="Points Needed">${points ? points.toLocaleString() : "—"}</td>
       <td data-label="Cash Price">—</td>
-      <td data-label="Fees">${taxes ? "$" + taxes.toLocaleString() : "—"}</td>
+      <td data-label="Fees">${taxes != null ? "$" + (taxes / 100).toFixed(2) : "—"}</td>
       <td data-label="Value (¢/mile)">—</td>
       <td data-label="Seats Available">${seats != null ? seats : "—"}</td>
       <td data-label=""><button class="btn">Book</button></td>
