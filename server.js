@@ -87,11 +87,10 @@ app.post("/api/redemption", async (req, res) => {
       cabin: cabin || "economy"
     });
 
-   console.log("➡️ Full SA response object:", apiResponse);
-   console.log("➡️ Using SA key:", process.env.SEATSAERO_KEY ? "Loaded" : "Missing");
-    
-    // 🔄 Revert: just return raw results as-is
-    return res.json({ results: apiResponse.results });
+    console.log("➡️ Full SA response object:", apiResponse);
+
+    // FIX: return apiResponse directly
+    return res.json(apiResponse);
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     return res.status(500).json({
