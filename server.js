@@ -67,9 +67,35 @@ class SeatsAeroService {
 // Initialize service
 const seatsService = new SeatsAeroService(process.env.SEATSAERO_KEY);
 
+// --- ARE YOU OUT OF YOUR MIND filter ---
+function applySanityFilter(results) {
+  return results.filter(r => {
+    const miles = parseInt(
+      r.YMileageCost || r.JMileageCost || r.FMileageCost || 0,
+      10
+    );
+    const distance = r.Route?.Distance || 0;
+    const fees = r.TotalTaxes ? r.TotalTaxes / 100 : 0;
+
+    // 1. Mileage sanity
+    if (miles < 20000 || miles > 250000) return false;
+
+    // 2. Distance vs. miles sanity
+    if (distance > 0) {
+      const ratio = miles / distance;
+      if (ratio < 3 || ratio > 20) return false;
+    }
+
+    // 3. Fees sanity for long-haul
+    if (distance > 3000 && fees < 20) return false;
+
+    return true;
+  });
+}
+
 // --- Serve static files ---
 app.use(express.static(path.join(__dirname)));
-app.use('/dev', express.static(path.join(__dirname, 'dev')));
+app.use("/dev", express.static(path.join(__dirname, "dev")));
 
 // --- Redemption route (frontend calls this) ---
 app.post("/api/redemption", async (req, res) => {
@@ -83,6 +109,7 @@ app.post("/api/redemption", async (req, res) => {
       });
     }
 
+    // Call SA
     const apiResponse = await seatsService.searchFlights({
       origin,
       destination,
@@ -90,7 +117,16 @@ app.post("/api/redemption", async (req, res) => {
       endDate
     });
 
-    return res.json(apiResponse);
+    // Apply sanity filter
+    const filtered = applySanityFilter(apiResponse.data || []);
+
+    console.log(
+      `➡️ Filtered results: ${filtered.length} of ${
+        apiResponse.data?.length || 0
+      }`
+    );
+
+    return res.json({ data: filtered });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     return res.status(500).json({
@@ -101,7 +137,7 @@ app.post("/api/redemption", async (req, res) => {
   }
 });
 
-// --- Bulk test route (optional, might still be restricted) ---
+// --- Bulk test route (optional, may still be restricted) ---
 app.get("/api/redemption/testBulk", async (req, res) => {
   try {
     const url = `${seatsService.baseUrl}/bulk-availability?sources=aeroplan&region=NorthAmerica-Europe&month=2025-10`;
