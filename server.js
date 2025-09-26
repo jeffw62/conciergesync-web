@@ -13,56 +13,55 @@ class SeatsAeroService {
 
   /// Cached availability search (Pro users can use this)
     async availabilitySearch({ origin, destination, date, cabin, program }) {
-    let url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
-  
-    if (program) {
-      url += `&sources=${program}`;
-    }
-  
-    console.log("➡️ SA base request URL:", url);
-  
-    let allResults = [];
-    let cursor = null;
-    let skip = 0;
-    let keepGoing = true;
-  
-    while (keepGoing) {
-      let pageUrl = url;
-      if (cursor) {
-        pageUrl += `&skip=${skip}&cursor=${cursor}`;
-      }
-  
-      console.log("➡️ Fetching:", pageUrl);
-  
-      const response = await fetch(pageUrl, {
-        method: "GET",
-        headers: {
-          "Partner-Authorization": this.apiKey,
-          "accept": "application/json"
-        }
-      });
-  
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Seats.aero error ${response.status}: ${text}`);
-      }
-  
-      const data = await response.json();
-      const results = Array.isArray(data.results) ? data.results : data.data || [];
-  
-      if (results.length > 0) {
-        allResults = allResults.concat(results);
-        cursor = data.cursor;
-        skip += results.length;
-      } else {
-        keepGoing = false; // no more pages
-      }
-    }
-  
-    return { results: allResults };
+  let url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
+
+  if (program) {
+    url += `&sources=${program}`;
   }
 
+  console.log("➡️ SA base request URL:", url);
 
+  let allResults = [];
+  let cursor = null;
+  let skip = 0;
+  let keepGoing = true;
+
+  while (keepGoing) {
+    let pageUrl = url;
+    if (cursor) {
+      pageUrl += `&skip=${skip}&cursor=${cursor}`;
+    }
+
+    console.log("➡️ Fetching:", pageUrl);
+
+    const response = await fetch(pageUrl, {
+      method: "GET",
+      headers: {
+        "Partner-Authorization": this.apiKey,
+        "accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Seats.aero error ${response.status}: ${text}`);
+    }
+
+    const data = await response.json();
+    const results = Array.isArray(data.results) ? data.results : [];
+
+    if (results.length > 0) {
+      allResults = allResults.concat(results);
+      cursor = data.cursor;
+      skip += results.length;
+    } else {
+      keepGoing = false;
+    }
+  }
+
+  console.log(`➡️ Total results pulled: ${allResults.length}`);
+  return { results: allResults };
+}
 
   // Your old liveSearch stays here for later if you ever get access
   async liveSearch({ origin, destination, date, program, passengers = 1 }) {
