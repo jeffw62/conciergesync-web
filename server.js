@@ -75,41 +75,42 @@ app.use(express.static(path.join(__dirname)));
 app.use('/dev', express.static(path.join(__dirname, 'dev')));
 
 // --- Redemption route ---
-app.post("/api/redemption", async (req, res) => {
-  try {
-    const { origin, destination, date, cabin } = req.body;
-
-    if (!origin || !destination || !date || !cabin) {
-      return res.status(400).json({
-        error: "missing_parameters",
-        message: "Origin, destination, date, and cabin are required."
+  app.post("/api/redemption", async (req, res) => {
+    try {
+      const { origin, destination, date, cabin, program } = req.body;
+  
+      if (!origin || !destination || !date || !cabin) {
+        return res.status(400).json({
+          error: "missing_parameters",
+          message: "Origin, destination, date, and cabin are required."
+        });
+      }
+  
+      const apiResponse = await seatsService.availabilitySearch({
+        origin,
+        destination,
+        date,
+        cabin: cabin || "economy",
+        program // 👈 forward program selection
+      });
+  
+      console.log("➡️ Full SA response object:", apiResponse);
+  
+      const results = Array.isArray(apiResponse)
+        ? apiResponse
+        : apiResponse.results || apiResponse.data || [];
+  
+      return res.json({ results });
+    } catch (err) {
+      console.error("❌ Redemption API error:", err);
+      return res.status(500).json({
+        error: "server_error",
+        message: err.message,
+        stack: err.stack
       });
     }
+  });
 
-    const apiResponse = await seatsService.availabilitySearch({
-      origin,
-      destination,
-      date,
-      cabin: cabin || "economy"
-    });
-
-    console.log("➡️ Full SA response object:", apiResponse);
-
-    // ✅ Always wrap SA response in results so frontend sees it
-    const results = Array.isArray(apiResponse)
-      ? apiResponse
-      : apiResponse.results || apiResponse.data || [];
-
-    return res.json({ results });
-  } catch (err) {
-    console.error("❌ Redemption API error:", err);
-    return res.status(500).json({
-      error: "server_error",
-      message: err.message,
-      stack: err.stack
-    });
-  }
-});
 
 // --- Start server ---
 app.listen(PORT, () => {
