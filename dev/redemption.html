@@ -705,7 +705,7 @@
   
     console.log("First SA record:", results[0]);
   
-    results.slice(0, 20).forEach(r => {
+    results.forEach(r => {
       console.log("Program field check:", r.Source, r.source, r);
 
       const airline = r[`${prefix}DirectAirlinesRaw`] || r[`${prefix}AirlinesRaw`] || "—";
