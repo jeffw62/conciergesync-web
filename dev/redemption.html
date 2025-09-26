@@ -786,24 +786,38 @@
   setupAutocomplete('destination', 'destination-suggestions');
 
   // --- Seats.aero API Hook ---
-    document.querySelector('.search-btn').addEventListener('click', () => {
+  document.querySelector('.search-btn').addEventListener('click', () => {
     const origin = document.getElementById('origin').value.trim().toUpperCase();
     const destination = document.getElementById('destination').value.trim().toUpperCase();
-    const date = document.getElementById('departDate').value;
+    const departDate = document.getElementById('departDate').value;
     const passengers = document.getElementById('passengers').value;
-  
-    // cabin will be "economy", "premium_economy", "business", or "first"
     const cabin = document.getElementById('cabin').value;
   
     const flexMode = document.getElementById('flexBtn').classList.contains('active') ? 'flexible' : 'exact';
-    const flexDays = document.getElementById('flexDays').value;
+    const flexDays = parseInt(document.getElementById('flexDays').value, 10);
     const directPref = document.querySelector('#directStop .active')?.dataset.val;
     const multiPref = document.querySelector('#multiConn .active')?.dataset.val;
     const positioning = document.querySelector('#posFlight .active')?.dataset.val;
   
-    if (!origin || !destination || !date) {
+    if (!origin || !destination || !departDate) {
       alert("Please complete origin, destination, and date.");
       return;
+    }
+  
+    // Compute startDate and endDate
+    let startDate = departDate;
+    let endDate = departDate;
+  
+    if (flexMode === 'flexible') {
+      const baseDate = new Date(departDate);
+  
+      const start = new Date(baseDate);
+      start.setDate(start.getDate() - flexDays);
+      startDate = start.toISOString().split("T")[0];
+  
+      const end = new Date(baseDate);
+      end.setDate(end.getDate() + flexDays);
+      endDate = end.toISOString().split("T")[0];
     }
   
     const program = document.getElementById("program").value;
@@ -811,9 +825,10 @@
     const payload = {
       origin,
       destination,
-      date,
+      startDate,
+      endDate,
       passengers,
-      cabin,     // stays as "economy", "business", etc.
+      cabin,       // stays as "economy", "business", etc.
       flexMode,
       flexDays,
       routing: {
@@ -824,22 +839,26 @@
       program
     };
   
-    console.log("Search payload:", payload);
+    console.log("➡️ Payload being sent:", payload);
   
     fetch("/api/redemption", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
     })
-    .then(res => res.json())
-    .then(data => {
-      console.log("✅ Redemption API response:", data);
-      displayResults(data, cabin);
-    })
-    .catch(err => {
-      console.error("❌ Redemption API error:", err);
-    });
+      .then(res => {
+        if (!res.ok) throw new Error(`Backend error: ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        console.log("✅ Redemption API response:", data);
+        displayResults(data, cabin);
+      })
+      .catch(err => {
+        console.error("❌ Redemption API error:", err);
+      });
   });
+
 
 </script>
 
