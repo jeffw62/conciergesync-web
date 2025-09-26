@@ -100,40 +100,38 @@ app.use('/dev', express.static(path.join(__dirname, 'dev')));
 
 // --- Redemption route ---
   // --- Bulk Availability test route ---
-  // --- Redemption route (frontend calls this) ---
-app.get("/api/redemption/testBulk", async (req, res) => {
-  try {
-    const url = `${seatsService.baseUrl}/bulk-availability?sources=aeroplan&month=2025-10`;
-
-    console.log("➡️ SA Bulk request URL:", url);
-
-    const response = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Partner-Authorization": seatsService.apiKey,
-        "accept": "application/json"
+  app.get("/api/redemption/testBulk", async (req, res) => {
+    try {
+      // hard-coded example: Aeroplan, North America to Europe, October 2025
+      const url = `${seatsService.baseUrl}/bulk-availability?sources=aeroplan&region=NorthAmerica-Europe&month=2025-10`;
+  
+      console.log("➡️ SA Bulk request URL:", url);
+  
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Partner-Authorization": seatsService.apiKey,
+          "accept": "application/json"
+        }
+      });
+  
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Seats.aero error ${response.status}: ${text}`);
       }
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`Seats.aero error ${response.status}: ${text}`);
+  
+      const data = await response.json();
+      console.log("➡️ SA Bulk response sample:", JSON.stringify(data).slice(0, 500));
+  
+      return res.json(data);
+    } catch (err) {
+      console.error("❌ Bulk API error:", err);
+      return res.status(500).json({
+        error: "server_error",
+        message: err.message
+      });
     }
-
-    const data = await response.json();
-    console.log("➡️ SA Bulk response sample:", data);
-
-    return res.json(data);
-  } catch (err) {
-    console.error("❌ Bulk API error:", err);
-    return res.status(500).json({
-      error: "server_error",
-      message: err.message
-    });
-  }
-});
-
-
+  });
 // --- Start server ---
 app.listen(PORT, () => {
   console.log(`ConciergeSync Web running on port ${PORT}`);
