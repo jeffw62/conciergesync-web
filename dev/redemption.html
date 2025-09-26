@@ -679,7 +679,33 @@
     });
   } // ✅ properly closed
 
-  function displayResults(data, selectedCabin) {
+    // ARE YOU OUT OF YOUR MIND filter
+    function applySanityFilter(results) {
+      return results.filter(r => {
+        const miles = parseInt(
+          r.YMileageCost || r.JMileageCost || r.FMileageCost || 0,
+          10
+        );
+        const distance = r.Route?.Distance || 0;
+        const fees = r.TotalTaxes ? r.TotalTaxes / 100 : 0;
+    
+        // 1. Mileage sanity
+        if (miles < 20000 || miles > 250000) return false;
+    
+        // 2. Distance vs. miles sanity
+        if (distance > 0) {
+          const ratio = miles / distance;
+          if (ratio < 3 || ratio > 20) return false;
+        }
+    
+        // 3. Fees sanity for long-haul
+        if (distance > 3000 && fees < 20) return false;
+    
+        return true;
+      });
+    }
+
+    function displayResults(data, selectedCabin) {
     const tbody = document.getElementById("resultsBody");
     tbody.innerHTML = "";
   
@@ -705,7 +731,7 @@
   
     console.log("First SA record:", results[0]);
   
-    results.forEach(r => {
+    applySanityFilter(results).forEach(r => {
       console.log("Program field check:", r.Source, r.source, r);
 
       const airline = r[`${prefix}DirectAirlinesRaw`] || r[`${prefix}AirlinesRaw`] || "—";
