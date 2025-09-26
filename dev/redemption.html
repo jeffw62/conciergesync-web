@@ -686,7 +686,7 @@
     // Map fields dynamically by cabin
     const cabinPrefixMap = {
       economy: "Y",
-      premium: "W",
+      premium_economy: "W",
       business: "J",
       first: "F"
     };
@@ -786,19 +786,15 @@
   setupAutocomplete('destination', 'destination-suggestions');
 
   // --- Seats.aero API Hook ---
-  document.querySelector('.search-btn').addEventListener('click', () => {
+    document.querySelector('.search-btn').addEventListener('click', () => {
     const origin = document.getElementById('origin').value.trim().toUpperCase();
     const destination = document.getElementById('destination').value.trim().toUpperCase();
     const date = document.getElementById('departDate').value;
     const passengers = document.getElementById('passengers').value;
-          const outboundCabinMap = {
-            economy: "Y",
-            premium_economy: "W",
-            business: "J",
-            first: "F"
-          };
-      const cabinRaw = document.getElementById('cabin').value;
-      const cabin = outboundCabinMap[cabinRaw] || "Y"; // ✅ default to Y
+  
+    // cabin will be "economy", "premium_economy", "business", or "first"
+    const cabin = document.getElementById('cabin').value;
+  
     const flexMode = document.getElementById('flexBtn').classList.contains('active') ? 'flexible' : 'exact';
     const flexDays = document.getElementById('flexDays').value;
     const directPref = document.querySelector('#directStop .active')?.dataset.val;
@@ -811,13 +807,13 @@
     }
   
     const program = document.getElementById("program").value;
-
+  
     const payload = {
       origin,
       destination,
       date,
       passengers,
-      cabin,
+      cabin,     // stays as "economy", "business", etc.
       flexMode,
       flexDays,
       routing: {
@@ -825,29 +821,26 @@
         multi: multiPref,
         positioning
       },
-      program  // 👈 new field added here
+      program
     };
-    
+  
     console.log("Search payload:", payload);
-
-    // For now send to our backend API
+  
     fetch("/api/redemption", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload),
-      })
-      .then(res => {
-        if (!res.ok) throw new Error(`Backend error: ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        console.log("✅ Redemption API response:", data);
-        displayResults(data, cabin);
-      })
-      .catch(err => {
-        console.error("❌ Redemption API error:", err);
-      });
+    })
+    .then(res => res.json())
+    .then(data => {
+      console.log("✅ Redemption API response:", data);
+      displayResults(data, cabin);
+    })
+    .catch(err => {
+      console.error("❌ Redemption API error:", err);
+    });
   });
+
 </script>
 
 </body>
