@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html>
-  <body>
-    <a href="https://www.aa.com/booking/search/find-flights" target="_blank">
+  <head>
+    <title>AA Advanced Search Test</title>
+  </head>
+  <body style="display:flex;justify-content:center;align-items:center;height:100vh;background:#f4f4f4;">
+    <button onclick="window.open('https://www.aa.com/booking/search/find-flights','_blank')"
+            style="padding:15px 30px;font-size:18px;background:#0078d2;color:white;border:none;border-radius:6px;cursor:pointer;">
       Open AA Advanced Search
-    </a>
+    </button>
   </body>
 </html>
