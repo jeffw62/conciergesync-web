@@ -11,12 +11,17 @@ class SeatsAeroService {
     this.baseUrl = "https://seats.aero/partnerapi";
   }
 
-  // Cached availability search (Pro users can use this)
-  async availabilitySearch({ origin, destination, date, cabin }) {
-    const url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
-
+  /// Cached availability search (Pro users can use this)
+  async availabilitySearch({ origin, destination, date, cabin, program }) {
+    let url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
+  
+    // 👇 Add program filter if provided
+    if (program) {
+      url += `&sources=${program}`;
+    }
+  
     console.log("➡️ SA request URL:", url);
-
+  
     const response = await fetch(url, {
       method: "GET",
       headers: {
@@ -24,12 +29,12 @@ class SeatsAeroService {
         "accept": "application/json"
       }
     });
-
+  
     if (!response.ok) {
       const text = await response.text();
       throw new Error(`Seats.aero error ${response.status}: ${text}`);
     }
-
+  
     return response.json();
   }
 
