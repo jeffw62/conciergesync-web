@@ -99,32 +99,39 @@ app.use(express.static(path.join(__dirname)));
 app.use('/dev', express.static(path.join(__dirname, 'dev')));
 
 // --- Redemption route ---
-app.post("/api/redemption", async (req, res) => {
-  try {
-    // 🔧 TEMP: hard-coded known-good test
-    const apiResponse = await seatsService.availabilitySearch({
-      origin: "YYZ",
-      destination: "LHR",
-      date: "2025-10-20",
-      program: "aeroplan"
-    });
+  // --- Bulk Availability test route ---
+  app.get("/api/redemption/testBulk", async (req, res) => {
+    try {
+      const url = `${seatsService.baseUrl}/bulk-availability?sources=aeroplan&month=2025-10`;
+  
+      console.log("➡️ SA Bulk request URL:", url);
+  
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          "Partner-Authorization": seatsService.apiKey,
+          "accept": "application/json"
+        }
+      });
+  
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Seats.aero error ${response.status}: ${text}`);
+      }
+  
+      const data = await response.json();
+      console.log("➡️ SA Bulk response sample:", data);
+  
+      return res.json(data);
+    } catch (err) {
+      console.error("❌ Bulk API error:", err);
+      return res.status(500).json({
+        error: "server_error",
+        message: err.message
+      });
+    }
+  });
 
-    console.log("➡️ Full SA response object:", apiResponse);
-
-    const results = Array.isArray(apiResponse)
-      ? apiResponse
-      : apiResponse.results || apiResponse.data || [];
-
-    return res.json({ results });
-  } catch (err) {
-    console.error("❌ Redemption API error:", err);
-    return res.status(500).json({
-      error: "server_error",
-      message: err.message,
-      stack: err.stack
-    });
-  }
-});
 
 // --- Start server ---
 app.listen(PORT, () => {
