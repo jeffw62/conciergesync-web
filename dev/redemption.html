@@ -686,8 +686,8 @@
     // Map fields dynamically by cabin
     const cabinPrefixMap = {
       economy: "Y",
-      premium: "J",
-      business: "D",
+      premium: "W",
+      business: "J",
       first: "F"
     };
   
@@ -791,7 +791,14 @@
     const destination = document.getElementById('destination').value.trim().toUpperCase();
     const date = document.getElementById('departDate').value;
     const passengers = document.getElementById('passengers').value;
-    const cabin = document.getElementById('cabin').value;
+          const outboundCabinMap = {
+            economy: "Y",
+            premium_economy: "W",
+            business: "J",
+            first: "F"
+          };
+      const cabinRaw = document.getElementById('cabin').value;
+      const cabin = outboundCabinMap[cabinRaw] || "Y"; // ✅ default to Y
     const flexMode = document.getElementById('flexBtn').classList.contains('active') ? 'flexible' : 'exact';
     const flexDays = document.getElementById('flexDays').value;
     const directPref = document.querySelector('#directStop .active')?.dataset.val;
