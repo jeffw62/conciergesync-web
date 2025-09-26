@@ -13,7 +13,7 @@ class SeatsAeroService {
 
   /// Cached availability search (Pro users can use this)
     async availabilitySearch({ origin, destination, date, cabin, program }) {
-  let url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
+  let url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}`;
 
   if (program) {
     url += `&sources=${program}`;
