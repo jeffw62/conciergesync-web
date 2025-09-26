@@ -11,55 +11,28 @@ class SeatsAeroService {
     this.baseUrl = "https://seats.aero/partnerapi";
   }
 
-  /// Cached availability search
-  async availabilitySearch({ origin, destination, date, program }) {
-    let url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}`;
-    if (program) {
-      url += `&sources=${program}`;
+  /// Flight search using /search endpoint
+  async searchFlights({ origin, destination, startDate, endDate, take = 500 }) {
+    let url = `${this.baseUrl}/search?origin_airport=${origin}&destination_airport=${destination}&start_date=${startDate}&end_date=${endDate}&take=${take}&include_trips=false&only_direct_flights=false&include_filtered=false`;
+
+    console.log("➡️ SA search request URL:", url);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Partner-Authorization": this.apiKey,
+        "accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Seats.aero error ${response.status}: ${text}`);
     }
 
-    console.log("➡️ SA base request URL:", url);
-
-    let allResults = [];
-    let cursor = null;
-    let skip = 0;
-    let keepGoing = true;
-
-    while (keepGoing) {
-      let pageUrl = url;
-      if (cursor) {
-        pageUrl += `&skip=${skip}&cursor=${cursor}`;
-      }
-
-      console.log("➡️ Fetching:", pageUrl);
-
-      const response = await fetch(pageUrl, {
-        method: "GET",
-        headers: {
-          "Partner-Authorization": this.apiKey,
-          "accept": "application/json"
-        }
-      });
-
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Seats.aero error ${response.status}: ${text}`);
-      }
-
-      const data = await response.json();
-      const results = Array.isArray(data.results) ? data.results : [];
-
-      if (results.length > 0) {
-        allResults = allResults.concat(results);
-        cursor = data.cursor;
-        skip += results.length;
-      } else {
-        keepGoing = false;
-      }
-    }
-
-    console.log(`➡️ Total results pulled: ${allResults.length}`);
-    return { results: allResults };
+    const data = await response.json();
+    console.log(`➡️ SA returned ${data.data?.length || 0} records`);
+    return data; // { data: [ AvailabilityObjects... ] }
   }
 
   // Live search (unused for now)
@@ -98,40 +71,66 @@ const seatsService = new SeatsAeroService(process.env.SEATSAERO_KEY);
 app.use(express.static(path.join(__dirname)));
 app.use('/dev', express.static(path.join(__dirname, 'dev')));
 
-// --- Redemption route ---
-  // --- Bulk Availability test route ---
-  app.get("/api/redemption/testBulk", async (req, res) => {
-    try {
-      // hard-coded example: Aeroplan, North America to Europe, October 2025
-      const url = `${seatsService.baseUrl}/bulk-availability?sources=aeroplan&region=NorthAmerica-Europe&month=2025-10`;
-  
-      console.log("➡️ SA Bulk request URL:", url);
-  
-      const response = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Partner-Authorization": seatsService.apiKey,
-          "accept": "application/json"
-        }
-      });
-  
-      if (!response.ok) {
-        const text = await response.text();
-        throw new Error(`Seats.aero error ${response.status}: ${text}`);
-      }
-  
-      const data = await response.json();
-      console.log("➡️ SA Bulk response sample:", JSON.stringify(data).slice(0, 500));
-  
-      return res.json(data);
-    } catch (err) {
-      console.error("❌ Bulk API error:", err);
-      return res.status(500).json({
-        error: "server_error",
-        message: err.message
+// --- Redemption route (frontend calls this) ---
+app.post("/api/redemption", async (req, res) => {
+  try {
+    const { origin, destination, startDate, endDate } = req.body;
+
+    if (!origin || !destination || !startDate || !endDate) {
+      return res.status(400).json({
+        error: "missing_parameters",
+        message: "Origin, destination, startDate, and endDate are required."
       });
     }
-  });
+
+    const apiResponse = await seatsService.searchFlights({
+      origin,
+      destination,
+      startDate,
+      endDate
+    });
+
+    return res.json(apiResponse);
+  } catch (err) {
+    console.error("❌ Redemption API error:", err);
+    return res.status(500).json({
+      error: "server_error",
+      message: err.message,
+      stack: err.stack
+    });
+  }
+});
+
+// --- Bulk test route (optional, might still be restricted) ---
+app.get("/api/redemption/testBulk", async (req, res) => {
+  try {
+    const url = `${seatsService.baseUrl}/bulk-availability?sources=aeroplan&region=NorthAmerica-Europe&month=2025-10`;
+    console.log("➡️ SA Bulk request URL:", url);
+
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Partner-Authorization": seatsService.apiKey,
+        "accept": "application/json"
+      }
+    });
+
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Seats.aero error ${response.status}: ${text}`);
+    }
+
+    const data = await response.json();
+    return res.json(data);
+  } catch (err) {
+    console.error("❌ Bulk API error:", err);
+    return res.status(500).json({
+      error: "server_error",
+      message: err.message
+    });
+  }
+});
+
 // --- Start server ---
 app.listen(PORT, () => {
   console.log(`ConciergeSync Web running on port ${PORT}`);
