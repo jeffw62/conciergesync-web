@@ -112,12 +112,12 @@ app.use('/dev', express.static(path.join(__dirname, 'dev')));
       }
   
       const apiResponse = await seatsService.availabilitySearch({
-        origin,
-        destination,
-        date,
-        cabin: cabin || "economy",
-        program // 👈 forward program selection
-      });
+      origin: "DFW",
+      destination: "LHR",
+      date: "2025-10-15",
+      cabin: "Y",         // economy as single letter
+      program: "aeroplan" // known-good program
+    });
   
       console.log("➡️ Full SA response object:", apiResponse);
   
