@@ -101,38 +101,34 @@ app.use('/dev', express.static(path.join(__dirname, 'dev')));
 // --- Redemption route ---
   // --- Bulk Availability test route ---
   // --- Redemption route (frontend calls this) ---
-app.post("/api/redemption", async (req, res) => {
+app.get("/api/redemption/testBulk", async (req, res) => {
   try {
-    const { origin, destination, date, cabin, program } = req.body;
+    const url = `${seatsService.baseUrl}/bulk-availability?sources=aeroplan&month=2025-10`;
 
-    if (!origin || !destination || !date || !cabin) {
-      return res.status(400).json({
-        error: "missing_parameters",
-        message: "Origin, destination, date, and cabin are required."
-      });
-    }
+    console.log("➡️ SA Bulk request URL:", url);
 
-    // For now, just echo back the request (or wire to availabilitySearch)
-    const apiResponse = await seatsService.availabilitySearch({
-      origin,
-      destination,
-      date,
-      program
+    const response = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Partner-Authorization": seatsService.apiKey,
+        "accept": "application/json"
+      }
     });
 
-    console.log("➡️ Full SA response object:", apiResponse);
+    if (!response.ok) {
+      const text = await response.text();
+      throw new Error(`Seats.aero error ${response.status}: ${text}`);
+    }
 
-    const results = Array.isArray(apiResponse)
-      ? apiResponse
-      : apiResponse.results || apiResponse.data || [];
+    const data = await response.json();
+    console.log("➡️ SA Bulk response sample:", data);
 
-    return res.json({ results });
+    return res.json(data);
   } catch (err) {
-    console.error("❌ Redemption API error:", err);
+    console.error("❌ Bulk API error:", err);
     return res.status(500).json({
       error: "server_error",
-      message: err.message,
-      stack: err.stack
+      message: err.message
     });
   }
 });
