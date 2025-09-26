@@ -12,37 +12,29 @@ class SeatsAeroService {
   }
 
   /// Cached availability search (Pro users can use this)
-  async availabilitySearch({ origin, destination, date, cabin, program }) {
+    async availabilitySearch({ origin, destination, date, cabin, program }) {
     let url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}&cabin=${cabin}`;
   
     if (program) {
       url += `&sources=${program}`;
     }
   
-    console.log("➡️ SA request URL:", url);
+    console.log("➡️ SA base request URL:", url);
   
-    const response1 = await fetch(url, {
-      method: "GET",
-      headers: {
-        "Partner-Authorization": this.apiKey,
-        "accept": "application/json"
+    let allResults = [];
+    let cursor = null;
+    let skip = 0;
+    let keepGoing = true;
+  
+    while (keepGoing) {
+      let pageUrl = url;
+      if (cursor) {
+        pageUrl += `&skip=${skip}&cursor=${cursor}`;
       }
-    });
   
-    if (!response1.ok) {
-      const text = await response1.text();
-      throw new Error(`Seats.aero error ${response1.status}: ${text}`);
-    }
+      console.log("➡️ Fetching:", pageUrl);
   
-    const data1 = await response1.json();
-  
-    // If there’s a cursor, pull the next page too
-    let allResults = Array.isArray(data1.results) ? data1.results : data1.data || [];
-    if (data1.cursor) {
-      const url2 = `${url}&skip=20&cursor=${data1.cursor}`;
-      console.log("➡️ SA pagination URL:", url2);
-  
-      const response2 = await fetch(url2, {
+      const response = await fetch(pageUrl, {
         method: "GET",
         headers: {
           "Partner-Authorization": this.apiKey,
@@ -50,15 +42,26 @@ class SeatsAeroService {
         }
       });
   
-      if (response2.ok) {
-        const data2 = await response2.json();
-        const page2 = Array.isArray(data2.results) ? data2.results : data2.data || [];
-        allResults = allResults.concat(page2);
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Seats.aero error ${response.status}: ${text}`);
+      }
+  
+      const data = await response.json();
+      const results = Array.isArray(data.results) ? data.results : data.data || [];
+  
+      if (results.length > 0) {
+        allResults = allResults.concat(results);
+        cursor = data.cursor;
+        skip += results.length;
+      } else {
+        keepGoing = false; // no more pages
       }
     }
   
     return { results: allResults };
   }
+
 
 
   // Your old liveSearch stays here for later if you ever get access
