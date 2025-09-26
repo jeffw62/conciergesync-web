@@ -11,59 +11,58 @@ class SeatsAeroService {
     this.baseUrl = "https://seats.aero/partnerapi";
   }
 
-  /// Cached availability search (Pro users can use this)
-    async availabilitySearch({ origin, destination, date, cabin, program }) {
+  /// Cached availability search
+  async availabilitySearch({ origin, destination, date, program }) {
     let url = `${this.baseUrl}/availability?origin=${origin}&destination=${destination}&date=${date}`;
     if (program) {
       url += `&sources=${program}`;
     }
 
+    console.log("➡️ SA base request URL:", url);
 
-  console.log("➡️ SA base request URL:", url);
+    let allResults = [];
+    let cursor = null;
+    let skip = 0;
+    let keepGoing = true;
 
-  let allResults = [];
-  let cursor = null;
-  let skip = 0;
-  let keepGoing = true;
-
-  while (keepGoing) {
-    let pageUrl = url;
-    if (cursor) {
-      pageUrl += `&skip=${skip}&cursor=${cursor}`;
-    }
-
-    console.log("➡️ Fetching:", pageUrl);
-
-    const response = await fetch(pageUrl, {
-      method: "GET",
-      headers: {
-        "Partner-Authorization": this.apiKey,
-        "accept": "application/json"
+    while (keepGoing) {
+      let pageUrl = url;
+      if (cursor) {
+        pageUrl += `&skip=${skip}&cursor=${cursor}`;
       }
-    });
 
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`Seats.aero error ${response.status}: ${text}`);
+      console.log("➡️ Fetching:", pageUrl);
+
+      const response = await fetch(pageUrl, {
+        method: "GET",
+        headers: {
+          "Partner-Authorization": this.apiKey,
+          "accept": "application/json"
+        }
+      });
+
+      if (!response.ok) {
+        const text = await response.text();
+        throw new Error(`Seats.aero error ${response.status}: ${text}`);
+      }
+
+      const data = await response.json();
+      const results = Array.isArray(data.results) ? data.results : [];
+
+      if (results.length > 0) {
+        allResults = allResults.concat(results);
+        cursor = data.cursor;
+        skip += results.length;
+      } else {
+        keepGoing = false;
+      }
     }
 
-    const data = await response.json();
-    const results = Array.isArray(data.results) ? data.results : [];
-
-    if (results.length > 0) {
-      allResults = allResults.concat(results);
-      cursor = data.cursor;
-      skip += results.length;
-    } else {
-      keepGoing = false;
-    }
+    console.log(`➡️ Total results pulled: ${allResults.length}`);
+    return { results: allResults };
   }
 
-  console.log(`➡️ Total results pulled: ${allResults.length}`);
-  return { results: allResults };
-}
-
-  // Your old liveSearch stays here for later if you ever get access
+  // Live search (unused for now)
   async liveSearch({ origin, destination, date, program, passengers = 1 }) {
     const response = await fetch(`${this.baseUrl}/live`, {
       method: "POST",
@@ -100,42 +99,32 @@ app.use(express.static(path.join(__dirname)));
 app.use('/dev', express.static(path.join(__dirname, 'dev')));
 
 // --- Redemption route ---
-  app.post("/api/redemption", async (req, res) => {
-    try {
-      const { origin, destination, date, cabin, program } = req.body;
-  
-      if (!origin || !destination || !date || !cabin) {
-        return res.status(400).json({
-          error: "missing_parameters",
-          message: "Origin, destination, date, and cabin are required."
-        });
-      }
-  
-      const apiResponse = await seatsService.availabilitySearch({
-      origin: "DFW",
+app.post("/api/redemption", async (req, res) => {
+  try {
+    // 🔧 TEMP: hard-coded known-good test
+    const apiResponse = await seatsService.availabilitySearch({
+      origin: "YYZ",
       destination: "LHR",
-      date: "2025-10-15",
-      cabin: "Y",         // economy as single letter
-      program: "aeroplan" // known-good program
+      date: "2025-10-20",
+      program: "aeroplan"
     });
-  
-      console.log("➡️ Full SA response object:", apiResponse);
-  
-      const results = Array.isArray(apiResponse)
-        ? apiResponse
-        : apiResponse.results || apiResponse.data || [];
-  
-      return res.json({ results });
-    } catch (err) {
-      console.error("❌ Redemption API error:", err);
-      return res.status(500).json({
-        error: "server_error",
-        message: err.message,
-        stack: err.stack
-      });
-    }
-  });
 
+    console.log("➡️ Full SA response object:", apiResponse);
+
+    const results = Array.isArray(apiResponse)
+      ? apiResponse
+      : apiResponse.results || apiResponse.data || [];
+
+    return res.json({ results });
+  } catch (err) {
+    console.error("❌ Redemption API error:", err);
+    return res.status(500).json({
+      error: "server_error",
+      message: err.message,
+      stack: err.stack
+    });
+  }
+});
 
 // --- Start server ---
 app.listen(PORT, () => {
