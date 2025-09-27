@@ -77,17 +77,17 @@ function applySanityFilter(results) {
     const distance = r.Route?.Distance || 0;
     const fees = r.TotalTaxes ? r.TotalTaxes / 100 : 0;
 
-    // 1. Mileage sanity
-    if (miles < 20000 || miles > 250000) return false;
+    // 1. Mileage sanity (allow 5k+)
+    if (miles < 5000 || miles > 500000) return false;
 
-    // 2. Distance vs. miles sanity
+    // 2. Distance vs. miles sanity (loosen to 1–100x)
     if (distance > 0) {
       const ratio = miles / distance;
-      if (ratio < 3 || ratio > 20) return false;
+      if (ratio < 1 || ratio > 100) return false;
     }
 
-    // 3. Fees sanity for long-haul
-    if (distance > 3000 && fees < 20) return false;
+    // 3. Fees sanity (only toss if distance > 3000 and fees === 0)
+    if (distance > 3000 && fees === 0) return false;
 
     return true;
   });
