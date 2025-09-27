@@ -68,23 +68,27 @@ class SeatsAeroService {
 const seatsService = new SeatsAeroService(process.env.SEATSAERO_KEY);
 
 // --- ARE YOU OUT OF YOUR MIND filter ---
+// --- ARE YOU OUT OF YOUR MIND filter (simplified) ---
 function applySanityFilter(results) {
   return results.filter(r => {
     const miles = parseInt(
       r.YMileageCost || r.JMileageCost || r.FMileageCost || 0,
       10
     );
-    const distance = r.Route?.Distance || 0;
     const fees = r.TotalTaxes ? r.TotalTaxes / 100 : 0;
 
-    // 1. Mileage sanity (allow 5k+)
-    if (miles < 5000 || miles > 500000) return false;
+    // 1. Drop broken mileage values
+    if (!miles || miles <= 0) return false;       // no mileage cost at all
+    if (miles > 500000) return false;             // absurd unicorn awards
 
-    // 2. Distance vs. miles sanity (loosen to 1–100x)
-    if (distance > 0) {
-      const ratio = miles / distance;
-      if (ratio < 1 || ratio > 100) return false;
-    }
+    // 2. Drop impossible fees
+    if (fees < 0) return false;
+
+    // Keep everything else (even cheap saver awards with $5.60 fees)
+    return true;
+  });
+}
+
 
     // 3. Fees sanity (only toss if distance > 3000 and fees === 0)
     if (distance > 3000 && fees === 0) return false;
