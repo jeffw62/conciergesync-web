@@ -4,10 +4,6 @@ const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
-// --- Safe fetch import for Render (works on Node 16+)
-const fetch = (...args) =>
-  import("node-fetch").then(({ default: fetch }) => fetch(...args));
-
 // --- Service class for Seats.aero Partner API ---
 class SeatsAeroService {
   constructor(apiKey) {
@@ -43,6 +39,23 @@ class SeatsAeroService {
 // Initialize service
 const seatsService = new SeatsAeroService(process.env.SEATSAERO_KEY);
 
+// --- ARE YOU OUT OF YOUR MIND filter (simplified) ---
+function applySanityFilter(results) {
+  return results.filter(r => {
+    const miles = parseInt(
+      r.YMileageCost || r.JMileageCost || r.FMileageCost || 0,
+      10
+    );
+    const fees = r.TotalTaxes ? r.TotalTaxes / 100 : 0;
+
+    if (!miles || miles <= 0) return false;   // no mileage cost
+    if (miles > 500000) return false;         // absurd unicorn
+    if (fees < 0) return false;               // impossible fee
+
+    return true; // keep everything else
+  });
+}
+
 // --- Serve static files ---
 app.use(express.static(path.join(__dirname)));
 app.use("/dev", express.static(path.join(__dirname, "dev")));
@@ -67,11 +80,16 @@ app.post("/api/redemption", async (req, res) => {
       endDate,
     });
 
-    // 🚨 Sanity filter is OFF for now
-    // const filtered = applySanityFilter(apiResponse.data || []);
-    // return res.json({ data: filtered });
+    // Apply sanity filter
+    const filtered = applySanityFilter(apiResponse.data || []);
 
-    return res.json(apiResponse);
+    console.log(
+      `➡️ Filtered results: ${filtered.length} of ${
+        apiResponse.data?.length || 0
+      }`
+    );
+
+    return res.json({ data: filtered });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     return res.status(500).json({
