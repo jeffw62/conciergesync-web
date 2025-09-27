@@ -69,6 +69,7 @@ const seatsService = new SeatsAeroService(process.env.SEATSAERO_KEY);
 
 // --- ARE YOU OUT OF YOUR MIND filter ---
 // --- ARE YOU OUT OF YOUR MIND filter (simplified) ---
+// --- ARE YOU OUT OF YOUR MIND filter (simplified) ---
 function applySanityFilter(results) {
   return results.filter(r => {
     const miles = parseInt(
@@ -84,15 +85,7 @@ function applySanityFilter(results) {
     // 2. Drop impossible fees
     if (fees < 0) return false;
 
-    // Keep everything else (even cheap saver awards with $5.60 fees)
-    return true;
-  });
-}
-
-
-    // 3. Fees sanity (only toss if distance > 3000 and fees === 0)
-    if (distance > 3000 && fees === 0) return false;
-
+    // ✅ keep everything else (even cheap saver awards with $5.60 fees)
     return true;
   });
 }
