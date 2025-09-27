@@ -4,6 +4,10 @@ const app = express();
 app.use(express.json());
 const PORT = process.env.PORT || 3000;
 
+// --- Safe fetch import for Render (works on Node 16+)
+const fetch = (...args) =>
+  import("node-fetch").then(({ default: fetch }) => fetch(...args));
+
 // --- Service class for Seats.aero Partner API ---
 class SeatsAeroService {
   constructor(apiKey) {
@@ -13,7 +17,7 @@ class SeatsAeroService {
 
   /// Flight search using /search endpoint
   async searchFlights({ origin, destination, startDate, endDate, take = 500 }) {
-    let url = `${this.baseUrl}/search?origin_airport=${origin}&destination_airport=${destination}&start_date=${startDate}&end_date=${endDate}&take=${take}&include_trips=false&only_direct_flights=false&include_filtered=false`;
+    const url = `${this.baseUrl}/search?origin_airport=${origin}&destination_airport=${destination}&start_date=${startDate}&end_date=${endDate}&take=${take}&include_trips=false&only_direct_flights=false&include_filtered=false`;
 
     console.log("➡️ SA search request URL:", url);
 
@@ -21,8 +25,8 @@ class SeatsAeroService {
       method: "GET",
       headers: {
         "Partner-Authorization": this.apiKey,
-        "accept": "application/json"
-      }
+        accept: "application/json",
+      },
     });
 
     if (!response.ok) {
@@ -32,63 +36,12 @@ class SeatsAeroService {
 
     const data = await response.json();
     console.log(`➡️ SA returned ${data.data?.length || 0} records`);
-    return data; // { data: [ AvailabilityObjects... ] }
-  }
-
-  // Live search (unused for now)
-  async liveSearch({ origin, destination, date, program, passengers = 1 }) {
-    const response = await fetch(`${this.baseUrl}/live`, {
-      method: "POST",
-      headers: {
-        "Partner-Authorization": this.apiKey,
-        "accept": "application/json",
-        "content-type": "application/json"
-      },
-      body: JSON.stringify({
-        origin_airport: origin,
-        destination_airport: destination,
-        departure_date: date,
-        source: program,
-        seat_count: passengers,
-        disable_filters: false,
-        show_dynamic_pricing: false
-      })
-    });
-
-    if (!response.ok) {
-      const text = await response.text();
-      throw new Error(`Seats.aero error ${response.status}: ${text}`);
-    }
-
-    return response.json();
+    return data; // { data: [...] }
   }
 }
 
 // Initialize service
 const seatsService = new SeatsAeroService(process.env.SEATSAERO_KEY);
-
-// --- ARE YOU OUT OF YOUR MIND filter ---
-// --- ARE YOU OUT OF YOUR MIND filter (simplified) ---
-// --- ARE YOU OUT OF YOUR MIND filter (simplified) ---
-function applySanityFilter(results) {
-  return results.filter(r => {
-    const miles = parseInt(
-      r.YMileageCost || r.JMileageCost || r.FMileageCost || 0,
-      10
-    );
-    const fees = r.TotalTaxes ? r.TotalTaxes / 100 : 0;
-
-    // 1. Drop broken mileage values
-    if (!miles || miles <= 0) return false;       // no mileage cost at all
-    if (miles > 500000) return false;             // absurd unicorn awards
-
-    // 2. Drop impossible fees
-    if (fees < 0) return false;
-
-    // ✅ keep everything else (even cheap saver awards with $5.60 fees)
-    return true;
-  });
-}
 
 // --- Serve static files ---
 app.use(express.static(path.join(__dirname)));
@@ -102,7 +55,7 @@ app.post("/api/redemption", async (req, res) => {
     if (!origin || !destination || !startDate || !endDate) {
       return res.status(400).json({
         error: "missing_parameters",
-        message: "Origin, destination, startDate, and endDate are required."
+        message: "Origin, destination, startDate, and endDate are required.",
       });
     }
 
@@ -111,25 +64,20 @@ app.post("/api/redemption", async (req, res) => {
       origin,
       destination,
       startDate,
-      endDate
+      endDate,
     });
 
-    // Apply sanity filter
-    const filtered = applySanityFilter(apiResponse.data || []);
+    // 🚨 Sanity filter is OFF for now
+    // const filtered = applySanityFilter(apiResponse.data || []);
+    // return res.json({ data: filtered });
 
-    console.log(
-      `➡️ Filtered results: ${filtered.length} of ${
-        apiResponse.data?.length || 0
-      }`
-    );
-
-    return res.json({ data: filtered });
+    return res.json(apiResponse);
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     return res.status(500).json({
       error: "server_error",
       message: err.message,
-      stack: err.stack
+      stack: err.stack,
     });
   }
 });
@@ -144,8 +92,8 @@ app.get("/api/redemption/testBulk", async (req, res) => {
       method: "GET",
       headers: {
         "Partner-Authorization": seatsService.apiKey,
-        "accept": "application/json"
-      }
+        accept: "application/json",
+      },
     });
 
     if (!response.ok) {
@@ -159,7 +107,7 @@ app.get("/api/redemption/testBulk", async (req, res) => {
     console.error("❌ Bulk API error:", err);
     return res.status(500).json({
       error: "server_error",
-      message: err.message
+      message: err.message,
     });
   }
 });
