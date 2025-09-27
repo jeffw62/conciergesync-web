@@ -89,7 +89,7 @@ app.post("/api/redemption", async (req, res) => {
       }`
     );
 
-    return res.json({ data: filtered });
+    return res.json({ results: filtered });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     return res.status(500).json({
