@@ -708,64 +708,66 @@
     const tbody = document.getElementById("resultsBody");
     tbody.innerHTML = "";
   
-    // Map fields dynamically by cabin
+    // Map fields by cabin prefix
     const cabinPrefixMap = {
       economy: "Y",
       premium_economy: "W",
       business: "J",
       first: "F"
     };
+    const prefix = cabinPrefixMap[selectedCabin] || "Y";
   
-    const prefix = cabinPrefixMap[selectedCabin] || "Y"; // fallback to economy
-  
-    // Normalize results
+    // Normalize to an array
     let results = [];
     if (Array.isArray(data)) {
       results = data;
     } else if (Array.isArray(data.results)) {
-      results = data.results;   // <-- unwraps backend { results: [...] }
+      results = data.results;
     } else if (Array.isArray(data.data)) {
       results = data.data;
     }
-    
+  
     console.log("🔎 Normalized results:", results.length, results);
-
   
     if (results.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="7">No results found</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="8">No results found</td></tr>`;
       return;
     }
   
-    console.log("First SA record:", results[0]);
-  
-    applySanityFilter(results).forEach(r => {
-      console.log("Program field check:", r.Source, r.source, r);
-
-      const airline = r.Route?.Source || "—";
+    results.forEach(r => {
       const origin = r.Route?.OriginAirport || "—";
       const destination = r.Route?.DestinationAirport || "—";
-      const points = parseInt(r[`${prefix}MileageCost`] || 0, 10);
-      const taxes = r.TotalTaxes ? (r.TotalTaxes / 100).toFixed(2) : "—";
-      const seats = r[`${prefix}RemainingSeats`] || "—";
+      const program = r.Source || "—";
+      const date = r.Date || "—";
   
+      // Pick fields based on selected cabin
+      const miles = r[`${prefix}MileageCostRaw`] || 0;
+      const taxes = r[`${prefix}TotalTaxesRaw`] 
+        ? (r[`${prefix}TotalTaxesRaw`] / 100).toFixed(2) 
+        : "—";
+      const seats = r[`${prefix}RemainingSeatsRaw`] || "—";
+  
+      // Value per mile (cents per mile)
       let cpm = "—";
-      if (typeof points === "number" && typeof taxes === "number" && points > 0) {
-        cpm = (((taxes / 100) / points) * 100).toFixed(2);
+      if (miles > 0 && taxes !== "—") {
+        cpm = ((parseFloat(taxes) / miles) * 100).toFixed(2);
       }
   
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td data-label="Airline">${airline}</td>
-        <td data-label="Program">${r.Route?.Source || "—"}</td>
-        <td data-label="Points Needed">${points ? points.toLocaleString() : "—"}</td>
-        <td data-label="Cash Price">—</td>
+        <td data-label="Date">${date}</td>
+        <td data-label="Origin">${origin}</td>
+        <td data-label="Destination">${destination}</td>
+        <td data-label="Program">${program}</td>
+        <td data-label="Points Needed">${miles.toLocaleString()}</td>
         <td data-label="Fees">${taxes !== "—" ? "$" + taxes : "—"}</td>
         <td data-label="Seats Available">${seats}</td>
-        <td><button class="btn">Book</button></td>
+        <td data-label="Value (¢/mile)">${cpm}</td>
       `;
       tbody.appendChild(tr);
     });
   }
+
 
   // --- Airport Autocomplete ---
   let airports = [];
