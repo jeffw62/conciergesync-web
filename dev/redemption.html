@@ -531,14 +531,14 @@
   <table>
     <thead>
       <tr>
-        <th>Airlines</th>
-        <th>Program</th>
-        <th>Points Needed</th>
-        <th>Cash Price</th>
-        <th>Fees</th>
-        <th>Value (¢/mile)</th>
+        <th>Date</th>
+        <th>Origin</th>
+        <th>Distnation</th>
+        <th>Airline</th>
+        <th>Miles Needed</th>
+        <th>Taxes/Fees</th>
         <th>Seats Available</th>
-        <th></th>
+        <th>Value (¢/mile)</th>
       </tr>
     </thead>
     <tbody id="resultsBody"></tbody>
@@ -663,13 +663,14 @@
     data.forEach(r => {
       const tr = document.createElement("tr");
       tr.innerHTML = `
-      <td data-label="Airlines">${r[`${prefix}Airlines`] || r[`${prefix}AirlinesRaw`] || "—"}</td>
-      <td data-label="Program">${r.Source || "—"}</td>
-      <td data-label="Points Needed">${miles ? miles.toLocaleString() : "—"}</td>
-      <td data-label="Cash Price">—</td> <!-- placeholder until we wire in cash fares -->
-      <td data-label="Fees">${taxes !== "—" ? "$" + taxes : "—"}</td>
-      <td data-label="Value (¢/mile)">${cpm}</td>
+      <td data-label="Date">${r.Date || "—"}</td>
+      <td data-label="Origin">${r.Route?.OriginAirport || "—"}</td>
+      <td data-label="Destination">${r.Route?.DestinationAirport || "—"}</td>
+      <td data-label="Airline">${r[`${prefix}Airlines`] || r[`${prefix}AirlinesRaw`] || "—"}</td>
+      <td data-label="Miles Needed">${miles ? miles.toLocaleString() : "—"}</td>
+      <td data-label="Taxes/Fees">${taxes !== "—" ? "$" + taxes : "—"}</td>
       <td data-label="Seats Available">${seats}</td>
+      <td data-label="Value (¢/mile)">${cpm}</td>
     `;
       tbody.appendChild(tr);
     });
