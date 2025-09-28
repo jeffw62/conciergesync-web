@@ -724,7 +724,7 @@
     if (Array.isArray(data)) {
       results = data;
     } else if (Array.isArray(data.results)) {
-      results = data.results;
+      results = data.results;   // <-- unwraps backend { results: [...] }
     } else if (Array.isArray(data.data)) {
       results = data.data;
     }
@@ -886,7 +886,7 @@
       })
       .then(data => {
         console.log("✅ Redemption API response:", data);
-        displayResults(data, cabin);
+        displayResults(data, cabin);   // <-- must be `data`, not `data.results`
       })
       .catch(err => {
         console.error("❌ Redemption API error:", err);
