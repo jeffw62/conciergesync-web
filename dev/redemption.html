@@ -752,6 +752,7 @@
         if (!isNaN(feeDollars)) {
           const centsPerMile = ((feeDollars * 100) / miles).toFixed(2);
           cpm = `${centsPerMile}¢`;
+        }
       }
   
       const tr = document.createElement("tr");
@@ -768,7 +769,6 @@
       tbody.appendChild(tr);
     });
   }
-
 
   // --- Airport Autocomplete ---
   let airports = [];
