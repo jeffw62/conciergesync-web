@@ -886,7 +886,7 @@
         return res.json();
       })
       .then(data => {
-        console.log("✅ Redemption API response:", data);
+        console.log("🔎 Raw API data:", data);
         displayResults(data, cabin);   // <-- must be `data`, not `data.results`
       })
       .catch(err => {
