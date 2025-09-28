@@ -748,7 +748,7 @@
       // Value per mile (cents per mile)
       let cpm = "—";
       if (miles > 0 && taxes !== "—") {
-        cpm = ((parseFloat(taxes) / miles) * 100).toFixed(2);
+        cpm = ((parseFloat(taxes) * 100 / miles).toFixed(2);
       }
   
       const tr = document.createElement("tr");
