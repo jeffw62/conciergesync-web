@@ -627,12 +627,11 @@
       });
     });
 
-    // Validate before search
+    // … later
     function checkSelections() {
       const allGroups = [directGroup, multiGroup, posGroup];
       const allSelected = allGroups.every(g => g.querySelector('.active'));
-      const warning = document.getElementById('searchWarning');
-    
+      
       if (allSelected) {
         searchBtn.disabled = false;
         searchBtn.style.opacity = "1";
