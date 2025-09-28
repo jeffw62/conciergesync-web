@@ -742,10 +742,12 @@
     applySanityFilter(results).forEach(r => {
       console.log("Program field check:", r.Source, r.source, r);
 
-      const airline = r[`${prefix}DirectAirlinesRaw`] || r[`${prefix}AirlinesRaw`] || "—";
-      const points  = r[`${prefix}DirectMileageCostRaw`] || r[`${prefix}MileageCostRaw`] || null;
-      const taxes   = r[`${prefix}DirectTotalTaxesRaw`] || r[`${prefix}TotalTaxesRaw`] || null;
-      const seats   = r[`${prefix}DirectRemainingSeatsRaw`] || r[`${prefix}RemainingSeatsRaw`] || null;
+      const airline = r.Route?.Source || "—";
+      const origin = r.Route?.OriginAirport || "—";
+      const destination = r.Route?.DestinationAirport || "—";
+      const points = parseInt(r[`${prefix}MileageCost`] || 0, 10);
+      const taxes = r.TotalTaxes ? (r.TotalTaxes / 100).toFixed(2) : "—";
+      const seats = r[`${prefix}RemainingSeats`] || "—";
   
       let cpm = "—";
       if (typeof points === "number" && typeof taxes === "number" && points > 0) {
@@ -754,13 +756,13 @@
   
       const tr = document.createElement("tr");
       tr.innerHTML = `
-        <td data-label="Route">${airline}</td>
-        <td data-label="Program">${r.Source || "—"}</td>
-        <td data-label="Points Needed">${points != null ? points.toLocaleString() : "—"}</td>
+        <td data-label="Airline">${airline}</td>
+        <td data-label="Program">${r.Route?.Source || "—"}</td>
+        <td data-label="Points Needed">${points ? points.toLocaleString() : "—"}</td>
         <td data-label="Cash Price">—</td>
-        <td data-label="Fees">${taxes != null ? "$" + (taxes / 100).toFixed(2) : "—"}</td>
-        <td data-label="Value (¢/mile)">${cpm}</td>
-        <td data-label=""><button class="btn">Book</button></td>
+        <td data-label="Fees">${taxes !== "—" ? "$" + taxes : "—"}</td>
+        <td data-label="Seats Available">${seats}</td>
+        <td><button class="btn">Book</button></td>
       `;
       tbody.appendChild(tr);
     });
