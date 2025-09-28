@@ -747,8 +747,11 @@
   
       // Value per mile (cents per mile)
       let cpm = "—";
-      if (miles > 0 && taxes !== "—") {
-        cpm = ((parseFloat(taxes) * 100 / miles).toFixed(2);
+      if (miles && typeof miles === "number" && miles > 0) {
+        const feeDollars = (typeof taxes === "string") ? parseFloat(taxes) : taxes;
+        if (!isNaN(feeDollars)) {
+          const centsPerMile = ((feeDollars * 100) / miles).toFixed(2);
+          cpm = `${centsPerMile}¢`;
       }
   
       const tr = document.createElement("tr");
