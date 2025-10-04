@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ConciergeSync™ – Dev Home</title>
-  <link rel="stylesheet" href="/dev/style.css">
- <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/dev/style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Shadows+Into+Light+Two&display=swap" rel="stylesheet" />
 
   <style>
     body {
@@ -37,17 +37,15 @@
       height: 32px;
     }
     header .logo a {
-      color: inherit;          /* matches the header text color */
-      text-decoration: none;   /* removes underline */
+      color: inherit;
+      text-decoration: none;
       display: flex;
       align-items: center;
       gap: 8px;
     }
-    
     header .logo a:hover {
-      opacity: 0.85;           /* subtle hover fade */
+      opacity: 0.85;
     }
-    /* nav hidden by default */
     header nav {
       display: none;
       gap: 24px;
@@ -61,8 +59,6 @@
     header nav a:hover {
       opacity: 0.75;
     }
-
-    /* desktop: show nav always */
     @media (min-width: 769px) {
       header nav {
         display: flex;
@@ -72,64 +68,7 @@
       }
     }
 
-    .hero-text { flex:1 1 400px; }
-    .hero-video {
-      flex:1 1 400px;
-      position: relative;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      max-width: 520px;
-    }
-    .hero-video img,
-    .hero-video video {
-      width: 100%;
-      border: 3px solid #d4af37; /* gold border - updated tone */
-      border-radius: 8px;
-      object-fit: cover;
-    }
-
-    /* --- Smooth fade-in for hero video --- */
-    .hero-video-player {
-      opacity: 0;
-      animation: fadeInHero 1.5s ease-in forwards;
-    }
-    
-    /* Keyframes for fade-in */
-    @keyframes fadeInHero {
-      from { opacity: 0; }
-      to   { opacity: 1; }
-    }
-    /* Responsive: stack hero on mobile */
-    @media (max-width: 900px) {
-      .hero-video {
-        max-width: 100%;
-        margin-top: 1.5rem;
-      }
-      .hero-video-player {
-        width: 100%;
-        height: 260px;
-      }
-
-    /* --- Hamburger --- */
-    .menu-toggle {
-      display: none;
-      flex-direction: column;
-      cursor: pointer;
-      gap: 4px;
-      padding: 10px;
-      margin-left: auto;
-      user-select: none;
-    }
-    .menu-toggle span {
-      display: block;
-      width: 24px;
-      height: 3px;
-      background: #fff;
-      border-radius: 2px;
-    }
-
-    /* --- Hero Banner --- */
+    /* --- Hero Layout --- */
     .hero {
       display: flex;
       justify-content: space-between;
@@ -149,6 +88,10 @@
       height: 6px;
       background: #bfa14a;
     }
+    .hero-text {
+      flex: 1 1 400px;
+      min-width: 300px;
+    }
     .hero h1 {
       font-size: 2.4rem;
       margin-bottom: 12px;
@@ -157,74 +100,42 @@
       font-size: 1.2rem;
       margin-bottom: 24px;
       color: #e0e6f0;
-      max-width: 700px;   /* expand width */
-      line-height: 1.6;   /* improve readability */
+      max-width: 700px;
+      line-height: 1.6;
     }
-
     .btn {
       background: #bfa14a;
       color: #fff;
       padding: 14px 24px;
       border: none;
-      border-radius: 0px;
       text-decoration: none;
       font-weight: bold;
       cursor: pointer;
     }
 
-    /* --- Login Box --- */
-    .login-box {
-      background: #fff;
-      padding: 32px;
-      border-radius: 0px;
-      width: 360px;
-      max-width: 90%;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-      color: #222;
-      box-sizing: border-box;
-    }
-    .login-box h3 {
-      margin-top: 0;
-      margin-bottom: 20px;
-      color: #0a1a33;
-      text-align: left;
-    }
-    .login-box input,
-    .login-box button {
-      display: block;
-      width: 100%;
-      margin: 12px 0;
-      padding: 12px;
-      border-radius: 0px;
-      border: 1px solid #ccc;
-      font-size: 1rem;
-      box-sizing: border-box;
-    }
-    .login-box button {
-      background: #bfa14a;
-      color: #fff;
-      border: none;
-      font-weight: bold;
-      cursor: pointer;
-    }
-    .signup-link {
-      margin-top: 8px;
+    /* --- Hero Video --- */
+    .hero-video {
+      flex: 1 1 400px;
+      position: relative;
       display: flex;
+      justify-content: center;
       align-items: center;
-      width: 66%;              /* 2/3 width of the button above */
-      font-size: 0.8rem;       /* smaller text */
-      color: #444;             /* darker gray, more legible */
+      max-width: 520px;
     }
-    
-    .signup-link a {
-      color: #bfa14a;
-      font-weight: 600;
-      margin-left: 4px;        /* little breathing space after "Not Registered?" */
-      text-decoration: none;   /* no underline */
+    .hero-video img,
+    .hero-video video {
+      width: 100%;
+      border: 3px solid #d4af37;
+      border-radius: 8px;
+      object-fit: cover;
     }
-    
-    .signup-link a:hover {
-      opacity: 0.85;           /* subtle hover feedback */
+    .hero-video-player {
+      opacity: 0;
+      animation: fadeInHero 1.5s ease-in forwards;
+    }
+    @keyframes fadeInHero {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     /* --- Sections --- */
@@ -248,58 +159,70 @@
       font-weight: 600;
       font-size: 1.1rem;
     }
-
     .sections i {
       width: 32px;
       height: 32px;
-      stroke: #0a1a33;   /* default navy outline */
+      stroke: #0a1a33;
       stroke-width: 2;
       margin-bottom: 8px;
     }
-    
     .sections div:hover i {
-      stroke: #bfa14a;   /* gold on hover */
+      stroke: #bfa14a;
     }
 
-   .creed-hero {
-      font-family: 'Shadows Into Light Two', cursive;
-      font-size: 1rem;
-      line-height: 1.5;
-      color: rgba(255, 255, 255, 0.7);
-      transform: rotate(-1deg);
-      max-width: 320px;
+    /* --- Hamburger --- */
+    .menu-toggle {
+      display: none;
+      flex-direction: column;
+      cursor: pointer;
+      gap: 4px;
+      padding: 10px;
+      margin-left: auto;
+      user-select: none;
     }
-    .creed-hero strong {
-      font-size: 1.05rem;
-      color: rgba(255, 255, 255, 0.85);
+    .menu-toggle span {
       display: block;
-      margin-bottom: 8px;
+      width: 24px;
+      height: 3px;
+      background: #fff;
+      border-radius: 2px;
     }
 
     /* --- Mobile Responsive --- */
+    @media (max-width: 900px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 40px 5%;
+      }
+      .hero-video {
+        max-width: 100%;
+        margin-top: 1.5rem;
+      }
+      .hero-video-player {
+        width: 100%;
+        height: 260px;
+      }
+    }
     @media (max-width: 768px) {
       header nav {
-        display: flex;               /* keep it in the tree */
+        display: flex;
         flex-direction: column;
         background: #0a1a33;
         position: absolute;
         top: 100%;
         right: 0;
         left: 0;
-        border-radius: 0 0 6px 6px;
         box-shadow: 0 4px 8px rgba(0,0,0,0.3);
         z-index: 9999;
-
-    /* animation state */
         max-height: 0;
         overflow: hidden;
         opacity: 0;
-        padding: 0 20px; 
+        padding: 0 20px;
         transition: max-height 0.3s ease, opacity 0.3s ease, padding 0.3s ease;
       }
-
       header nav.active {
-        max-height: 400px; /* adjust as needed */
+        max-height: 400px;
         opacity: 1;
         padding: 20px;
       }
@@ -315,15 +238,6 @@
       }
       header nav a:hover {
         opacity: 0.75;
-      }
-      .hero {
-        flex-direction: column;
-        text-align: center;
-      }
-      .login-box {
-        width: 100%;
-        max-width: 320px;
-        margin-top: 30px;
       }
       .sections {
         flex-direction: column;
@@ -343,9 +257,7 @@
       </a>
     </div>
     <div class="menu-toggle">
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span>
     </div>
     <nav>
       <a href="/dev/about.html">About</a>
@@ -365,23 +277,16 @@
       </p>
       <a href="/dev/betap.html" class="btn">Experience ConciergeSync™</a>
     </div>
-  
-   <div class="hero-video">
-      <video
-        autoplay
-        muted
-        loop
-        playsinline
-        poster="/dev/asset/video-poster.jpg"
-        class="hero-video-player"
-      >
+
+    <div class="hero-video">
+      <video autoplay muted loop playsinline poster="/dev/asset/video-poster.jpg" class="hero-video-player">
         <source src="https://cdn.coverr.co/videos/coverr-plane-window-view-9585/1080p.mp4" type="video/mp4" />
         Your browser does not support the video tag.
       </video>
     </div>
   </section>
 
-
+  <!-- ICON SECTIONS -->
   <section class="sections">
     <div>
       <i data-lucide="bar-chart-3"></i>
@@ -415,27 +320,18 @@
   <script>
     // Load universal footer
     fetch("/dev/footer.html")
-      .then(response => response.text())
-      .then(html => {
-        document.getElementById("footer").innerHTML = html;
-      })
+      .then(res => res.text())
+      .then(html => { document.getElementById("footer").innerHTML = html; })
       .catch(err => console.error("Footer failed to load:", err));
 
     // Hamburger toggle
     document.addEventListener("DOMContentLoaded", () => {
       const toggle = document.querySelector(".menu-toggle");
       const nav = document.querySelector("header nav");
-
-      if (toggle && nav) {
-        toggle.addEventListener("click", () => {
-          nav.classList.toggle("active");
-        });
-      }
+      if (toggle && nav) toggle.addEventListener("click", () => nav.classList.toggle("active"));
     });
   </script>
-    <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
-      <script>
-        lucide.createIcons();
-  </script>
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script> lucide.createIcons(); </script>
 </body>
 </html>
