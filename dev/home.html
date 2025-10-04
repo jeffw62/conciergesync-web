@@ -83,35 +83,33 @@
     }
     .hero-video img,
     .hero-video video {
-      width:100%;
-      border:3px solid #bfa14a;
-      border-radius:4px;
-      object-fit:cover;
+      width: 100%;
+      border: 3px solid #d4af37; /* gold border - updated tone */
+      border-radius: 8px;
+      object-fit: cover;
     }
-    .hero-video .overlay {
-      position:absolute;
-      display:flex;
-      justify-content:center;
-      align-items:center;
-      inset:0;
+
+    /* --- Smooth fade-in for hero video --- */
+    .hero-video-player {
+      opacity: 0;
+      animation: fadeInHero 1.5s ease-in forwards;
     }
-    .play-btn {
-      background:#bfa14a;
-      color:#fff;
-      border:none;
-      font-size:1.2rem;
-      padding:12px 24px;
-      cursor:pointer;
-      border-radius:2px;
-      opacity:0.9;
-      transition:opacity 0.2s;
-    }
-    .play-btn:hover { opacity:1; }
     
-    @media (max-width:768px){
-      .hero{flex-direction:column;text-align:center;}
-      .hero-video{margin-top:30px;max-width:100%;}
+    /* Keyframes for fade-in */
+    @keyframes fadeInHero {
+      from { opacity: 0; }
+      to   { opacity: 1; }
     }
+    /* Responsive: stack hero on mobile */
+    @media (max-width: 900px) {
+      .hero-video {
+        max-width: 100%;
+        margin-top: 1.5rem;
+      }
+      .hero-video-player {
+        width: 100%;
+        height: 260px;
+      }
 
     /* --- Hamburger --- */
     .menu-toggle {
@@ -368,13 +366,18 @@
       <a href="/dev/betap.html" class="btn">Experience ConciergeSync™</a>
     </div>
   
-    <div class="hero-video">
-      <!-- Temporary placeholder until the 60-sec spot is ready -->
-      <img src="/dev/asset/hero-placeholder.jpg"
-           alt="ConciergeSync video coming soon">
-      <div class="overlay">
-        <button class="play-btn">▶ Watch the Story</button>
-      </div>
+   <div class="hero-video">
+      <video
+        autoplay
+        muted
+        loop
+        playsinline
+        poster="/dev/asset/video-poster.jpg"
+        class="hero-video-player"
+      >
+        <source src="https://cdn.coverr.co/videos/coverr-plane-window-view-9585/1080p.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
     </div>
   </section>
 
