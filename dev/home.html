@@ -72,6 +72,47 @@
       }
     }
 
+    .hero-text { flex:1 1 400px; }
+    .hero-video {
+      flex:1 1 400px;
+      position: relative;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      max-width: 520px;
+    }
+    .hero-video img,
+    .hero-video video {
+      width:100%;
+      border:3px solid #bfa14a;
+      border-radius:4px;
+      object-fit:cover;
+    }
+    .hero-video .overlay {
+      position:absolute;
+      display:flex;
+      justify-content:center;
+      align-items:center;
+      inset:0;
+    }
+    .play-btn {
+      background:#bfa14a;
+      color:#fff;
+      border:none;
+      font-size:1.2rem;
+      padding:12px 24px;
+      cursor:pointer;
+      border-radius:2px;
+      opacity:0.9;
+      transition:opacity 0.2s;
+    }
+    .play-btn:hover { opacity:1; }
+    
+    @media (max-width:768px){
+      .hero{flex-direction:column;text-align:center;}
+      .hero-video{margin-top:30px;max-width:100%;}
+    }
+
     /* --- Hamburger --- */
     .menu-toggle {
       display: none;
