@@ -170,6 +170,58 @@
       stroke: #bfa14a;
     }
 
+    /* --- Icon Preview Card --- */
+    .icon-tile {
+      position: relative;
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      cursor: pointer;
+    }
+    
+    .icon-preview {
+      position: absolute;
+      bottom: 120%;
+      left: 50%;
+      transform: translateX(-50%);
+      background: #fff;
+      border: 2px solid #bfa14a;
+      border-radius: 8px;
+      padding: 12px;
+      width: 260px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.2);
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+      z-index: 50;
+    }
+    
+    .icon-preview img {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 8px;
+    }
+    
+    .icon-preview p {
+      font-size: 0.9rem;
+      color: #0a1a33;
+      margin: 0;
+    }
+    
+    /* Hover effect */
+    .icon-tile:hover .icon-preview {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-8px);
+    }
+    
+    /* Optional subtle glow on hover */
+    .icon-tile:hover i {
+      stroke: #bfa14a;
+      filter: drop-shadow(0 0 6px #bfa14a80);
+    }
+
+    
     /* --- Hamburger --- */
     .menu-toggle {
       display: none;
@@ -288,9 +340,13 @@
 
   <!-- ICON SECTIONS -->
   <section class="sections">
-    <div>
+    <div class="icon-tile" id="dashboard-icon">
       <i data-lucide="bar-chart-3"></i>
       <p>Dashboard</p>
+      <div class="icon-preview">
+        <img src="/dev/asset/dashboard-preview.jpg" alt="Dashboard Preview">
+        <p>Your unified view of cards, points, and redemptions.</p>
+      </div>
     </div>
     <div>
       <i data-lucide="target"></i>
@@ -333,5 +389,9 @@
   </script>
   <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
   <script> lucide.createIcons(); </script>
+
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+  <script> lucide.createIcons(); </script>
+  <script src="/dev/js/icons.js"></script>
 </body>
 </html>
