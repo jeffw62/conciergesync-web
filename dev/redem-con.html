@@ -548,17 +548,6 @@
 <div id="footer"></div>
 
 <script>
-  // Footer loader
-  fetch("/dev/footer.html")
-    .then(res => res.text())
-    .then(html => { document.getElementById("footer").innerHTML = html; })
-    .catch(err => console.error("Footer failed to load:", err));
-
-  // Hamburger toggle
-  const toggleBtn = document.querySelector(".menu-toggle");
-  const nav = document.querySelector("header nav");
-  toggleBtn.addEventListener("click", () => nav.classList.toggle("active"));
-
   // Date selection card logic
   const exactBtn = document.getElementById('exactBtn');
   const flexBtn = document.getElementById('flexBtn');
@@ -890,10 +879,20 @@
       })
       .then(data => {
         console.log("🔎 Raw API data:", data);
-        displayResults(data, cabin);   // <-- must be `data`, not `data.results`
+    
+        // show a quick "searching" feedback
+        const searchBtn = document.querySelector(".search-btn");
+        searchBtn.textContent = "Searching…";
+        searchBtn.disabled = true;
+    
+        // Hand off to the results page
+        // `sessionId` can be returned from backend, or just use timestamp
+        const sessionId = data.sessionId || Date.now();
+        window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
       })
       .catch(err => {
         console.error("❌ Redemption API error:", err);
+        alert("Something went wrong while searching. Please try again.");
       });
   });
 
