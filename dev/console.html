@@ -6,37 +6,13 @@
   <title>ConciergeSync™ Console</title>
   <link rel="stylesheet" href="/dev/style.css" />
   <style>
-    /* --- Page Background --- */
+    /* --- Console Specific Styles --- */
     body {
-      margin: 0;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
       background: linear-gradient(180deg, #0a1a33 0%, #121a27 100%);
       color: #fff;
     }
 
-    /* --- Reset master-build artifacts for console --- */
-    .hero,
-    .hero::after,
-    .site-footer {
-      display: none !important;
-    }
-    
-    header, #footer {
-      background: #0a1a33;
-      color: #fff;
-    }
-    
-    a {
-      color: #bfa14a;
-      text-decoration: none;
-    }
-    
-    #footer {
-      display: none; /* prevent injected footer duplication */
-    }
-    
-    /* --- Console Layout --- */
-    main.console-container {
+    .console-container {
       max-width: 1200px;
       margin: 0 auto;
       padding: 60px 20px 100px;
@@ -52,7 +28,6 @@
       justify-content: space-between;
       gap: 20px;
     }
-
     .metric-card {
       flex: 1 1 260px;
       background: #fff;
@@ -73,10 +48,7 @@
       font-size: 1.2rem;
       color: #bfa14a;
     }
-    .metric-card p {
-      margin: 0;
-      font-size: 1rem;
-    }
+    .metric-card p { margin: 0; }
 
     /* --- Wallet Section --- */
     .wallet-card {
@@ -86,10 +58,6 @@
       border: 2px solid #bfa14a;
       padding: 24px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
-    }
-    .wallet-card h2 {
-      margin-top: 0;
-      color: #bfa14a;
     }
     .wallet-grid {
       display: grid;
@@ -103,12 +71,9 @@
       border-radius: 8px;
       padding: 12px 16px;
     }
-    .wallet-item strong {
-      color: #0a1a33;
-      font-weight: 700;
-    }
+    .wallet-item strong { color: #0a1a33; }
 
-    /* --- Insights Section --- */
+    /* --- Insights --- */
     .insights-row {
       display: flex;
       flex-wrap: wrap;
@@ -123,12 +88,9 @@
       padding: 20px;
       box-shadow: 0 4px 12px rgba(0,0,0,0.25);
     }
-    .insight-card h2 {
-      color: #bfa14a;
-      margin-top: 0;
-    }
+    .insight-card h2 { color: #bfa14a; }
 
-    /* --- Creed Footer Card --- */
+    /* --- Creed --- */
     .creed-card {
       background: rgba(191,161,74,0.08);
       border: 2px dashed #bfa14a;
@@ -139,11 +101,8 @@
       color: rgba(255,255,255,0.8);
     }
 
-    /* --- Mobile --- */
     @media (max-width: 768px) {
-      .metrics-row, .insights-row {
-        flex-direction: column;
-      }
+      .metrics-row, .insights-row { flex-direction: column; }
     }
   </style>
 </head>
@@ -157,9 +116,7 @@
       </a>
     </div>
     <div class="menu-toggle">
-      <span></span>
-      <span></span>
-      <span></span>
+      <span></span><span></span><span></span>
     </div>
     <nav>
       <a href="/dev/home.html">Home</a>
@@ -171,83 +128,73 @@
     </nav>
   </header>
 
-  <!-- Console Body -->
-  <main class="console-container">
-    <!-- Top Metric Row -->
-    <div class="metrics-row">
-      <div class="metric-card">
-        <h2>💳 Total Cards</h2>
-        <p><strong>6 Active</strong></p>
-        <small>Across 3 issuers</small>
+  <!-- Hero placeholder from master-build replaced with console -->
+  <section class="hero">
+    <main class="console-container">
+      <!-- Top Metrics -->
+      <div class="metrics-row">
+        <div class="metric-card">
+          <h2>💳 Total Cards</h2>
+          <p><strong>6 Active</strong></p>
+          <small>Across 3 issuers</small>
+        </div>
+        <div class="metric-card">
+          <h2>💎 Points Value</h2>
+          <p><strong>1,245,600 pts</strong></p>
+          <small>≈ $37,368 (3.0¢ baseline)</small>
+        </div>
+        <div class="metric-card">
+          <h2>🎯 Redemptions</h2>
+          <p><strong>3 Exceptional</strong></p>
+          <small>Updated 2h ago</small>
+        </div>
+        <div class="metric-card">
+          <h2>🚀 Transfer Bonuses</h2>
+          <p><strong>2 Active</strong></p>
+          <small>See full list</small>
+        </div>
       </div>
-      <div class="metric-card">
-        <h2>💎 Points Value</h2>
-        <p><strong>1,245,600 pts</strong></p>
-        <small>≈ $37,368 (3.0¢ baseline)</small>
-      </div>
-      <div class="metric-card">
-        <h2>🎯 Redemptions</h2>
-        <p><strong>3 Exceptional</strong></p>
-        <small>Updated 2h ago</small>
-      </div>
-      <div class="metric-card">
-        <h2>🚀 Transfer Bonuses</h2>
-        <p><strong>2 Active</strong></p>
-        <small>See full list</small>
-      </div>
-    </div>
 
-    <!-- Wallet Snapshot -->
-    <div class="wallet-card">
-      <h2>Wallet Snapshot</h2>
-      <div class="wallet-grid">
-        <div class="wallet-item">
-          <strong>Chase Sapphire Preferred</strong><br>
-          219,896 UR • $0 balance • Due Sep 21
-        </div>
-        <div class="wallet-item">
-          <strong>AmEx Gold</strong><br>
-          316,395 MR • $0 balance • Due Sep 25
-        </div>
-        <div class="wallet-item">
-          <strong>Capital One Venture X</strong><br>
-          206,617 Miles • $332 balance • Due Oct 10
-        </div>
-        <div class="wallet-item">
-          <strong>American Airlines</strong><br>
-          138,296 Miles • Platinum Status
+      <!-- Wallet Snapshot -->
+      <div class="wallet-card">
+        <h2>Wallet Snapshot</h2>
+        <div class="wallet-grid">
+          <div class="wallet-item"><strong>Chase Sapphire Preferred</strong><br>219,896 UR • $0 balance • Due Sep 21</div>
+          <div class="wallet-item"><strong>AmEx Gold</strong><br>316,395 MR • $0 balance • Due Sep 25</div>
+          <div class="wallet-item"><strong>Capital One Venture X</strong><br>206,617 Miles • $332 balance • Due Oct 10</div>
+          <div class="wallet-item"><strong>American Airlines</strong><br>138,296 Miles • Platinum Status</div>
         </div>
       </div>
-    </div>
 
-    <!-- Insights + Alerts -->
-    <div class="insights-row">
-      <div class="insight-card">
-        <h2>🎯 Redemption Engine Highlights</h2>
-        <ul>
-          <li>DFW → LHR — 13.8¢/mile (AA)</li>
-          <li>CUN → DFW — 4.5¢/mile (Avios)</li>
-          <li>LAS → JFK — 3.9¢/mile (JetBlue)</li>
-        </ul>
-        <button class="btn">View Full Engine</button>
+      <!-- Insights + Alerts -->
+      <div class="insights-row">
+        <div class="insight-card">
+          <h2>🎯 Redemption Engine Highlights</h2>
+          <ul>
+            <li>DFW → LHR — 13.8¢/mile (AA)</li>
+            <li>CUN → DFW — 4.5¢/mile (Avios)</li>
+            <li>LAS → JFK — 3.9¢/mile (JetBlue)</li>
+          </ul>
+          <button class="btn">View Full Engine</button>
+        </div>
+        <div class="insight-card">
+          <h2>🚀 Transfer Bonus Alerts</h2>
+          <p>30% bonus → Chase UR → Avios (Ends Oct 15)</p>
+          <p>20% bonus → AmEx MR → Virgin (Ends Oct 30)</p>
+        </div>
+        <div class="insight-card">
+          <h2>💡 Helpful Hint</h2>
+          <p>Pair Sapphire Preferred with Freedom Flex to unlock 5x quarterly categories and 1:1 UR transfers.</p>
+        </div>
       </div>
-      <div class="insight-card">
-        <h2>🚀 Transfer Bonus Alerts</h2>
-        <p>30% bonus → Chase UR → Avios (Ends Oct 15)</p>
-        <p>20% bonus → AmEx MR → Virgin (Ends Oct 30)</p>
-      </div>
-      <div class="insight-card">
-        <h2>💡 Helpful Hint</h2>
-        <p>Pair Sapphire Preferred with Freedom Flex to unlock 5x quarterly categories and 1:1 UR transfers.</p>
-      </div>
-    </div>
 
-    <!-- Creed / Motto -->
-    <div class="creed-card">
-      Clarity eliminates confusion. Cleanliness eliminates clutter.  
-      <strong>Trust is our foundation.</strong>
-    </div>
-  </main>
+      <!-- Creed -->
+      <div class="creed-card">
+        Clarity eliminates confusion. Cleanliness eliminates clutter.  
+        <strong>Trust is our foundation.</strong>
+      </div>
+    </main>
+  </section>
 
   <!-- Footer injection -->
   <div id="footer"></div>
