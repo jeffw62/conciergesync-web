@@ -608,6 +608,10 @@
       const html = await res.text();
       workspace.innerHTML = html;
     
+      // Load redemption module script dynamically
+      const redemptionScript = document.createElement('script');
+      redemptionScript.src = '/dev/js/redemption-module.js';
+      document.body.appendChild(redemptionScript);
       // Wait a short moment, then initialize the redemption module
       setTimeout(() => {
         if (typeof initRedemptionModule === "function") {
