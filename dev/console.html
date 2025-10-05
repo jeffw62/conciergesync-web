@@ -35,42 +35,52 @@
     #tickerTrend.good { color: #3ad97f; }  /* green down arrow */
     #tickerTrend.bad  { color: #ff6060; }  /* red up arrow   */
 
-    .nav-bar {
+    /* --- Header Layout --- */
+    header {
       display: flex;
-      justify-content: center;
-      gap: 40px;
-      background: rgba(10, 18, 36, 0.9);
-      padding: 10px 0 14px;
-      border-radius: 0 0 12px 12px;
-      backdrop-filter: blur(6px);
+      justify-content: space-between;
+      align-items: center;
+      padding: 14px 40px;
+      background: #0a1a33;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.4);
     }
     
-    .nav-item {
+    /* --- Top-right nav cluster --- */
+    .console-nav {
       display: flex;
-      align-items: center;
-      gap: 6px;
+      gap: 28px;
+    }
+    
+    .console-nav .nav-link {
       color: #d4d4d4;
+      text-decoration: none;
       font-size: 0.95rem;
       font-weight: 400;
       letter-spacing: 0.4px;
-      text-decoration: none;
       transition: all 0.25s ease;
-      padding: 6px 14px;
-      border-radius: 999px;
-      background: rgba(255, 255, 255, 0.04);
+      padding: 6px 8px;
+      border-radius: 4px;
     }
     
-    .nav-item:hover {
+    .console-nav .nav-link:hover {
       color: #fff;
       background: rgba(212, 175, 55, 0.1);
       box-shadow: 0 0 8px rgba(212, 175, 55, 0.2) inset;
       transform: translateY(-1px);
     }
     
-    .nav-item i {
-      font-size: 1.1rem;
-      vertical-align: middle;
+    /* Slightly lighter look for secondary links */
+    .console-nav .nav-link.secondary {
+      color: rgba(212, 212, 212, 0.7);
+      font-size: 0.9rem;
     }
+    
+    .console-nav .nav-link.secondary:hover {
+      color: #fff;
+      background: rgba(255, 255, 255, 0.06);
+      box-shadow: none;
+    }
+
     
     /* --- Welcome section --- */
     .welcome-section {
@@ -368,11 +378,14 @@
     <div class="menu-toggle">
       <span></span><span></span><span></span>
     </div>
-    <nav>
-      <a href="/dev/about.html">About</a>
-      <a href="/dev/betap.html">Beta Program</a>
-      <a href="#">Helpful Hints</a>
-      <a href="#">Contact</a>
+    
+    <nav class="console-nav">
+      <a href="#" class="nav-link">Wallet</a>
+      <a href="#" class="nav-link">Redemptions</a>
+      <a href="#" class="nav-link">Bonuses</a>
+      <a href="#" class="nav-link">Settings</a>
+      <a href="#" class="nav-link secondary">Helpful Hints</a>
+      <a href="#" class="nav-link secondary">Contact</a>
     </nav>
   </header>
 
@@ -383,15 +396,6 @@
     <span id="tickerTrend" class="up">▲</span>
   </div>
   
-  <!-- Console Body -->
-  <!-- Tab navigation row -->
-  <div class="nav-bar">
-    <a href="#" class="nav-item active"><i class="fas fa-wallet"></i> Wallet</a>
-    <a href="#" class="nav-item"><i class="fas fa-bullseye"></i> Redemptions</a>
-    <a href="#" class="nav-item"><i class="fas fa-rocket"></i> Bonuses</a>
-    <a href="#" class="nav-item"><i class="fas fa-cog"></i> Settings</a>
-  </div>
- 
   <!-- Welcome + Creed Section -->
   <section id="welcome-section" class="welcome-section">
     <h1 id="welcome-message">Welcome, Jeff.</h1>
