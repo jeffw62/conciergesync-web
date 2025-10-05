@@ -4,73 +4,144 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ConciergeSync™ Console</title>
+  <link rel="stylesheet" href="/dev/style.css" />
   <style>
+    /* --- Page Background --- */
     body {
       margin: 0;
       font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-      background: #f5f7fa;
-      color: #222;
-    }
-    header {
-      background: #0b0f14;
+      background: linear-gradient(180deg, #0a1a33 0%, #121a27 100%);
       color: #fff;
-      padding: 16px 40px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-    header nav a {
-      margin-left: 24px;
-      text-decoration: none;
-      color: #fff;
-      font-weight: 500;
     }
 
-    .container {
+    /* --- Console Layout --- */
+    main.console-container {
       max-width: 1200px;
       margin: 0 auto;
-      padding: 30px 20px;
-    }
-
-    .card {
-      background: #fff;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 20px;
-      margin-bottom: 24px;
-    }
-
-    /* Row layouts */
-    .row-2, .row-3 {
+      padding: 60px 20px 100px;
       display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    /* --- Metric Row --- */
+    .metrics-row {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
       gap: 20px;
     }
-    .row-2 .card { flex: 1; }
-    .row-3 .card { flex: 1; }
 
-    h2 { margin-top: 0; font-size: 1.3rem; }
-    footer {
-      background: #0b0f14;
-      color: #fff;
+    .metric-card {
+      flex: 1 1 260px;
+      background: #fff;
+      color: #0a1a33;
+      border: 2px solid #bfa14a;
+      border-radius: 10px;
+      padding: 20px;
       text-align: center;
-      padding: 16px;
-      margin-top: 40px;
-      font-size: 0.9rem;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .metric-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 6px 18px rgba(0,0,0,0.3);
+    }
+    .metric-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      color: #bfa14a;
+    }
+    .metric-card p {
+      margin: 0;
+      font-size: 1rem;
     }
 
-    /* Mobile */
+    /* --- Wallet Section --- */
+    .wallet-card {
+      background: #fff;
+      color: #0a1a33;
+      border-radius: 10px;
+      border: 2px solid #bfa14a;
+      padding: 24px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    .wallet-card h2 {
+      margin-top: 0;
+      color: #bfa14a;
+    }
+    .wallet-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      gap: 16px;
+      margin-top: 10px;
+    }
+    .wallet-item {
+      background: #f9fafc;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 12px 16px;
+    }
+    .wallet-item strong {
+      color: #0a1a33;
+      font-weight: 700;
+    }
+
+    /* --- Insights Section --- */
+    .insights-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .insight-card {
+      flex: 1 1 360px;
+      background: #fff;
+      color: #0a1a33;
+      border-radius: 10px;
+      border: 2px solid #bfa14a;
+      padding: 20px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+    }
+    .insight-card h2 {
+      color: #bfa14a;
+      margin-top: 0;
+    }
+
+    /* --- Creed Footer Card --- */
+    .creed-card {
+      background: rgba(191,161,74,0.08);
+      border: 2px dashed #bfa14a;
+      border-radius: 10px;
+      text-align: center;
+      padding: 24px;
+      font-style: italic;
+      color: rgba(255,255,255,0.8);
+    }
+
+    /* --- Mobile --- */
     @media (max-width: 768px) {
-      .row-2, .row-3 {
+      .metrics-row, .insights-row {
         flex-direction: column;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Header -->
   <header>
-    <div class="logo">ConciergeSync™ Console</div>
+    <div class="logo">
+      <a href="/dev/home.html">
+        <img src="/dev/asset/CS_Logo_Premium_2x.png" alt="ConciergeSync Logo" />
+        ConciergeSync™
+      </a>
+    </div>
+    <div class="menu-toggle">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
     <nav>
-      <a href="home-dev.html">Home</a>
+      <a href="/dev/home.html">Home</a>
       <a href="#">Redemption Engine</a>
       <a href="#">My Cards</a>
       <a href="#">My Programs</a>
@@ -79,58 +150,100 @@
     </nav>
   </header>
 
-  <main class="container">
-    <!-- Row 1: Wide -->
-    <div class="card">
-      <h2>📊 Points Overview</h2>
-      <p>Total Points Value: <strong>881,204</strong> (3.0¢ baseline)</p>
-      <ul>
-        <li>American Airlines: 138,296 miles</li>
-        <li>Chase UR: 219,896 points</li>
-        <li>AmEx MR: 316,395 points</li>
-        <li>Capital One Rewards: 206,617 miles</li>
-      </ul>
+  <!-- Console Body -->
+  <main class="console-container">
+    <!-- Top Metric Row -->
+    <div class="metrics-row">
+      <div class="metric-card">
+        <h2>💳 Total Cards</h2>
+        <p><strong>6 Active</strong></p>
+        <small>Across 3 issuers</small>
+      </div>
+      <div class="metric-card">
+        <h2>💎 Points Value</h2>
+        <p><strong>1,245,600 pts</strong></p>
+        <small>≈ $37,368 (3.0¢ baseline)</small>
+      </div>
+      <div class="metric-card">
+        <h2>🎯 Redemptions</h2>
+        <p><strong>3 Exceptional</strong></p>
+        <small>Updated 2h ago</small>
+      </div>
+      <div class="metric-card">
+        <h2>🚀 Transfer Bonuses</h2>
+        <p><strong>2 Active</strong></p>
+        <small>See full list</small>
+      </div>
     </div>
 
-    <!-- Row 2: Two-up -->
-    <div class="row-2">
-      <div class="card">
-        <h2>💳 My Cards</h2>
-        <p>Capital One Venture X — $332 balance — Due Oct 10</p>
-        <p>AmEx Gold — $0 balance — Due Sep 25</p>
-        <p>Chase Sapphire Preferred — $0 balance — Due Sep 21</p>
+    <!-- Wallet Snapshot -->
+    <div class="wallet-card">
+      <h2>Wallet Snapshot</h2>
+      <div class="wallet-grid">
+        <div class="wallet-item">
+          <strong>Chase Sapphire Preferred</strong><br>
+          219,896 UR • $0 balance • Due Sep 21
+        </div>
+        <div class="wallet-item">
+          <strong>AmEx Gold</strong><br>
+          316,395 MR • $0 balance • Due Sep 25
+        </div>
+        <div class="wallet-item">
+          <strong>Capital One Venture X</strong><br>
+          206,617 Miles • $332 balance • Due Oct 10
+        </div>
+        <div class="wallet-item">
+          <strong>American Airlines</strong><br>
+          138,296 Miles • Platinum Status
+        </div>
       </div>
-      <div class="card">
+    </div>
+
+    <!-- Insights + Alerts -->
+    <div class="insights-row">
+      <div class="insight-card">
         <h2>🎯 Redemption Engine Highlights</h2>
         <ul>
-          <li>DFW → LHR — 13.8¢ per mile (AA miles)</li>
-          <li>CUN → DFW — 4.5¢ per mile (Avios)</li>
-          <li>LAS → JFK — 3.9¢ per mile (JetBlue points)</li>
+          <li>DFW → LHR — 13.8¢/mile (AA)</li>
+          <li>CUN → DFW — 4.5¢/mile (Avios)</li>
+          <li>LAS → JFK — 3.9¢/mile (JetBlue)</li>
         </ul>
-        <button>View Full Engine</button>
+        <button class="btn">View Full Engine</button>
+      </div>
+      <div class="insight-card">
+        <h2>🚀 Transfer Bonus Alerts</h2>
+        <p>30% bonus → Chase UR → Avios (Ends Oct 15)</p>
+        <p>20% bonus → AmEx MR → Virgin (Ends Oct 30)</p>
+      </div>
+      <div class="insight-card">
+        <h2>💡 Helpful Hint</h2>
+        <p>Pair Sapphire Preferred with Freedom Flex to unlock 5x quarterly categories and 1:1 UR transfers.</p>
       </div>
     </div>
 
-    <!-- Row 3: Three-up -->
-    <div class="row-3">
-      <div class="card">
-        <h2>💡 Helpful Hint</h2>
-        <p>Pairing Sapphire Preferred with Freedom Flex unlocks 5x quarterly categories with 1:1 UR transfers.</p>
-      </div>
-      <div class="card">
-        <h2>🚀 Transfer Bonus Alerts</h2>
-        <p>30% bonus → Chase UR → Avios (Ends Sep 15)</p>
-        <p>20% bonus → AmEx MR → Virgin (Ends Sep 30)</p>
-      </div>
-      <div class="card">
-        <h2>🤝 The ConciergeSync™ Creed</h2>
-        <p>Clarity eliminates confusion. Cleanliness eliminates clutter. Trust is our foundation.</p>
-      </div>
+    <!-- Creed / Motto -->
+    <div class="creed-card">
+      Clarity eliminates confusion. Cleanliness eliminates clutter.  
+      <strong>Trust is our foundation.</strong>
     </div>
   </main>
 
-  <footer>
-    Solving What Matters… <em>Beautifully</em> • © 2025 ConciergeSync™
-  </footer>
+  <!-- Footer injection -->
+  <div id="footer"></div>
+
+  <script>
+    // Footer loader
+    fetch("/dev/footer.html")
+      .then(res => res.text())
+      .then(html => { document.getElementById("footer").innerHTML = html; })
+      .catch(err => console.error("Footer failed to load:", err));
+
+    // Hamburger toggle
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggle = document.querySelector(".menu-toggle");
+      const nav = document.querySelector("header nav");
+      if (toggle && nav) toggle.addEventListener("click", () => nav.classList.toggle("active"));
+    });
+  </script>
 </body>
 </html>
