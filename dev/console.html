@@ -469,15 +469,6 @@
     
     welcomeMsg.textContent = `${greeting}, Jeff.`;
       
-    // Tab activation (visual only for now)
-    const tabs = document.querySelectorAll(".tab-btn");
-    tabs.forEach(btn => {
-      btn.addEventListener("click", () => {
-        tabs.forEach(t => t.classList.remove("active"));
-        btn.classList.add("active");
-        // Later this will load the module into the workspace
-      });
-    });
   </script>
 </body>
 </html>
