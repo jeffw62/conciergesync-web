@@ -368,17 +368,15 @@
       position: relative;
     }
     
-    .profile-btn {
-      background: none;
-      border: none;
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 50%;
-      transition: background 0.2s ease;
+    .profile-btn i {
+      font-size: 1.3rem;
+      color: rgba(212, 212, 212, 0.65);
+      transition: color 0.25s ease, transform 0.25s ease;
     }
     
-    .profile-btn:hover {
-      background: rgba(255,255,255,0.08);
+    .profile-btn:hover i {
+      color: #fff;
+      transform: translateY(-1px);
     }
     
     .profile-btn img {
@@ -445,9 +443,9 @@
       <a href="#" class="nav-link secondary">Contact</a>
         <!-- Account / profile dropdown -->
         <div class="account-menu">
-          <button id="accountBtn" class="profile-btn">
-            <img src="/assets/icons/user.svg" alt="Account" />
-          </button>
+           <button id="accountBtn" class="profile-btn">
+              <i class="fas fa-user-circle"></i>
+           </button>
           <div class="account-dropdown">
             <a href="#">Settings</a>
             <a href="#">Profile</a>
