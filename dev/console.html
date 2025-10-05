@@ -459,7 +459,16 @@
       text-rendering: auto;
       -webkit-font-smoothing: antialiased;
     }
+    /* --- Workspace fade animation --- */
+    .console-container {
+      animation: fadeIn 0.6s ease;
+    }
     
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(8px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
   </style>
 </head>
 <body>
@@ -500,21 +509,19 @@
     <span id="tickerTrend" class="up">▲</span>
   </div>
   
-  <!-- Welcome + Creed Section -->
-  <section id="welcome-section" class="welcome-section">
-    <h1 id="welcome-message">Welcome, Jeff.</h1>
-    <p class="subline">Welcome to your ConciergeSync™ Console — your travel finances, unified in one glance.</p>
-  
-    <div class="creed-box">
-      <p class="creed-heading">ConciergeSync™ Creed...</p>
-      <p class="creed-body">
-        Clarity eliminates confusion. Cleanliness eliminates clutter.
-        <strong>Trust is our foundation.</strong>
-      </p>
-    </div>
-  </section>
+  <!-- Main workspace container -->
+  <main id="workspace" class="console-container">
+    <!-- Default welcome view -->
+    <section id="welcome-section" class="welcome-section">
+      <h1 id="welcome-message">Good morning, Jeff.</h1>
+      <p>Welcome to your ConciergeSync™ Console — your travel finances, unified in one glance.</p>
+      <div class="creed-box">
+        <h3 class="creed-heading">ConciergeSync™ Creed…</h3>
+        <p class="creed-body">Clarity eliminates confusion. Cleanliness eliminates clutter. <strong>Trust is our foundation.</strong></p>
+      </div>
+    </section>
+  </main>
 
-</main>
 
   <!-- Footer Injection -->
   <div id="footer"></div>
@@ -582,6 +589,34 @@
       }
     });
   </script>
+  <script>
+  // Load content dynamically into the workspace
+  const workspace = document.getElementById("workspace");
+
+  document.querySelectorAll('.nav-link').forEach(link => {
+    link.addEventListener('click', async (e) => {
+      e.preventDefault();
+      const page = e.target.textContent.trim().toLowerCase();
+
+      // highlight the current link
+      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
+      e.target.classList.add('active');
+
+      // load content
+      if (page === 'redemptions') {
+        const res = await fetch('/dev/redemption.html');
+        const html = await res.text();
+        workspace.innerHTML = html;
+      } else if (page === 'wallet') {
+        workspace.innerHTML = '<h2>Wallet coming soon...</h2>';
+      } else if (page === 'bonuses') {
+        workspace.innerHTML = '<h2>Bonuses panel placeholder...</h2>';
+      } else {
+        workspace.innerHTML = document.getElementById('welcome-section').outerHTML;
+      }
+    });
+  });
+</script>
 
 </body>
 </html>
