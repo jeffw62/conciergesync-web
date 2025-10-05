@@ -32,8 +32,8 @@
       font-size: 1.1rem;
     }
     
-    #tickerTrend.up  { color: #bfa14a; }
-    #tickerTrend.down { color: #ff6060; }
+    #tickerTrend.good { color: #3ad97f; }  /* green down arrow */
+    #tickerTrend.bad  { color: #ff6060; }  /* red up arrow   */
 
     /* --- Remove any leftover hero or band from global styles --- */
     .hero, .hero::after {
@@ -407,15 +407,14 @@
     let current = 2.13;
   
     setInterval(() => {
-      // random small change ±0.05
-      const delta = (Math.random() - 0.5) * 0.1;
-      current = Math.max(1.5, Math.min(3.5, current + delta));
-      const trendUp = delta >= 0;
+    const delta = (Math.random() - 0.5) * 0.1;
+    current = Math.max(1.5, Math.min(3.5, current + delta));
   
-      tickerValue.textContent = current.toFixed(2) + "¢";
-      tickerTrend.textContent = trendUp ? "▲" : "▼";
-      tickerTrend.className = trendUp ? "up" : "down";
-    }, 3000);
+    const goingDown = delta < 0;
+    tickerValue.textContent = current.toFixed(2) + "¢";
+    tickerTrend.textContent = goingDown ? "▼" : "▲";
+    tickerTrend.className = goingDown ? "good" : "bad";
+  }, 3000);
   </script>
 
 </body>
