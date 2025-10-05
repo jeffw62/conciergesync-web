@@ -363,6 +363,64 @@
     main.console-container {
       flex: 1; /* keeps footer at bottom when content is short */
     }
+    /* --- Account icon + dropdown --- */
+    .account-menu {
+      position: relative;
+    }
+    
+    .profile-btn {
+      background: none;
+      border: none;
+      cursor: pointer;
+      padding: 4px;
+      border-radius: 50%;
+      transition: background 0.2s ease;
+    }
+    
+    .profile-btn:hover {
+      background: rgba(255,255,255,0.08);
+    }
+    
+    .profile-btn img {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      object-fit: cover;
+      filter: brightness(0.9);
+    }
+    
+    /* Dropdown panel */
+    .account-dropdown {
+      display: none;
+      position: absolute;
+      right: 0;
+      top: 110%;
+      background: rgba(10,18,36,0.98);
+      border: 1px solid rgba(191,161,74,0.4);
+      border-radius: 8px;
+      min-width: 160px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+      z-index: 999;
+    }
+    
+    .account-dropdown a {
+      display: block;
+      color: #d4d4d4;
+      text-decoration: none;
+      padding: 10px 16px;
+      font-size: 0.9rem;
+      transition: background 0.2s ease, color 0.2s ease;
+    }
+    
+    .account-dropdown a:hover {
+      color: #fff;
+      background: rgba(212,175,55,0.1);
+    }
+    
+    /* Show dropdown on active */
+    .account-menu.active .account-dropdown {
+      display: block;
+    }
 
   </style>
 </head>
@@ -383,9 +441,19 @@
       <a href="#" class="nav-link">Wallet</a>
       <a href="#" class="nav-link">Redemptions</a>
       <a href="#" class="nav-link">Bonuses</a>
-      <a href="#" class="nav-link">Settings</a>
       <a href="#" class="nav-link secondary">Helpful Hints</a>
       <a href="#" class="nav-link secondary">Contact</a>
+        <!-- Account / profile dropdown -->
+        <div class="account-menu">
+          <button id="accountBtn" class="profile-btn">
+            <img src="/assets/icons/user.svg" alt="Account" />
+          </button>
+          <div class="account-dropdown">
+            <a href="#">Settings</a>
+            <a href="#">Profile</a>
+            <a href="#">Log Out</a>
+          </div>
+        </div>
     </nav>
   </header>
 
@@ -462,7 +530,22 @@
     }
     
     welcomeMsg.textContent = `${greeting}, Jeff.`;
-      
   </script>
+
+  <script>
+    const accountBtn = document.getElementById('accountBtn');
+    const accountMenu = accountBtn.parentElement;
+  
+    accountBtn.addEventListener('click', () => {
+      accountMenu.classList.toggle('active');
+    });
+  
+    document.addEventListener('click', (e) => {
+      if (!accountMenu.contains(e.target)) {
+        accountMenu.classList.remove('active');
+      }
+    });
+  </script>
+
 </body>
 </html>
