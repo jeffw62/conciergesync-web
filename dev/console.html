@@ -6,6 +6,35 @@
   <title>ConciergeSync™ Console</title>
   <link rel="stylesheet" href="/dev/style.css" />
   <style>
+
+    /* --- CPM Ticker --- */
+    .ticker-bar {
+      background: rgba(0,0,0,0.25);
+      color: #fff;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+      padding: 10px 0;
+      border-top: 1px solid rgba(255,255,255,0.1);
+      border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+    
+    .ticker-bar .label {
+      color: #bfa14a;
+      font-weight: 600;
+    }
+    
+    #tickerValue {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    
+    #tickerTrend.up  { color: #bfa14a; }
+    #tickerTrend.down { color: #ff6060; }
+
     /* --- Remove any leftover hero or band from global styles --- */
     .hero, .hero::after {
       display: none !important;
@@ -211,6 +240,13 @@
     </nav>
   </header>
 
+  <!-- Avg Cost Per Mile Ticker -->
+  <div class="ticker-bar">
+    <span class="label">Avg Cost per Mile:</span>
+    <span id="tickerValue">2.13¢</span>
+    <span id="tickerTrend" class="up">▲</span>
+  </div>
+  
   <!-- Console Body -->
   <main class="console-container">
     <div class="metrics-row">
@@ -291,5 +327,23 @@
         toggle.addEventListener("click", () => nav.classList.toggle("active"));
     });
   </script>
+
+  <script>
+    const tickerValue = document.getElementById('tickerValue');
+    const tickerTrend = document.getElementById('tickerTrend');
+    let current = 2.13;
+  
+    setInterval(() => {
+      // random small change ±0.05
+      const delta = (Math.random() - 0.5) * 0.1;
+      current = Math.max(1.5, Math.min(3.5, current + delta));
+      const trendUp = delta >= 0;
+  
+      tickerValue.textContent = current.toFixed(2) + "¢";
+      tickerTrend.textContent = trendUp ? "▲" : "▼";
+      tickerTrend.className = trendUp ? "up" : "down";
+    }, 3000);
+  </script>
+
 </body>
 </html>
