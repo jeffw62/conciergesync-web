@@ -241,9 +241,24 @@ function initRedemptionModule() {
   });
 }
     if (page === 'redemptions') {
-      const res = await fetch('/dev/redem-con.html');
-      const html = await res.text();
-      workspace.innerHTML = html;
-      initRedemptionModule(); // <— this line makes the buttons/fields live
-}
+    const res = await fetch('/dev/redem-con.html');
+    const html = await res.text();
+    workspace.innerHTML = html;
+  
+    // Find and execute scripts inside the injected HTML
+    const tempDiv = document.createElement('div');
+    tempDiv.innerHTML = html;
+    const scripts = tempDiv.querySelectorAll('script');
+    scripts.forEach(scr => {
+      const newScript = document.createElement('script');
+      if (scr.src) {
+        newScript.src = scr.src;
+        newScript.async = false;
+        document.body.appendChild(newScript);
+      } else {
+        newScript.textContent = scr.textContent;
+        document.body.appendChild(newScript);
+      }
+    });
+  }
 </script>
