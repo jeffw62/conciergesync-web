@@ -604,7 +604,7 @@
 
       // load content
       if (page === 'redemptions') {
-        const res = await fetch('/dev/redemption.html');
+        const res = await fetch('/dev/redem-con.html');
         const html = await res.text();
         workspace.innerHTML = html;
       } else if (page === 'wallet') {
