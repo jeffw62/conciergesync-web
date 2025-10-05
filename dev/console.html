@@ -612,9 +612,9 @@
       setTimeout(() => {
         if (typeof initRedemptionModule === "function") {
           initRedemptionModule();
-          console.log("✅ Redemption module initialized.");
+          console.log("Redemption module initialized.");
         } else {
-          console.warn("⚠️ initRedemptionModule() not found — check /dev/js/redemption-module.js");
+          console.warn("initRedemptionModule() not found — check /dev/js/redemption-module.js");
         }
       }, 100);
     }
