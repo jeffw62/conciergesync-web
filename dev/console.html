@@ -69,12 +69,10 @@
     
     .nav-bar .nav-item.active {
       color: #f5d36c;
-      background: none !important;          /* clears inherited background completely */
-      background-color: rgba(212, 175, 55, 0.08) !important; /* clean gold tint */
+      background-color: rgba(212, 175, 55, 0.03); /* down from 0.08 */
       box-shadow: 0 0 6px rgba(212, 175, 55, 0.25) inset,
                   0 0 6px rgba(212, 175, 55, 0.15);
       transform: translateY(-1px);
-      isolation: isolate;                   /* forces a separate compositing layer */
     }
 
     .nav-item i {
