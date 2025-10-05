@@ -6,6 +6,12 @@
   <title>ConciergeSync™ Console</title>
   <link rel="stylesheet" href="/dev/style.css" />
   <style>
+    /* --- Remove any leftover hero or band from global styles --- */
+    .hero, .hero::after {
+      display: none !important;
+      content: none !important;
+    }
+
     /* --- Console Layout --- */
     body {
       margin: 0;
