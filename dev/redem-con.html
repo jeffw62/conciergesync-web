@@ -4,16 +4,19 @@
   .search-panel {
     max-width: 900px;
     margin: 40px auto;
-    background: rgba(255,255,255,0.95);
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-    padding: 24px 20px;
+    background: rgba(10, 18, 36, 0.6); /* translucent navy tone */
+    border: 1px solid rgba(191,161,74,0.4); /* subtle gold frame */
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+    padding: 32px 28px;
     display: grid;
     grid-template-columns: auto auto;
     gap: 60px;
     justify-content: center;
     justify-items: start;
+    color: rgba(255,255,255,0.9);
     position: relative;
+    backdrop-filter: blur(8px); /* soft glass effect */
   }
   @media (max-width: 980px) {
     .search-panel { grid-template-columns: 1fr; }
