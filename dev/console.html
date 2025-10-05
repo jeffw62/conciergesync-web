@@ -39,6 +39,22 @@
       max-width: 180px;       /* prevent full-width blow-up */
       object-fit: contain;    /* no cropping */
     }
+
+    /* --- Align logo and text nicely --- */
+    header .logo {
+      display: flex;
+      align-items: center;
+      gap: 8px;               /* spacing between logo and text */
+    }
+    
+    header .logo a {
+      display: flex;
+      align-items: center;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 600;
+    }
+
     
     @media (max-width: 768px) {
       header .logo img {
