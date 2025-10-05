@@ -343,7 +343,22 @@
       transition: background 0.3s ease;
     }
     .action-btn:hover { background: rgba(191,161,74,0.2); }
+
+    html, body {
+      height: 100%;
+      margin: 0;
+    }
     
+    body {
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+    
+    main.console-container {
+      flex: 1; /* keeps footer at bottom when content is short */
+    }
+
   </style>
 </head>
 <body>
@@ -385,7 +400,7 @@
   <!-- Welcome + Creed Section -->
   <section id="welcome-section" class="welcome-section">
     <h1 id="welcome-message">Welcome, Jeff.</h1>
-    <p class="subline">Your travel finance landscape in one glance.</p>
+    <p class="subline">Welcome to your ConciergeSync™ Console — your travel finances, unified in one glance.</p>
   
     <div class="creed-box">
       <p class="creed-heading">ConciergeSync™ Creed...</p>
@@ -433,17 +448,22 @@
   }, 3000);
   </script>
   <script>
-    // Welcome message logic
+    // --- Time-based greeting logic ---
     const welcomeMsg = document.getElementById("welcome-message");
-    const seenKey = "cs_hasVisitedConsole";
-  
-    if (sessionStorage.getItem(seenKey)) {
-      welcomeMsg.textContent = "Welcome back, Jeff.";
+    const now = new Date();
+    const hour = now.getHours();
+    let greeting;
+    
+    if (hour < 12) {
+      greeting = "Good morning";
+    } else if (hour < 18) {
+      greeting = "Good afternoon";
     } else {
-      welcomeMsg.textContent = "Welcome, Jeff.";
-      sessionStorage.setItem(seenKey, "true");
+      greeting = "Good evening";
     }
-  
+    
+    welcomeMsg.textContent = `${greeting}, Jeff.`;
+      
     // Tab activation (visual only for now)
     const tabs = document.querySelectorAll(".tab-btn");
     tabs.forEach(btn => {
