@@ -35,6 +35,77 @@
     #tickerTrend.good { color: #3ad97f; }  /* green down arrow */
     #tickerTrend.bad  { color: #ff6060; }  /* red up arrow   */
 
+    /* --- Tab navigation --- */
+    .console-tabs {
+      display: flex;
+      justify-content: center;
+      gap: 24px;
+      margin-bottom: 40px;
+      border-bottom: 1px solid rgba(191,161,74,0.25);
+      padding-bottom: 10px;
+    }
+    
+    .tab-btn {
+      background: none;
+      border: none;
+      color: #fff;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: color 0.3s ease;
+    }
+    
+    .tab-btn:hover,
+    .tab-btn.active {
+      color: #bfa14a;
+    }
+    
+    /* --- Welcome section --- */
+    .welcome-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      color: #fff;
+      margin-top: 40px;
+      animation: fadeIn 1s ease;
+    }
+    
+    .welcome-section h1 {
+      font-size: 2rem;
+      color: #bfa14a;
+      margin-bottom: 8px;
+    }
+    
+    .subline {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.8);
+      margin-bottom: 30px;
+    }
+    
+    /* --- Creed box --- */
+    .creed-box {
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(191,161,74,0.4);
+      border-radius: 12px;
+      padding: 20px 40px;
+      color: rgba(255,255,255,0.85);
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      max-width: 600px;
+    }
+    
+    .creed-box h3 {
+      color: #bfa14a;
+      margin-bottom: 10px;
+      font-size: 1rem;
+      letter-spacing: 0.5px;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    
     /* --- Remove any leftover hero or band from global styles --- */
     .hero, .hero::after {
       display: none !important;
@@ -327,27 +398,29 @@
   </div>
   
   <!-- Console Body -->
-  <main class="console-container">
-    <!-- Welcome Section -->
-    <section class="console-intro">
-      <h1>Welcome back, Jeff.</h1>
-      <p>Your travel finance landscape in one glance.</p>
-    </section>
-    
-    <!-- Primary Insight (hero panel) -->
-    <section class="console-spotlight">
-      <h2>💎 Points Value</h2>
-      <p><strong>1,245,600 pts</strong> ≈ $37,368 (3.0¢ baseline)</p>
-      <p>Last update · 2 hours ago</p>
-      <button class="btn-primary">View Optimization</button>
-    </section>
-    
-    <!-- Quick-Access Actions -->
-    <section class="console-actions">
-      <button class="action-btn">💳 Wallet</button>
-      <button class="action-btn">🎯 Redemptions</button>
-      <button class="action-btn">🚀 Transfer Bonuses</button>
-    </section>
+  <!-- Tab navigation row -->
+  <nav class="console-tabs">
+    <button class="tab-btn" data-module="wallet">💳 Wallet</button>
+    <button class="tab-btn" data-module="redemptions">🎯 Redemptions</button>
+    <button class="tab-btn" data-module="bonuses">🚀 Bonuses</button>
+    <button class="tab-btn" data-module="settings">⚙️ Settings</button>
+  </nav>
+  
+  <!-- Welcome + Creed Section -->
+  <section id="welcome-section" class="welcome-section">
+    <h1 id="welcome-message">Welcome, Jeff.</h1>
+    <p class="subline">Your travel finance landscape in one glance.</p>
+  
+    <div class="creed-box">
+      <h3>ConciergeSync™ Creed</h3>
+      <p>
+        Clarity eliminates confusion.<br />
+        Cleanliness eliminates clutter.<br />
+        <strong>Trust is our foundation.</strong>
+      </p>
+    </div>
+  </section>
+
     
     <!-- Expandable Drawers -->
     <details class="drawer">
@@ -416,6 +489,27 @@
     tickerTrend.className = goingDown ? "good" : "bad";
   }, 3000);
   </script>
-
+  <script>
+    // Welcome message logic
+    const welcomeMsg = document.getElementById("welcome-message");
+    const seenKey = "cs_hasVisitedConsole";
+  
+    if (sessionStorage.getItem(seenKey)) {
+      welcomeMsg.textContent = "Welcome back, Jeff.";
+    } else {
+      welcomeMsg.textContent = "Welcome, Jeff.";
+      sessionStorage.setItem(seenKey, "true");
+    }
+  
+    // Tab activation (visual only for now)
+    const tabs = document.querySelectorAll(".tab-btn");
+    tabs.forEach(btn => {
+      btn.addEventListener("click", () => {
+        tabs.forEach(t => t.classList.remove("active"));
+        btn.classList.add("active");
+        // Later this will load the module into the workspace
+      });
+    });
+  </script>
 </body>
 </html>
