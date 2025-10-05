@@ -1,17 +1,91 @@
-<div id="results" class="mt-8 text-sm text-gray-800">
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Origin</th>
-        <th>Destination</th>
-        <th>Airline</th>
-        <th>Miles Needed</th>
-        <th>Taxes/Fees</th>
-        <th>Seats Available</th>
-        <th>Value (¢/mile)</th>
-      </tr>
-    </thead>
-    <tbody id="resultsBody"></tbody>
-  </table>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConciergeSync™ – Redemption Results</title>
+  <link rel="stylesheet" href="/dev/style.css">
+  <style>
+    main.results-container {
+      max-width: 1200px;
+      margin: 60px auto;
+      padding: 0 20px;
+      color: #fff;
+    }
+    .results-header {
+      margin-bottom: 30px;
+      text-align: center;
+    }
+    .results-header h2 {
+      color: #bfa14a;
+      font-size: 1.8rem;
+      margin-bottom: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      background: rgba(255,255,255,0.05);
+      border: 1px solid rgba(191,161,74,0.4);
+      border-radius: 8px;
+    }
+    th, td {
+      padding: 12px 10px;
+      text-align: left;
+      border-bottom: 1px solid rgba(191,161,74,0.2);
+    }
+    th {
+      color: #bfa14a;
+      font-weight: 600;
+    }
+    tr:hover {
+      background: rgba(255,255,255,0.05);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Shared Header -->
+  <header>
+    <div class="logo">
+      <img src="/dev/asset/CS_Logo_v1.svg" alt="ConciergeSync™">
+    </div>
+  </header>
+
+  <!-- ACPM Ticker -->
+  <div class="ticker-bar">
+    <span class="label">Avg Cost per Mile:</span>
+    <span id="tickerValue">—</span>
+    <span id="tickerTrend"></span>
+  </div>
+
+  <!-- Main Results Content -->
+  <main class="results-container">
+    <div class="results-header">
+      <h2>Redemption Results</h2>
+      <p id="results-summary">Loading your best redemption options...</p>
+    </div>
+
+    <table id="resultsTable">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>Origin</th>
+          <th>Destination</th>
+          <th>Airline</th>
+          <th>Miles Needed</th>
+          <th>Taxes/Fees</th>
+          <th>Seats</th>
+          <th>Value (¢/mile)</th>
+        </tr>
+      </thead>
+      <tbody id="resultsBody">
+        <tr><td colspan="8" style="text-align:center; color:#999;">Loading results...</td></tr>
+      </tbody>
+    </table>
+  </main>
+
+  <footer id="footer"></footer>
+
+  <script src="/dev/js/redemption-results.js"></script>
+</body>
+</html>
