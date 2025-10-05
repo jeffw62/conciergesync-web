@@ -1,122 +1,9 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>ConciergeSync™ – Redemption Engine</title>
-<link rel="stylesheet" href="/dev/style.css">
+<!-- no <html>, no <head>, no <body> -->
+
 <style>
-  body {
-    margin: 0;
-    font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
-    background: #fff;
-    color: #222;
-  }
-
-  /* ---------- Header ---------- */
-  header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px 20px;
-    background: #0a1a33;
-    color: #fff;
-    position: relative;
-    z-index: 1000;
-  }
-  header .logo a {
-    font-weight: 700;
-    font-size: 1.2rem;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: inherit;
-    text-decoration: none;
-  }
-  header .logo img { height: 32px; }
-  header nav { display: none; gap: 24px; }
-  header nav a {
-    text-decoration: none;
-    color: #fff;
-    font-weight: 500;
-    transition: opacity 0.2s ease;
-  }
-  header nav a:hover { opacity: 0.75; }
-  @media (min-width: 769px) {
-    header nav { display: flex; }
-    .menu-toggle { display: none !important; }
-  }
-
-  /* ---------- Hamburger ---------- */
-  .menu-toggle {
-    display: none;
-    flex-direction: column;
-    cursor: pointer;
-    gap: 4px;
-    padding: 10px;
-    margin-left: auto;
-    user-select: none;
-  }
-  .menu-toggle span {
-    display: block;
-    width: 24px;
-    height: 3px;
-    background: #fff;
-    border-radius: 2px;
-  }
-  @media (max-width: 768px) {
-    header nav {
-      display: flex;
-      flex-direction: column;
-      background: #0a1a33;
-      position: absolute;
-      top: 100%;
-      right: 0; left: 0;
-      border-radius: 0 0 6px 6px;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-      max-height: 0; overflow: hidden; opacity: 0;
-      padding: 0 20px;
-      transition: max-height .3s ease, opacity .3s ease, padding .3s ease;
-    }
-    header nav.active { max-height: 400px; opacity: 1; padding: 20px; }
-    .menu-toggle { display: flex; }
-    header nav a { font-size: 1rem; padding: 8px 0; display: block; }
-  }
-
-  /* ---------- Hero ---------- */
-  .hero {
-    background: url('/dev/asset/hero-bg.png') center/cover no-repeat;
-    color: #fff;
-    text-align: center;
-    padding: 200px 20px 120px;
-    position: relative;
-    overflow: hidden;
-  }
-  .hero::before {
-    content: "";
-    position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
-    background: rgba(0,0,0,0.65);
-    z-index: 0;
-  }
-  .hero::after {
-    content: "";
-    position: absolute;
-    left: 0; right: 0; bottom: 0;
-    height: 6px;
-    background: #bfa14a;
-    z-index: 1;
-  }
-  .hero h1,
-  .hero p {
-    position: relative;
-    z-index: 2;
-  }
-
-  /* ---------- Guided Search Panel ---------- */
-   .search-panel {
+  .search-panel {
     max-width: 900px;
-    margin: -80px auto 40px;
+    margin: 40px auto;
     background: rgba(255,255,255,0.95);
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0,0,0,0.15);
@@ -127,313 +14,30 @@
     justify-content: center;
     justify-items: start;
     position: relative;
-    z-index: 3;
   }
-
   @media (max-width: 980px) {
     .search-panel { grid-template-columns: 1fr; }
   }
-
-  .step {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-  }
-  .step > label + input,
-  .step > label + select {
-    margin-top: -6px;   /* cancel gap only for direct label/input pairs */
-  }
-  .step h3 {
-    margin: 0 0 4px 0;
-    color: #0a1a33;
-    font-size: 1.1rem;
-  }
-  .step label {
-    display: block;
-    margin-top: 0;        /* remove top gap */
-    margin-bottom: 4px;   /* match Passengers/Service Class */
-    font-weight: 500;
-    font-size: 0.95rem;
-  }
+  .step { display: flex; flex-direction: column; gap: 6px; }
+  .step label { margin-bottom: 4px; font-weight: 500; }
   .step input, .step select {
-    width: 75%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-family: inherit;
-    font-size: 1rem;
-    color: #333;
-    box-sizing: border-box;
+    width: 75%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
   }
-  .step input[type="date"] {
-    appearance: none;
-    -webkit-appearance: none;
-    background-color: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 10px;
-    font-size: 1rem;
-    color: #333;
-    width: 75%;
-    box-sizing: border-box;
-  }
-
   .search-btn {
-    width: 75%;
-    background: #bfa14a;
-    color: #fff;
-    padding: 12px;
-    border: none;
-    border-radius: 6px;
-    font-size: 1rem;
-    cursor: pointer;
-    display: block;
-    opacity: 0.6;
-    cursor: not-allowed;
+    width: 75%; background: #bfa14a; color: #fff;
+    padding: 12px; border: none; border-radius: 6px;
+    font-size: 1rem; opacity: 0.6; cursor: not-allowed;
   }
-
   #searchWarning {
-    font-size: 0.85rem;
-    color: #a00;
-    margin-top: 6px;
-    text-align: left;
-    opacity: 1;
-    transition: opacity 0.3s ease; /* fade in/out */
+    font-size: 0.85rem; color: #a00; margin-top: 6px;
   }
-  #searchWarning.hidden {
-    opacity: 0;
-  }
-
-  .date-wrap .hint {
-    font-size: 0.8rem;
-    color: #555;
-    display: block;
-    width: 75%;
-    margin-top: 4px;
-    line-height: 1.3;
-  }
-
-  /* ---------- Option Card ---------- */
-  .card-options {
-    display: flex;
-    gap: 8px;
-    width: 75%;
-    margin-top: 16px;
-  }
-  .option-btn {
-    flex: 1;
-    padding: 10px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background: #f7f7f7;
-    cursor: pointer;
-    font-size: 0.95rem;
-    transition: all 0.2s ease;
-  }
-  .option-btn.active {
-    background: #bfa14a;
-    color: #fff;
-    border-color: #bfa14a;
-  }
-  @media (max-width: 600px) {
-    .card-options {
-      flex-direction: column;
-      width: 75%;
-    }
-    .option-btn {
-      width: 100%;
-    }
-  }
-
-  /* ---------- Toggle Group Buttons (Yes/No) ---------- */
-  .toggle-group {
-    display: flex;
-    gap: 10px;
-  }
-  .step > label + .toggle-group {
-    margin-top: -6px;   /* tighten spacing between label and its toggle group */
-  }
-  .toggle-group button {
-    flex: 0 0 auto;
-    padding: 4px 12px;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    background: #f7f7f7;
-    color: #0a1a33;
-    font-size: 0.85rem;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease;
-  }
-  .toggle-group button:hover {
-    background: #e6e6e6;
-  }
+  .toggle-group { display: flex; gap: 10px; }
   .toggle-group button.active {
-    background: #bfa14a;
-    color: #fff;
-    border-color: #bfa14a;
+    background: #bfa14a; color: #fff; border-color: #bfa14a;
   }
-  /* Autocomplete dropdown */
-  .suggestions {
-    position: absolute;
-    background: #fff;
-    border: 1px solid #ccc;
-    max-height: 200px;
-    overflow-y: auto;
-    z-index: 1000;
-    width: 200px;   /* adjust to match your input width */
-    border-radius: 4px;
-  }
-  
-  .suggestion-item {
-    cursor: pointer !important;   /* hand cursor */
-    user-select: none;            /* stop text selection */
-    display: block;               /* whole row clickable */
-    padding: 6px 10px;
-  }
-  
-  .suggestion-item:hover {
-    background: #f0f0f0;
-  }
-    .iata {
-    font-weight: bold;     /* IATA code always bold */
-  }
-  
-  .airport {
-    font-weight: normal;   /* Airport name always regular */
-  }
-
-  /* ---------- Table ---------- */
-  .container {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 40px 20px;
-  }
-  table {
-    width: 100%;
-    border-collapse: collapse;
-    background: #fff;
-    border: 1px solid #ddd;
-  }
-  th, td {
-    padding: 12px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-  }
-  th { background: #f0f0f0; cursor: pointer; }
-  tr:hover { background: #fafafa; }
-  .highlight { background: #fff8e1; }
-  .btn {
-    background: #bfa14a;
-    color: #fff;
-    padding: 8px;
-    border: none;
-    border-radius: 4px;
-    cursor: pointer;
-  }
-
-  @media (max-width: 768px) {
-    table, thead, tbody, th, td, tr { display: block; }
-    thead { display: none; }
-    tr {
-      margin-bottom: 20px;
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      background: #fff;
-      padding: 12px;
-      box-sizing: border-box;
-    }
-    td {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 8px 10px;
-      margin: 6px 0;
-      background: transparent;
-      border-radius: 0;
-      box-sizing: border-box;
-    }
-    td:last-child { border-bottom: none; }
-    td::before {
-      content: attr(data-label);
-      font-weight: bold;
-    }
-    td .btn {
-      width: 100%;
-      padding: 10px;
-      margin-top: 8px;
-      font-size: 0.95rem;
-    }
-    table {
-      border: 1px solid #ddd;
-      border-radius: 6px;
-      background: #fff;
-      margin: 12px auto;
-      padding: 12px;
-      box-sizing: border-box;
-      width: calc(100% - 24px);
-    }
-  }
-
-  /* ---------- Footer ---------- */
-  #footer {
-    position: relative;
-    z-index: 0;
-    margin-top: 60px;
-  }
-  
-  /* ---------- Row (Passengers + Cabin) ---------- */
-  .search-panel .row {
-    display: flex;
-    gap: 12px;
-    width: 75%;              /* match other fields */
-    margin-top: 8px;
-    box-sizing: border-box;
-  }
-  
-  .search-panel .row .field {
-    flex: 1;                  /* split that 75% evenly */
-    box-sizing: border-box;
-  }
-  
-  .search-panel .row input,
-  .search-panel .row select {
-    width: 100%;              /* fill their half only */
-  }
-  
-  /* .search-panel .row label {
-  display: block;
-  margin-bottom: 4px;
-  font-size: 0.9rem;
-} */
 </style>
-</head>
-<body>
 
-<header>
-  <div class="logo">
-    <a href="/dev/home.html">
-      <img src="/dev/asset/CS_Logo_Premium_2x.png" alt="ConciergeSync Logo">
-      ConciergeSync™
-    </a>
-  </div>
-  <div class="menu-toggle"><span></span><span></span><span></span></div>
-  <nav>
-    <a href="/dev/index.html">About</a>
-    <a href="/dev/betap.html">Beta Program</a>
-    <a href="#">Helpful Hints</a>
-    <a href="#">Contact</a>
-  </nav>
-</header>
-
-<section class="hero">
-  <h1>Redemption Engine</h1>
-  <p>Scan and compare the best redemption opportunities across your programs. Sort, filter, and act with confidence.</p>
-</section>
-
-<!-- Guided Search Panel -->
 <div class="search-panel" id="searchPanel">
-  <!-- Step 1 -->
   <div class="step">
     <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
     <label for="origin">Origin</label>
@@ -445,11 +49,11 @@
     <div class="row">
       <div class="field">
         <label for="passengers">Passengers</label>
-        <input type="number" id="passengers" name="passengers" min="1" max="10" value="1" required>
+        <input type="number" id="passengers" value="1" min="1" max="10" />
       </div>
       <div class="field">
         <label for="cabin">Service Class</label>
-        <select id="cabin" name="cabin" required>
+        <select id="cabin">
           <option value="economy">Economy</option>
           <option value="premium_economy">Premium Economy</option>
           <option value="business">Business</option>
@@ -458,41 +62,25 @@
       </div>
     </div>
     <div class="date-wrap">
-      <label for="departDate">Departure Date (Tap To Select Date)</label>
-      <input type="date" id="departDate" />
-
+      <label for="departDate">Departure Date</label>
+      <input type="date" id="departDate">
       <div class="card-options">
         <button class="option-btn active" id="exactBtn">Exact Date</button>
         <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
       </div>
-
-      <div id="flexPicker" class="flex-picker">
+      <div id="flexPicker" class="flex-picker" style="display:none;">
         <label for="flexDays">Search Days +/- Date Selected:</label>
         <select id="flexDays">
           <option value="1">1 day</option>
-          <option value="2">2 days</option>
           <option value="3">3 days</option>
-          <option value="4">4 days</option>
           <option value="5">5 days</option>
-          <option value="6">6 days</option>
           <option value="7">7 days</option>
-          <option value="8">8 days</option>
-          <option value="9">9 days</option>
-          <option value="10">10 days</option>
-          <option value="11">11 days</option>
-          <option value="12">12 days</option>
-          <option value="13">13 days</option>
-          <option value="14">14 days</option>
         </select>
       </div>
-
-      <small class="hint">
-        Select “Exact Date” to search only that day, or “Flexible” to include a +/- 14-day window.
-      </small>
+      <small class="hint">Select “Exact Date” to search only that day, or “Flexible” for a range.</small>
     </div>
   </div>
 
-  <!-- Step 2 + Step 3 stacked -->
   <div class="step routing">
     <h3>Step 2:&nbsp;Routing Preferences</h3>
     <label>Direct Non-stop</label>
@@ -510,8 +98,7 @@
       <button data-val="yes">Yes</button>
       <button data-val="no">No</button>
     </div>
-    <!-- 👇 Program selection dropdown goes here -->
-  <label for="program">Airline Program:</label>
+    <label for="program">Airline Program:</label>
     <select id="program">
       <option value="united">United</option>
       <option value="delta">Delta</option>
@@ -525,34 +112,14 @@
   </div>
 </div>
 
-<div id="results" class="mt-8 text-sm text-gray-800"></div>
-  
-<main class="container">
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Origin</th>
-        <th>Distnation</th>
-        <th>Airline</th>
-        <th>Miles Needed</th>
-        <th>Taxes/Fees</th>
-        <th>Seats Available</th>
-        <th>Value (¢/mile)</th>
-      </tr>
-    </thead>
-    <tbody id="resultsBody"></tbody>
-  </table>
-</main>
-
-<div id="footer"></div>
-
 <script>
-  // Date selection card logic
+document.addEventListener('DOMContentLoaded', () => {
   const exactBtn = document.getElementById('exactBtn');
   const flexBtn = document.getElementById('flexBtn');
   const flexPicker = document.getElementById('flexPicker');
-  
+  const searchBtn = document.querySelector('.search-btn');
+  const warning = document.getElementById('searchWarning');
+
   function setMode(mode) {
     if (mode === 'exact') {
       exactBtn.classList.add('active');
@@ -564,63 +131,26 @@
       flexPicker.style.display = 'block';
     }
   }
-  
+
   exactBtn.addEventListener('click', () => setMode('exact'));
   flexBtn.addEventListener('click', () => setMode('flexible'));
-  
-  document.addEventListener('DOMContentLoaded', () => {
-    setMode('exact');
-    initRoutingLogic();
-  });
+  setMode('exact');
+  initRoutingLogic();
 
-  // Routing Preferences Logic
   function initRoutingLogic() {
-    const directGroup = document.getElementById('directStop');
-    const multiGroup = document.getElementById('multiConn');
-    const posGroup   = document.getElementById('posFlight');
-    const searchBtn  = document.querySelector('.search-btn');
-    const warning    = document.getElementById('searchWarning');
-
-    function activate(btn, group) {
-      group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      checkSelections();
-    }
-
-    // Direct Non-stop
-    directGroup.querySelectorAll('button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        activate(btn, directGroup);
-        if (btn.dataset.val === 'yes') {
-          const noBtn = multiGroup.querySelector('button[data-val="no"]');
-          activate(noBtn, multiGroup);
-        }
-      });
+    const groups = ['directStop','multiConn','posFlight']
+      .map(id => document.getElementById(id));
+    groups.forEach(group => {
+      group.querySelectorAll('button').forEach(btn =>
+        btn.addEventListener('click', () => {
+          group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
+          btn.classList.add('active');
+          checkSelections();
+        })
+      );
     });
-
-    // Multiple Connections
-    multiGroup.querySelectorAll('button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        activate(btn, multiGroup);
-        if (btn.dataset.val === 'yes') {
-          const noBtn = directGroup.querySelector('button[data-val="no"]');
-          activate(noBtn, directGroup);
-        }
-      });
-    });
-
-    // Positioning Flight Allowed
-    posGroup.querySelectorAll('button').forEach(btn => {
-      btn.addEventListener('click', () => {
-        activate(btn, posGroup);
-      });
-    });
-
-    // … later
     function checkSelections() {
-      const allGroups = [directGroup, multiGroup, posGroup];
-      const allSelected = allGroups.every(g => g.querySelector('.active'));
-      
+      const allSelected = groups.every(g => g.querySelector('.active'));
       if (allSelected) {
         searchBtn.disabled = false;
         searchBtn.style.opacity = "1";
@@ -633,271 +163,33 @@
         warning.classList.remove('hidden');
       }
     }
-
-    // Initial state
-    checkSelections();
   }
 
-  // Sample redemption data
-  const redemptions = [
-    { route: "DFW → LHR", program: "AA", points: 57500, cashFare: 7950, fees: 737 },
-    { route: "CUN → DFW", program: "Avios", points: 12000, cashFare: 540, fees: 90 },
-    { route: "LAS → JFK", program: "JetBlue", points: 15000, cashFare: 585, fees: 30 }
-  ];
-  redemptions.forEach(r => { r.cpm = ((r.cashFare - r.fees) / r.points).toFixed(2); });
-
-  function renderTable(data) {
-    const tbody = document.getElementById("resultsBody");
-    tbody.innerHTML = "";
-    data.forEach(r => {
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-      <td data-label="Date">${r.Date || "—"}</td>
-      <td data-label="Origin">${r.Route?.OriginAirport || "—"}</td>
-      <td data-label="Destination">${r.Route?.DestinationAirport || "—"}</td>
-      <td data-label="Airline">${r[`${prefix}Airlines`] || r[`${prefix}AirlinesRaw`] || "—"}</td>
-      <td data-label="Miles Needed">${miles ? miles.toLocaleString() : "—"}</td>
-      <td data-label="Taxes/Fees">${taxes !== "—" ? "$" + taxes : "—"}</td>
-      <td data-label="Seats Available">${seats}</td>
-      <td data-label="Value (¢/mile)">${cpm}</td>
-    `;
-      tbody.appendChild(tr);
-    });
-  } // ✅ properly closed
-
-    // ARE YOU OUT OF YOUR MIND filter
-    function applySanityFilter(results) {
-      return results.filter(r => {
-        const miles = parseInt(
-          r.YMileageCost || r.JMileageCost || r.FMileageCost || 0,
-          10
-        );
-        const distance = r.Route?.Distance || 0;
-        const fees = r.TotalTaxes ? r.TotalTaxes / 100 : 0;
-    
-        // 1. Mileage sanity
-        if (miles < 20000 || miles > 250000) return false;
-    
-        // 2. Distance vs. miles sanity
-        if (distance > 0) {
-          const ratio = miles / distance;
-          if (ratio < 3 || ratio > 20) return false;
-        }
-    
-        // 3. Fees sanity for long-haul
-        if (distance > 3000 && fees < 20) return false;
-    
-        return true;
-      });
-    }
-
-    function displayResults(data, selectedCabin) {
-    const tbody = document.getElementById("resultsBody");
-    tbody.innerHTML = "";
-  
-    // Map fields by cabin prefix
-    const cabinPrefixMap = {
-      economy: "Y",
-      premium_economy: "W",
-      business: "J",
-      first: "F"
-    };
-    const prefix = cabinPrefixMap[selectedCabin] || "Y";
-  
-    // Normalize to an array
-    let results = [];
-    if (Array.isArray(data)) {
-      results = data;
-    } else if (Array.isArray(data.results)) {
-      results = data.results;
-    } else if (Array.isArray(data.data)) {
-      results = data.data;
-    }
-  
-    console.log("🔎 Normalized results:", results.length, results);
-  
-    if (results.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="8">No results found</td></tr>`;
-      return;
-    }
-  
-    results.forEach(r => {
-      const origin = r.Route?.OriginAirport || "—";
-      const destination = r.Route?.DestinationAirport || "—";
-      const program = r.Source || "—";
-      const date = r.Date || "—";
-  
-      // Pick fields based on selected cabin
-      const miles = r[`${prefix}MileageCostRaw`] || 0;
-      const taxes = r[`${prefix}TotalTaxesRaw`] 
-        ? (r[`${prefix}TotalTaxesRaw`] / 100).toFixed(2) 
-        : "—";
-      const seats = r[`${prefix}RemainingSeatsRaw`] || "—";
-  
-      // Value per mile (cents per mile)
-      let cpm = "—";
-      if (miles && typeof miles === "number" && miles > 0) {
-        const feeDollars = (typeof taxes === "string") ? parseFloat(taxes) : taxes;
-        if (!isNaN(feeDollars)) {
-          const centsPerMile = ((feeDollars * 100) / miles).toFixed(2);
-          cpm = `${centsPerMile}¢`;
-        }
-      }
-  
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td data-label="Date">${date}</td>
-        <td data-label="Origin">${origin}</td>
-        <td data-label="Destination">${destination}</td>
-        <td data-label="Program">${program}</td>
-        <td data-label="Points Needed">${miles.toLocaleString()}</td>
-        <td data-label="Fees">${taxes !== "—" ? "$" + taxes : "—"}</td>
-        <td data-label="Seats Available">${seats}</td>
-        <td data-label="Value (¢/mile)">${cpm}</td>
-      `;
-      tbody.appendChild(tr);
-    });
-  }
-
-  // --- Airport Autocomplete ---
-  let airports = [];
-  
-  // Load the airport JSON once when page loads
-  fetch('/dev/asset/iata-icao.json')
-    .then(res => res.json())
-    .then(data => {
-      airports = data;
-      console.log("Loaded airports:", airports.length);
-    })
-    .catch(err => console.error("❌ Failed to load airports:", err));
-  
-  // Function to set up autocomplete for a field
-  function setupAutocomplete(inputId, suggestionsId) {
-    const input = document.getElementById(inputId);
-    const suggestions = document.getElementById(suggestionsId);
-  
-    input.addEventListener('input', () => {
-      const query = input.value.toLowerCase();
-      suggestions.innerHTML = '';
-  
-      if (query.length < 2) return; // only search if 2+ chars
-  
-      const matches = airports.filter(a =>
-        a.iata.toLowerCase().includes(query) ||
-        a.airport.toLowerCase().includes(query) ||
-        (a.region_name && a.region_name.toLowerCase().includes(query))
-      ).slice(0, 10); // limit to 10 results
-  
-      matches.forEach(match => {
-        const div = document.createElement('div');
-        div.classList.add("suggestion-item");
-        div.innerHTML = `<span class="iata">${match.iata}</span> – <span class="airport">${match.airport}</span>`;
-        div.addEventListener('click', () => {
-          input.value = match.iata; // put the IATA code in the box
-          suggestions.innerHTML = '';
-        });
-        suggestions.appendChild(div);
-      });
-    });
-  
-    // Hide suggestions if user clicks away
-    document.addEventListener('click', (e) => {
-      if (!suggestions.contains(e.target) && e.target !== input) {
-        suggestions.innerHTML = '';
-      }
-    });
-  }
-  
-  // Initialize for both fields
-  setupAutocomplete('origin', 'origin-suggestions');
-  setupAutocomplete('destination', 'destination-suggestions');
-
-  // --- Seats.aero API Hook ---
-  document.querySelector('.search-btn').addEventListener('click', () => {
-    const origin = document.getElementById('origin').value.trim().toUpperCase();
-    const destination = document.getElementById('destination').value.trim().toUpperCase();
-    const departDate = document.getElementById('departDate').value;
-    const passengers = document.getElementById('passengers').value;
-    const cabin = document.getElementById('cabin').value;
-  
-    const flexMode = document.getElementById('flexBtn').classList.contains('active') ? 'flexible' : 'exact';
-    const flexDays = parseInt(document.getElementById('flexDays').value, 10);
-    const directPref = document.querySelector('#directStop .active')?.dataset.val;
-    const multiPref = document.querySelector('#multiConn .active')?.dataset.val;
-    const positioning = document.querySelector('#posFlight .active')?.dataset.val;
-  
-    if (!origin || !destination || !departDate) {
-      alert("Please complete origin, destination, and date.");
-      return;
-    }
-  
-    // Compute startDate and endDate
-    let startDate = departDate;
-    let endDate = departDate;
-  
-    if (flexMode === 'flexible') {
-      const baseDate = new Date(departDate);
-  
-      const start = new Date(baseDate);
-      start.setDate(start.getDate() - flexDays);
-      startDate = start.toISOString().split("T")[0];
-  
-      const end = new Date(baseDate);
-      end.setDate(end.getDate() + flexDays);
-      endDate = end.toISOString().split("T")[0];
-    }
-  
-    const program = document.getElementById("program").value;
-  
+  searchBtn.addEventListener('click', () => {
     const payload = {
-      origin,
-      destination,
-      startDate,
-      endDate,
-      passengers,
-      cabin,       // stays as "economy", "business", etc.
-      flexMode,
-      flexDays,
-      routing: {
-        direct: directPref,
-        multi: multiPref,
-        positioning
-      },
-      program
+      origin: document.getElementById('origin').value.trim().toUpperCase(),
+      destination: document.getElementById('destination').value.trim().toUpperCase(),
+      date: document.getElementById('departDate').value,
+      program: document.getElementById('program').value
     };
-  
     console.log("➡️ Payload being sent:", payload);
-  
+    searchBtn.textContent = "Searching…";
+    searchBtn.disabled = true;
+
     fetch("/api/redemption", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+      body: JSON.stringify(payload)
     })
-      .then(res => {
-        if (!res.ok) throw new Error(`Backend error: ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        console.log("🔎 Raw API data:", data);
-    
-        // show a quick "searching" feedback
-        const searchBtn = document.querySelector(".search-btn");
-        searchBtn.textContent = "Searching…";
-        searchBtn.disabled = true;
-    
-        // Hand off to the results page
-        // `sessionId` can be returned from backend, or just use timestamp
-        const sessionId = data.sessionId || Date.now();
-        window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
-      })
-      .catch(err => {
-        console.error("❌ Redemption API error:", err);
-        alert("Something went wrong while searching. Please try again.");
-      });
+    .then(res => res.json())
+    .then(data => {
+      const sessionId = data.sessionId || Date.now();
+      window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
+    })
+    .catch(err => {
+      console.error("❌ Redemption API error:", err);
+      alert("Something went wrong while searching. Please try again.");
+    });
   });
-
-
+});
 </script>
-
-</body>
-</html>
