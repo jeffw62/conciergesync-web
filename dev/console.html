@@ -26,6 +26,37 @@
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
     }
 
+    header {
+      background: #0a1a33;
+      color: #fff;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    }
+    
+    /* --- Header logo size control --- */
+    header .logo img {
+      height: 40px;           /* normal desktop height */
+      width: auto;            /* maintain aspect ratio */
+      max-width: 180px;       /* prevent full-width blow-up */
+      object-fit: contain;    /* no cropping */
+    }
+    
+    @media (max-width: 768px) {
+      header .logo img {
+        height: 32px;         /* smaller on mobile */
+        max-width: 140px;
+      }
+    }
+    
+    main.console-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 60px 20px 100px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+    }
+
+    
     main.console-container {
       max-width: 1200px;
       margin: 0 auto;
