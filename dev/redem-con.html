@@ -22,14 +22,32 @@
     .search-panel { grid-template-columns: 1fr; }
   }
   .step { display: flex; flex-direction: column; gap: 6px; }
-  .step label { margin-bottom: 4px; font-weight: 500; }
+  .step label {
+    color: rgba(255,255,255,0.85);
+  }
   .step input, .step select {
     width: 75%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;
   }
   .search-btn {
-    width: 75%; background: #bfa14a; color: #fff;
-    padding: 12px; border: none; border-radius: 6px;
-    font-size: 1rem; opacity: 0.6; cursor: not-allowed;
+    width: 75%;
+    background: #bfa14a;
+    color: #0a1a33;
+    font-weight: 600;
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 1rem;
+    cursor: not-allowed;
+    opacity: 0.75;
+    transition: all 0.25s ease;
+  }
+  
+  .search-btn:enabled {
+    opacity: 1;
+    cursor: pointer;
+    background: #d6b658;
+    color: #0a1a33;
+    box-shadow: 0 0 10px rgba(191,161,74,0.4);
   }
   #searchWarning {
     font-size: 0.85rem; color: #a00; margin-top: 6px;
@@ -37,6 +55,11 @@
   .toggle-group { display: flex; gap: 10px; }
   .toggle-group button.active {
     background: #bfa14a; color: #fff; border-color: #bfa14a;
+  }
+  .step h3 {
+    color: #f5d36c;
+    font-weight: 600;
+    letter-spacing: 0.3px;
   }
 </style>
 
