@@ -52,7 +52,7 @@
     }
     
     .console-nav .nav-link {
-      color: #d4d4d4;
+      color: rgba(212, 212, 212, 0.65);        /* baseline dim tone */
       text-decoration: none;
       font-size: 0.95rem;
       font-weight: 400;
@@ -60,13 +60,14 @@
       transition: all 0.25s ease;
       padding: 6px 8px;
       border-radius: 4px;
+      transform: translateY(0);
     }
     
     .console-nav .nav-link:hover {
       color: #fff;
       background: rgba(212, 175, 55, 0.1);
       box-shadow: 0 0 8px rgba(212, 175, 55, 0.2) inset;
-      transform: translateY(-1px);
+      transform: translateY(-1px);             /* gentle upward motion */
     }
     
     /* Slightly lighter look for secondary links */
@@ -81,7 +82,6 @@
       box-shadow: none;
     }
 
-    
     /* --- Welcome section --- */
     .welcome-section {
       display: flex;
