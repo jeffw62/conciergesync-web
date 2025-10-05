@@ -35,28 +35,47 @@
     #tickerTrend.good { color: #3ad97f; }  /* green down arrow */
     #tickerTrend.bad  { color: #ff6060; }  /* red up arrow   */
 
-    /* --- Tab navigation --- */
-    .console-tabs {
+    .nav-bar {
       display: flex;
       justify-content: center;
-      gap: 24px;
-      margin-bottom: 40px;
-      border-bottom: 1px solid rgba(191,161,74,0.25);
-      padding-bottom: 10px;
+      gap: 40px;
+      background: rgba(10, 18, 36, 0.9);
+      padding: 10px 0 14px;
+      border-radius: 0 0 12px 12px;
+      backdrop-filter: blur(6px);
     }
     
-    .tab-btn {
-      background: none;
-      border: none;
+    .nav-item {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      color: #d4d4d4;
+      font-size: 0.95rem;
+      font-weight: 400;
+      letter-spacing: 0.4px;
+      text-decoration: none;
+      transition: all 0.25s ease;
+      padding: 6px 14px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.04);
+    }
+    
+    .nav-item:hover {
       color: #fff;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: color 0.3s ease;
+      background: rgba(212, 175, 55, 0.1);
+      box-shadow: 0 0 8px rgba(212, 175, 55, 0.2) inset;
+      transform: translateY(-1px);
     }
     
-    .tab-btn:hover,
-    .tab-btn.active {
-      color: #bfa14a;
+    .nav-item.active {
+      color: #f5d36c;
+      background: rgba(212, 175, 55, 0.15);
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.25) inset;
+    }
+    
+    .nav-item i {
+      font-size: 1.1rem;
+      vertical-align: middle;
     }
     
     /* --- Welcome section --- */
@@ -239,28 +258,43 @@
       color: #bfa14a;
     }
 
-    /* Wallet Section */
+    /* --- Wallet Section (refined for console theme) --- */
     .wallet-card {
-      background: #fff;
-      color: #0a1a33;
-      border-radius: 10px;
-      border: 2px solid #bfa14a;
+      background: rgba(255, 255, 255, 0.04);
+      color: #e6e6e6;
+      border-radius: 12px;
+      border: 1px solid rgba(191, 161, 74, 0.3);
       padding: 24px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.25);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+      backdrop-filter: blur(6px);
     }
+    
     .wallet-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-      gap: 16px;
-      margin-top: 10px;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 18px;
+      margin-top: 14px;
     }
+    
     .wallet-item {
-      background: #f9fafc;
-      border: 1px solid #ddd;
-      border-radius: 8px;
-      padding: 12px 16px;
+      background: rgba(255, 255, 255, 0.06);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: 10px;
+      padding: 14px 18px;
+      transition: all 0.3s ease;
     }
-    .wallet-item strong { color: #0a1a33; }
+    
+    .wallet-item:hover {
+      border-color: rgba(212, 175, 55, 0.3);
+      background: rgba(255, 255, 255, 0.1);
+      box-shadow: 0 0 10px rgba(212, 175, 55, 0.15);
+      transform: translateY(-2px);
+    }
+    
+    .wallet-item strong {
+      color: #f5d36c; /* gold accent */
+      font-weight: 600;
+    }
 
     /* Insights Section */
     .insights-row {
@@ -395,13 +429,13 @@
   
   <!-- Console Body -->
   <!-- Tab navigation row -->
-  <nav class="console-tabs">
-    <button class="tab-btn" data-module="wallet">💳 Wallet</button>
-    <button class="tab-btn" data-module="redemptions">🎯 Redemptions</button>
-    <button class="tab-btn" data-module="bonuses">🚀 Bonuses</button>
-    <button class="tab-btn" data-module="settings">⚙️ Settings</button>
-  </nav>
-  
+  <div class="nav-bar">
+    <a href="#" class="nav-item active"><i class="fas fa-wallet"></i> Wallet</a>
+    <a href="#" class="nav-item"><i class="fas fa-bullseye"></i> Redemptions</a>
+    <a href="#" class="nav-item"><i class="fas fa-rocket"></i> Bonuses</a>
+    <a href="#" class="nav-item"><i class="fas fa-cog"></i> Settings</a>
+  </div>
+ 
   <!-- Welcome + Creed Section -->
   <section id="welcome-section" class="welcome-section">
     <h1 id="welcome-message">Welcome, Jeff.</h1>
