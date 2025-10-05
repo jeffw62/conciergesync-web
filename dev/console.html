@@ -14,6 +14,27 @@
       color: #fff;
     }
 
+    /* --- Reset master-build artifacts for console --- */
+    .hero,
+    .hero::after,
+    .site-footer {
+      display: none !important;
+    }
+    
+    header, #footer {
+      background: #0a1a33;
+      color: #fff;
+    }
+    
+    a {
+      color: #bfa14a;
+      text-decoration: none;
+    }
+    
+    #footer {
+      display: none; /* prevent injected footer duplication */
+    }
+    
     /* --- Console Layout --- */
     main.console-container {
       max-width: 1200px;
