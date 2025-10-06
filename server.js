@@ -65,9 +65,9 @@ app.use("/dev", express.static(path.join(__dirname, "dev")));
 app.post("/api/redemption", async (req, res) => {
   console.log("🔍 Incoming headers:", req.headers["content-type"]);
   console.log("🔍 Raw body object right now:", req.body);
-  try {
+    try {
     const { origin, destination, date, passengers, cabin, program } = req.body;
-    
+
     if (!origin || !destination || !date) {
       return res.status(400).json({
         error: "missing_parameters",
@@ -75,13 +75,14 @@ app.post("/api/redemption", async (req, res) => {
       });
     }
 
-    // Call SA
+    // Call SA using the single date (not start/end)
     const apiResponse = await seatsService.searchFlights({
       origin,
       destination,
-      startDate,
-      endDate,
+      startDate: date,
+      endDate: date,
     });
+
 
     // Apply sanity filter
     const filtered = applySanityFilter(apiResponse.data || []);
