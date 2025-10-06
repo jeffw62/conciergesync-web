@@ -1,3 +1,4 @@
+console.log("✅ redemption-module.js loaded into browser");
 document.addEventListener("DOMContentLoaded", async () => {
   const params = new URLSearchParams(window.location.search);
   const sessionId = params.get("session");
@@ -58,6 +59,8 @@ document.addEventListener("DOMContentLoaded", async () => {
 
       const numericValue = parseFloat(r.cpm);
       if (!isNaN(numericValue)) totalValue += numericValue;
+      // Make initRedemptionModule globally visible
+      window.initRedemptionModule = initRedemptionModule;
     });
 
     // update avg CPM
