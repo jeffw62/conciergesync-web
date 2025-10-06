@@ -133,8 +133,10 @@ function initRedemptionModule() {
       .then(data => {
         const sessionId = data.sessionId || Date.now();
         console.log("🧠 Redemption API response:", data);
-        alert("Search complete — check the console for the API JSON!");
-        // window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
+        
+        const sessionId = data.sessionId || Date.now();
+        window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
+
 
       })
       .catch(err => {
