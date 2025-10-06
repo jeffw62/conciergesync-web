@@ -1,18 +1,32 @@
-// =====================================================
-// ConciergeSync – Redemption Form Logic (stable build)
-// =====================================================
-document.addEventListener("DOMContentLoaded", () => {
+// ============================================================
+// ConciergeSync™ Redemption Module (stable + console compatible)
+// ============================================================
+
+// ---------- GLOBAL INIT (required by console.html) ----------
+function initRedemptionModule() {
+  console.log("⚙️ initRedemptionModule() called");
+  setupRedemptionModule();
+}
+
+// ---------- SELF-START (stand-alone pages) ----------
+document.addEventListener("DOMContentLoaded", setupRedemptionModule);
+
+// ============================================================
+// Main setup
+// ============================================================
+function setupRedemptionModule() {
+  if (window.__redemptionInitialized) return; // prevent double-init
+  window.__redemptionInitialized = true;
   console.log("🧠 Redemption module initializing...");
 
-  // ----------------------------------------------------
-  // Yes / No toggle groups
-  // ----------------------------------------------------
-  const toggleGroups = document.querySelectorAll(".yes-no");
-  toggleGroups.forEach(group => {
-    const buttons = group.querySelectorAll("button");
-    buttons.forEach(btn => {
+  // ------------------------------------------------------------
+  // 1. YES / NO Toggles
+  // ------------------------------------------------------------
+  document.querySelectorAll(".yes-no").forEach(group => {
+    const btns = group.querySelectorAll("button");
+    btns.forEach(btn => {
       btn.addEventListener("click", () => {
-        buttons.forEach(b => b.classList.remove("active"));
+        btns.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
         btn.dataset.value = btn.textContent.trim().toLowerCase();
         console.log(`🔘 ${group.id}: ${btn.dataset.value}`);
@@ -20,9 +34,9 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   });
 
-  // ----------------------------------------------------
-  // Date mode toggles
-  // ----------------------------------------------------
+  // ------------------------------------------------------------
+  // 2. Exact / Flexible Date Toggle
+  // ------------------------------------------------------------
   const exactBtn = document.getElementById("exactBtn");
   const flexBtn = document.getElementById("flexBtn");
   const flexPicker = document.getElementById("flexPicker");
@@ -39,16 +53,17 @@ document.addEventListener("DOMContentLoaded", () => {
       flexBtn.classList.add("active");
       exactBtn.classList.remove("active");
       flexPicker.style.display = "block";
-      console.log("📅 Flexible-range mode selected");
+      console.log("📅 Flexible-date mode selected");
     });
   }
 
-  // ----------------------------------------------------
-  // Form submission
-  // ----------------------------------------------------
+  // ------------------------------------------------------------
+  // 3. Search submission
+  // ------------------------------------------------------------
   const searchBtn = document.getElementById("searchBtn");
   if (!searchBtn) {
     console.warn("⚠️ searchBtn not found");
+    console.log("✅ Redemption module initialized (no searchBtn).");
     return;
   }
 
@@ -63,7 +78,7 @@ document.addEventListener("DOMContentLoaded", () => {
       program: document.getElementById("program").value,
       date: document.getElementById("departDate").value,
       flexDays: document.getElementById("flexDays")?.value || 0,
-      mode: flexBtn?.classList.contains("active") ? "flex" : "exact"
+      mode: flexBtn?.classList.contains("active") ? "flex" : "exact",
     };
 
     console.log("📦 Payload being sent:", payload);
@@ -77,13 +92,13 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
+
       console.log("🧠 Redemption API response:", data);
+      alert(`Search complete – ${data.results?.length || 0} results found.`);
 
-      alert(`Search complete – ${data.results?.length || 0} results found`);
-      // Uncomment when ready to redirect:
-      // const sessionId = data.sessionId || Date.now();
-      // window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
-
+      // Redirect after success
+      const sessionId = data.sessionId || Date.now();
+      window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
     } catch (err) {
       console.error("❌ Redemption fetch error:", err);
       alert("Search failed – check console for details.");
@@ -91,4 +106,4 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   console.log("✅ Redemption module initialized.");
-});
+}
