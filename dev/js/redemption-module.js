@@ -12,7 +12,7 @@ function initRedemptionModule() {
   const warning = document.getElementById("searchWarning");
 
   if (!exactBtn || !flexBtn || !searchBtn) {
-    console.warn("⚠️ Redemption form elements not found.");
+    console.warn("Redemption form elements not found.");
     return;
   }
 
@@ -109,7 +109,7 @@ function initRedemptionModule() {
         window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
       })
       .catch(err => {
-        console.error("❌ Redemption API error:", err);
+        console.error("Redemption API error:", err);
         alert("Something went wrong while searching. Please try again.");
       });
   });
