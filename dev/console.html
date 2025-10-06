@@ -611,16 +611,20 @@
       // Load redemption module script dynamically
       const redemptionScript = document.createElement('script');
       redemptionScript.src = '/dev/js/redemption-module.js';
-      document.body.appendChild(redemptionScript);
-      // Wait a short moment, then initialize the redemption module
-      setTimeout(() => {
+      // Load redemption module script dynamically and wait for it to finish
+      const redemptionScript = document.createElement('script');
+      redemptionScript.src = '/dev/js/redemption-module.js';
+      redemptionScript.onload = () => {
+        console.log("Redemption module script loaded.");
         if (typeof initRedemptionModule === "function") {
           initRedemptionModule();
-          console.log("Redemption module initialized.");
+          console.log("Redemption module initialized (after load).");
         } else {
-          console.warn("initRedemptionModule() not found — check /dev/js/redemption-module.js");
+          console.warn("initRedemptionModule() still not found after load — check /dev/js/redemption-module.js");
         }
-      }, 100);
+      };
+      document.body.appendChild(redemptionScript);
+
       } else if (page === 'wallet') {
         workspace.innerHTML = '<h2>Wallet coming soon...</h2>';
       } else if (page === 'bonuses') {
