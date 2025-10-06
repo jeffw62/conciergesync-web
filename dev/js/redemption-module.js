@@ -38,27 +38,27 @@ function initRedemptionModule() {
   setMode("exact");
 
   // ------------------------------------------
-// Step-Date Toggle Logic
-// ------------------------------------------
-const exactBtn = document.getElementById("exactDateBtn");
-const flexBtn  = document.getElementById("flexDateBtn");
-const flexWrap = document.getElementById("flexDaysWrapper");
-
-if (exactBtn && flexBtn && flexWrap) {
-  exactBtn.addEventListener("click", () => {
-    exactBtn.classList.add("active");
-    flexBtn.classList.remove("active");
-    flexWrap.style.display = "none";
-    console.log("📅 Exact-date mode selected");
-  });
-
-  flexBtn.addEventListener("click", () => {
-    flexBtn.classList.add("active");
-    exactBtn.classList.remove("active");
-    flexWrap.style.display = "block";
-    console.log("📅 Flexible-range mode selected");
-  });
-}
+  // Step-Date Toggle Logic
+  // ------------------------------------------
+  const exactBtn = document.getElementById("exactDateBtn");
+  const flexBtn  = document.getElementById("flexDateBtn");
+  const flexWrap = document.getElementById("flexDaysWrapper");
+  
+  if (exactBtn && flexBtn && flexWrap) {
+    exactBtn.addEventListener("click", () => {
+      exactBtn.classList.add("active");
+      flexBtn.classList.remove("active");
+      flexWrap.style.display = "none";
+      console.log("📅 Exact-date mode selected");
+    });
+  
+    flexBtn.addEventListener("click", () => {
+      flexBtn.classList.add("active");
+      exactBtn.classList.remove("active");
+      flexWrap.style.display = "block";
+      console.log("📅 Flexible-range mode selected");
+    });
+  }
 
   // --------------------------------
   // 2. Routing preference interactions
