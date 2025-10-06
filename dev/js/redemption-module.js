@@ -1,156 +1,67 @@
-function initRedemptionModule() {
-  const exactBtn = document.getElementById('exactBtn');
-  const flexBtn = document.getElementById('flexBtn');
-  const flexPicker = document.getElementById('flexPicker');
-  const searchBtn = document.querySelector('.search-btn');
-  const warning = document.getElementById('searchWarning');
+document.addEventListener("DOMContentLoaded", async () => {
+  const params = new URLSearchParams(window.location.search);
+  const sessionId = params.get("session");
 
-  if (!exactBtn || !flexBtn) return;
+  console.log("Loading session:", sessionId);
 
-  function setMode(mode) {
-    if (mode === 'exact') {
-      exactBtn.classList.add('active');
-      flexBtn.classList.remove('active');
-      flexPicker.style.display = 'none';
-    } else {
-      flexBtn.classList.add('active');
-      exactBtn.classList.remove('active');
-      flexPicker.style.display = 'block';
+  const tableBody = document.getElementById("resultsBody");
+  const noResults = document.getElementById("noResults");
+  const avgValueEl = document.createElement("p");
+  avgValueEl.id = "avgValue";
+  avgValueEl.style.marginTop = "10px";
+  avgValueEl.style.color = "#777";
+  avgValueEl.textContent = "Avg Cost per Mile: —";
+  document.querySelector(".hero").appendChild(avgValueEl);
+
+  if (!sessionId) {
+    console.error("❌ No session ID found in URL.");
+    noResults.textContent = "No session ID provided.";
+    return;
+  }
+
+  try {
+    const res = await fetch(`/api/redemption/session/${sessionId}`);
+    const data = await res.json();
+
+    if (!data || !Array.isArray(data.results)) {
+      throw new Error("Invalid or missing results array");
     }
+
+    displayResults(data.results);
+  } catch (err) {
+    console.error("❌ Failed to load session data:", err);
+    if (noResults) noResults.textContent = "Failed to load results.";
   }
 
-  exactBtn.addEventListener('click', () => setMode('exact'));
-  flexBtn.addEventListener('click', () => setMode('flexible'));
-  setMode('exact');
+  function displayResults(results) {
+    if (!results || results.length === 0) {
+      noResults.textContent = "No results to display yet.";
+      return;
+    }
 
-  initRoutingLogic();
+    noResults.textContent = ""; // hide placeholder
 
-  // --- Mutual toggle between Direct and Multi ---
-  const directGroup = document.getElementById("directStop");
-  const multiGroup  = document.getElementById("multiConn");
+    let totalValue = 0;
+    results.forEach(r => {
+      const row = document.createElement("tr");
+      row.innerHTML = `
+        <td data-label="Date">${r.date}</td>
+        <td data-label="Origin">${r.origin}</td>
+        <td data-label="Destination">${r.destination}</td>
+        <td data-label="Program">${r.program}</td>
+        <td data-label="Points Needed">${r.miles.toLocaleString()}</td>
+        <td data-label="Fees">${r.taxes !== "-" ? "$" + r.taxes : "-"}</td>
+        <td data-label="Seats Available">${r.seats}</td>
+        <td data-label="Value (¢/mile)">${r.cpm}</td>
+      `;
+      tableBody.appendChild(row);
 
-  if (directGroup && multiGroup) {
-    const directYes = directGroup.querySelector('[data-val="yes"]');
-    const directNo  = directGroup.querySelector('[data-val="no"]');
-    const multiYes  = multiGroup.querySelector('[data-val="yes"]');
-    const multiNo   = multiGroup.querySelector('[data-val="no"]');
-
-    directYes.addEventListener("click", () => {
-      multiYes.classList.remove("active");
-      multiNo.classList.add("active");
+      const numericValue = parseFloat(r.cpm);
+      if (!isNaN(numericValue)) totalValue += numericValue;
     });
 
-    multiYes.addEventListener("click", () => {
-      directYes.classList.remove("active");
-      directNo.classList.add("active");
-    });
+    // update avg CPM
+    const avg = (totalValue / results.length).toFixed(2);
+    avgValueEl.textContent = `Avg Cost per Mile: ${avg}¢`;
   }
-
-  // --- Routing logic setup ---
-  function initRoutingLogic() {
-    const groups = ['directStop', 'multiConn', 'posFlight']
-      .map(id => document.getElementById(id));
-
-    const checkSelections = () => {
-      const allSelected = groups.every(g => g.querySelector('.active'));
-      if (allSelected) {
-        searchBtn.disabled = false;
-        searchBtn.style.opacity = "1";
-        searchBtn.style.cursor = "pointer";
-        warning.classList.add('hidden');
-      } else {
-        searchBtn.disabled = true;
-        searchBtn.style.opacity = "0.6";
-        searchBtn.style.cursor = "not-allowed";
-        warning.classList.remove('hidden');
-      }
-    };
-
-    groups.forEach(group => {
-      group.querySelectorAll('button').forEach(btn => {
-        btn.addEventListener('click', () => {
-          group.querySelectorAll('button').forEach(b => b.classList.remove('active'));
-          btn.classList.add('active');
-          checkSelections();
-        });
-      });
-    });
-
-    checkSelections();
-  }
-
-  // --- Search button event ---
-  searchBtn.addEventListener('click', () => {
-    const payload = {
-      origin: document.getElementById('origin').value.trim().toUpperCase(),
-      destination: document.getElementById('destination').value.trim().toUpperCase(),
-      passengers: document.getElementById('passengers').value,
-      cabin: document.getElementById('cabin').value,
-      program: document.getElementById('program').value,
-      date: document.getElementById('departDate').value
-    };
-
-    console.log("➡️ Payload being sent:", payload);
-    searchBtn.textContent = "Searching…";
-    searchBtn.disabled = true;
-
-    fetch("/api/redemption", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload)
-    })
-      .then(res => res.json())
-      .then(data => {
-        const sessionId = data.sessionId || Date.now();
-        window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
-      })
-      .catch(err => {
-        console.error("❌ Redemption API error:", err);
-        alert("Something went wrong while searching. Please try again.");
-      });
-  });
-
-  // --- Autocomplete setup ---
-  fetch('/dev/asset/iata-icao.json')
-    .then(res => res.json())
-    .then(data => {
-      setupAutocomplete('origin', 'origin-suggestions', data);
-      setupAutocomplete('destination', 'destination-suggestions', data);
-    });
-
-  function setupAutocomplete(inputId, suggestionsId, airports) {
-    const input = document.getElementById(inputId);
-    const suggestions = document.getElementById(suggestionsId);
-
-    input.addEventListener('input', () => {
-      const query = input.value.toLowerCase();
-      suggestions.innerHTML = '';
-      if (query.length < 2) return;
-
-      const matches = airports
-        .filter(a =>
-          a.iata.toLowerCase().includes(query) ||
-          a.airport.toLowerCase().includes(query) ||
-          (a.region_name && a.region_name.toLowerCase().includes(query))
-        )
-        .slice(0, 10);
-
-      matches.forEach(match => {
-        const div = document.createElement('div');
-        div.classList.add('suggestion-item');
-        div.innerHTML = `<span class="iata">${match.iata}</span> – <span class="airport">${match.airport}</span>`;
-        div.addEventListener('click', () => {
-          input.value = match.iata;
-          suggestions.innerHTML = '';
-        });
-        suggestions.appendChild(div);
-      });
-    });
-
-    document.addEventListener('click', e => {
-      if (!suggestions.contains(e.target) && e.target !== input) {
-        suggestions.innerHTML = '';
-      }
-    });
-  }
-}
+});
