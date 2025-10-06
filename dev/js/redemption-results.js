@@ -30,22 +30,23 @@ function displayResults(data) {
 
   data.results.forEach(r => {
     const row = document.createElement("tr");
-    const miles = r.MileageCostRaw || 0;
-    const taxes = r.TotalTaxesRaw ? (r.TotalTaxesRaw / 100).toFixed(2) : "—";
-    const cpm = miles > 0 && taxes !== "—"
-      ? ((taxes * 100) / miles).toFixed(2) + "¢"
-      : "—";
-
+  
+    const miles = r.milesNeeded || 0;
+    const taxes = r.taxes !== undefined ? r.taxes : "-";
+    const cpm = miles > 0 && taxes !== "-" ? ((taxes * 100) / miles).toFixed(2) + "¢" : "-";
+  
     row.innerHTML = `
-      <td>${r.Date || "—"}</td>
-      <td>${r.Route?.OriginAirport || "—"}</td>
-      <td>${r.Route?.DestinationAirport || "—"}</td>
-      <td>${r.Source || "—"}</td>
+      <td>${r.date || "-"}</td>
+      <td>${r.origin || "-"}</td>
+      <td>${r.destination || "-"}</td>
+      <td>${r.program || "-"}</td>
       <td>${miles.toLocaleString()}</td>
-      <td>${taxes !== "—" ? "$" + taxes : "—"}</td>
-      <td>${r.RemainingSeatsRaw || "—"}</td>
+      <td>${taxes !== "-" ? "$" + taxes : "-"}</td>
+      <td>${r.seats !== undefined ? r.seats : "-"}</td>
       <td>${cpm}</td>
     `;
+  
     tbody.appendChild(row);
   });
+
 }
