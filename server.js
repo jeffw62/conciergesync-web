@@ -164,6 +164,48 @@ app.get("/api/redemption/session/:id", (req, res) => {
   });
 });
 
+//--------------------------------------------------------------
+// Live Redemption Search Endpoint
+//--------------------------------------------------------------
+app.post("/api/redemption", async (req, res) => {
+  try {
+    const payload = req.body;
+    console.log("📦 Received redemption payload:", payload);
+
+    // Temporary mock response (replace later with real logic)
+    const results = [
+      {
+        date: "2025-10-24",
+        origin: payload.origin,
+        destination: payload.destination,
+        program: payload.program || "American",
+        milesNeeded: 12000,
+        taxes: 47,
+        seats: 2,
+        value: 1.5,
+      },
+      {
+        date: "2025-10-25",
+        origin: payload.origin,
+        destination: payload.destination,
+        program: payload.program || "American",
+        milesNeeded: 18000,
+        taxes: 52,
+        seats: 3,
+        value: 1.3,
+      },
+    ];
+
+    res.json({
+      sessionId: Date.now(),
+      results,
+    });
+  } catch (err) {
+    console.error("❌ Redemption POST error:", err);
+    res.status(500).json({ error: "Server error processing redemption" });
+  }
+});
+
 
 // --- Start server ---
 app.listen(PORT, () => {
