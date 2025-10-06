@@ -129,6 +129,17 @@ app.get("/api/redemption/testBulk", async (req, res) => {
     });
   }
 });
+// --- Temporary session route to prevent 404 ---
+app.get("/api/redemption/session/:id", (req, res) => {
+  const { id } = req.params;
+  console.log(`Session request received for ID: ${id}`);
+  // Send a minimal dummy payload for now
+  res.json({
+    sessionId: id,
+    status: "ok",
+    results: []
+  });
+});
 
 // --- Start server ---
 app.listen(PORT, () => {
