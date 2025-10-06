@@ -608,9 +608,6 @@
       const html = await res.text();
       workspace.innerHTML = html;
     
-      // Load redemption module script dynamically
-      const redemptionScript = document.createElement('script');
-      redemptionScript.src = '/dev/js/redemption-module.js';
       // Load redemption module script dynamically and wait for it to finish
       const redemptionScript = document.createElement('script');
       redemptionScript.src = '/dev/js/redemption-module.js';
