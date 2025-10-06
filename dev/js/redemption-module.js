@@ -40,27 +40,25 @@ function initRedemptionModule() {
   // --------------------------------
   initRoutingLogic();
 
-  function initRoutingLogic() {
-    const groups = ["directStop", "multiConn", "posFlight"].map(id =>
-      document.getElementById(id)
-    );
+  const checkSelections = () => {
+    const groups = ['directStop', 'multiConn', 'posFlight']
+      .map(id => document.getElementById(id));
+    const allSelected = groups.every(g => g && g.querySelector('.active'));
 
-    const checkSelections = () => {
-      const allSelected = groups.every(g => g && g.querySelector(".active"));
-      if (allSelected) {
-        searchBtn.disabled = false;
-        searchBtn.style.opacity = "1";
-        searchBtn.style.cursor = "pointer";
-        warning.classList.add("hidden");
-        warning.style.display = "none";
-      } else {
-        searchBtn.disabled = true;
-        searchBtn.style.opacity = "0.6";
-        searchBtn.style.cursor = "not-allowed";
-        warning.classList.remove("hidden");
-        warning.style.display = "block";
-      }
-    };
+    if (allSelected) {
+      searchBtn.disabled = false;
+      searchBtn.style.opacity = "1";
+      searchBtn.style.cursor = "pointer";
+      warning.classList.add('hidden');
+      warning.style.display = "none";
+    } else {
+      searchBtn.disabled = true;
+      searchBtn.style.opacity = "0.6";
+      searchBtn.style.cursor = "not-allowed";
+      warning.classList.remove('hidden');
+      warning.style.display = "block";
+    }
+  };
 
     groups.forEach(group => {
       if (!group) return;
