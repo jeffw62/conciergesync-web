@@ -74,29 +74,27 @@ app.post("/api/redemption", async (req, res) => {
         message: "Origin, destination, and date are required.",
       });
     }
+  // Call Seats.Aero live /search endpoint
+  // ---------------------------------------------
+  const apiResponse = await seatsService.searchFlights({
+    origin,
+    destination,
+    startDate: date,
+    endDate: date,
+    take: 40, // adjust number of results you want back
+  });
+  
+  console.log("🛫 SA search returned:", apiResponse?.data?.length || 0, "results");
+  
+  // For now skip filtering until we verify live payload shape
+  res.status(200).json({
+    sessionId: Date.now(),
+    results: apiResponse?.data || [],
+  });
 
-    // Call SA using the single date (not start/end)
-    const apiResponse = await seatsService.searchFlights({
-      origin,
-      destination,
-      startDate: date,
-      endDate: date,
-    });
-
-
-    // Apply sanity filter
-    const filtered = applySanityFilter(apiResponse.data || []);
-
-    console.log(
-      `➡️ Filtered results: ${filtered.length} of ${
-        apiResponse.data?.length || 0
-      }`
-    );
-
-    return res.json({ results: filtered });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
-    return res.status(500).json({
+    res.status(500).json({
       error: "server_error",
       message: err.message,
       stack: err.stack,
