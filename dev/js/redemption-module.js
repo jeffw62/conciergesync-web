@@ -3,7 +3,7 @@
 // ======================================================
 
 function initRedemptionModule() {
-  console.log("✅ initRedemptionModule() fired");
+  console.log("initRedemptionModule() fired");
 
   const exactBtn = document.getElementById("exactBtn");
   const flexBtn = document.getElementById("flexBtn");
@@ -94,7 +94,7 @@ function initRedemptionModule() {
       date: document.getElementById("departDate").value,
     };
 
-    console.log("➡️ Payload being sent:", payload);
+    console.log("Payload being sent:", payload);
     searchBtn.textContent = "Searching…";
     searchBtn.disabled = true;
 
@@ -123,7 +123,7 @@ function initRedemptionModule() {
       setupAutocomplete("origin", "origin-suggestions", data);
       setupAutocomplete("destination", "destination-suggestions", data);
     })
-    .catch(() => console.warn("⚠️ Could not load airport data."));
+    .catch(() => console.warn("Could not load airport data."));
 
   function setupAutocomplete(inputId, suggestionsId, airports) {
     const input = document.getElementById(inputId);
