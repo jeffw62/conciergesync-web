@@ -132,7 +132,7 @@ function initRedemptionModule() {
       .then(res => res.json())
       .then(data => {
         const sessionId = data.sessionId || Date.now();
-        window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
+        // window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
       })
       .catch(err => {
         console.error("Redemption API error:", err);
