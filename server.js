@@ -63,6 +63,8 @@ app.use("/dev", express.static(path.join(__dirname, "dev")));
 
 // --- Redemption route (frontend calls this) ---
 app.post("/api/redemption", async (req, res) => {
+  console.log("🔍 Incoming headers:", req.headers["content-type"]);
+  console.log("🔍 Raw body object right now:", req.body);
   try {
     const { origin, destination, startDate, endDate } = req.body;
 
