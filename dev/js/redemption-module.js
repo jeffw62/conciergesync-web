@@ -142,11 +142,15 @@ document.addEventListener("DOMContentLoaded", () => {
     directButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const isYes = btn.dataset.val === 'yes';
+        // toggle direct group buttons
+        directButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
         if (isYes) {
-          // if Direct = Yes, set Multi = No
+          // if Direct = Yes, force Multi = No
           multiButtons.forEach(b => {
+            b.classList.remove('active');
             if (b.dataset.val === 'no') b.classList.add('active');
-            else b.classList.remove('active');
           });
         }
       });
@@ -155,11 +159,15 @@ document.addEventListener("DOMContentLoaded", () => {
     multiButtons.forEach(btn => {
       btn.addEventListener('click', () => {
         const isYes = btn.dataset.val === 'yes';
+        // toggle multi group buttons
+        multiButtons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
         if (isYes) {
-          // if Multi = Yes, set Direct = No
+          // if Multi = Yes, force Direct = No
           directButtons.forEach(b => {
+            b.classList.remove('active');
             if (b.dataset.val === 'no') b.classList.add('active');
-            else b.classList.remove('active');
           });
         }
       });
