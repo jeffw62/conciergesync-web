@@ -135,8 +135,6 @@ app.get("/api/redemption/testBulk", async (req, res) => {
 //--------------------------------------------------------------
 // Live Redemption Search Endpoint
 //--------------------------------------------------------------
-// Live Redemption Search Endpoint
-//--------------------------------------------------------------
 app.post("/api/redemption", async (req, res) => {
   try {
     const payload = req.body;
@@ -152,18 +150,17 @@ app.post("/api/redemption", async (req, res) => {
     });
 
     console.log("🛫 SA search returned:", apiResponse?.data?.length || 0, "results");
-
-    // optional: preview first few results
     console.log(
       "🧠 RAW SA RESPONSE SAMPLE:",
-      JSON.stringify(apiResponse.data?.slice(0, 3), null, 2)
+      JSON.stringify(apiResponse?.data?.slice(0, 3), null, 2)
     );
 
-    // send live results directly to front end
+    // --- Send live results directly to front end ---
     res.status(200).json({
       sessionId: Date.now(),
       results: apiResponse?.data || [],
     });
+
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     res.status(500).json({
@@ -171,16 +168,6 @@ app.post("/api/redemption", async (req, res) => {
       message: err.message,
       stack: err.stack,
     });
-  }
-});
-
-    res.json({
-      sessionId: Date.now(),
-      results,
-    });
-  } catch (err) {
-    console.error("❌ Redemption POST error:", err);
-    res.status(500).json({ error: "Server error processing redemption" });
   }
 });
 
