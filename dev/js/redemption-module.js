@@ -132,43 +132,40 @@ function initRedemptionModule() {
 }
 // --- Mutual toggle logic between Direct and Multi ---
 document.addEventListener("DOMContentLoaded", () => {
-  const directGroup = document.getElementById('directStop');
-  const multiGroup = document.getElementById('multiConn');
+  const directGroup = document.getElementById("directStop");
+  const multiGroup = document.getElementById("multiConn");
 
   if (directGroup && multiGroup) {
-    const directButtons = directGroup.querySelectorAll('button');
-    const multiButtons = multiGroup.querySelectorAll('button');
+    const directButtons = directGroup.querySelectorAll("button");
+    const multiButtons = multiGroup.querySelectorAll("button");
 
-    directButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const isYes = btn.dataset.val === 'yes';
-        // toggle direct group buttons
-        directButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    function setActive(group, value) {
+      group.forEach((b) => {
+        b.classList.remove("active");
+        if (b.dataset.val === value) b.classList.add("active");
+      });
+    }
+
+    directButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const isYes = btn.dataset.val === "yes";
+        setActive(directButtons, btn.dataset.val);
 
         if (isYes) {
-          // if Direct = Yes, force Multi = No
-          multiButtons.forEach(b => {
-            b.classList.remove('active');
-            if (b.dataset.val === 'no') b.classList.add('active');
-          });
+          // force Multi = No immediately
+          setActive(multiButtons, "no");
         }
       });
     });
 
-    multiButtons.forEach(btn => {
-      btn.addEventListener('click', () => {
-        const isYes = btn.dataset.val === 'yes';
-        // toggle multi group buttons
-        multiButtons.forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
+    multiButtons.forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const isYes = btn.dataset.val === "yes";
+        setActive(multiButtons, btn.dataset.val);
 
         if (isYes) {
-          // if Multi = Yes, force Direct = No
-          directButtons.forEach(b => {
-            b.classList.remove('active');
-            if (b.dataset.val === 'no') b.classList.add('active');
-          });
+          // force Direct = No immediately
+          setActive(directButtons, "no");
         }
       });
     });
