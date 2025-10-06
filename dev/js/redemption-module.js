@@ -1,74 +1,57 @@
-// ============================================================
-// ConciergeSync™ Redemption Module (stable + console compatible)
-// ============================================================
-
-// ---------- GLOBAL INIT (required by console.html) ----------
 function initRedemptionModule() {
-  console.log("⚙️ initRedemptionModule() called");
   setupRedemptionModule();
 }
-
-// ---------- SELF-START (stand-alone pages) ----------
 document.addEventListener("DOMContentLoaded", setupRedemptionModule);
 
-// ============================================================
-// Main setup
-// ============================================================
 function setupRedemptionModule() {
-  if (window.__redemptionInitialized) return; // prevent double-init
+  if (window.__redemptionInitialized) return;
   window.__redemptionInitialized = true;
   console.log("🧠 Redemption module initializing...");
 
-  // ------------------------------------------------------------
-  // 1. YES / NO Toggles
-  // ------------------------------------------------------------
-  document.querySelectorAll(".yes-no").forEach(group => {
+  const searchBtn = document.getElementById("searchBtn");
+  const warning = document.getElementById("searchWarning");
+
+  // ---- toggle groups (Step 2)
+  document.querySelectorAll(".toggle-group").forEach(group => {
     const btns = group.querySelectorAll("button");
     btns.forEach(btn => {
       btn.addEventListener("click", () => {
         btns.forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-        btn.dataset.value = btn.textContent.trim().toLowerCase();
-        console.log(`🔘 ${group.id}: ${btn.dataset.value}`);
+        validateStep2();
       });
     });
   });
 
-  // ------------------------------------------------------------
-  // 2. Exact / Flexible Date Toggle
-  // ------------------------------------------------------------
+  function validateStep2() {
+    const filled = [...document.querySelectorAll(".toggle-group")].every(g =>
+      g.querySelector("button.active")
+    );
+    searchBtn.disabled = !filled;
+    warning.style.display = filled ? "none" : "block";
+  }
+
+  // ---- date mode toggle
   const exactBtn = document.getElementById("exactBtn");
   const flexBtn = document.getElementById("flexBtn");
   const flexPicker = document.getElementById("flexPicker");
-
   if (exactBtn && flexBtn && flexPicker) {
-    exactBtn.addEventListener("click", () => {
+    exactBtn.onclick = () => {
       exactBtn.classList.add("active");
       flexBtn.classList.remove("active");
       flexPicker.style.display = "none";
-      console.log("📅 Exact-date mode selected");
-    });
-
-    flexBtn.addEventListener("click", () => {
+    };
+    flexBtn.onclick = () => {
       flexBtn.classList.add("active");
       exactBtn.classList.remove("active");
       flexPicker.style.display = "block";
-      console.log("📅 Flexible-date mode selected");
-    });
+    };
   }
 
-  // ------------------------------------------------------------
-  // 3. Search submission
-  // ------------------------------------------------------------
-  const searchBtn = document.getElementById("searchBtn");
-  if (!searchBtn) {
-    console.warn("⚠️ searchBtn not found");
-    console.log("✅ Redemption module initialized (no searchBtn).");
-    return;
-  }
-
-  searchBtn.addEventListener("click", async () => {
-    console.log("🚀 Search clicked");
+  // ---- search click
+  searchBtn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    if (searchBtn.disabled) return;
 
     const payload = {
       origin: document.getElementById("origin").value.trim().toUpperCase(),
@@ -78,10 +61,18 @@ function setupRedemptionModule() {
       program: document.getElementById("program").value,
       date: document.getElementById("departDate").value,
       flexDays: document.getElementById("flexDays")?.value || 0,
-      mode: flexBtn?.classList.contains("active") ? "flex" : "exact",
+      mode: flexBtn.classList.contains("active") ? "flex" : "exact",
+      direct: document.querySelector("#directStop button.active")?.dataset.val,
+      multi: document.querySelector("#multiConn button.active")?.dataset.val,
+      positioning: document.querySelector("#posFlight button.active")?.dataset.val,
     };
 
-    console.log("📦 Payload being sent:", payload);
+    if (!payload.origin || !payload.destination || !payload.date) {
+      alert("Please complete all Step 1 fields before searching.");
+      return;
+    }
+
+    console.log("📦 Sending payload:", payload);
 
     try {
       const res = await fetch("/api/redemption", {
@@ -89,19 +80,18 @@ function setupRedemptionModule() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-    
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-    
+
       console.log("🧠 Redemption API response:", data);
-      
-      // ✅ Save results locally so the next page can read them
-      sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data.results));
-      
-      // Redirect after success
+
+      sessionStorage.setItem(
+        "latestRedemptionResults",
+        JSON.stringify(data.results || [])
+      );
+
       const sessionId = data.sessionId || Date.now();
       window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
-      
     } catch (err) {
       console.error("❌ Redemption fetch error:", err);
       alert("Search failed – check console for details.");
