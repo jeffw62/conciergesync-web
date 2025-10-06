@@ -89,13 +89,12 @@ function setupRedemptionModule() {
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-
+    
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
       const data = await res.json();
-
+    
       console.log("🧠 Redemption API response:", data);
-      alert(`Search complete – ${data.results?.length || 0} results found.`);
-
+    
       // Redirect after success
       const sessionId = data.sessionId || Date.now();
       window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
