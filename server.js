@@ -3,7 +3,6 @@
 // ===============================================
 const express = require("express");
 const path = require("path");
-const fetch = require("node-fetch"); // only needed if not globally available
 const app = express();
 
 app.use(express.json());
