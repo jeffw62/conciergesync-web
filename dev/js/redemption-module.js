@@ -54,6 +54,30 @@ function initRedemptionModule() {
     });
 
     checkSelections();
+        checkSelections();
+
+    // --- Mutual toggle between Direct and Multi ---
+    const directGroup = document.getElementById("directStop");
+    const multiGroup  = document.getElementById("multiConn");
+
+    if (directGroup && multiGroup) {
+      const directYes = directGroup.querySelector('[data-val="yes"]');
+      const directNo  = directGroup.querySelector('[data-val="no"]');
+      const multiYes  = multiGroup.querySelector('[data-val="yes"]');
+      const multiNo   = multiGroup.querySelector('[data-val="no"]');
+
+      directYes.addEventListener("click", () => {
+        multiYes.classList.remove("active");
+        multiNo.classList.add("active");
+      });
+
+      multiYes.addEventListener("click", () => {
+        directYes.classList.remove("active");
+        directNo.classList.add("active");
+      });
+    }
+}
+
   }
 
   searchBtn.addEventListener('click', () => {
@@ -130,45 +154,3 @@ function initRedemptionModule() {
     });
   }
 }
-// --- Mutual toggle logic between Direct and Multi ---
-document.addEventListener("DOMContentLoaded", () => {
-  const directGroup = document.getElementById("directStop");
-  const multiGroup  = document.getElementById("multiConn");
-
-  if (directGroup && multiGroup) {
-    const directYes = directGroup.querySelector('[data-val="yes"]');
-    const directNo  = directGroup.querySelector('[data-val="no"]');
-    const multiYes  = multiGroup.querySelector('[data-val="yes"]');
-    const multiNo   = multiGroup.querySelector('[data-val="no"]');
-
-    function setActive(btnYes, btnNo, value) {
-      if (value === "yes") {
-        btnYes.classList.add("active");
-        btnNo.classList.remove("active");
-      } else {
-        btnNo.classList.add("active");
-        btnYes.classList.remove("active");
-      }
-    }
-
-    // --- click logic for Direct ---
-    directYes.addEventListener("click", () => {
-      // Direct → Yes forces Multi → No
-      setActive(directYes, directNo, "yes");
-      setActive(multiYes, multiNo, "no");
-    });
-    directNo.addEventListener("click", () => {
-      setActive(directYes, directNo, "no");
-    });
-
-    // --- click logic for Multi ---
-    multiYes.addEventListener("click", () => {
-      // Multi → Yes forces Direct → No
-      setActive(multiYes, multiNo, "yes");
-      setActive(directYes, directNo, "no");
-    });
-    multiNo.addEventListener("click", () => {
-      setActive(multiYes, multiNo, "no");
-    });
-  }
-});
