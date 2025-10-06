@@ -208,9 +208,18 @@
     <p id="searchWarning">Complete Step 2 to continue.</p>
   </div>
 
+  <script src="/dev/js/redemption-module.js"></script>
+  
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      if (typeof initRedemptionModule === "function") {
+        console.log("🔁 Standalone page detected, initializing redemption module...");
+        initRedemptionModule();
+      } else {
+        console.warn("⚠️ initRedemptionModule() not found.");
+      }
+    });
+  </script>
+
   </body>
 </html>
-
-</div>
-
-<script src="/dev/js/redemption-module.js"></script>
