@@ -66,12 +66,12 @@ app.post("/api/redemption", async (req, res) => {
   console.log("🔍 Incoming headers:", req.headers["content-type"]);
   console.log("🔍 Raw body object right now:", req.body);
   try {
-    const { origin, destination, startDate, endDate } = req.body;
-
-    if (!origin || !destination || !startDate || !endDate) {
+    const { origin, destination, date, passengers, cabin, program } = req.body;
+    
+    if (!origin || !destination || !date) {
       return res.status(400).json({
         error: "missing_parameters",
-        message: "Origin, destination, startDate, and endDate are required.",
+        message: "Origin, destination, and date are required.",
       });
     }
 
