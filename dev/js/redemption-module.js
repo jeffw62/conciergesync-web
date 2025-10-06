@@ -25,9 +25,32 @@ function initRedemptionModule() {
 
   initRoutingLogic();
 
+  // --- Mutual toggle between Direct and Multi ---
+  const directGroup = document.getElementById("directStop");
+  const multiGroup  = document.getElementById("multiConn");
+
+  if (directGroup && multiGroup) {
+    const directYes = directGroup.querySelector('[data-val="yes"]');
+    const directNo  = directGroup.querySelector('[data-val="no"]');
+    const multiYes  = multiGroup.querySelector('[data-val="yes"]');
+    const multiNo   = multiGroup.querySelector('[data-val="no"]');
+
+    directYes.addEventListener("click", () => {
+      multiYes.classList.remove("active");
+      multiNo.classList.add("active");
+    });
+
+    multiYes.addEventListener("click", () => {
+      directYes.classList.remove("active");
+      directNo.classList.add("active");
+    });
+  }
+
+  // --- Routing logic setup ---
   function initRoutingLogic() {
-    const groups = ['directStop','multiConn','posFlight']
+    const groups = ['directStop', 'multiConn', 'posFlight']
       .map(id => document.getElementById(id));
+
     const checkSelections = () => {
       const allSelected = groups.every(g => g.querySelector('.active'));
       if (allSelected) {
@@ -54,32 +77,9 @@ function initRedemptionModule() {
     });
 
     checkSelections();
-        checkSelections();
-
-    // --- Mutual toggle between Direct and Multi ---
-    const directGroup = document.getElementById("directStop");
-    const multiGroup  = document.getElementById("multiConn");
-
-    if (directGroup && multiGroup) {
-      const directYes = directGroup.querySelector('[data-val="yes"]');
-      const directNo  = directGroup.querySelector('[data-val="no"]');
-      const multiYes  = multiGroup.querySelector('[data-val="yes"]');
-      const multiNo   = multiGroup.querySelector('[data-val="no"]');
-
-      directYes.addEventListener("click", () => {
-        multiYes.classList.remove("active");
-        multiNo.classList.add("active");
-      });
-
-      multiYes.addEventListener("click", () => {
-        directYes.classList.remove("active");
-        directNo.classList.add("active");
-      });
-    }
-}
-
   }
 
+  // --- Search button event ---
   searchBtn.addEventListener('click', () => {
     const payload = {
       origin: document.getElementById('origin').value.trim().toUpperCase(),
@@ -99,18 +99,18 @@ function initRedemptionModule() {
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(payload)
     })
-    .then(res => res.json())
-    .then(data => {
-      const sessionId = data.sessionId || Date.now();
-      window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
-    })
-    .catch(err => {
-      console.error("❌ Redemption API error:", err);
-      alert("Something went wrong while searching. Please try again.");
-    });
+      .then(res => res.json())
+      .then(data => {
+        const sessionId = data.sessionId || Date.now();
+        window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
+      })
+      .catch(err => {
+        console.error("❌ Redemption API error:", err);
+        alert("Something went wrong while searching. Please try again.");
+      });
   });
 
-  // Load airports for autocomplete
+  // --- Autocomplete setup ---
   fetch('/dev/asset/iata-icao.json')
     .then(res => res.json())
     .then(data => {
