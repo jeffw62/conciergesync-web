@@ -139,21 +139,21 @@ app.get("/api/redemption/session/:id", (req, res) => {
       date: "2025-10-25",
       origin: "DFW",
       destination: "LHR",
-      airline: "United",
-      milesNeeded: 60000,
-      taxesFees: 123,
-      seats: 2,
-      value: 0.025
+      program: "American",
+      miles: 27000,
+      taxes: 5.6,
+      seats: "—",
+      cpm: "0.02¢"
     },
     {
       date: "2025-10-26",
       origin: "DFW",
       destination: "LHR",
-      airline: "Air Canada",
-      milesNeeded: 70000,
-      taxesFees: 98,
-      seats: 1,
-      value: 0.021
+      program: "United",
+      miles: 60000,
+      taxes: 121.0,
+      seats: 2,
+      cpm: "0.021¢"
     }
   ];
 
