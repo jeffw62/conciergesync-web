@@ -1,5 +1,3 @@
-console.log("✅ redemption-module.js loaded into browser");
-
 // ======================================================
 // ConciergeSync™ – Redemption Form Logic
 // ======================================================
