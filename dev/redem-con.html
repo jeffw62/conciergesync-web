@@ -204,20 +204,44 @@
       <option value="alaska">Alaska</option>
     </select>
     <h3 style="margin-top:20px;">Step 3:&nbsp;Search</h3>
-    <button id="searchBtn" class="search-btn" type="button">Search</button>
-    <p id="searchWarning">Complete Step 2 to continue.</p>
+    <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
+    <p id="searchWarning" style="display:block;">Complete Step 2 to continue.</p>
+
   </div>
 
   <script src="/dev/js/redemption-module.js"></script>
   
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      if (typeof initRedemptionModule === "function") {
-        console.log("🔁 Standalone page detected, initializing redemption module...");
-        initRedemptionModule();
-      } else {
-        console.warn("⚠️ initRedemptionModule() not found.");
-      }
+      const btn = document.getElementById("searchBtn");
+      btn.disabled = false;
+  
+      btn.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const payload = {
+          origin: document.getElementById("origin").value.trim().toUpperCase(),
+          destination: document.getElementById("destination").value.trim().toUpperCase(),
+          date: document.getElementById("departDate").value,
+        };
+        console.table(payload);
+  
+        try {
+          const res = await fetch("/api/redemption", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload),
+          });
+          const data = await res.json();
+          console.log("API returned:", data);
+          sessionStorage.setItem(
+            "latestRedemptionResults",
+            JSON.stringify(data.results || [])
+          );
+          window.location.href = `/dev/redemption-results.html?session=${Date.now()}`;
+        } catch (err) {
+          console.error("fetch failed", err);
+        }
+      });
     });
   </script>
 
