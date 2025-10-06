@@ -37,12 +37,12 @@ function initRedemptionModule() {
   flexBtn.addEventListener("click", () => setMode("flexible"));
   setMode("exact");
 
-  // ------------------------------------------
+  // ------------------------------
   // Step-Date Toggle Logic
-  // ------------------------------------------
-  const exactBtn = document.getElementById("exactDateBtn");
-  const flexBtn  = document.getElementById("flexDateBtn");
-  const flexWrap = document.getElementById("flexDaysWrapper");
+  // ------------------------------
+  const exactBtn = document.getElementById("exactBtn");
+  const flexBtn = document.getElementById("flexBtn");
+  const flexWrap = document.getElementById("flexPicker");
   
   if (exactBtn && flexBtn && flexWrap) {
     exactBtn.addEventListener("click", () => {
