@@ -129,17 +129,41 @@ app.get("/api/redemption/testBulk", async (req, res) => {
     });
   }
 });
-// --- Temporary session route to prevent 404 ---
+// --- Temporary session route for testing ---
 app.get("/api/redemption/session/:id", (req, res) => {
   const { id } = req.params;
   console.log(`Session request received for ID: ${id}`);
-  // Send a minimal dummy payload for now
+
+  const mockResults = [
+    {
+      date: "2025-10-25",
+      origin: "DFW",
+      destination: "LHR",
+      airline: "United",
+      milesNeeded: 60000,
+      taxesFees: 123,
+      seats: 2,
+      value: 0.025
+    },
+    {
+      date: "2025-10-26",
+      origin: "DFW",
+      destination: "LHR",
+      airline: "Air Canada",
+      milesNeeded: 70000,
+      taxesFees: 98,
+      seats: 1,
+      value: 0.021
+    }
+  ];
+
   res.json({
     sessionId: id,
     status: "ok",
-    results: []
+    results: mockResults
   });
 });
+
 
 // --- Start server ---
 app.listen(PORT, () => {
