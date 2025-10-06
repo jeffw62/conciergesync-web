@@ -94,10 +94,14 @@ function setupRedemptionModule() {
       const data = await res.json();
     
       console.log("🧠 Redemption API response:", data);
-    
+      
+      // ✅ Save results locally so the next page can read them
+      sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data.results));
+      
       // Redirect after success
       const sessionId = data.sessionId || Date.now();
       window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
+      
     } catch (err) {
       console.error("❌ Redemption fetch error:", err);
       alert("Search failed – check console for details.");
