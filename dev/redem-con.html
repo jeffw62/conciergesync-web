@@ -33,16 +33,6 @@
     .search-panel { grid-template-columns: 1fr; }
   }
   
-  .inline-fields {
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
-  }
-  
-  .inline-fields .field {
-    flex: 1;
-  }
-
   .step { display: flex; flex-direction: column; gap: 6px; }
   .step label {
     color: rgba(255,255,255,0.85);
@@ -83,6 +73,16 @@
     font-weight: 600;
     letter-spacing: 0.3px;
   }
+  
+  .inline-fields {
+    display: flex;
+    gap: 20px;
+    justify-content: space-between;
+  }
+  .inline-fields .field {
+    flex: 1;
+  }
+
 </style>
 
 <div class="search-panel" id="searchPanel">
@@ -95,12 +95,12 @@
     <label for="destination">Destination</label>
     <input type="text" id="destination" placeholder="e.g. LHR">
     <div id="destination-suggestions"></div>
+    
     <div class="inline-fields">
       <div class="field">
         <label for="passengers">Passengers</label>
         <input id="passengers" type="number" min="1" value="1">
       </div>
-    
       <div class="field">
         <label for="cabin">Service Class</label>
         <select id="cabin">
