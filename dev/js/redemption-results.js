@@ -1,52 +1,62 @@
+// =====================================================
+// ConciergeSync™ Redemption Results Loader (Stable Build)
+// =====================================================
 document.addEventListener("DOMContentLoaded", () => {
-  const params = new URLSearchParams(window.location.search);
-  const sessionId = params.get("session");
+  console.log("🔎 Loading redemption results…");
 
-  console.log("🧩 Loading session:", sessionId);
+  // Try to read saved results from sessionStorage
+  const stored = sessionStorage.getItem("latestRedemptionResults");
 
-  fetch(`/api/redemption/session/${sessionId}`)
-    .then(res => res.json())
-    .then(data => {
-      displayResults(data);
-    })
-    .catch(err => {
-      console.error("❌ Failed to load session data:", err);
-      const body = document.getElementById("resultsBody");
-      body.innerHTML = `<tr><td colspan="8" style="text-align:center;">Failed to load results</td></tr>`;
-    });
+  if (stored) {
+    console.log("✅ Found stored results in sessionStorage");
+    const results = JSON.parse(stored);
+    renderResults(results);
+
+    // clear storage after render so refresh doesn’t reuse old data
+    sessionStorage.removeItem("latestRedemptionResults");
+  } else {
+    console.warn("⚠️ No stored results found — displaying empty table");
+    const body = document.getElementById("resultsBody");
+    body.innerHTML =
+      '<tr><td colspan="8" style="text-align:center;">No results to display.</td></tr>';
+  }
 });
 
-function displayResults(data) {
+// =====================================================
+// Render Function
+// =====================================================
+function renderResults(results) {
   const tbody = document.getElementById("resultsBody");
   const summary = document.getElementById("results-summary");
+
   tbody.innerHTML = "";
 
-  if (!data || !Array.isArray(data.results) || data.results.length === 0) {
+  if (!Array.isArray(results) || results.length === 0) {
     summary.textContent = "No results found for this search.";
     return;
   }
 
-  summary.textContent = `${data.results.length} redemption options found.`;
+  summary.textContent = `${results.length} redemption options found.`;
 
-  data.results.forEach(r => {
+  results.forEach((r) => {
     const row = document.createElement("tr");
-  
-    const miles = r.milesNeeded || 0;
-    const taxes = r.taxes !== undefined ? r.taxes : "-";
-    const cpm = miles > 0 && taxes !== "-" ? ((taxes * 100) / miles).toFixed(2) + "¢" : "-";
-  
+
+    const miles = r.milesNeeded || r.mileage_cost || 0;
+    const taxes = r.taxes !== undefined ? r.taxes : r.TotalTaxes || "-";
+    const cpm =
+      miles > 0 && taxes !== "-" ? ((taxes * 100) / miles).toFixed(2) + "¢" : "-";
+
     row.innerHTML = `
-      <td>${r.date || "-"}</td>
-      <td>${r.origin || "-"}</td>
-      <td>${r.destination || "-"}</td>
-      <td>${r.program || "-"}</td>
+      <td>${r.date || r.departure_date || "-"}</td>
+      <td>${r.origin || r.origin_airport || "-"}</td>
+      <td>${r.destination || r.destination_airport || "-"}</td>
+      <td>${r.program || r.Source || "-"}</td>
       <td>${miles.toLocaleString()}</td>
       <td>${taxes !== "-" ? "$" + taxes : "-"}</td>
-      <td>${r.seats !== undefined ? r.seats : "-"}</td>
+      <td>${r.seats !== undefined ? r.seats : r.RemainingSeatsRaw || "-"}</td>
       <td>${cpm}</td>
     `;
-  
+
     tbody.appendChild(row);
   });
-
 }
