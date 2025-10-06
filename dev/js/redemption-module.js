@@ -130,3 +130,39 @@ function initRedemptionModule() {
     });
   }
 }
+// --- Mutual toggle logic between Direct and Multi ---
+document.addEventListener("DOMContentLoaded", () => {
+  const directGroup = document.getElementById('directStop');
+  const multiGroup = document.getElementById('multiConn');
+
+  if (directGroup && multiGroup) {
+    const directButtons = directGroup.querySelectorAll('button');
+    const multiButtons = multiGroup.querySelectorAll('button');
+
+    directButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const isYes = btn.dataset.val === 'yes';
+        if (isYes) {
+          // if Direct = Yes, set Multi = No
+          multiButtons.forEach(b => {
+            if (b.dataset.val === 'no') b.classList.add('active');
+            else b.classList.remove('active');
+          });
+        }
+      });
+    });
+
+    multiButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const isYes = btn.dataset.val === 'yes';
+        if (isYes) {
+          // if Multi = Yes, set Direct = No
+          directButtons.forEach(b => {
+            if (b.dataset.val === 'no') b.classList.add('active');
+            else b.classList.remove('active');
+          });
+        }
+      });
+    });
+  }
+});
