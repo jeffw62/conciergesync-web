@@ -133,41 +133,42 @@ function initRedemptionModule() {
 // --- Mutual toggle logic between Direct and Multi ---
 document.addEventListener("DOMContentLoaded", () => {
   const directGroup = document.getElementById("directStop");
-  const multiGroup = document.getElementById("multiConn");
+  const multiGroup  = document.getElementById("multiConn");
 
   if (directGroup && multiGroup) {
-    const directButtons = directGroup.querySelectorAll("button");
-    const multiButtons = multiGroup.querySelectorAll("button");
+    const directYes = directGroup.querySelector('[data-val="yes"]');
+    const directNo  = directGroup.querySelector('[data-val="no"]');
+    const multiYes  = multiGroup.querySelector('[data-val="yes"]');
+    const multiNo   = multiGroup.querySelector('[data-val="no"]');
 
-    function setActive(group, value) {
-      group.forEach((b) => {
-        b.classList.remove("active");
-        if (b.dataset.val === value) b.classList.add("active");
-      });
+    function setActive(btnYes, btnNo, value) {
+      if (value === "yes") {
+        btnYes.classList.add("active");
+        btnNo.classList.remove("active");
+      } else {
+        btnNo.classList.add("active");
+        btnYes.classList.remove("active");
+      }
     }
 
-    directButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const isYes = btn.dataset.val === "yes";
-        setActive(directButtons, btn.dataset.val);
-
-        if (isYes) {
-          // force Multi = No immediately
-          setActive(multiButtons, "no");
-        }
-      });
+    // --- click logic for Direct ---
+    directYes.addEventListener("click", () => {
+      // Direct → Yes forces Multi → No
+      setActive(directYes, directNo, "yes");
+      setActive(multiYes, multiNo, "no");
+    });
+    directNo.addEventListener("click", () => {
+      setActive(directYes, directNo, "no");
     });
 
-    multiButtons.forEach((btn) => {
-      btn.addEventListener("click", () => {
-        const isYes = btn.dataset.val === "yes";
-        setActive(multiButtons, btn.dataset.val);
-
-        if (isYes) {
-          // force Direct = No immediately
-          setActive(directButtons, "no");
-        }
-      });
+    // --- click logic for Multi ---
+    multiYes.addEventListener("click", () => {
+      // Multi → Yes forces Direct → No
+      setActive(multiYes, multiNo, "yes");
+      setActive(directYes, directNo, "no");
+    });
+    multiNo.addEventListener("click", () => {
+      setActive(multiYes, multiNo, "no");
     });
   }
 });
