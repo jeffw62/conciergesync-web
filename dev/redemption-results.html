@@ -4,87 +4,107 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ConciergeSync™ – Redemption Results</title>
-  <link rel="stylesheet" href="/dev/style.css">
+
   <style>
-    main.results-container {
-      max-width: 1200px;
-      margin: 60px auto;
-      padding: 0 20px;
-      color: #fff;
-    }
-    .results-header {
-      margin-bottom: 30px;
+    body {
+      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f8f8f8;
+      color: #222;
       text-align: center;
     }
-    .results-header h2 {
-      color: #bfa14a;
-      font-size: 1.8rem;
-      margin-bottom: 6px;
+
+    .hero {
+      margin-top: 50px;
     }
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(191,161,74,0.4);
-      border-radius: 8px;
+
+    .hero img {
+      width: 160px;
+      opacity: 0.9;
     }
-    th, td {
-      padding: 12px 10px;
-      text-align: left;
-      border-bottom: 1px solid rgba(191,161,74,0.2);
-    }
-    th {
-      color: #bfa14a;
+
+    h2 {
       font-weight: 600;
+      margin-top: 16px;
+      color: #a47e3c; /* gold tone */
     }
-    tr:hover {
-      background: rgba(255,255,255,0.05);
+
+    table {
+      border-collapse: collapse;
+      margin: 40px auto;
+      width: 85%;
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    }
+
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px 12px;
+      text-align: center;
+      color: #333;
+    }
+
+    th {
+      background-color: #f1e9da;
+      color: #6a4b00;
+    }
+
+    .placeholder {
+      margin-top: 20px;
+      color: #777;
+      font-size: 15px;
+    }
+
+    .footer {
+      margin: 40px auto;
+      color: #777;
+      font-size: 13px;
     }
   </style>
 </head>
 <body>
-
-  <!-- Shared Header -->
-  <header>
-    <div class="logo">
-      <img src="/dev/asset/CS_Logo_v1.svg" alt="ConciergeSync™">
-    </div>
-  </header>
-
-  <!-- ACPM Ticker -->
-  <div class="ticker-bar">
-    <span class="label">Avg Cost per Mile:</span>
-    <span id="tickerValue">—</span>
-    <span id="tickerTrend"></span>
+  <div class="hero">
+    <img src="/dev/asset/infinity-gold.png" alt="InfiniteSync Logo">
+    <h2>Redemption Results</h2>
   </div>
 
-  <!-- Main Results Content -->
-  <main class="results-container">
-    <div class="results-header">
-      <h2>Redemption Results</h2>
-      <p id="results-summary">Loading your best redemption options...</p>
-    </div>
-
-    <table id="resultsTable">
-      <thead>
+  <table id="resultsTable">
+    <thead>
+      <tr>
+        <th>Date</th>
+        <th>Origin</th>
+        <th>Destination</th>
+        <th>Program</th>
+        <th>Miles Needed</th>
+        <th>Taxes/Fees</th>
+        <th>Seats</th>
+        <th>Value (¢/mile)</th>
+      </tr>
+    </thead>
+    <tbody id="resultsBody">
+      <!-- Rows dynamically injected -->
+      <script type="text/template" id="resultRowTemplate">
         <tr>
-          <th>Date</th>
-          <th>Origin</th>
-          <th>Destination</th>
-          <th>Airline</th>
-          <th>Miles Needed</th>
-          <th>Taxes/Fees</th>
-          <th>Seats</th>
-          <th>Value (¢/mile)</th>
+          <td data-label="Date">${date}</td>
+          <td data-label="Origin">${origin}</td>
+          <td data-label="Destination">${destination}</td>
+          <td data-label="Program">${program}</td>
+          <td data-label="Points Needed">${miles.toLocaleString()}</td>
+          <td data-label="Fees">${taxes !== "-" ? "$" + taxes : "-"}</td>
+          <td data-label="Seats Available">${seats}</td>
+          <td data-label="Value (¢/mile)">${cpm}</td>
         </tr>
-      </thead>
-      <tbody id="resultsBody">
-        <tr><td colspan="8" style="text-align:center; color:#999;">Loading results...</td></tr>
-      </tbody>
-    </table>
-  </main>
+      </script>
+    </tbody>
+  </table>
 
-  <footer id="footer"></footer>
+  <div class="placeholder" id="noResults">No results to display yet.</div>
+
+  <div class="footer">
+    ConciergeSync™ Internal Test View
+  </div>
 
   <script src="/dev/js/redemption-results.js"></script>
 </body>
