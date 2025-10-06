@@ -81,6 +81,29 @@ function initRedemptionModule() {
   // initialize routing logic
   initRoutingLogic();
 
+  // --- Mutual toggle between Direct and Multi ---
+  const directGroup = document.getElementById("directStop");
+  const multiGroup  = document.getElementById("multiConn");
+  
+  if (directGroup && multiGroup) {
+    const directYes = directGroup.querySelector('[data-val="yes"]');
+    const directNo  = directGroup.querySelector('[data-val="no"]');
+    const multiYes  = multiGroup.querySelector('[data-val="yes"]');
+    const multiNo   = multiGroup.querySelector('[data-val="no"]');
+  
+    // Direct → Yes forces Multi → No
+    directYes.addEventListener("click", () => {
+      multiYes.classList.remove("active");
+      multiNo.classList.add("active");
+    });
+  
+    // Multi → Yes forces Direct → No
+    multiYes.addEventListener("click", () => {
+      directYes.classList.remove("active");
+      directNo.classList.add("active");
+    });
+  }
+
   // -----------------------------
   // 3. Search-button click handler
   // -----------------------------
@@ -167,31 +190,6 @@ function initRedemptionModule() {
     });
   }
 }
-
-// --- Mutual toggle between Direct and Multi ---
-document.addEventListener("DOMContentLoaded", () => {
-  const directGroup = document.getElementById("directStop");
-  const multiGroup  = document.getElementById("multiConn");
-
-  if (directGroup && multiGroup) {
-    const directYes = directGroup.querySelector('[data-val="yes"]');
-    const directNo  = directGroup.querySelector('[data-val="no"]');
-    const multiYes  = multiGroup.querySelector('[data-val="yes"]');
-    const multiNo   = multiGroup.querySelector('[data-val="no"]');
-
-    // Direct → Yes forces Multi → No
-    directYes.addEventListener("click", () => {
-      multiYes.classList.remove("active");
-      multiNo.classList.add("active");
-    });
-
-    // Multi → Yes forces Direct → No
-    multiYes.addEventListener("click", () => {
-      directYes.classList.remove("active");
-      directNo.classList.add("active");
-    });
-  }
-});
 
 // make available to console.html loader
 window.initRedemptionModule = initRedemptionModule;
