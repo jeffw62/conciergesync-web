@@ -460,6 +460,7 @@
         
           // Save results for results page
           sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data));
+          console.log("Checking write immediately:", sessionStorage.getItem("latestRedemptionResults"));
           console.log("sessionStorage write complete");
         
           // Wait a tick before redirect
@@ -475,6 +476,6 @@
     </script>
 
   <!-- your JS link -->
-  <script src="/dev/js/redemption-module.js?v=108"></script>
+  <script src="/dev/js/redemption-module.js?v=109"></script>
 </body>
 </html>
