@@ -1,1059 +1,316 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>ConciergeSync™ – Redemption Console</title>
-</head>
-<body>
 
-<style>
-  /* ---------- Match Redemption.html Card Style ---------- */
-  .search-wrapper {
-    max-width: 950px;
-    margin: 30px auto;
-    background: #ffffff !important;
-    color: #111 !important;          /* force dark text */
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
-    padding: 20px 30px 30px;         /* tighter padding to shorten card */
-    text-align: left;
-    position: relative;
-    z-index: 10;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    line-height: 1.3;
-  }
+  <style>
+    /* ========================
+       CORE BASELINE STYLES
+    ========================= */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background-color: #0a1a33;
+      color: #111;
+    }
 
-  .search-panel {
-    max-width: 900px;
-    margin: 0 auto; /* centers inside wrapper */
-    background: transparent; /* remove gray overlay */
-    border: none; /* remove outline */
-    border-radius: 0; /* let wrapper control corners */
-  }
-  .search-panel .row {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 12px;
-    width: 75%;
-    margin-top: 8px;
-  }
-  .search-panel .field {
-    flex: 1;
-    min-width: 150px; /* prevents them from collapsing */
-  }
-  @media (max-width: 980px) {
-    .search-panel { grid-template-columns: 1fr; }
-      }
-      /* --- Date Option Buttons (Exact / Flexible) --- */
-    
+    .search-wrapper {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      padding: 28px 32px 32px;
+    }
+
+    .search-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #bfa14a;
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 7px 9px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      color: #111;
+      background: #fff;
+      box-sizing: border-box;
+    }
+
+    /* Two-field row pairs */
+    .inline-fields {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .inline-fields .field {
+      flex: 1 1 48%;
+    }
+
+    /* Exact / Flexible buttons */
+    .card-options {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+
     .option-btn {
-      flex: 1;
-      padding: 10px;
+      flex: 1 1 48%;
       border: 1px solid #ccc;
       border-radius: 6px;
+      padding: 10px;
+      background: #f7f7f7;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .option-btn.active {
+      background: #bfa14a;
+      border-color: #bfa14a;
+      color: #fff;
+    }
+
+    .option-btn:hover {
+      background: #d6b658;
+      color: #fff;
+      border-color: #d6b658;
+    }
+
+    /* Checkbox row */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 8px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #bfa14a;
+      cursor: pointer;
+    }
+
+    .checkbox-row label {
+      font-size: 0.9rem;
+      color: #111;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    small.hint {
+      display: block;
+      font-size: 0.85rem;
+      color: #333;
+      margin-top: 4px;
+    }
+
+    /* Step 2 + Step 3 */
+    .toggle-group {
+      display: inline-flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .toggle-group button {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
       background: #f7f7f7;
       cursor: pointer;
-      font-size: 0.95rem;
-      transition: all 0.2s ease;
+      transition: 0.25s ease;
     }
-    .option-btn.active {
+
+    .toggle-group button.active,
+    .toggle-group button:hover {
       background: #bfa14a;
       color: #fff;
       border-color: #bfa14a;
     }
 
-  /* --- Step Section Styling (Unified Version) --- */
-  .step {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* increased slightly for breathing room */
-  }
-  
-  .step h3 {
-    margin-bottom: 10px;
-    color: #f5d36c; /* gold accent */
-    font-weight: 600;
-    letter-spacing: 0.3px;
-  }
-  
-  .step label {
-    color: rgba(255,255,255,0.85);
-    font-weight: 500;
-  }
-  
-  .step input,
-  .step select {
-    width: 75%;
-    padding: 8px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: rgba(255,255,255,0.95);
-    color: #0a1a33;
-    font-size: 0.95rem;
-  }
-  
-  /* Optional: subtle divider between step blocks */
-  .step:not(:last-child)::after {
-    content: "";
-    height: 1px;
-    width: 100%;
-    background: rgba(191,161,74,0.25);
-    margin-top: 28px;
-  }
+    .search-btn {
+      width: 100%;
+      background: #bfa14a;
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 1rem;
+      cursor: not-allowed;
+      opacity: 0.9;
+      transition: all 0.25s ease;
+    }
 
-  .search-btn {
-    width: 75%;
-    background: #bfa14a;
-    color: #0a1a33;
-    font-weight: 600;
-    border: none;
-    border-radius: 6px;
-    padding: 12px;
-    font-size: 1rem;
-    cursor: not-allowed;
-    opacity: 0.75;
-    transition: all 0.25s ease;
-  }
-  
-  .search-btn:enabled {
-    opacity: 1;
-    cursor: pointer;
-    background: #d6b658;
-    color: #0a1a33;
-    box-shadow: 0 0 10px rgba(191,161,74,0.4);
-  }
-  #searchWarning {
-    font-size: 0.85rem; color: #a00; margin-top: 6px;
-  }
-  .toggle-group { display: flex; gap: 10px; }
-  .toggle-group button.active {
-    background: #bfa14a; color: #fff; border-color: #bfa14a;
-  }
-  .step h3 {
-    color: #f5d36c;
-    font-weight: 600;
-    letter-spacing: 0.3px;
-  }
-  
-  /* Inline fields (passengers + cabin) */
-  .inline-fields {
-    display: flex;
-    gap: 20px;
-    justify-content: space-between;
-    align-items: flex-end;
-    flex-wrap: wrap;
-  }
-  
-  .inline-fields .field {
-    flex: 1;
-    min-width: 200px;
-  }
+    .search-btn:enabled {
+      cursor: pointer;
+      background: #d6b658;
+      box-shadow: 0 0 8px rgba(191,161,74,0.4);
+    }
 
-  .suggestion-item {
-    cursor: pointer;
-  }
+    #searchWarning {
+      font-size: 0.85rem;
+      color: #a00;
+      margin-top: 6px;
+    }
 
-  .date-wrap {
-    display: flex;
-    flex-direction: column;
-    gap: 10px; /* adds space between date field and buttons */
-    width: 75%;
-  }
-  /* ---------- Harmonize headings and button styling ---------- */
-  .step h3 {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: #bfa14a;
-    margin-bottom: 10px;
-  }
-  
-  .search-btn {
-    width: 75%;
-    background: #bfa14a;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 12px;
-    font-size: 1rem;
-    cursor: pointer;
-    opacity: 0.9;
-    transition: all 0.25s ease;
-  }
-  
-  .search-btn:hover:enabled {
-    opacity: 1;
-    background: #d6b658;
-    box-shadow: 0 0 10px rgba(191,161,74,0.4);
-  }
-  /* ---------- Layout alignment polish ---------- */
-  
-  /* unify column layout inside search-panel */
-  .search-panel {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    align-items: start;
-  }
-  
-  /* ---------- Layout alignment + spacing polish ---------- */
-  
-  /* unify two-column layout inside the panel */
-  .search-panel {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 25px;             /* was 40px — brings columns closer */
-    align-items: start;
-  }
-  
-  /* Step 1 → left column / Step 2+3 → right column */
-  .step:nth-of-type(1) {
-    grid-column: 1;
-  }
-  .step:nth-of-type(2),
-  .step:nth-of-type(3) {
-    grid-column: 2;
-  }
-  
-  /* subtle divider line only below Step 1 */
-  .step:nth-of-type(1) {
-    border-bottom: 1px solid #eee;
-    padding-bottom: 15px;
-    margin-bottom: 15px;
-  }
-  
-  /* tighter section spacing */
- .step {
-    margin-bottom: 12px;   /* smaller section gaps */
-    color: #111 !important;
-    line-height: 1.3;
-  }
-  
-  /* gold step headers */
-  .step h3 {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: #bfa14a;
-    margin-bottom: 10px;
-  }
-  
-  /* clean label + inputs */
-  .step label {
-    display: block;
-    margin-bottom: 6px;
-  }
-  
-  /* compact Yes/No toggle group */
-  .toggle-group {
-    display: inline-flex;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-  
-  /* Search button look + hover */
-  .search-btn {
-    width: 75%;
-    background: #bfa14a;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 12px;
-    font-size: 1rem;
-    cursor: pointer;
-    opacity: 0.9;
-    transition: all 0.25s ease;
-  }
-  .search-btn:hover:enabled {
-    opacity: 1;
-    background: #d6b658;
-    box-shadow: 0 0 10px rgba(191,161,74,0.4);
-  }
+    /* Responsive collapse */
+    @media (max-width: 760px) {
+      .search-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
 
-  /* === FINAL OVERRIDES (safe version) === */
-  .search-wrapper {
-    max-width: 950px !important;
-    margin: 30px auto !important;
-    background: #ffffff !important;
-    color: #111 !important;
-    border-radius: 10px !important;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.15) !important;
-    padding: 20px 30px 30px !important;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
-    line-height: 1.3 !important;
-  }
-  
-  .search-panel {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 20px !important;
-    align-items: start !important;
-    background: transparent !important;
-    border: none !important;
-  }
-  
-  .step {
-    margin-bottom: 10px !important;
-    color: #111 !important;
-    font-weight: 500 !important;
-  }
-  
-  .step h3 {
-    font-size: 1.1rem !important;
-    font-weight: 600 !important;
-    color: #bfa14a !important;
-    margin-bottom: 8px !important;
-  }
-  
-  .step label,
-  .step small,
-  .step p {
-    color: #111 !important;
-  }
-  
-  .search-btn {
-    width: 75% !important;
-    background: #bfa14a !important;
-    color: #fff !important;
-    border: none !important;
-    border-radius: 6px !important;
-    padding: 10px !important;
-    font-size: 1rem !important;
-    cursor: pointer !important;
-  }
-  /* === FINAL HEIGHT TRIM === */
-  .search-wrapper {
-    padding: 18px 28px 22px !important; /* tighter overall padding */
-  }
-  
-  .step {
-    margin-bottom: 6px !important;
-    line-height: 1.15 !important;
-  }
-  
-  .step h3 {
-    margin-bottom: 6px !important;
-  }
-  
-  .inline-fields,
-  .date-wrap,
-  .toggle-group {
-    margin-bottom: 4px !important;
-  }
-  
-  .inline-fields input,
-  .inline-fields select,
-  .date-wrap input {
-    padding: 5px 7px !important;
-  }
-  
-  .option-btn {
-    padding: 7px 9px !important;
-    font-size: 0.9rem !important;
-  }
-  
-  .search-btn {
-    margin-top: 4px !important;
-    padding: 8px 0 !important;
-    font-size: 0.95rem !important;
-  }
-  /* === FINAL HEIGHT + CLEANUP PASS === */
+<body>
+  <div class="search-wrapper">
+    <div class="search-panel" id="searchPanel">
 
-  /* remove bottom divider lines */
-  .step::after {
-    content: none !important;
-  }
-  
-  /* tighter vertical rhythm overall */
-  .search-wrapper {
-    padding: 15px 25px 18px !important;
-  }
-  
-  .step {
-    margin-bottom: 4px !important;
-    line-height: 1.1 !important;
-  }
-  
-  .step h3 {
-    margin-bottom: 4px !important;
-    font-size: 1.05rem !important;
-  }
-  
-  .inline-fields,
-  .date-wrap,
-  .toggle-group {
-    margin-bottom: 3px !important;
-  }
-  
-  .inline-fields input,
-  .inline-fields select,
-  .date-wrap input {
-    padding: 4px 6px !important;
-  }
-  
-  .option-btn {
-    padding: 6px 8px !important;
-    font-size: 0.88rem !important;
-  }
-  
-  .search-btn {
-    margin-top: 3px !important;
-    padding: 7px 0 !important;
-    font-size: 0.93rem !important;
-  }
+      <!-- STEP 1 -->
+      <div class="step">
+        <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
 
-  /* === ALIGNMENT + WIDTH NORMALIZATION (Match redemption.html) === */
-  
-  /* 1️⃣ Tighten space between labels and inputs */
-  .step label {
-    margin-bottom: 2px !important;
-    line-height: 1.1 !important;
-  }
-  
-  /* 2️⃣ Normalize overall column widths */
-  .search-panel {
-    grid-template-columns: 1fr 0.95fr !important; /* slightly narrows right column */
-    gap: 20px !important;
-  }
-  
-  /* 3️⃣ Fix Service Class horizontal alignment */
-  .inline-fields {
-    display: flex !important;
-    justify-content: flex-start !important;
-    align-items: flex-end !important;
-    gap: 16px !important; /* same horizontal spacing as redemption.html */
-  }
-  
-  .inline-fields .field {
-    flex: 1 !important;
-    min-width: 180px !important;
-  }
-  
-  .inline-fields .field:last-child {
-    margin-left: 0 !important;
-    flex-basis: 46% !important; /* narrows slightly so right edge lines up */
-  }
-  
-  /* 4️⃣ Fine-tune form input padding and sizing */
-  .step input,
-  .step select {
-    padding: 5px 7px !important;
-    font-size: 0.95rem !important;
-  }
-  
-  /* 5️⃣ Slightly reduce interior padding on wrapper for height match */
-  .search-wrapper {
-    padding: 15px 25px 20px !important;
-  }
-
-  /* === SHIFT ENTIRE FORM CONTENT TO THE RIGHT (retain card width) === */
-  .search-panel {
-    margin-left: 60px !important;   /* expands left margin → pushes content right */
-    margin-right: 20px !important;  /* trims right side a little for balance */
-  }
-  
-  .search-wrapper {
-    padding-left: 20px !important;  /* maintain smooth edge spacing */
-    padding-right: 10px !important;
-  }
-  /* === SERVICE CLASS ALIGNMENT FIX === */
-  .inline-fields {
-    display: flex !important;
-    justify-content: space-between !important;
-    align-items: flex-end !important;
-    gap: 14px !important;
-  }
-  
-  .inline-fields .field {
-    flex: 1 1 48% !important;   /* equal width fields */
-    min-width: 180px !important;
-  }
-  
-  .inline-fields .field:first-child {
-    margin-right: 0 !important;
-  }
-  
-  .inline-fields .field:last-child {
-    flex: 1 1 48% !important;   /* keeps Service Class same width as Passengers */
-    margin-left: 0 !important;
-  }
-  
-  /* === SERVICE CLASS FIELD TRUE EDGE ALIGNMENT === */
-  .inline-fields {
-    display: flex !important;
-    justify-content: flex-start !important;
-    gap: 14px !important;
-  }
-  
-  .inline-fields .field:first-child {
-    flex: 0 0 35% !important;  /* Passenger box */
-    max-width: 35% !important;
-  }
-  
-  .inline-fields .field:last-child {
-    flex: 0 0 58% !important;  /* Service Class box */
-    max-width: 58% !important;
-  }
-  
-  /* make sure controls fill their container */
-  .inline-fields input,
-  .inline-fields select {
-    width: 100% !important;
-  }
-  /* === STREAMLINED 2-COLUMN FIELD LAYOUT (Step 1 compact) === */
-  .step .inline-fields {
-    display: flex;
-    justify-content: space-between;
-    gap: 14px;
-  }
-  
-  .step .inline-fields .field {
-    flex: 1 1 48%;
-  }
-  
-  .step input[type="text"],
-  .step input[type="number"],
-  .step input[type="date"],
-  .step select {
-    width: 100%;
-    max-width: 100%;
-  }
-  
-  /* tighten vertical rhythm */
-  .step label { margin-bottom: 2px; }
-  
-  /* checkbox row */
-  .checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 6px;
-  }
-  .checkbox-row input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: #bfa14a;
-  }
-  .checkbox-row label {
-    font-size: 0.9rem;
-    color: #111;
-    user-select: none;
-  }
-  /* === RESET AND RESTORE STEP-1 VISUALS === */
-  .search-wrapper {
-    background: #fff !important;
-    color: #111 !important;
-    padding: 20px 28px 26px !important;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
-  }
-  
-  /* two-column inline rows */
-  .step .inline-fields {
-    display: flex;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 8px;
-  }
-  
-  /* keep each field balanced */
-  .step .inline-fields .field {
-    flex: 1 1 48%;
-  }
-  
-  .step label {
-    color: #111;
-    font-weight: 500;
-    margin-bottom: 3px;
-    display: block;
-  }
-  
-  /* input styling */
-  .step input[type="text"],
-  .step input[type="number"],
-  .step input[type="date"],
-  .step select {
-    width: 100%;
-    background: #fff;
-    color: #111;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    padding: 6px 8px;
-    font-size: 0.95rem;
-  }
-  
-  /* restore buttons and gold accents */
-  .option-btn.active,
-  .search-btn {
-    background: #bfa14a !important;
-    color: #fff !important;
-  }
-  .option-btn {
-    background: #f7f7f7;
-    border: 1px solid #ccc;
-  }
-  
-  /* checkbox row (for partner award space) */
-  .checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 8px;
-  }
-  .checkbox-row input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: #bfa14a;
-  }
-  .checkbox-row label {
-    font-size: 0.9rem;
-    color: #111;
-  }
-  /* === RESTORE STEP 1 COMPACT 2-COLUMN LAYOUT === */
-  .search-wrapper {
-    background: #fff !important;
-    color: #111 !important;
-    padding: 20px 28px 26px !important;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
-  }
-  
-  /* keep Step 1 fields in tidy two-column rows */
-  .step .inline-fields {
-    display: flex !important;
-    justify-content: space-between !important;
-    gap: 14px !important;
-    margin-bottom: 8px !important;
-  }
-  
-  .step .inline-fields .field {
-    flex: 1 1 48% !important;
-  }
-  
-  .step label {
-    color: #111 !important;
-    font-weight: 500 !important;
-    margin-bottom: 3px !important;
-    display: block !important;
-  }
-  
-  .step input[type="text"],
-  .step input[type="number"],
-  .step input[type="date"],
-  .step select {
-    width: 100% !important;
-    background: #fff !important;
-    color: #111 !important;
-    border: 1px solid #ccc !important;
-    border-radius: 4px !important;
-    padding: 6px 8px !important;
-    font-size: 0.95rem !important;
-  }
-  
-  /* restore button look */
-  .option-btn.active,
-  .search-btn {
-    background: #bfa14a !important;
-    color: #fff !important;
-  }
-  .option-btn {
-    background: #f7f7f7 !important;
-    border: 1px solid #ccc !important;
-  }
-  
-  /* partner award space checkbox row */
-  .checkbox-row {
-    display: flex !important;
-    align-items: center !important;
-    gap: 8px !important;
-    margin-top: 8px !important;
-  }
-  .checkbox-row input[type="checkbox"] {
-    width: 18px !important;
-    height: 18px !important;
-    accent-color: #bfa14a !important;
-  }
-  .checkbox-row label {
-    font-size: 0.9rem !important;
-    color: #111 !important;
-  }
-  /* === FINAL CARD RESTORATION (WHITE BACKGROUND + SHADOW) === */
-  .search-wrapper {
-    background: #ffffff !important;
-    border-radius: 10px !important;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.12) !important;
-    padding: 24px 30px 28px !important;
-    color: #111 !important;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
-    line-height: 1.3 !important;
-  }
-  /* === RESTORE TWO-COLUMN CARD LAYOUT (Step 1 + Step 2 side by side) === */
-  .search-panel {
-    display: grid !important;
-    grid-template-columns: 1fr 1fr !important;
-    gap: 30px !important;
-    align-items: start !important;
-  }
-  
-  /* left column = Step 1 */
-  .step:nth-of-type(1) {
-    grid-column: 1 !important;
-  }
-  
-  /* right column = Step 2 (and Step 3 lives with it) */
-  .step:nth-of-type(2),
-  .step:nth-of-type(3) {
-    grid-column: 2 !important;
-  }
-  
-  /* unify section spacing */
-  .step {
-    margin-bottom: 10px !important;
-  }
-  /* === FORCE RESTORE TWO-COLUMN GRID === */
-  .search-wrapper > .search-panel {
-    display: grid !important;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) !important;
-    gap: 28px !important;
-    align-items: start !important;
-    justify-content: space-between !important;
-  }
-  
-  /* Explicit placement */
-  .search-wrapper > .search-panel > .step:nth-of-type(1) {
-    grid-column: 1 !important;
-  }
-  
-  .search-wrapper > .search-panel > .step:nth-of-type(2),
-  .search-wrapper > .search-panel > .step:nth-of-type(3) {
-    grid-column: 2 !important;
-  }
-  
-  /* Safety: undo any rogue flex or block display */
-  .search-panel, .step {
-    display: revert-layer !important;
-    display: block !important;
-    box-sizing: border-box !important;
-  }
-  
-  /* keep uniform margins */
-  .step {
-    margin-bottom: 10px !important;
-  }
-  /* === SPACING + FIELD WIDTH TUNING === */
-  
-  /* give each column more interior room */
-  .search-wrapper {
-    padding: 28px 40px 32px !important;
-  }
-  
-  /* tighten the gap between left/right columns slightly */
-  .search-panel {
-    gap: 24px !important;
-  }
-  
-  /* reduce width of inline text/date/select inputs */
-  .step .inline-fields .field {
-    flex: 0 0 46% !important;     /* narrower fields */
-    max-width: 46% !important;
-  }
-  
-  /* restore smooth vertical rhythm */
-  .step .inline-fields {
-    margin-bottom: 10px !important;
-  }
-  
-  .step label {
-    margin-bottom: 2px !important;
-    font-size: 0.94rem !important;
-  }
-  
-  .step input[type="text"],
-  .step input[type="number"],
-  .step input[type="date"],
-  .step select {
-    padding: 5px 7px !important;
-    font-size: 0.9rem !important;
-  }
-  
-  /* subtle breathing room under hint + checkbox */
-  small.hint {
-    display: block;
-    margin-top: 6px !important;
-    margin-bottom: 8px !important;
-  }
-  .checkbox-row {
-    margin-top: 4px !important;
-  }
-  /* === FIELD WIDTH REDUCTION (≈ 2/3 current width) === */
-  
-  /* Limit width of all paired fields within Step 1 */
-  .step:nth-of-type(1) .inline-fields .field {
-    flex: 0 0 32% !important;      /* was ~48%; 32% ≈ two-thirds */
-    max-width: 32% !important;
-  }
-  
-  /* Center the narrower pairs neatly within the left column */
-  .step:nth-of-type(1) .inline-fields {
-    justify-content: space-around !important;
-  }
-  
-  /* Make sure inputs and selects still fill their new container */
-  .step:nth-of-type(1) input,
-  .step:nth-of-type(1) select {
-    width: 100% !important;
-  }
-  /* === FORCE NARROWER FIELD WIDTHS FOR STEP 1 === */
-  
-  /* Apply only to Step 1 within the grid */
-  .search-panel > .step:nth-of-type(1) .inline-fields {
-    justify-content: flex-start !important;
-    gap: 18px !important;
-  }
-  
-  /* lock each input/select container to a fixed width */
-  .search-panel > .step:nth-of-type(1) .inline-fields .field {
-    flex: 0 0 auto !important;
-    width: 100px !important;          /* adjust as needed: 180–220px sweet spot */
-    max-width: 100px !important;
-  }
-  
-  /* make sure inner controls still fit cleanly */
-  .search-panel > .step:nth-of-type(1) input,
-  .search-panel > .step:nth-of-type(1) select {
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  /* === CARD WIDTH REDUCTION AND CENTERING === */
-  .search-wrapper {
-    max-width: 700px !important;       /* was around 950px — ~2/3 the width */
-    margin: 30px auto !important;      /* keep it centered */
-    padding: 24px 28px 28px !important;
-    background: #fff !important;
-    border-radius: 10px !important;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.12) !important;
-  }
-  
-  /* tighten the grid slightly inside the smaller card */
-  .search-panel {
-    grid-template-columns: 1fr 1fr !important;
-    gap: 20px !important;
-  }
-  /* === STEP 1 FIELD WIDTH OPTIMIZATION FOR 700PX CARD === */
-  
-  /* shrink all Step 1 paired fields to fit side-by-side inside the 700px card */
-  .search-panel > .step:nth-of-type(1) .inline-fields .field {
-    flex: 0 0 10% !important;   /* sweet spot for 700px wrapper */
-    max-width: 10% !important;
-  }
-  
-  /* ensure the pairs distribute evenly */
-  .search-panel > .step:nth-of-type(1) .inline-fields {
-    justify-content: space-between !important;
-    gap: 14px !important;
-  }
-  
-  /* keep controls fully filling their narrower containers */
-  .search-panel > .step:nth-of-type(1) input,
-  .search-panel > .step:nth-of-type(1) select {
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  
-  /* optional: a touch more breathing room below rows */
-  .search-panel > .step:nth-of-type(1) .inline-fields {
-    margin-bottom: 8px !important;
-  }
-  /* === HARD RESTORE INLINE FIELD LAYOUT FOR STEP 1 === */
-  .search-panel > .step:nth-of-type(1) .inline-fields {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    justify-content: space-between !important;
-    gap: 14px !important;
-    width: 100% !important;
-  }
-  
-  /* each .field now takes a true half width */
-  .search-panel > .step:nth-of-type(1) .inline-fields .field {
-    flex: 1 1 48% !important;   /* about half width per field */
-    max-width: 48% !important;
-  }
-  
-  /* ensure the controls fill their containers neatly */
-  .search-panel > .step:nth-of-type(1) input,
-  .search-panel > .step:nth-of-type(1) select {
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  /* === FINAL FIT: keep Step-1 rows side-by-side within 700 px card === */
-  .search-panel > .step:nth-of-type(1) .inline-fields {
-    display: flex !important;
-    flex-wrap: nowrap !important;
-    justify-content: space-between !important;
-    gap: 12px !important;
-  }
-  
-  .search-panel > .step:nth-of-type(1) .inline-fields .field {
-    flex: 0 0 42% !important;   /* down from 48%; leaves 16% breathing room */
-    max-width: 42% !important;
-  }
-  
-  .search-panel > .step:nth-of-type(1) input,
-  .search-panel > .step:nth-of-type(1) select {
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-  /* === HARD OVERRIDE: shrink Step-1 paired field width === */
-  .search-wrapper .search-panel > .step:nth-of-type(1) .inline-fields .field {
-    flex: 0 0 38% !important;     /* narrower than previous 40% */
-    max-width: 38% !important;
-  }
-  
-  .search-wrapper .search-panel > .step:nth-of-type(1) .inline-fields {
-    justify-content: space-between !important;
-    gap: 10px !important;
-  }
-  
-  /* keep inner inputs filling the reduced containers */
-  .search-wrapper .search-panel > .step:nth-of-type(1) input,
-  .search-wrapper .search-panel > .step:nth-of-type(1) select {
-    width: 100% !important;
-    box-sizing: border-box !important;
-  }
-
-
-</style>
-<div class="search-wrapper">
-  <div class="search-panel" id="searchPanel">
-
-    <!-- STEP 1 -->
-    <div class="step">
-      <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
-
-      <!-- Row 1: Origin + Destination -->
-      <div class="inline-fields">
-        <div class="field">
-          <label for="origin">Origin</label>
-          <input type="text" id="origin" placeholder="e.g. DFW">
+        <!-- Origin / Destination -->
+        <div class="inline-fields">
+          <div class="field">
+            <label for="origin">Origin</label>
+            <input type="text" id="origin" placeholder="e.g. DFW" />
+          </div>
+          <div class="field">
+            <label for="destination">Destination</label>
+            <input type="text" id="destination" placeholder="e.g. LHR" />
+          </div>
         </div>
-        <div class="field">
-          <label for="destination">Destination</label>
-          <input type="text" id="destination" placeholder="e.g. LHR">
+
+        <!-- Passengers / Service Class -->
+        <div class="inline-fields">
+          <div class="field">
+            <label for="passengers">Passengers</label>
+            <input type="number" id="passengers" min="1" value="1" />
+          </div>
+          <div class="field">
+            <label for="cabin">Service Class</label>
+            <select id="cabin">
+              <option value="Economy">Economy</option>
+              <option value="Premium Economy">Premium Economy</option>
+              <option value="Business">Business</option>
+              <option value="First">First</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Departure / Return Date -->
+        <div class="inline-fields">
+          <div class="field">
+            <label for="departDate">Departure Date</label>
+            <input type="date" id="departDate" />
+          </div>
+          <div class="field">
+            <label for="returnDate">Return Date</label>
+            <input type="date" id="returnDate" />
+          </div>
+        </div>
+
+        <!-- Exact / Flexible -->
+        <div class="card-options">
+          <button class="option-btn active" id="exactBtn">Exact Date</button>
+          <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
+        </div>
+
+        <small class="hint">
+          Select “Exact Date” to search only that day, or “Flexible” to include a +/- 14-day window.
+        </small>
+
+        <!-- Checkbox -->
+        <div class="checkbox-row">
+          <input type="checkbox" id="partnerSpace" />
+          <label for="partnerSpace">Include partner award space</label>
         </div>
       </div>
 
-      <!-- Row 2: Passengers + Service Class -->
-      <div class="inline-fields">
-        <div class="field">
-          <label for="passengers">Passengers</label>
-          <input id="passengers" type="number" min="1" value="1">
-        </div>
-        <div class="field">
-          <label for="cabin">Service Class</label>
-          <select id="cabin">
-            <option value="Economy">Economy</option>
-            <option value="Premium Economy">Premium Economy</option>
-            <option value="Business">Business</option>
-            <option value="First">First</option>
-          </select>
-        </div>
-      </div>
+      <!-- STEP 2 -->
+      <div class="step routing">
+        <h3>Step 2:&nbsp;Routing Preferences</h3>
 
-      <!-- Row 3: Departure + Return Date -->
-      <div class="inline-fields">
-        <div class="field">
-          <label for="departDate">Departure Date</label>
-          <input type="date" id="departDate">
+        <label>Direct Non-stop</label>
+        <div class="toggle-group" id="directStop">
+          <button data-val="yes">Yes</button>
+          <button data-val="no">No</button>
         </div>
-        <div class="field">
-          <label for="returnDate">Return Date</label>
-          <input type="date" id="returnDate">
+
+        <label>Multiple Connections</label>
+        <div class="toggle-group" id="multiConn">
+          <button data-val="yes">Yes</button>
+          <button data-val="no">No</button>
         </div>
-      </div>
 
-      <!-- Row 4: Date options -->
-      <div class="card-options">
-        <button class="option-btn active" id="exactBtn">Exact Date</button>
-        <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
-      </div>
+        <label>Positioning Flight Allowed</label>
+        <div class="toggle-group" id="posFlight">
+          <button data-val="yes">Yes</button>
+          <button data-val="no">No</button>
+        </div>
 
-      <div id="flexPicker" class="flex-picker" style="display:none;">
-        <label for="flexDays">Search Days +/- Date Selected:</label>
-        <select id="flexDays">
-          <option value="1">1 day</option>
-          <option value="3">3 days</option>
-          <option value="5">5 days</option>
-          <option value="7">7 days</option>
-          <option value="14">14 days</option>
+        <label for="program">Airline Program:</label>
+        <select id="program">
+          <option value="">All Programs</option>
+          <option value="american">American Airlines</option>
+          <option value="alaska">Alaska Airlines</option>
+          <option value="united">United Airlines</option>
+          <option value="delta">Delta Air Lines</option>
+          <option value="jetblue">JetBlue</option>
+          <option value="southwest">Southwest Airlines</option>
+          <option value="aeroplan">Air Canada Aeroplan</option>
+          <option value="avios">British Airways Avios</option>
+          <option value="flyingblue">Air France / KLM Flying Blue</option>
+          <option value="virginatlantic">Virgin Atlantic</option>
+          <option value="qantas">Qantas</option>
+          <option value="qatar">Qatar Airways Privilege Club</option>
+          <option value="ana">ANA Mileage Club</option>
+          <option value="emirates">Emirates Skywards</option>
+          <option value="etihad">Etihad Guest</option>
+          <option value="singapore">Singapore KrisFlyer</option>
+          <option value="turkish">Turkish Miles & Smiles</option>
         </select>
-      </div>
 
-      <small class="hint">
-        Select “Exact Date” to search only that day, or “Flexible” for a range.
-      </small>
-
-      <!-- Row 5: Checkbox -->
-      <div class="checkbox-row">
-        <input type="checkbox" id="partnerSpace">
-        <label for="partnerSpace">Include partner award space</label>
+        <!-- STEP 3 -->
+        <h3 style="margin-top: 20px;">Step 3:&nbsp;Search</h3>
+        <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
+        <p id="searchWarning" style="display: block;">Complete Step 2 to continue.</p>
       </div>
     </div>
-    <!-- END STEP 1 -->
+  </div>
 
-    <!-- STEP 2 -->
-    <div class="step routing">
-      <h3>Step 2:&nbsp;Routing Preferences</h3>
-      <label>Direct Non-stop</label>
-      <div class="toggle-group" id="directStop">
-        <button data-val="yes">Yes</button>
-        <button data-val="no">No</button>
-      </div>
-      <label>Multiple Connections</label>
-      <div class="toggle-group" id="multiConn">
-        <button data-val="yes">Yes</button>
-        <button data-val="no">No</button>
-      </div>
-      <label>Positioning Flight Allowed</label>
-      <div class="toggle-group" id="posFlight">
-        <button data-val="yes">Yes</button>
-        <button data-val="no">No</button>
-      </div>
-      <label for="program">Airline Program:</label>
-      <select id="program">
-        <option value="">All Programs</option>
-        <option value="american">American Airlines</option>
-        <option value="alaska">Alaska Airlines</option>
-        <option value="united">United Airlines</option>
-        <option value="delta">Delta Air Lines</option>
-        <option value="jetblue">JetBlue</option>
-        <option value="southwest">Southwest Airlines</option>
-        <option value="aeroplan">Air Canada Aeroplan</option>
-        <option value="avios">British Airways Avios</option>
-        <option value="flyingblue">Air France / KLM Flying Blue</option>
-        <option value="virginatlantic">Virgin Atlantic</option>
-        <option value="qantas">Qantas</option>
-        <option value="qatar">Qatar Airways Privilege Club</option>
-        <option value="ana">ANA Mileage Club</option>
-        <option value="emirates">Emirates Skywards</option>
-        <option value="etihad">Etihad Guest</option>
-        <option value="singapore">Singapore KrisFlyer</option>
-        <option value="turkish">Turkish Miles & Smiles</option>
-      </select>
-    </div>
-    <!-- END STEP 2 -->
-
-    <!-- STEP 3 -->
-    <div class="step">
-      <h3 style="margin-top:20px;">Step 3:&nbsp;Search</h3>
-      <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
-      <p id="searchWarning" style="display:block;">Complete Step 2 to continue.</p>
-    </div>
-    <!-- END STEP 3 -->
-
-  </div> <!-- closes search-panel -->
-</div> <!-- closes search-wrapper -->
-
-
-  <script src="/dev/js/redemption-module.js?v=49"></script>
- 
-  </body>
+  <!-- your JS link -->
+  <script src="/dev/js/redemption-module.js?v=101"></script>
+</body>
 </html>
