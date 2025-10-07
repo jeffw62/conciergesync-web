@@ -9,6 +9,17 @@
 
 
 <style>
+  /* ---------- Match Redemption.html Card Style ---------- */
+  .search-wrapper {
+    max-width: 1100px;
+    margin: 40px auto;
+    background: #fff;
+    color: #222;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    padding: 40px 40px 60px;
+    text-align: left;
+  }
   .search-panel {
     max-width: 900px;
     margin: 40px auto;
@@ -152,9 +163,37 @@
     gap: 10px; /* adds space between date field and buttons */
     width: 75%;
   }
+  /* ---------- Harmonize headings and button styling ---------- */
+  .step h3 {
+    font-size: 1.15rem;
+    font-weight: 600;
+    color: #bfa14a;
+    margin-bottom: 10px;
+  }
+  
+  .search-btn {
+    width: 75%;
+    background: #bfa14a;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    padding: 12px;
+    font-size: 1rem;
+    cursor: pointer;
+    opacity: 0.9;
+    transition: all 0.25s ease;
+  }
+  
+  .search-btn:hover:enabled {
+    opacity: 1;
+    background: #d6b658;
+    box-shadow: 0 0 10px rgba(191,161,74,0.4);
+  }
+
 </style>
 
-<div class="search-panel" id="searchPanel">
+<div class="search-wrapper">
+  <div class="search-panel" id="searchPanel">
    <div class="step">
     <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
     <label for="origin">Origin</label>
@@ -243,7 +282,8 @@
     <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
     <p id="searchWarning" style="display:block;">Complete Step 2 to continue.</p>
 
-  </div>
+    </div> <!-- closes .search-panel -->
+  </div> <!-- closes .search-wrapper -->
 
   <script src="/dev/js/redemption-module.js?v=17"></script>
  
