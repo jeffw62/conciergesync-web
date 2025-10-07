@@ -823,6 +823,21 @@
     width: 100% !important;
     box-sizing: border-box !important;
   }
+  /* === CARD WIDTH REDUCTION AND CENTERING === */
+  .search-wrapper {
+    max-width: 640px !important;       /* was around 950px — ~2/3 the width */
+    margin: 30px auto !important;      /* keep it centered */
+    padding: 24px 28px 28px !important;
+    background: #fff !important;
+    border-radius: 10px !important;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12) !important;
+  }
+  
+  /* tighten the grid slightly inside the smaller card */
+  .search-panel {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 20px !important;
+  }
 
 
 </style>
@@ -957,7 +972,7 @@
 </div> <!-- closes search-wrapper -->
 
 
-  <script src="/dev/js/redemption-module.js?v=41"></script>
+  <script src="/dev/js/redemption-module.js?v=42"></script>
  
   </body>
 </html>
