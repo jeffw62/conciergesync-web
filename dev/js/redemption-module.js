@@ -159,7 +159,7 @@ function setupRedemptionModule() {
       );
 
       const sessionId = data.sessionId || Date.now();
-      window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
+      // window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
     } catch (err) {
       console.error("❌ Redemption fetch error:", err);
       alert("Search failed – check console for details.");
