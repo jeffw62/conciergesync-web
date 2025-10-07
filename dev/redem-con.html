@@ -326,25 +326,21 @@
 
     console.log("Routing logic initialized ✅");
 
-    // run only after everything is loaded
-    document.addEventListener("DOMContentLoaded", () => {
-    setMode("exact");
-    initRoutingLogic();
-  });
-
-    console.log("✅ initRoutingLogic declared");
-    window.initRoutingLogic = initRoutingLogic;
-    
-    document.addEventListener("DOMContentLoaded", () => {
-    console.log("🚀 calling initRoutingLogic manually");
-    setMode("exact");      // keep date toggle consistent
-    initRoutingLogic();    // attach routing button logic
-  });
-
   </script>
 
   <script src="/dev/js/redemption-module.js?v=11"></script>
 
+  <script>
+    console.log("✅ initRoutingLogic declared");
+    window.initRoutingLogic = initRoutingLogic;
+  
+    window.addEventListener("load", () => {
+      console.log("🚀 calling initRoutingLogic after load");
+      setMode("exact");
+      initRoutingLogic();
+    });
+  </script>
+  
   <script>
     document.addEventListener("DOMContentLoaded", () => {
       const btn = document.getElementById("searchBtn");
