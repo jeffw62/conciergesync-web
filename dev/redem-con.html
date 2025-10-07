@@ -401,6 +401,50 @@
     font-size: 0.93rem !important;
   }
 
+  /* === ALIGNMENT + WIDTH NORMALIZATION (Match redemption.html) === */
+  
+  /* 1️⃣ Tighten space between labels and inputs */
+  .step label {
+    margin-bottom: 2px !important;
+    line-height: 1.1 !important;
+  }
+  
+  /* 2️⃣ Normalize overall column widths */
+  .search-panel {
+    grid-template-columns: 1fr 0.95fr !important; /* slightly narrows right column */
+    gap: 20px !important;
+  }
+  
+  /* 3️⃣ Fix Service Class horizontal alignment */
+  .inline-fields {
+    display: flex !important;
+    justify-content: flex-start !important;
+    align-items: flex-end !important;
+    gap: 16px !important; /* same horizontal spacing as redemption.html */
+  }
+  
+  .inline-fields .field {
+    flex: 1 !important;
+    min-width: 180px !important;
+  }
+  
+  .inline-fields .field:last-child {
+    margin-left: 0 !important;
+    flex-basis: 46% !important; /* narrows slightly so right edge lines up */
+  }
+  
+  /* 4️⃣ Fine-tune form input padding and sizing */
+  .step input,
+  .step select {
+    padding: 5px 7px !important;
+    font-size: 0.95rem !important;
+  }
+  
+  /* 5️⃣ Slightly reduce interior padding on wrapper for height match */
+  .search-wrapper {
+    padding: 15px 25px 20px !important;
+  }
+
 </style>
 
 <div class="search-wrapper">
@@ -496,7 +540,7 @@
     </div> <!-- closes .search-panel -->
   </div> <!-- closes .search-wrapper -->
 
-  <script src="/dev/js/redemption-module.js?v=24"></script>
+  <script src="/dev/js/redemption-module.js?v=25"></script>
  
   </body>
 </html>
