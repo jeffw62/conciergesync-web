@@ -11,19 +11,20 @@
 <style>
   /* ---------- Match Redemption.html Card Style ---------- */
   .search-wrapper {
-    max-width: 1000px;
-    margin: 40px auto;
-    background: #ffffff;
-    color: #222; /* ensure all text is dark */
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    padding: 30px 35px 40px; /* reduced padding for shorter height */
+    max-width: 950px;
+    margin: 30px auto;
+    background: #ffffff !important;
+    color: #111 !important;          /* force dark text */
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.12);
+    padding: 20px 30px 30px;         /* tighter padding to shorten card */
     text-align: left;
     position: relative;
     z-index: 10;
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    line-height: 1.4;
+    line-height: 1.3;
   }
+
   .search-panel {
     max-width: 900px;
     margin: 0 auto; /* centers inside wrapper */
@@ -202,7 +203,7 @@
   .search-panel {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 40px;
+    gap: 25px;             /* was 40px — brings columns closer */
     align-items: start;
   }
   
@@ -217,16 +218,16 @@
   
   /* subtle divider line only below Step 1 */
   .step:nth-of-type(1) {
-    border-bottom: 1px solid #ddd;
-    padding-bottom: 20px;
-    margin-bottom: 20px;
+    border-bottom: 1px solid #eee;
+    padding-bottom: 15px;
+    margin-bottom: 15px;
   }
   
   /* tighter section spacing */
-  .step {
-    margin-bottom: 20px;
-    color: #222;              /* make all text dark */
-    line-height: 1.4;
+ .step {
+    margin-bottom: 12px;   /* smaller section gaps */
+    color: #111 !important;
+    line-height: 1.3;
   }
   
   /* gold step headers */
