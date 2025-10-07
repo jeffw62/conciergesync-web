@@ -277,6 +277,7 @@
       directGroup.querySelectorAll("button").forEach(btn => {
         btn.addEventListener("click", () => {
           activate(btn, directGroup);
+          console.log("Direct clicked:", btn.textContent.trim(), "dataset.val =", btn.dataset.val);
           if (btn.dataset.val === "yes") {
             const noBtn = multiGroup.querySelector('button[data-val="no"]');
             if (noBtn) {
@@ -291,6 +292,7 @@
       multiGroup.querySelectorAll("button").forEach(btn => {
         btn.addEventListener("click", () => {
           activate(btn, multiGroup);
+          console.log("Multi clicked:", btn.textContent.trim(), "dataset.val =", btn.dataset.val);
           if (btn.dataset.val === "yes") {
             const noBtn = directGroup.querySelector('button[data-val="no"]');
             if (noBtn) {
