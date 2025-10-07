@@ -884,6 +884,24 @@
     width: 100% !important;
     box-sizing: border-box !important;
   }
+  /* === FINAL FIT: keep Step-1 rows side-by-side within 700 px card === */
+  .search-panel > .step:nth-of-type(1) .inline-fields {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    gap: 12px !important;
+  }
+  
+  .search-panel > .step:nth-of-type(1) .inline-fields .field {
+    flex: 0 0 42% !important;   /* down from 48%; leaves 16% breathing room */
+    max-width: 42% !important;
+  }
+  
+  .search-panel > .step:nth-of-type(1) input,
+  .search-panel > .step:nth-of-type(1) select {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
 
 
 </style>
@@ -1018,7 +1036,7 @@
 </div> <!-- closes search-wrapper -->
 
 
-  <script src="/dev/js/redemption-module.js?v=47"></script>
+  <script src="/dev/js/redemption-module.js?v=48"></script>
  
   </body>
 </html>
