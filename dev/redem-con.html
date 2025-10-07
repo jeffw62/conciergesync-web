@@ -266,6 +266,11 @@
       const directGroup = document.getElementById("directStop");
       const multiGroup  = document.getElementById("multiConn");
       const posGroup    = document.getElementById("posFlight");
+
+      console.log("🧭 initRoutingLogic running...");
+      console.log("directStop →", directGroup);
+      console.log("multiConn →", multiGroup);
+      console.log("posFlight →", posGroup);
   
       // utility function
       function activate(btn, group) {
@@ -328,7 +333,7 @@
   });
   </script>
 
-  <script src="/dev/js/redemption-module.js?v=8"></script>
+  <script src="/dev/js/redemption-module.js?v=10"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
