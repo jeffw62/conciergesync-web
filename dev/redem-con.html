@@ -538,10 +538,85 @@
     color: #111;
     user-select: none;
   }
+  /* === RESET AND RESTORE STEP-1 VISUALS === */
+  .search-wrapper {
+    background: #fff !important;
+    color: #111 !important;
+    padding: 20px 28px 26px !important;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+  }
+  
+  /* two-column inline rows */
+  .step .inline-fields {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+    margin-bottom: 8px;
+  }
+  
+  /* keep each field balanced */
+  .step .inline-fields .field {
+    flex: 1 1 48%;
+  }
+  
+  .step label {
+    color: #111;
+    font-weight: 500;
+    margin-bottom: 3px;
+    display: block;
+  }
+  
+  /* input styling */
+  .step input[type="text"],
+  .step input[type="number"],
+  .step input[type="date"],
+  .step select {
+    width: 100%;
+    background: #fff;
+    color: #111;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 6px 8px;
+    font-size: 0.95rem;
+  }
+  
+  /* restore buttons and gold accents */
+  .option-btn.active,
+  .search-btn {
+    background: #bfa14a !important;
+    color: #fff !important;
+  }
+  .option-btn {
+    background: #f7f7f7;
+    border: 1px solid #ccc;
+  }
+  
+  /* checkbox row (for partner award space) */
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 8px;
+  }
+  .checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #bfa14a;
+  }
+  .checkbox-row label {
+    font-size: 0.9rem;
+    color: #111;
+  }
 
 
 </style>
 
+    <div class="step">
+    <!-- STEP 1 -->
+    <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
+  
+    <!-- Row 1: Origin + Destination -->
     <div class="inline-fields">
       <div class="field">
         <label for="origin">Origin</label>
@@ -552,7 +627,8 @@
         <input type="text" id="destination" placeholder="e.g. LHR">
       </div>
     </div>
-    
+  
+    <!-- Row 2: Passengers + Service Class -->
     <div class="inline-fields">
       <div class="field">
         <label for="passengers">Passengers</label>
@@ -568,28 +644,48 @@
         </select>
       </div>
     </div>
-
-    <div class="date-wrap">
-      <label for="departDate">Departure Date</label>
-      <input type="date" id="departDate">
-      <div class="card-options">
-        <button class="option-btn active" id="exactBtn">Exact Date</button>
-        <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
+  
+    <!-- Row 3: Departure + Return Date -->
+    <div class="inline-fields">
+      <div class="field">
+        <label for="departDate">Departure Date</label>
+        <input type="date" id="departDate">
       </div>
-      <div id="flexPicker" class="flex-picker" style="display:none;">
-        <label for="flexDays">Search Days +/- Date Selected:</label>
-        <select id="flexDays">
-          <option value="1">1 day</option>
-          <option value="3">3 days</option>
-          <option value="5">5 days</option>
-          <option value="7">7 days</option>
-          <option value="14">14 days</option>
-        </select>
+      <div class="field">
+        <label for="returnDate">Return Date</label>
+        <input type="date" id="returnDate">
       </div>
-      <small class="hint">Select “Exact Date” to search only that day, or “Flexible” for a range.</small>
+    </div>
+  
+    <!-- Row 4: Date options -->
+    <div class="card-options">
+      <button class="option-btn active" id="exactBtn">Exact Date</button>
+      <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
+    </div>
+  
+    <div id="flexPicker" class="flex-picker" style="display:none;">
+      <label for="flexDays">Search Days +/- Date Selected:</label>
+      <select id="flexDays">
+        <option value="1">1 day</option>
+        <option value="3">3 days</option>
+        <option value="5">5 days</option>
+        <option value="7">7 days</option>
+        <option value="14">14 days</option>
+      </select>
+    </div>
+  
+    <small class="hint">
+      Select “Exact Date” to search only that day, or “Flexible” for a range.
+    </small>
+  
+    <!-- Row 5: Checkbox -->
+    <div class="checkbox-row">
+      <input type="checkbox" id="partnerSpace">
+      <label for="partnerSpace">Include partner award space</label>
     </div>
   </div>
 
+  <!-- STEP 2 -->
   <div class="step routing">
     <h3>Step 2:&nbsp;Routing Preferences</h3>
     <label>Direct Non-stop</label>
@@ -628,6 +724,7 @@
       <option value="singapore">Singapore KrisFlyer</option>
       <option value="turkish">Turkish Miles & Smiles</option>
     </select>
+    <!-- STEP 3 -->
     <h3 style="margin-top:20px;">Step 3:&nbsp;Search</h3>
     <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
     <p id="searchWarning" style="display:block;">Complete Step 2 to continue.</p>
