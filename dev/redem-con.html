@@ -324,8 +324,16 @@
   <script src="/dev/js/redemption-module.js"></script>
 
   <script>
+    console.log("Bottom script running…");
+  
+    if (typeof initRoutingLogic === "function") {
+      console.log("✅ initRoutingLogic is defined, calling now");
+      document.addEventListener("DOMContentLoaded", initRoutingLogic);
+    } else {
+      console.error("❌ initRoutingLogic is NOT defined yet");
+    }
     // initialize when DOM ready
-    document.addEventListener("DOMContentLoaded", initRoutingLogic);
+    // document.addEventListener("DOMContentLoaded", initRoutingLogic);
   </script>
   
   <script>
