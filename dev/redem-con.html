@@ -309,7 +309,14 @@
         });
       });
     }
-  
+
+    console.log("Routing logic loaded ✅");
+    
+    ["directStop", "multiConn", "posFlight"].forEach(id => {
+      const group = document.getElementById(id);
+      console.log(id, "buttons found →", group ? group.querySelectorAll("button").length : "none");
+    });
+
     // initialize when DOM ready
     document.addEventListener("DOMContentLoaded", initRoutingLogic);
   </script>
