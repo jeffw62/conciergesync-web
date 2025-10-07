@@ -278,24 +278,29 @@
         btn.addEventListener("click", () => {
           activate(btn, directGroup);
           if (btn.dataset.val === "yes") {
-            // if Direct=Yes, force Multi=No
             const noBtn = multiGroup.querySelector('button[data-val="no"]');
-            activate(noBtn, multiGroup);
+            if (noBtn) {
+              multiGroup.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+              noBtn.classList.add("active");
+            }
           }
         });
       });
-  
+      
       // Multiple Connections buttons
       multiGroup.querySelectorAll("button").forEach(btn => {
         btn.addEventListener("click", () => {
           activate(btn, multiGroup);
           if (btn.dataset.val === "yes") {
-            // if Multi=Yes, force Direct=No
             const noBtn = directGroup.querySelector('button[data-val="no"]');
-            activate(noBtn, directGroup);
+            if (noBtn) {
+              directGroup.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+              noBtn.classList.add("active");
+            }
           }
         });
       });
+
   
       // Positioning Flight Allowed buttons
       posGroup.querySelectorAll("button").forEach(btn => {
