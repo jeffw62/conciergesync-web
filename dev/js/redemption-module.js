@@ -153,6 +153,16 @@ function setupRedemptionModule() {
 
       console.log("🧠 Redemption API response:", data);
 
+      // --- Save the API results for the results page ---
+      sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data.results));
+      console.log("✅ sessionStorage write complete:", sessionStorage.getItem("latestRedemptionResults"));
+      
+      // --- Redirect after short delay ---
+      setTimeout(() => {
+        console.log("Redirecting to results page...");
+        window.location.href = "/dev/redemption-results.html";
+      }, 500);
+
       sessionStorage.setItem(
         "latestRedemptionResults",
         JSON.stringify(data.results || [])
