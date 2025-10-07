@@ -36,8 +36,25 @@
   }
   @media (max-width: 980px) {
     .search-panel { grid-template-columns: 1fr; }
-  }
-  
+      }
+      /* --- Date Option Buttons (Exact / Flexible) --- */
+    
+    .option-btn {
+      flex: 1;
+      padding: 10px;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      background: #f7f7f7;
+      cursor: pointer;
+      font-size: 0.95rem;
+      transition: all 0.2s ease;
+    }
+    .option-btn.active {
+      background: #bfa14a;
+      color: #fff;
+      border-color: #bfa14a;
+    }
+
   /* --- Step Section Styling (Unified Version) --- */
   .step {
     display: flex;
