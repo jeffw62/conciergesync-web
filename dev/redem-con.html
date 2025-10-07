@@ -863,6 +863,27 @@
   .search-panel > .step:nth-of-type(1) .inline-fields {
     margin-bottom: 8px !important;
   }
+  /* === HARD RESTORE INLINE FIELD LAYOUT FOR STEP 1 === */
+  .search-panel > .step:nth-of-type(1) .inline-fields {
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    justify-content: space-between !important;
+    gap: 14px !important;
+    width: 100% !important;
+  }
+  
+  /* each .field now takes a true half width */
+  .search-panel > .step:nth-of-type(1) .inline-fields .field {
+    flex: 1 1 48% !important;   /* about half width per field */
+    max-width: 48% !important;
+  }
+  
+  /* ensure the controls fill their containers neatly */
+  .search-panel > .step:nth-of-type(1) input,
+  .search-panel > .step:nth-of-type(1) select {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
 
 
 </style>
@@ -997,7 +1018,7 @@
 </div> <!-- closes search-wrapper -->
 
 
-  <script src="/dev/js/redemption-module.js?v=46"></script>
+  <script src="/dev/js/redemption-module.js?v=47"></script>
  
   </body>
 </html>
