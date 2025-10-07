@@ -102,8 +102,10 @@ app.post("/api/redemption", async (req, res) => {
 
     // --- Filter by selected program if provided ---
     let finalResults = filtered;
-    if (payload.program) {
-      const selectedProgram = payload.program.toLowerCase();
+    const selectedProgram = payload.program?.toLowerCase();
+    
+    // only filter if a specific program was chosen
+    if (selectedProgram) {
       finalResults = filtered.filter(
         r => r.Source?.toLowerCase() === selectedProgram
       );
