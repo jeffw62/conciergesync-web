@@ -608,6 +608,74 @@
     font-size: 0.9rem;
     color: #111;
   }
+  /* === RESTORE STEP 1 COMPACT 2-COLUMN LAYOUT === */
+  .search-wrapper {
+    background: #fff !important;
+    color: #111 !important;
+    padding: 20px 28px 26px !important;
+    border-radius: 10px;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.12);
+  }
+  
+  /* keep Step 1 fields in tidy two-column rows */
+  .step .inline-fields {
+    display: flex !important;
+    justify-content: space-between !important;
+    gap: 14px !important;
+    margin-bottom: 8px !important;
+  }
+  
+  .step .inline-fields .field {
+    flex: 1 1 48% !important;
+  }
+  
+  .step label {
+    color: #111 !important;
+    font-weight: 500 !important;
+    margin-bottom: 3px !important;
+    display: block !important;
+  }
+  
+  .step input[type="text"],
+  .step input[type="number"],
+  .step input[type="date"],
+  .step select {
+    width: 100% !important;
+    background: #fff !important;
+    color: #111 !important;
+    border: 1px solid #ccc !important;
+    border-radius: 4px !important;
+    padding: 6px 8px !important;
+    font-size: 0.95rem !important;
+  }
+  
+  /* restore button look */
+  .option-btn.active,
+  .search-btn {
+    background: #bfa14a !important;
+    color: #fff !important;
+  }
+  .option-btn {
+    background: #f7f7f7 !important;
+    border: 1px solid #ccc !important;
+  }
+  
+  /* partner award space checkbox row */
+  .checkbox-row {
+    display: flex !important;
+    align-items: center !important;
+    gap: 8px !important;
+    margin-top: 8px !important;
+  }
+  .checkbox-row input[type="checkbox"] {
+    width: 18px !important;
+    height: 18px !important;
+    accent-color: #bfa14a !important;
+  }
+  .checkbox-row label {
+    font-size: 0.9rem !important;
+    color: #111 !important;
+  }
 
 
 </style>
@@ -732,7 +800,7 @@
     </div> <!-- closes .search-panel -->
   </div> <!-- closes .search-wrapper -->
 
-  <script src="/dev/js/redemption-module.js?v=31"></script>
+  <script src="/dev/js/redemption-module.js?v=32"></script>
  
   </body>
 </html>
