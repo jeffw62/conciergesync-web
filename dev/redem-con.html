@@ -209,6 +209,33 @@
 
   </div>
 
+  <script>
+    // --- Exact vs Flexible Date Toggle ---
+    const exactBtn = document.getElementById("exactBtn");
+    const flexBtn = document.getElementById("flexBtn");
+    const flexPicker = document.getElementById("flexPicker");
+  
+    function setMode(mode) {
+      if (mode === "exact") {
+        exactBtn.classList.add("active");
+        flexBtn.classList.remove("active");
+        flexPicker.style.display = "none";
+      } else {
+        flexBtn.classList.add("active");
+        exactBtn.classList.remove("active");
+        flexPicker.style.display = "block";
+      }
+    }
+  
+    exactBtn.addEventListener("click", () => setMode("exact"));
+    flexBtn.addEventListener("click", () => setMode("flexible"));
+  
+    // default to Exact when the page first loads
+    document.addEventListener("DOMContentLoaded", () => {
+      setMode("exact");
+    });
+  </script>
+
   <script src="/dev/js/redemption-module.js"></script>
   
   <script>
