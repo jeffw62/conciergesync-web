@@ -331,9 +331,19 @@
     setMode("exact");
     initRoutingLogic();
   });
+
+    console.log("✅ initRoutingLogic declared");
+    window.initRoutingLogic = initRoutingLogic;
+    
+    document.addEventListener("DOMContentLoaded", () => {
+    console.log("🚀 calling initRoutingLogic manually");
+    setMode("exact");      // keep date toggle consistent
+    initRoutingLogic();    // attach routing button logic
+  });
+
   </script>
 
-  <script src="/dev/js/redemption-module.js?v=10"></script>
+  <script src="/dev/js/redemption-module.js?v=11"></script>
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
