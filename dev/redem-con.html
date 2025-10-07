@@ -418,6 +418,53 @@
     });
   
   </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchBtn = document.getElementById("searchBtn");
+    
+      if (!searchBtn) return;
+    
+      searchBtn.addEventListener("click", async () => {
+        // disable while loading
+        searchBtn.disabled = true;
+        searchBtn.textContent = "Searching…";
+    
+        // gather form values
+        const payload = {
+          origin: document.getElementById("origin")?.value || "",
+          destination: document.getElementById("destination")?.value || "",
+          passengers: document.getElementById("passengers")?.value || "1",
+          cabin: document.getElementById("cabin")?.value || "Economy",
+          departDate: document.getElementById("departDate")?.value || "",
+          returnDate: document.getElementById("returnDate")?.value || "",
+          flexDays: document.getElementById("flexDays")?.value || "0",
+          includePartners: document.getElementById("partnerSpace")?.checked || false
+        };
+    
+        console.log("Submitting search:", payload); // confirm data in console
+    
+        try {
+          const res = await fetch("/api/search", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(payload)
+          });
+    
+          if (!res.ok) throw new Error("Search request failed");
+    
+          const data = await res.json();
+          console.log("Search results:", data); // confirm response
+    
+          // TODO: replace table-update logic once we know response structure
+        } catch (err) {
+          console.error("Search error:", err);
+        } finally {
+          searchBtn.disabled = false;
+          searchBtn.textContent = "Search";
+        }
+      });
+    });
+    </script>
 
   <!-- your JS link -->
   <script src="/dev/js/redemption-module.js?v=104"></script>
