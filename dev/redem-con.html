@@ -322,7 +322,10 @@
     console.log("Routing logic initialized ✅");
 
     // run only after everything is loaded
-    window.addEventListener("load", initRoutingLogic);
+    document.addEventListener("DOMContentLoaded", () => {
+    setMode("exact");
+    initRoutingLogic();
+  });
   </script>
 
   <script src="/dev/js/redemption-module.js?v=7"></script>
