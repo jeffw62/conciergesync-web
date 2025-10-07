@@ -742,128 +742,138 @@
 
 
 </style>
+<div class="search-wrapper">
+  <div class="search-panel" id="searchPanel">
 
-    <div class="step">
     <!-- STEP 1 -->
-    <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
-  
-    <!-- Row 1: Origin + Destination -->
-    <div class="inline-fields">
-      <div class="field">
-        <label for="origin">Origin</label>
-        <input type="text" id="origin" placeholder="e.g. DFW">
+    <div class="step">
+      <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
+
+      <!-- Row 1: Origin + Destination -->
+      <div class="inline-fields">
+        <div class="field">
+          <label for="origin">Origin</label>
+          <input type="text" id="origin" placeholder="e.g. DFW">
+        </div>
+        <div class="field">
+          <label for="destination">Destination</label>
+          <input type="text" id="destination" placeholder="e.g. LHR">
+        </div>
       </div>
-      <div class="field">
-        <label for="destination">Destination</label>
-        <input type="text" id="destination" placeholder="e.g. LHR">
+
+      <!-- Row 2: Passengers + Service Class -->
+      <div class="inline-fields">
+        <div class="field">
+          <label for="passengers">Passengers</label>
+          <input id="passengers" type="number" min="1" value="1">
+        </div>
+        <div class="field">
+          <label for="cabin">Service Class</label>
+          <select id="cabin">
+            <option value="Economy">Economy</option>
+            <option value="Premium Economy">Premium Economy</option>
+            <option value="Business">Business</option>
+            <option value="First">First</option>
+          </select>
+        </div>
       </div>
-    </div>
-  
-    <!-- Row 2: Passengers + Service Class -->
-    <div class="inline-fields">
-      <div class="field">
-        <label for="passengers">Passengers</label>
-        <input id="passengers" type="number" min="1" value="1">
+
+      <!-- Row 3: Departure + Return Date -->
+      <div class="inline-fields">
+        <div class="field">
+          <label for="departDate">Departure Date</label>
+          <input type="date" id="departDate">
+        </div>
+        <div class="field">
+          <label for="returnDate">Return Date</label>
+          <input type="date" id="returnDate">
+        </div>
       </div>
-      <div class="field">
-        <label for="cabin">Service Class</label>
-        <select id="cabin">
-          <option value="Economy">Economy</option>
-          <option value="Premium Economy">Premium Economy</option>
-          <option value="Business">Business</option>
-          <option value="First">First</option>
+
+      <!-- Row 4: Date options -->
+      <div class="card-options">
+        <button class="option-btn active" id="exactBtn">Exact Date</button>
+        <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
+      </div>
+
+      <div id="flexPicker" class="flex-picker" style="display:none;">
+        <label for="flexDays">Search Days +/- Date Selected:</label>
+        <select id="flexDays">
+          <option value="1">1 day</option>
+          <option value="3">3 days</option>
+          <option value="5">5 days</option>
+          <option value="7">7 days</option>
+          <option value="14">14 days</option>
         </select>
       </div>
-    </div>
-  
-    <!-- Row 3: Departure + Return Date -->
-    <div class="inline-fields">
-      <div class="field">
-        <label for="departDate">Departure Date</label>
-        <input type="date" id="departDate">
-      </div>
-      <div class="field">
-        <label for="returnDate">Return Date</label>
-        <input type="date" id="returnDate">
+
+      <small class="hint">
+        Select “Exact Date” to search only that day, or “Flexible” for a range.
+      </small>
+
+      <!-- Row 5: Checkbox -->
+      <div class="checkbox-row">
+        <input type="checkbox" id="partnerSpace">
+        <label for="partnerSpace">Include partner award space</label>
       </div>
     </div>
-  
-    <!-- Row 4: Date options -->
-    <div class="card-options">
-      <button class="option-btn active" id="exactBtn">Exact Date</button>
-      <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
-    </div>
-  
-    <div id="flexPicker" class="flex-picker" style="display:none;">
-      <label for="flexDays">Search Days +/- Date Selected:</label>
-      <select id="flexDays">
-        <option value="1">1 day</option>
-        <option value="3">3 days</option>
-        <option value="5">5 days</option>
-        <option value="7">7 days</option>
-        <option value="14">14 days</option>
+    <!-- END STEP 1 -->
+
+    <!-- STEP 2 -->
+    <div class="step routing">
+      <h3>Step 2:&nbsp;Routing Preferences</h3>
+      <label>Direct Non-stop</label>
+      <div class="toggle-group" id="directStop">
+        <button data-val="yes">Yes</button>
+        <button data-val="no">No</button>
+      </div>
+      <label>Multiple Connections</label>
+      <div class="toggle-group" id="multiConn">
+        <button data-val="yes">Yes</button>
+        <button data-val="no">No</button>
+      </div>
+      <label>Positioning Flight Allowed</label>
+      <div class="toggle-group" id="posFlight">
+        <button data-val="yes">Yes</button>
+        <button data-val="no">No</button>
+      </div>
+      <label for="program">Airline Program:</label>
+      <select id="program">
+        <option value="">All Programs</option>
+        <option value="american">American Airlines</option>
+        <option value="alaska">Alaska Airlines</option>
+        <option value="united">United Airlines</option>
+        <option value="delta">Delta Air Lines</option>
+        <option value="jetblue">JetBlue</option>
+        <option value="southwest">Southwest Airlines</option>
+        <option value="aeroplan">Air Canada Aeroplan</option>
+        <option value="avios">British Airways Avios</option>
+        <option value="flyingblue">Air France / KLM Flying Blue</option>
+        <option value="virginatlantic">Virgin Atlantic</option>
+        <option value="qantas">Qantas</option>
+        <option value="qatar">Qatar Airways Privilege Club</option>
+        <option value="ana">ANA Mileage Club</option>
+        <option value="emirates">Emirates Skywards</option>
+        <option value="etihad">Etihad Guest</option>
+        <option value="singapore">Singapore KrisFlyer</option>
+        <option value="turkish">Turkish Miles & Smiles</option>
       </select>
     </div>
-  
-    <small class="hint">
-      Select “Exact Date” to search only that day, or “Flexible” for a range.
-    </small>
-  
-    <!-- Row 5: Checkbox -->
-    <div class="checkbox-row">
-      <input type="checkbox" id="partnerSpace">
-      <label for="partnerSpace">Include partner award space</label>
-    </div>
-  </div>
+    <!-- END STEP 2 -->
 
-  <!-- STEP 2 -->
-  <div class="step routing">
-    <h3>Step 2:&nbsp;Routing Preferences</h3>
-    <label>Direct Non-stop</label>
-    <div class="toggle-group" id="directStop">
-      <button data-val="yes">Yes</button>
-      <button data-val="no">No</button>
-    </div>
-    <label>Multiple Connections</label>
-    <div class="toggle-group" id="multiConn">
-      <button data-val="yes">Yes</button>
-      <button data-val="no">No</button>
-    </div>
-    <label>Positioning Flight Allowed</label>
-    <div class="toggle-group" id="posFlight">
-      <button data-val="yes">Yes</button>
-      <button data-val="no">No</button>
-    </div>
-    <label for="program">Airline Program:</label>
-    <select id="program">
-      <option value="">All Programs</option>
-      <option value="american">American Airlines</option>
-      <option value="alaska">Alaska Airlines</option>
-      <option value="united">United Airlines</option>
-      <option value="delta">Delta Air Lines</option>
-      <option value="jetblue">JetBlue</option>
-      <option value="southwest">Southwest Airlines</option>
-      <option value="aeroplan">Air Canada Aeroplan</option>
-      <option value="avios">British Airways Avios</option>
-      <option value="flyingblue">Air France / KLM Flying Blue</option>
-      <option value="virginatlantic">Virgin Atlantic</option>
-      <option value="qantas">Qantas</option>
-      <option value="qatar">Qatar Airways Privilege Club</option>
-      <option value="ana">ANA Mileage Club</option>
-      <option value="emirates">Emirates Skywards</option>
-      <option value="etihad">Etihad Guest</option>
-      <option value="singapore">Singapore KrisFlyer</option>
-      <option value="turkish">Turkish Miles & Smiles</option>
-    </select>
     <!-- STEP 3 -->
-    <h3 style="margin-top:20px;">Step 3:&nbsp;Search</h3>
-    <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
-    <p id="searchWarning" style="display:block;">Complete Step 2 to continue.</p>
+    <div class="step">
+      <h3 style="margin-top:20px;">Step 3:&nbsp;Search</h3>
+      <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
+      <p id="searchWarning" style="display:block;">Complete Step 2 to continue.</p>
+    </div>
+    <!-- END STEP 3 -->
 
-    </div> <!-- closes .search-panel -->
-  </div> <!-- closes .search-wrapper -->
+  </div> <!-- closes search-panel -->
+</div> <!-- closes search-wrapper -->
 
-  <script src="/dev/js/redemption-module.js?v=35"></script>
+
+  <script src="/dev/js/redemption-module.js?v=36"></script>
  
   </body>
 </html>
