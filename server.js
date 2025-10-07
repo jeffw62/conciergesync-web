@@ -100,10 +100,19 @@ app.post("/api/redemption", async (req, res) => {
     // (optional) sanity filter before returning
     const filtered = applySanityFilter(apiResponse.data || []);
 
+    // --- Filter by selected program if provided ---
+    let finalResults = filtered;
+    if (payload.program) {
+      const selectedProgram = payload.program.toLowerCase();
+      finalResults = filtered.filter(
+        r => r.Source?.toLowerCase() === selectedProgram
+      );
+    }
+    
     res.status(200).json({
-      sessionId: Date.now(),
-      results: filtered,
-    });
+    sessionId: Date.now(),
+    results: finalResults,
+  });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     res.status(500).json({
