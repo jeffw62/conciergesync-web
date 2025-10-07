@@ -13,12 +13,14 @@
   .search-wrapper {
     max-width: 1100px;
     margin: 40px auto;
-    background: #fff;
+    background: #fff !important;   /* Force solid white background */
     color: #222;
     border-radius: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
     padding: 40px 40px 60px;
     text-align: left;
+    position: relative;            /* ensure stacking context */
+    z-index: 2;                    /* keeps it above dark console background */
   }
   .search-panel {
     max-width: 900px;
@@ -202,7 +204,8 @@
   }
   
   /* subtle divider line between sections */
-  .step:not(:last-child) {
+  /* subtle divider line between Step 1 and Step 2 only */
+  .step:nth-of-type(1) {
     border-bottom: 1px solid #ddd;
     padding-bottom: 24px;
     margin-bottom: 24px;
