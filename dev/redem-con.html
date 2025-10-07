@@ -499,20 +499,59 @@
   .inline-fields select {
     width: 100% !important;
   }
+  /* === STREAMLINED 2-COLUMN FIELD LAYOUT (Step 1 compact) === */
+  .step .inline-fields {
+    display: flex;
+    justify-content: space-between;
+    gap: 14px;
+  }
+  
+  .step .inline-fields .field {
+    flex: 1 1 48%;
+  }
+  
+  .step input[type="text"],
+  .step input[type="number"],
+  .step input[type="date"],
+  .step select {
+    width: 100%;
+    max-width: 100%;
+  }
+  
+  /* tighten vertical rhythm */
+  .step label { margin-bottom: 2px; }
+  
+  /* checkbox row */
+  .checkbox-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 6px;
+  }
+  .checkbox-row input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #bfa14a;
+  }
+  .checkbox-row label {
+    font-size: 0.9rem;
+    color: #111;
+    user-select: none;
+  }
 
 
 </style>
 
-<div class="search-wrapper">
-  <div class="search-panel" id="searchPanel">
-   <div class="step">
-    <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
-    <label for="origin">Origin</label>
-    <input type="text" id="origin" placeholder="e.g. DFW">
-    <div id="origin-suggestions"></div>
-    <label for="destination">Destination</label>
-    <input type="text" id="destination" placeholder="e.g. LHR">
-    <div id="destination-suggestions"></div>
+    <div class="inline-fields">
+      <div class="field">
+        <label for="origin">Origin</label>
+        <input type="text" id="origin" placeholder="e.g. DFW">
+      </div>
+      <div class="field">
+        <label for="destination">Destination</label>
+        <input type="text" id="destination" placeholder="e.g. LHR">
+      </div>
+    </div>
     
     <div class="inline-fields">
       <div class="field">
@@ -596,7 +635,7 @@
     </div> <!-- closes .search-panel -->
   </div> <!-- closes .search-wrapper -->
 
-  <script src="/dev/js/redemption-module.js?v=29"></script>
+  <script src="/dev/js/redemption-module.js?v=30"></script>
  
   </body>
 </html>
