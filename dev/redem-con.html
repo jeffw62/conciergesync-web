@@ -838,6 +838,31 @@
     grid-template-columns: 1fr 1fr !important;
     gap: 20px !important;
   }
+  /* === STEP 1 FIELD WIDTH OPTIMIZATION FOR 700PX CARD === */
+  
+  /* shrink all Step 1 paired fields to fit side-by-side inside the 700px card */
+  .search-panel > .step:nth-of-type(1) .inline-fields .field {
+    flex: 0 0 44% !important;   /* sweet spot for 700px wrapper */
+    max-width: 44% !important;
+  }
+  
+  /* ensure the pairs distribute evenly */
+  .search-panel > .step:nth-of-type(1) .inline-fields {
+    justify-content: space-between !important;
+    gap: 14px !important;
+  }
+  
+  /* keep controls fully filling their narrower containers */
+  .search-panel > .step:nth-of-type(1) input,
+  .search-panel > .step:nth-of-type(1) select {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+  
+  /* optional: a touch more breathing room below rows */
+  .search-panel > .step:nth-of-type(1) .inline-fields {
+    margin-bottom: 8px !important;
+  }
 
 
 </style>
