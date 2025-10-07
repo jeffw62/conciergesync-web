@@ -802,6 +802,27 @@
   .step:nth-of-type(1) select {
     width: 100% !important;
   }
+  /* === FORCE NARROWER FIELD WIDTHS FOR STEP 1 === */
+  
+  /* Apply only to Step 1 within the grid */
+  .search-panel > .step:nth-of-type(1) .inline-fields {
+    justify-content: flex-start !important;
+    gap: 18px !important;
+  }
+  
+  /* lock each input/select container to a fixed width */
+  .search-panel > .step:nth-of-type(1) .inline-fields .field {
+    flex: 0 0 auto !important;
+    width: 200px !important;          /* adjust as needed: 180–220px sweet spot */
+    max-width: 200px !important;
+  }
+  
+  /* make sure inner controls still fit cleanly */
+  .search-panel > .step:nth-of-type(1) input,
+  .search-panel > .step:nth-of-type(1) select {
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
 
 
 </style>
@@ -936,7 +957,7 @@
 </div> <!-- closes search-wrapper -->
 
 
-  <script src="/dev/js/redemption-module.js?v=38"></script>
+  <script src="/dev/js/redemption-module.js?v=39"></script>
  
   </body>
 </html>
