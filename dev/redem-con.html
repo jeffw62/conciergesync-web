@@ -449,32 +449,32 @@
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify(payload)
           });
-    
           if (!res.ok) throw new Error("Search request failed");
-    
+        
           const data = await res.json();
-          console.log("Search results:", data); // confirm response
-          
+          console.log("Search results:", data);
+        
+          // NEW logs
+          console.log("Type of data:", typeof data);
+          console.log("Stringified:", JSON.stringify(data).slice(0,200));
+        
           // Save results for results page
           sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data));
-          
-          // Wait one tick so storage definitely completes, then redirect
+          console.log("sessionStorage write complete");
+        
+          // Wait a tick before redirect
           setTimeout(() => {
+            console.log("redirecting…");
             window.location.href = "/dev/redemption-results.html";
           }, 100);
-    
-          // TODO: replace table-update logic once we know response structure
         } catch (err) {
           console.error("Search error:", err);
-        } finally {
-          searchBtn.disabled = false;
-          searchBtn.textContent = "Search";
         }
       });
     });
     </script>
 
   <!-- your JS link -->
-  <script src="/dev/js/redemption-module.js?v=107"></script>
+  <script src="/dev/js/redemption-module.js?v=108"></script>
 </body>
 </html>
