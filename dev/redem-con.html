@@ -784,6 +784,24 @@
   .checkbox-row {
     margin-top: 4px !important;
   }
+  /* === FIELD WIDTH REDUCTION (≈ 2/3 current width) === */
+  
+  /* Limit width of all paired fields within Step 1 */
+  .step:nth-of-type(1) .inline-fields .field {
+    flex: 0 0 32% !important;      /* was ~48%; 32% ≈ two-thirds */
+    max-width: 32% !important;
+  }
+  
+  /* Center the narrower pairs neatly within the left column */
+  .step:nth-of-type(1) .inline-fields {
+    justify-content: space-around !important;
+  }
+  
+  /* Make sure inputs and selects still fill their new container */
+  .step:nth-of-type(1) input,
+  .step:nth-of-type(1) select {
+    width: 100% !important;
+  }
 
 
 </style>
@@ -918,7 +936,7 @@
 </div> <!-- closes search-wrapper -->
 
 
-  <script src="/dev/js/redemption-module.js?v=37"></script>
+  <script src="/dev/js/redemption-module.js?v=38"></script>
  
   </body>
 </html>
