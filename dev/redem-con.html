@@ -319,11 +319,14 @@
       console.log(id, "buttons found →", group ? group.querySelectorAll("button").length : "none");
     });
 
-    // initialize when DOM ready
-    document.addEventListener("DOMContentLoaded", initRoutingLogic);
   </script>
 
   <script src="/dev/js/redemption-module.js"></script>
+
+  <script>
+    // initialize when DOM ready
+    document.addEventListener("DOMContentLoaded", initRoutingLogic);
+  </script>
   
   <script>
     document.addEventListener("DOMContentLoaded", () => {
