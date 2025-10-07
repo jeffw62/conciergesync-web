@@ -454,6 +454,12 @@
     
           const data = await res.json();
           console.log("Search results:", data); // confirm response
+          
+          // Save results for results page
+          sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data));
+          
+          // Redirect to results page
+          window.location.href = "/dev/redemption-results.html";
     
           // TODO: replace table-update logic once we know response structure
         } catch (err) {
@@ -467,6 +473,6 @@
     </script>
 
   <!-- your JS link -->
-  <script src="/dev/js/redemption-module.js?v=105"></script>
+  <script src="/dev/js/redemption-module.js?v=106"></script>
 </body>
 </html>
