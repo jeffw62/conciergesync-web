@@ -2,11 +2,29 @@ function initRedemptionModule() {
   setupRedemptionModule();
 }
 document.addEventListener("DOMContentLoaded", setupRedemptionModule);
+// --- Airport Autocomplete (IATA/ICAO) ---
+let airports = [];
+
+function loadAirports() {
+  fetch("/dev/asset/iata-icao.json")
+    .then(res => res.json())
+    .then(data => {
+      airports = data;
+      console.log("🛫 Loaded airports:", airports.length);
+    })
+    .catch(err => console.error("❌ Failed to load airports:", err));
+}
 
 function setupRedemptionModule() {
-  if (window.__redemptionInitialized) return;
-  window.__redemptionInitialized = true;
-  console.log("🧠 Redemption module initializing...");
+  if (window._redemptionInitialized) return;
+  window._redemptionInitialized = true;
+  console.log("💗 Redemption module initializing...");
+
+  loadAirports(); // fetch airport list
+
+  // activate autocompletes
+  setupAutocomplete("origin", "origin-suggestions");
+  setupAutocomplete("destination", "destination-suggestions");
 
   // --- Routing Preference Button Logic (moved from redem-con.html) ---
   const directGroup = document.getElementById("directStop");
@@ -148,5 +166,41 @@ function setupRedemptionModule() {
     }
   });
 
-  console.log("✅ Redemption module initialized.");
+  // --- Autocomplete Setup Function ---
+function setupAutocomplete(inputId, suggestionsId) {
+  const input = document.getElementById(inputId);
+  const suggestions = document.getElementById(suggestionsId);
+  if (!input || !suggestions) return;
+
+  input.addEventListener("input", () => {
+    const query = input.value.toLowerCase();
+    suggestions.innerHTML = "";
+    if (query.length < 2) return;
+
+    const matches = airports
+      .filter(a =>
+        a.iata.toLowerCase().includes(query) ||
+        a.airport.toLowerCase().includes(query) ||
+        (a.region_name && a.region_name.toLowerCase().includes(query))
+      )
+      .slice(0, 10);
+
+    matches.forEach(match => {
+      const div = document.createElement("div");
+      div.classList.add("suggestion-item");
+      div.innerHTML = `<span class="iata">${match.iata}</span> – <span class="airport">${match.airport}</span>`;
+      div.addEventListener("click", () => {
+        input.value = match.iata;
+        suggestions.innerHTML = "";
+      });
+      suggestions.appendChild(div);
+    });
+  });
+
+  // Hide dropdown when clicking elsewhere
+  document.addEventListener("click", e => {
+    if (!suggestions.contains(e.target) && e.target !== input) {
+      suggestions.innerHTML = "";
+    }
+  });
 }
