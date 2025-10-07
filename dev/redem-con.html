@@ -739,6 +739,51 @@
   .step {
     margin-bottom: 10px !important;
   }
+  /* === SPACING + FIELD WIDTH TUNING === */
+  
+  /* give each column more interior room */
+  .search-wrapper {
+    padding: 28px 40px 32px !important;
+  }
+  
+  /* tighten the gap between left/right columns slightly */
+  .search-panel {
+    gap: 24px !important;
+  }
+  
+  /* reduce width of inline text/date/select inputs */
+  .step .inline-fields .field {
+    flex: 0 0 46% !important;     /* narrower fields */
+    max-width: 46% !important;
+  }
+  
+  /* restore smooth vertical rhythm */
+  .step .inline-fields {
+    margin-bottom: 10px !important;
+  }
+  
+  .step label {
+    margin-bottom: 2px !important;
+    font-size: 0.94rem !important;
+  }
+  
+  .step input[type="text"],
+  .step input[type="number"],
+  .step input[type="date"],
+  .step select {
+    padding: 5px 7px !important;
+    font-size: 0.9rem !important;
+  }
+  
+  /* subtle breathing room under hint + checkbox */
+  small.hint {
+    display: block;
+    margin-top: 6px !important;
+    margin-bottom: 8px !important;
+  }
+  .checkbox-row {
+    margin-top: 4px !important;
+  }
 
 
 </style>
@@ -873,7 +918,7 @@
 </div> <!-- closes search-wrapper -->
 
 
-  <script src="/dev/js/redemption-module.js?v=36"></script>
+  <script src="/dev/js/redemption-module.js?v=37"></script>
  
   </body>
 </html>
