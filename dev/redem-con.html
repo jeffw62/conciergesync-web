@@ -270,12 +270,7 @@
     box-shadow: 0 0 10px rgba(191,161,74,0.4);
   }
 
-  /* === FINAL ENFORCED OVERRIDES === */
-  .search-wrapper, .search-panel, .step, .search-btn {
-    all: unset;
-    display: revert;
-    box-sizing: border-box;
-  }
+  /* === FINAL OVERRIDES (safe version) === */
   .search-wrapper {
     max-width: 950px !important;
     margin: 30px auto !important;
@@ -287,6 +282,7 @@
     font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif !important;
     line-height: 1.3 !important;
   }
+  
   .search-panel {
     display: grid !important;
     grid-template-columns: 1fr 1fr !important;
@@ -295,16 +291,26 @@
     background: transparent !important;
     border: none !important;
   }
+  
   .step {
     margin-bottom: 10px !important;
     color: #111 !important;
+    font-weight: 500 !important;
   }
+  
   .step h3 {
     font-size: 1.1rem !important;
     font-weight: 600 !important;
     color: #bfa14a !important;
     margin-bottom: 8px !important;
   }
+  
+  .step label,
+  .step small,
+  .step p {
+    color: #111 !important;
+  }
+  
   .search-btn {
     width: 75% !important;
     background: #bfa14a !important;
@@ -411,7 +417,7 @@
     </div> <!-- closes .search-panel -->
   </div> <!-- closes .search-wrapper -->
 
-  <script src="/dev/js/redemption-module.js?v=20"></script>
+  <script src="/dev/js/redemption-module.js?v=21"></script>
  
   </body>
 </html>
