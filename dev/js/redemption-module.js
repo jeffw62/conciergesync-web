@@ -204,3 +204,4 @@ function setupAutocomplete(inputId, suggestionsId) {
     }
   });
 }
+}
