@@ -455,6 +455,27 @@
     padding-left: 20px !important;  /* maintain smooth edge spacing */
     padding-right: 10px !important;
   }
+  /* === SERVICE CLASS ALIGNMENT FIX === */
+  .inline-fields {
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: flex-end !important;
+    gap: 14px !important;
+  }
+  
+  .inline-fields .field {
+    flex: 1 1 48% !important;   /* equal width fields */
+    min-width: 180px !important;
+  }
+  
+  .inline-fields .field:first-child {
+    margin-right: 0 !important;
+  }
+  
+  .inline-fields .field:last-child {
+    flex: 1 1 48% !important;   /* keeps Service Class same width as Passengers */
+    margin-left: 0 !important;
+  }
 
 
 </style>
