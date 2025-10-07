@@ -65,7 +65,7 @@ function applySanityFilter(results) {
 // ===============================================
 // Static File Handling
 // ===============================================
-app.use(express.static(path.join(__dirname)));
+// Serve static files from the dev directory
 app.use("/dev", express.static(path.join(__dirname, "dev")));
 
 // ===============================================
