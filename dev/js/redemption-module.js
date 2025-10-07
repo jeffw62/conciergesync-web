@@ -8,6 +8,56 @@ function setupRedemptionModule() {
   window.__redemptionInitialized = true;
   console.log("🧠 Redemption module initializing...");
 
+  // --- Routing Preference Button Logic (moved from redem-con.html) ---
+  const directGroup = document.getElementById("directStop");
+  const multiGroup  = document.getElementById("multiConn");
+  const posGroup    = document.getElementById("posFlight");
+  
+  function activate(btn, group) {
+    group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+    btn.classList.add("active");
+  }
+  
+  // Direct Non-stop buttons
+  if (directGroup && multiGroup) {
+    directGroup.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activate(btn, directGroup);
+        if (btn.dataset.val === "yes") {
+          const noBtn = multiGroup.querySelector('button[data-val="no"]');
+          if (noBtn) {
+            multiGroup.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+            noBtn.classList.add("active");
+          }
+        }
+      });
+    });
+  
+    // Multiple Connections buttons
+    multiGroup.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activate(btn, multiGroup);
+        if (btn.dataset.val === "yes") {
+          const noBtn = directGroup.querySelector('button[data-val="no"]');
+          if (noBtn) {
+            directGroup.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+            noBtn.classList.add("active");
+          }
+        }
+      });
+    });
+  }
+  
+  // Positioning Flight Allowed buttons
+  if (posGroup) {
+    posGroup.querySelectorAll("button").forEach(btn => {
+      btn.addEventListener("click", () => {
+        activate(btn, posGroup);
+      });
+    });
+  }
+
+  
   const searchBtn = document.getElementById("searchBtn");
   const warning = document.getElementById("searchWarning");
 
