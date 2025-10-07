@@ -476,32 +476,30 @@
     flex: 1 1 48% !important;   /* keeps Service Class same width as Passengers */
     margin-left: 0 !important;
   }
-  /* === SERVICE CLASS FIELD HARD ALIGNMENT FIX === */
   
-  /* Lock both inline fields to equal width and alignment */
+  /* === SERVICE CLASS FIELD TRUE EDGE ALIGNMENT === */
   .inline-fields {
     display: flex !important;
     justify-content: flex-start !important;
     gap: 14px !important;
   }
   
-  /* Passenger field */
-  .inline-fields .field:nth-child(1) {
-    flex: 0 0 48% !important;
-    max-width: 48% !important;
+  .inline-fields .field:first-child {
+    flex: 0 0 35% !important;  /* Passenger box */
+    max-width: 35% !important;
   }
   
-  /* Service Class field */
-  .inline-fields .field:nth-child(2) {
-    flex: 0 0 48% !important;
-    max-width: 48% !important;
+  .inline-fields .field:last-child {
+    flex: 0 0 58% !important;  /* Service Class box */
+    max-width: 58% !important;
   }
   
-  /* Keep input and select full width within their container */
+  /* make sure controls fill their container */
   .inline-fields input,
   .inline-fields select {
     width: 100% !important;
   }
+
 
 </style>
 
@@ -598,7 +596,7 @@
     </div> <!-- closes .search-panel -->
   </div> <!-- closes .search-wrapper -->
 
-  <script src="/dev/js/redemption-module.js?v=28"></script>
+  <script src="/dev/js/redemption-module.js?v=29"></script>
  
   </body>
 </html>
