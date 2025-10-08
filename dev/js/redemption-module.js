@@ -163,13 +163,13 @@ function setupRedemptionModule() {
         window.location.href = "https://conciergesync.ai/dev/redemption-results.html";
       }, 500);
 
-      sessionStorage.setItem(
+      localStorage.setItem(
         "latestRedemptionResults",
         JSON.stringify(data.results || [])
       );
-
+      
       const sessionId = data.sessionId || Date.now();
-      // window.location.href = `/dev/redemption-results.html?session=${sessionId}`;
+      window.location.href = "/dev/redemption-results.html";
     } catch (err) {
       console.error("❌ Redemption fetch error:", err);
       alert("Search failed – check console for details.");
