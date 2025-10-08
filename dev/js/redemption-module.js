@@ -154,7 +154,7 @@ function setupRedemptionModule() {
       console.log("🧠 Redemption API response:", data);
 
       // --- Save the API results for the results page ---
-      sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data.results));
+      localStorage.setItem("latestRedemptionResults", JSON.stringify(data.results));
       console.log("✅ sessionStorage write complete:", sessionStorage.getItem("latestRedemptionResults"));
       
       // --- Redirect after short delay ---
