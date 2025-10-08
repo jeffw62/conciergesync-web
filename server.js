@@ -83,13 +83,26 @@ app.post("/api/redemption", async (req, res) => {
       });
     }
 
+    // derive ±14-day window
+    const baseDate = new Date(payload.date);
+    const startDate = new Date(baseDate);
+    const endDate   = new Date(baseDate);
+    startDate.setDate(startDate.getDate() - 14);
+    endDate.setDate(endDate.getDate() + 14);
+    
+    const startStr = startDate.toISOString().split("T")[0];
+    const endStr   = endDate.toISOString().split("T")[0];
+    
+    console.log(`📅 Expanded search window: ${startStr} → ${endStr}`);
+    
     const apiResponse = await seatsService.searchFlights({
       origin: payload.origin,
       destination: payload.destination,
-      startDate: payload.date,
-      endDate: payload.date,
+      startDate: startStr,
+      endDate: endStr,
       take: 40,
     });
+
 
     console.log("🛫 SA search returned:", apiResponse?.data?.length || 0, "results");
     console.log(
