@@ -46,20 +46,48 @@ function renderResults(results) {
   results.forEach((r) => {
     const row = document.createElement("tr");
 
-    const date = r.date || r.DepartureDate || r.departure_date || "-";
-    const origin = r.origin || r.OriginAirport || r.origin_airport || "-";
+    // --- Adjust field mappings to your actual JSON structure ---
+    const date =
+      r.date ||
+      r.DepartureDate ||
+      r.departure_date ||
+      r.FlightDate ||
+      "-";
+
+    const origin =
+      r.origin ||
+      r.Origin ||
+      r.OriginAirport ||
+      r.origin_airport ||
+      "-";
+
     const destination =
-      r.destination || r.DestinationAirport || r.destination_airport || "-";
-    const program = r.program || r.Source || "-";
+      r.destination ||
+      r.Destination ||
+      r.DestinationAirport ||
+      r.destination_airport ||
+      "-";
+
+    const program =
+      r.program ||
+      r.Program ||
+      r.Source ||
+      r.Airline ||
+      "-";
+
     const miles =
+      r.MilesNeeded ||
       r.milesNeeded ||
+      r.Miles ||
       r.mileage_cost ||
       r.YMileageCost ||
       r.JMileageCost ||
       r.FMileageCost ||
       0;
-    const taxes = r.taxes ?? r.TotalTaxes ?? "-";
-    const seats = r.seats ?? r.RemainingSeatsRaw ?? "-";
+
+    const taxes = r.taxes ?? r.TotalTaxes ?? r.Taxes ?? "-";
+    const seats = r.seats ?? r.RemainingSeatsRaw ?? r.Seats ?? "-";
+
     const cpm =
       miles > 0 && taxes !== "-"
         ? ((taxes * 100) / miles).toFixed(2) + "¢"
