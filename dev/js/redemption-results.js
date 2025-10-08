@@ -12,7 +12,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderResults(results);
   } else {
     console.warn("❌ No results found in localStorage");
-    const body = document.getElementById("results-Body");
+    const body = document.getElementById("results-body");
     if (body) {
       body.innerHTML =
         '<tr><td colspan="8" style="text-align:center;">No results to display.</td></tr>';
@@ -24,7 +24,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Render Function – Multi-Cabin Output
 // =====================================================
 function renderResults(results) {
-  const tbody = document.getElementById("results-Body");
+  const tbody = document.getElementById("results-body");
   if (!tbody) {
     console.warn("⚠️ Table body not found.");
     return;
