@@ -133,6 +133,24 @@
       padding: 28px 32px 32px;
     }
 
+    .wallet-section {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 20px 60px; /* 0 top ensures no added spacing */
+      margin-top: 0;        /* override any inherited top margin */
+      min-height: calc(100vh - 160px);
+    }
+    
+    .wallet-card {
+      max-width: 700px;
+      margin: 0 auto;       /* remove top margin, center horizontally */
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      padding: 28px 32px 32px;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
