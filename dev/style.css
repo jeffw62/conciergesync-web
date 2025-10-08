@@ -66,3 +66,9 @@ main {
   padding-top: 40px; /* controls space between ticker and first module card */
   padding-bottom: 60px;
 }
+
+/* --- Normalize workspace vertical spacing --- */
+.console-container {
+  padding-top: 40px;   /* was 60px — match redemption visual baseline */
+  padding-bottom: 80px; /* optional: slightly reduce bottom to balance footer space */
+}
