@@ -9,10 +9,11 @@
     .wallet-section {
       display: flex;
       justify-content: center;
-      align-items: flex-start;       /* match redemption alignment */
-      padding: 0 20px 60px;          /* same rhythm as redemption */
-      margin-top: 0;                 /* no extra offset */
-      min-height: calc(100vh - 160px);
+      align-items: flex-start;
+      padding: 0 20px 60px;   /* keep your desired bottom space */
+      margin-top: 0;
+      height: auto;           /* allow section to shrink-wrap its content */
+      min-height: 0;          /* cancel any previous min-height */
     }
   
     .wallet-card {
