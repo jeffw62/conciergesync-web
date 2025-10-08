@@ -160,7 +160,25 @@
       margin-top: 0;        /* ensure no inherited margin */
       gap: 0;               /* prevent flex gap offsets */
     }
-        
+
+    /* --- Wallet Card Alignment Correction --- */
+    .wallet-section {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0;           /* eliminate any extra padding */
+      margin-top: -40px;    /* lift wallet card upward to match redemption position */
+    }
+    
+    .wallet-card {
+      max-width: 700px;
+      margin: 40px auto 0;  /* keep consistent horizontal centering */
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      padding: 28px 32px 32px;
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
