@@ -589,69 +589,64 @@
       }
     });
   </script>
-  <script>
-  // Load content dynamically into the workspace
-  const workspace = document.getElementById("workspace");
+  <!-- Console module loader -->
+<script>
+const workspace = document.getElementById("workspace");
 
-  document.querySelectorAll('.nav-link').forEach(link => {
-    link.addEventListener('click', async (e) => {
-      e.preventDefault();
-      const page = e.target.textContent.trim().toLowerCase();
+document.querySelectorAll(".nav-link").forEach(link => {
+  link.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const page = e.target.textContent.trim().toLowerCase();
 
-      // highlight the current link
-      document.querySelectorAll('.nav-link').forEach(l => l.classList.remove('active'));
-      e.target.classList.add('active');
+    // highlight the current nav item
+    document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+    e.target.classList.add("active");
 
-      // load content
-      // --- Load content dynamically ---
-      let html = '';
-      
-      if (page === 'redemptions') {
-        const res = await fetch('/dev/redem-con.html');
+    try {
+      let html = "";
+
+      if (page === "redemptions") {
+        const res = await fetch("/dev/redem-con.html");
         html = await res.text();
         workspace.innerHTML = html;
-      
-        // Load Redemption module script only for redemptions
-        const redemptionScript = document.createElement('script');
-        redemptionScript.src = '/dev/js/redemption-module.js';
+
+        // Load Redemption module script only when needed
+        const redemptionScript = document.createElement("script");
+        redemptionScript.src = "/dev/js/redemption-module.js";
+        redemptionScript.onload = () => {
+          if (typeof initRedemptionModule === "function") initRedemptionModule();
+        };
         document.body.appendChild(redemptionScript);
       }
-      
-      else if (page === 'wallet') {
-        const res = await fetch('/dev/wallet-con.html');
+
+      else if (page === "wallet") {
+        const res = await fetch("/dev/wallet-con.html");
         html = await res.text();
         workspace.innerHTML = html;
-      
-        // (optional) Load a wallet module script if you create one
-        // const walletScript = document.createElement('script');
-        // walletScript.src = '/dev/js/wallet-module.js';
+
+        // If you add wallet-specific JS later, load it here
+        // const walletScript = document.createElement("script");
+        // walletScript.src = "/dev/js/wallet-module.js";
         // document.body.appendChild(walletScript);
       }
-    
-      // Load redemption module script dynamically and wait for it to finish
-      const redemptionScript = document.createElement('script');
-      redemptionScript.src = '/dev/js/redemption-module.js';
-      redemptionScript.onload = () => {
-        console.log("Redemption module script loaded.");
-        if (typeof initRedemptionModule === "function") {
-          initRedemptionModule();
-          console.log("Redemption module initialized (after load).");
-        } else {
-          console.warn("initRedemptionModule() still not found after load — check /dev/js/redemption-module.js");
-        }
-      };
-      document.body.appendChild(redemptionScript);
 
-      } else if (page === 'wallet') {
-        workspace.innerHTML = '<h2>Wallet coming soon...</h2>';
-      } else if (page === 'bonuses') {
-        workspace.innerHTML = '<h2>Bonuses panel placeholder...</h2>';
-      } else {
-        workspace.innerHTML = document.getElementById('welcome-section').outerHTML;
+      else if (page === "bonuses") {
+        workspace.innerHTML = "<h2>Bonuses panel placeholder...</h2>";
       }
-    });
+
+      else {
+        // Default home / welcome
+        workspace.innerHTML = document.getElementById("welcome-section").outerHTML;
+      }
+
+    } catch (err) {
+      console.error("Error loading module:", err);
+      workspace.innerHTML = "<p>Failed to load this section.</p>";
+    }
   });
+});
 </script>
+
 
 </body>
 </html>
