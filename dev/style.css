@@ -62,6 +62,19 @@ main {
   border-bottom: none !important;
 }
 
+.wallet-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding-top: 0 !important;   /* cancel internal padding */
+  margin-top: 0 !important;    /* cancel any margin offset */
+  height: auto;
+}
+
+.wallet-card {
+  margin-top: 0 !important;    /* ensures card starts at top of section */
+}
+
 .console-container {
   padding-top: 40px; /* controls space between ticker and first module card */
   padding-bottom: 60px;
