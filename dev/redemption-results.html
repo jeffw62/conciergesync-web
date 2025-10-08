@@ -78,13 +78,15 @@
         <th>Origin</th>
         <th>Destination</th>
         <th>Program</th>
-        <th>Miles Needed</th>
-        <th>Taxes/Fees</th>
-        <th>Seats</th>
-        <th>Value (¢/mile)</th>
+        <th>Economy</th>
+        <th>Premium</th>
+        <th>Business</th>
+        <th>First</th>
+        <th>Taxes / Fees</th>
       </tr>
     </thead>
-    <tbody id="resultsBody">
+    <tbody id="results-body"></tbody>
+    
       <!-- Rows dynamically injected -->
       <script type="text/template" id="resultRowTemplate">
         <tr>
@@ -92,10 +94,11 @@
           <td data-label="Origin">${origin}</td>
           <td data-label="Destination">${destination}</td>
           <td data-label="Program">${program}</td>
-          <td data-label="Points Needed">${miles.toLocaleString()}</td>
-          <td data-label="Fees">${taxes !== "-" ? "$" + taxes : "-"}</td>
-          <td data-label="Seats Available">${seats}</td>
-          <td data-label="Value (¢/mile)">${cpm}</td>
+          <td data-label="Economy">${yMiles ? yMiles.toLocaleString() + " pts" : "—"}</td>
+          <td data-label="Premium">${pMiles ? pMiles.toLocaleString() + " pts" : "—"}</td>
+          <td data-label="Business">${jMiles ? jMiles.toLocaleString() + " pts" : "—"}</td>
+          <td data-label="First">${fMiles ? fMiles.toLocaleString() + " pts" : "—"}</td>
+          <td data-label="Taxes / Fees">${taxes ? "$" + taxes.toFixed(2) : "—"}</td>
         </tr>
       </script>
     </tbody>
