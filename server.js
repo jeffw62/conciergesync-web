@@ -69,7 +69,7 @@ function applySanityFilter(results) {
 app.use("/dev", express.static(path.join(__dirname, "dev")));
 
 // ===============================================
-// Live Redemption Search Endpoint  (multi-day sweep)
+// Live Redemption Search Endpoint (dynamic window)
 // ===============================================
 app.post("/api/redemption", async (req, res) => {
   try {
@@ -83,12 +83,16 @@ app.post("/api/redemption", async (req, res) => {
       });
     }
 
-    // ----- build ±14-day sweep -----
+    // determine search window based on mode (exact vs flexible)
+    const flexDays = parseInt(payload.flexDays || 0, 10);
+    const mode = payload.mode || "exact";
+    const windowDays = mode === "flex" ? flexDays : 0;
+
     const base = new Date(payload.date + "T00:00:00");
     const start = new Date(base);
-    start.setDate(start.getDate() - 14);
+    start.setDate(start.getDate() - windowDays);
     const end = new Date(base);
-    end.setDate(end.getDate() + 14);
+    end.setDate(end.getDate() + windowDays);
 
     const toDateStr = d =>
       `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
@@ -99,11 +103,12 @@ app.post("/api/redemption", async (req, res) => {
     let day = new Date(start);
 
     console.log(
-      `📅 Running multi-day Seats.Aero sweep: ${toDateStr(start)} → ${toDateStr(
-        end
-      )}`
+      `📅 Mode: ${mode.toUpperCase()} | Window: ${windowDays} days | Range: ${toDateStr(
+        start
+      )} → ${toDateStr(end)}`
     );
 
+    // loop daily if flex mode, single call if exact
     while (day <= end) {
       const dateStr = toDateStr(day);
       console.log(`🔍 Fetching ${dateStr}`);
@@ -119,10 +124,11 @@ app.post("/api/redemption", async (req, res) => {
       } catch (innerErr) {
         console.warn(`⚠️  Failed on ${dateStr}:`, innerErr.message);
       }
+      if (mode === "exact") break; // stop after one iteration
       day.setDate(day.getDate() + 1);
     }
 
-    console.log(`🧩 Combined ${results.length} results across ±14 days`);
+    console.log(`🧩 Combined ${results.length} results total`);
 
     // (optional) sanity filter before returning
     const filtered = applySanityFilter(results);
