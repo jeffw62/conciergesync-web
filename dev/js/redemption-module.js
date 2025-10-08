@@ -160,7 +160,7 @@ function setupRedemptionModule() {
       // --- Redirect after short delay ---
       setTimeout(() => {
         console.log("Redirecting to results page...");
-        window.location.href = "/dev/redemption-results.html";
+        window.location.href = "https://conciergesync.ai/dev/redemption-results.html";
       }, 500);
 
       sessionStorage.setItem(
