@@ -31,7 +31,7 @@
       font-size: 2.3rem;
       margin-bottom: 1rem;
       letter-spacing: 1px;
-      animation: fadeIn 2s ease;
+      animation: fadeIn 1s ease;
     }
   
     p {
@@ -40,7 +40,7 @@
       line-height: 1.6;
       max-width: 680px;
       margin: 0 auto 2rem;
-      animation: fadeIn 3s ease;
+      animation: fadeIn 1.5s ease;
     }
   
     .cta {
@@ -53,7 +53,7 @@
       font-size: 1rem;
       cursor: pointer;
       transition: all 0.3s ease;
-      animation: fadeIn 3.5s ease;
+      animation: fadeIn 2s ease;
     }
   
     .cta:hover {
@@ -66,7 +66,7 @@
       color: rgba(191,161,74,0.6);
       font-size: 0.9rem;
       font-style: italic;
-      animation: fadeIn 4s ease;
+      animation: fadeIn 2s ease;
     }
 
     .wallet-section {
@@ -116,7 +116,14 @@
       transform: translateY(-2px);
     }
 
-  
+    .wallet-section {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 0 20px 80px; /* top 0, rely on console spacing */
+      min-height: calc(100vh - 160px);
+    }
+
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
