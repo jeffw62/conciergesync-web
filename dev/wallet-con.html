@@ -1,1 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConciergeSync™ – Wallet Console</title>
+  <link rel="stylesheet" href="/dev/style.css">
+  <style>
+    body {
+      margin: 0;
+      background: #0a1a33;
+      color: #fff;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      text-align: center;
+    }
+
+    h1 {
+      color: #d4af37;
+      font-size: 2.5rem;
+      margin-bottom: 1rem;
+      letter-spacing: 1px;
+      animation: fadeIn 2s ease;
+    }
+
+    p {
+      color: #ccc;
+      font-size: 1.1rem;
+      line-height: 1.6;
+      max-width: 640px;
+      margin: 0 auto 2rem;
+      animation: fadeIn 3s ease;
+    }
+
+    .cta {
+      background: #d4af37;
+      color: #0a1a33;
+      padding: 14px 36px;
+      border: none;
+      border-radius: 6px;
+      font-weight: 600;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      animation: fadeIn 3.5s ease;
+    }
+
+    .cta:hover {
+      background: #c19a34;
+      transform: translateY(-2px);
+    }
+
+    .tagline {
+      margin-top: 40px;
+      color: #888;
+      font-size: 0.9rem;
+      font-style: italic;
+      animation: fadeIn 4s ease;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
+</head>
+<body>
+
+  <h1>ConciergeSync™ Wallet</h1>
+  <p>
+    Where clarity replaces confusion — every balance, every point, every mile, unified inside your <strong>ConciergeSync™ Console</strong>.<br><br>
+    Powered by <strong>InfiniteSync™</strong>, your proprietary Award Intelligence Engine.  
+    Connect your cards and loyalty programs securely to reveal your complete travel-finance portfolio in one view.
+  </p>
+
+  <button class="cta" onclick="connectWallet()">Connect My Wallet Securely →</button>
+
+  <div class="tagline">Solving what matters... beautifully.</div>
+
+  <script>
+    function connectWallet() {
+      alert("InfiniteSync™ will now guide you through a secure Plaid connection flow.");
+      // TODO: Launch Plaid Link integration inside the console view
+    }
+  </script>
+
+</body>
+</html>
 
