@@ -603,15 +603,30 @@
       e.target.classList.add('active');
 
       // load content
+      // --- Load content dynamically ---
+      let html = '';
+      
       if (page === 'redemptions') {
-      const res = await fetch('/dev/redem-con.html');
-      const html = await res.text();
-      workspace.innerHTML = html;
-
-      if (page === 'wallet') {
-      const res = await fetch('/dev/wallet-con.html');
-      const html = await res.text();
-      workspace.innerHTML = html;
+        const res = await fetch('/dev/redem-con.html');
+        html = await res.text();
+        workspace.innerHTML = html;
+      
+        // Load Redemption module script only for redemptions
+        const redemptionScript = document.createElement('script');
+        redemptionScript.src = '/dev/js/redemption-module.js';
+        document.body.appendChild(redemptionScript);
+      }
+      
+      else if (page === 'wallet') {
+        const res = await fetch('/dev/wallet-con.html');
+        html = await res.text();
+        workspace.innerHTML = html;
+      
+        // (optional) Load a wallet module script if you create one
+        // const walletScript = document.createElement('script');
+        // walletScript.src = '/dev/js/wallet-module.js';
+        // document.body.appendChild(walletScript);
+      }
     
       // Load redemption module script dynamically and wait for it to finish
       const redemptionScript = document.createElement('script');
