@@ -51,7 +51,9 @@ function renderResults(results) {
     const pMiles = r.PMileageCost || 0;
     const jMiles = r.JMileageCost || 0;
     const fMiles = r.FMileageCost || 0;
-    const taxes = r.TotalTaxes ? (r.TotalTaxes / 100).toFixed(2) : "—";
+    const taxes = r.YTotalTaxesRaw && r.YTotalTaxesRaw > 0
+      ? (r.YTotalTaxesRaw / 100).toFixed(2)
+      : "—";
 
     row.innerHTML = `
       <td data-label="Date">${date}</td>
