@@ -1,10 +1,9 @@
 // =====================================================
-// ConciergeSync™ Redemption Results Loader (Stable Build)
+// ConciergeSync™ Redemption Results Loader (Final Build)
 // =====================================================
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🔎 Loading redemption results…");
 
-  // --- Load redemption results from localStorage ---
   const stored = localStorage.getItem("latestRedemptionResults");
 
   if (stored) {
@@ -26,8 +25,6 @@ document.addEventListener("DOMContentLoaded", () => {
 // =====================================================
 function renderResults(results) {
   const tbody = document.getElementById("resultsBody");
-  const summary = document.getElementById("results-summary");
-
   if (!tbody) {
     console.warn("⚠️ Table body not found.");
     return;
@@ -36,72 +33,46 @@ function renderResults(results) {
   tbody.innerHTML = "";
 
   if (!Array.isArray(results) || results.length === 0) {
-    if (summary) summary.textContent = "No results found for this search.";
+    tbody.innerHTML =
+      '<tr><td colspan="8" style="text-align:center;">No results found.</td></tr>';
     return;
   }
 
-  if (summary)
-    summary.textContent = `${results.length} redemption options found.`;
+  // Economy by default
+  const prefix = "Y";
 
   results.forEach((r) => {
     const row = document.createElement("tr");
 
-    // --- Adjust field mappings to your actual JSON structure ---
-    const date =
-      r.date ||
-      r.DepartureDate ||
-      r.departure_date ||
-      r.FlightDate ||
-      "-";
+    const date = r.Date || "—";
+    const origin = r.Route?.OriginAirport || "—";
+    const destination = r.Route?.DestinationAirport || "—";
+    const program = r.Source || "—";
+    const miles = r[`${prefix}MileageCostRaw`] || 0;
+    const taxes = r[`${prefix}TotalTaxesRaw`]
+      ? (r[`${prefix}TotalTaxesRaw`] / 100).toFixed(2)
+      : "—";
+    const seats = r[`${prefix}RemainingSeatsRaw`] || "—";
 
-    const origin =
-      r.origin ||
-      r.Origin ||
-      r.OriginAirport ||
-      r.origin_airport ||
-      "-";
-
-    const destination =
-      r.destination ||
-      r.Destination ||
-      r.DestinationAirport ||
-      r.destination_airport ||
-      "-";
-
-    const program =
-      r.program ||
-      r.Program ||
-      r.Source ||
-      r.Airline ||
-      "-";
-
-    const miles =
-      r.MilesNeeded ||
-      r.milesNeeded ||
-      r.Miles ||
-      r.mileage_cost ||
-      r.YMileageCost ||
-      r.JMileageCost ||
-      r.FMileageCost ||
-      0;
-
-    const taxes = r.taxes ?? r.TotalTaxes ?? r.Taxes ?? "-";
-    const seats = r.seats ?? r.RemainingSeatsRaw ?? r.Seats ?? "-";
-
-    const cpm =
-      miles > 0 && taxes !== "-"
-        ? ((taxes * 100) / miles).toFixed(2) + "¢"
-        : "-";
+    // Calculate cents per mile (Value column)
+    let cpm = "—";
+    if (miles && typeof miles === "number" && miles > 0) {
+      const feeDollars = typeof taxes === "string" ? parseFloat(taxes) : taxes;
+      if (!isNaN(feeDollars)) {
+        const centsPerMile = ((feeDollars * 100) / miles).toFixed(2);
+        cpm = `${centsPerMile}¢`;
+      }
+    }
 
     row.innerHTML = `
-      <td>${date}</td>
-      <td>${origin}</td>
-      <td>${destination}</td>
-      <td>${program}</td>
-      <td>${miles.toLocaleString()}</td>
-      <td>${taxes !== "-" ? "$" + taxes : "-"}</td>
-      <td>${seats}</td>
-      <td>${cpm}</td>
+      <td data-label="Date">${date}</td>
+      <td data-label="Origin">${origin}</td>
+      <td data-label="Destination">${destination}</td>
+      <td data-label="Airline">${program}</td>
+      <td data-label="Miles Needed">${miles.toLocaleString()}</td>
+      <td data-label="Taxes/Fees">${taxes !== "—" ? "$" + taxes : "—"}</td>
+      <td data-label="Seats Available">${seats}</td>
+      <td data-label="Value (¢/mile)">${cpm}</td>
     `;
 
     tbody.appendChild(row);
