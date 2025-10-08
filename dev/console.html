@@ -607,6 +607,11 @@
       const res = await fetch('/dev/redem-con.html');
       const html = await res.text();
       workspace.innerHTML = html;
+
+      if (page === 'wallet') {
+      const res = await fetch('/dev/wallet-con.html');
+      const html = await res.text();
+      workspace.innerHTML = html;
     
       // Load redemption module script dynamically and wait for it to finish
       const redemptionScript = document.createElement('script');
@@ -622,8 +627,6 @@
       };
       document.body.appendChild(redemptionScript);
 
-      } else if (page === 'wallet') {
-        workspace.innerHTML = '<h2>Wallet coming soon...</h2>';
       } else if (page === 'bonuses') {
         workspace.innerHTML = '<h2>Bonuses panel placeholder...</h2>';
       } else {
