@@ -133,11 +133,30 @@ app.post("/api/redemption", async (req, res) => {
     // (optional) sanity filter before returning
     const filtered = applySanityFilter(results);
 
+    // --- Cabin filter and normalization ---
+    const cabin = (payload.cabin || "Economy").toLowerCase();
+    
+    const cabinFieldMap = {
+      economy: "YMileageCost",
+      premium: "PMileageCost",
+      business: "JMileageCost",
+      first: "FMileageCost",
+    };
+    
+    // Determine which field to read for miles
+    const cabinField = cabinFieldMap[cabin] || "YMileageCost";
+    
+    // Replace generic MilesNeeded with cabin-specific value
+    const cabinAdjusted = filtered.map(r => {
+      const miles = r[cabinField] || r.YMileageCost || 0;
+      return { ...r, MilesNeeded: miles };
+    });
+    
     // --- Filter by selected program if provided ---
-    const selectedProgram = payload.program?.toLowerCase();
+    const selectedProgram = payload.program.toLowerCase();
     const finalResults = selectedProgram
-      ? filtered.filter(r => r.Source?.toLowerCase() === selectedProgram)
-      : filtered;
+      ? cabinAdjusted.filter(r => r.Source?.toLowerCase() === selectedProgram)
+      : cabinAdjusted;
 
     res.status(200).json({
       sessionId: Date.now(),
