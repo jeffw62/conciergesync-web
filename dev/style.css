@@ -54,34 +54,59 @@ footer * {
   text-align: center !important;
 }
 
-/* Prevent nested pages from adding extra gold lines */
-.wallet-section,
-.redemption-section,
-main {
-  border-top: none !important;
-  border-bottom: none !important;
-}
-
-.wallet-section {
-  display: flex;
-  justify-content: center;
-  align-items: flex-start;
-  padding-top: 0 !important;   /* cancel internal padding */
-  margin-top: 0 !important;    /* cancel any margin offset */
-  height: auto;
-}
-
-.wallet-card {
-  margin-top: 0 !important;    /* ensures card starts at top of section */
-}
-
 .console-container {
   padding-top: 40px; /* controls space between ticker and first module card */
   padding-bottom: 60px;
 }
 
-/* --- Normalize workspace vertical spacing --- */
-.console-container {
-  padding-top: 40px;   /* was 60px — match redemption visual baseline */
-  padding-bottom: 80px; /* optional: slightly reduce bottom to balance footer space */
+/* ===============================
+   MODULE: WALLET
+   =============================== */
+.wallet-section {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  padding: 0 20px 60px;   /* same bottom rhythm as redemption */
+  margin-top: 0;
+  height: auto;
+  min-height: 0;
+}
+
+.wallet-card {
+  max-width: 700px;
+  margin: 40px auto 0;    /* identical top offset to .search-wrapper */
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  padding: 28px 32px 32px;
+  text-align: center;
+  color: #0a1a33;
+}
+
+.wallet-card h1 {
+  color: rgba(191,161,74,0.9);
+  font-size: 2.1rem;
+  margin-bottom: 1.2rem;
+}
+
+.wallet-card p {
+  font-size: 1rem;
+  line-height: 1.6;
+  color: rgba(0,0,0,0.7);
+  margin-bottom: 2rem;
+}
+
+.wallet-card .cta {
+  background: #0a1a33;
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 14px 36px;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.wallet-card .cta:hover {
+  background: rgba(10,26,51,0.85);
+  transform: translateY(-2px);
 }
