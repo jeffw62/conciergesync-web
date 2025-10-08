@@ -151,6 +151,16 @@
       padding: 28px 32px 32px;
     }
 
+    /* --- Console Workspace Alignment Fix --- */
+    .console-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      padding-top: 0;       /* remove extra top space */
+      margin-top: 0;        /* ensure no inherited margin */
+      gap: 0;               /* prevent flex gap offsets */
+    }
+        
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
       to { opacity: 1; transform: translateY(0); }
