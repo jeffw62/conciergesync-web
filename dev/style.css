@@ -27,24 +27,37 @@
   line-height: 1.6;
 }
 
+/* --- GLOBAL FOOTER LOCK --- */
 footer {
-  background-color: #08172e; /* slightly darker than body */
-  color: rgba(255, 255, 255, 0.75);
+  background: #08172e;               /* slightly darker than body */
+  color: rgba(255, 255, 255, 0.8);   /* soft white text */
   font-size: 0.9rem;
   text-align: center;
   padding: 22px 0 18px;
-  margin-top: 40px;
-  border-top: 1px solid rgba(191, 161, 74, 0.3); /* thin gold line */
-  line-height: 1.4; /* tighten vertical spacing */
+  border-top: 1px solid rgba(191, 161, 74, 0.3); /* single thin gold line */
+  line-height: 1.4;
 }
 
 footer p {
   margin: 4px 0;
   font-style: italic;
-  color: rgba(191, 161, 74, 0.7);
+  color: rgba(255, 255, 255, 0.85);  /* white text, not gold */
 }
 
 footer small {
-  color: rgba(255, 255, 255, 0.7);
+  color: rgba(255, 255, 255, 0.75);
   font-style: normal;
+}
+
+/* Ensure footer text alignment remains centered, even inside flex containers */
+footer * {
+  text-align: center !important;
+}
+
+/* Prevent nested pages from adding extra gold lines */
+.wallet-section,
+.redemption-section,
+main {
+  border-top: none !important;
+  border-bottom: none !important;
 }
