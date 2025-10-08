@@ -83,17 +83,23 @@ app.post("/api/redemption", async (req, res) => {
       });
     }
 
-    // derive ±14-day window
-    const baseDate = new Date(payload.date);
-    const startDate = new Date(baseDate);
-    const endDate   = new Date(baseDate);
-    startDate.setDate(startDate.getDate() - 14);
-    endDate.setDate(endDate.getDate() + 14);
+    // derive ±14-day window (timezone-safe)
+    const base = new Date(payload.date + "T00:00:00");
+    const start = new Date(base);
+    const end   = new Date(base);
+    start.setDate(start.getDate() - 14);
+    end.setDate(end.getDate() + 14);
     
-    const startStr = startDate.toISOString().split("T")[0];
-    const endStr   = endDate.toISOString().split("T")[0];
+    // force YYYY-MM-DD in local time (avoid UTC rollback)
+    const toDateStr = d =>
+      `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+        d.getDate()
+      ).padStart(2, "0")}`;
     
-    console.log(`📅 Expanded search window: ${startStr} → ${endStr}`);
+    const startStr = toDateStr(start);
+    const endStr   = toDateStr(end);
+    
+    console.log(`📅 Expanded window (local-safe): ${startStr} → ${endStr}`);
     
     const apiResponse = await seatsService.searchFlights({
       origin: payload.origin,
