@@ -7,100 +7,38 @@
   <link rel="stylesheet" href="/dev/style.css">
   <style>
     .wallet-section {
-      color: rgba(255,255,255,0.85);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 80px 20px;
-    }
-  
-    main {
-      flex: 1;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      padding: 80px 20px; /* adds breathing space below header and above footer */
-      text-align: center;
-    }
-  
-    h1 {
-      color: rgba(191,161,74,0.85);
-      font-size: 2.3rem;
-      margin-bottom: 1rem;
-      letter-spacing: 1px;
-      animation: fadeIn 1s ease;
-    }
-  
-    p {
-      color: rgba(255,255,255,0.75);
-      font-size: 1.05rem;
-      line-height: 1.6;
-      max-width: 680px;
-      margin: 0 auto 2rem;
-      animation: fadeIn 1.5s ease;
-    }
-  
-    .cta {
-      background: transparent;
-      color: rgba(191,161,74,0.85);
-      padding: 14px 36px;
-      border: 1px solid rgba(191,161,74,0.4);
-      border-radius: 6px;
-      font-weight: 600;
-      font-size: 1rem;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      animation: fadeIn 2s ease;
-    }
-  
-    .cta:hover {
-      background: rgba(191,161,74,0.15);
-      transform: translateY(-2px);
-    }
-  
-    .tagline {
-      margin-top: 40px;
-      color: rgba(191,161,74,0.6);
-      font-size: 0.9rem;
-      font-style: italic;
-      animation: fadeIn 2s ease;
-    }
-
-    .wallet-section {
       display: flex;
       justify-content: center;
-      align-items: center;
-      padding: 80px 20px;
-      min-height: calc(100vh - 160px); /* accounts for header/ticker/footer space */
+      align-items: flex-start;       /* match redemption alignment */
+      padding: 0 20px 60px;          /* same rhythm as redemption */
+      margin-top: 0;                 /* no extra offset */
+      min-height: calc(100vh - 160px);
     }
-    
+  
     .wallet-card {
+      max-width: 700px;
+      margin: 40px auto 0;           /* same top offset as .search-wrapper */
       background: #fff;
-      color: #0a1a33;
-      border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.25);
-      padding: 60px 70px;
-      max-width: 720px;
-      width: 100%;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      padding: 28px 32px 32px;
       text-align: center;
+      color: #0a1a33;
     }
-    
+  
     .wallet-card h1 {
       color: rgba(191,161,74,0.9);
       font-size: 2.1rem;
       margin-bottom: 1.2rem;
     }
-    
+  
     .wallet-card p {
       font-size: 1rem;
       line-height: 1.6;
       color: rgba(0,0,0,0.7);
       margin-bottom: 2rem;
     }
-    
+  
     .wallet-card .cta {
       background: #0a1a33;
       color: #fff;
@@ -110,80 +48,18 @@
       font-weight: 600;
       transition: all 0.3s ease;
     }
-    
+  
     .wallet-card .cta:hover {
       background: rgba(10,26,51,0.85);
       transform: translateY(-2px);
     }
-
-    .wallet-section {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 0 20px 80px; /* top 0, rely on console spacing */
-      min-height: calc(100vh - 160px);
-    }
-
-    .wallet-card {
-      max-width: 700px;
-      margin: 40px auto;
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-      padding: 28px 32px 32px;
-    }
-
-    .wallet-section {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 0 20px 60px; /* 0 top ensures no added spacing */
-      margin-top: 0;        /* override any inherited top margin */
-      min-height: calc(100vh - 160px);
-    }
-    
-    .wallet-card {
-      max-width: 700px;
-      margin: 0 auto;       /* remove top margin, center horizontally */
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-      padding: 28px 32px 32px;
-    }
-
-    /* --- Console Workspace Alignment Fix --- */
-    .console-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding-top: 0;       /* remove extra top space */
-      margin-top: 0;        /* ensure no inherited margin */
-      gap: 0;               /* prevent flex gap offsets */
-    }
-
-    /* --- Wallet Card Alignment Correction --- */
-    .wallet-section {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 0;           /* eliminate any extra padding */
-      margin-top: -40px;    /* lift wallet card upward to match redemption position */
-    }
-    
-    .wallet-card {
-      max-width: 700px;
-      margin: 40px auto 0;  /* keep consistent horizontal centering */
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-      padding: 28px 32px 32px;
-    }
-
+  
     @keyframes fadeIn {
       from { opacity: 0; transform: translateY(10px); }
-      to { opacity: 1; transform: translateY(0); }
+      to   { opacity: 1; transform: translateY(0); }
     }
   </style>
+
 
 </head>
 <body>
