@@ -3,57 +3,21 @@
 // =====================================================
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🔎 Loading redemption results…");
-  
+
   // --- Load redemption results from localStorage ---
-  console.log("📘 Loading redemption results…");
-  
-  localStorage.setItem("latestRedemptionResults", JSON.stringify(data.results));
+  const stored = localStorage.getItem("latestRedemptionResults");
 
   if (stored) {
     console.log("✅ Found stored results in localStorage");
     const results = JSON.parse(stored);
-  
-    // find the table body where rows should go
-    const tableBody = document.querySelector("#resultsTable tbody");
-    if (tableBody && Array.isArray(results)) {
-      tableBody.innerHTML = ""; // clear any placeholder rows
-  
-      results.forEach(item => {
-        const row = document.createElement("tr");
-        row.innerHTML = `
-          <td>${item.date || "-"}</td>
-          <td>${item.origin || "-"}</td>
-          <td>${item.destination || "-"}</td>
-          <td>${item.program || "-"}</td>
-          <td>${item.miles || item.miles_needed || "-"}</td>
-          <td>${item.taxes || "-"}</td>
-          <td>${item.seats || "-"}</td>
-          <td>${item.value_cpm || item.value || "-"}</td>
-        `;
-        tableBody.appendChild(row);
-      });
-    } else {
-      console.warn("⚠️ Table body not found or results not array.");
-    }
-  } else {
-    console.warn("❌ No results found in localStorage.");
-  }
-
-  // Try to read saved results from sessionStorage
-  const stored = sessionStorage.getItem("latestRedemptionResults");
-
-  if (stored) {
-    console.log("✅ Found stored results in sessionStorage");
-    const results = JSON.parse(stored);
     renderResults(results);
-
-    // clear storage after render so refresh doesn’t reuse old data
-    sessionStorage.removeItem("latestRedemptionResults");
   } else {
-    console.warn("⚠️ No stored results found — displaying empty table");
+    console.warn("❌ No results found in localStorage");
     const body = document.getElementById("resultsBody");
-    body.innerHTML =
-      '<tr><td colspan="8" style="text-align:center;">No results to display.</td></tr>';
+    if (body) {
+      body.innerHTML =
+        '<tr><td colspan="8" style="text-align:center;">No results to display.</td></tr>';
+    }
   }
 });
 
@@ -64,21 +28,28 @@ function renderResults(results) {
   const tbody = document.getElementById("resultsBody");
   const summary = document.getElementById("results-summary");
 
-  tbody.innerHTML = "";
-
-  if (!Array.isArray(results) || results.length === 0) {
-    summary.textContent = "No results found for this search.";
+  if (!tbody) {
+    console.warn("⚠️ Table body not found.");
     return;
   }
 
-  summary.textContent = `${results.length} redemption options found.`;
+  tbody.innerHTML = "";
+
+  if (!Array.isArray(results) || results.length === 0) {
+    if (summary) summary.textContent = "No results found for this search.";
+    return;
+  }
+
+  if (summary)
+    summary.textContent = `${results.length} redemption options found.`;
 
   results.forEach((r) => {
     const row = document.createElement("tr");
-  
+
     const date = r.date || r.DepartureDate || r.departure_date || "-";
     const origin = r.origin || r.OriginAirport || r.origin_airport || "-";
-    const destination = r.destination || r.DestinationAirport || r.destination_airport || "-";
+    const destination =
+      r.destination || r.DestinationAirport || r.destination_airport || "-";
     const program = r.program || r.Source || "-";
     const miles =
       r.milesNeeded ||
@@ -93,7 +64,7 @@ function renderResults(results) {
       miles > 0 && taxes !== "-"
         ? ((taxes * 100) / miles).toFixed(2) + "¢"
         : "-";
-  
+
     row.innerHTML = `
       <td>${date}</td>
       <td>${origin}</td>
@@ -104,8 +75,7 @@ function renderResults(results) {
       <td>${seats}</td>
       <td>${cpm}</td>
     `;
-  
+
     tbody.appendChild(row);
   });
-
 }
