@@ -61,3 +61,8 @@ main {
   border-top: none !important;
   border-bottom: none !important;
 }
+
+.console-container {
+  padding-top: 40px; /* controls space between ticker and first module card */
+  padding-bottom: 60px;
+}
