@@ -110,3 +110,27 @@ footer * {
   background: rgba(10,26,51,0.85);
   transform: translateY(-2px);
 }
+
+/* ===============================
+   MODULE: REDEMPTION
+   =============================== */
+.search-wrapper {
+  max-width: 700px;
+  margin: 40px auto;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  padding: 28px 32px 32px;
+}
+
+.search-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 32px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .search-panel {
+    grid-template-columns: 1fr;
+  }
