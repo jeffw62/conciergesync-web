@@ -69,7 +69,7 @@ function applySanityFilter(results) {
 app.use("/dev", express.static(path.join(__dirname, "dev")));
 
 // ===============================================
-// Live Redemption Search Endpoint
+// Live Redemption Search Endpoint  (multi-day sweep)
 // ===============================================
 app.post("/api/redemption", async (req, res) => {
   try {
@@ -83,57 +83,60 @@ app.post("/api/redemption", async (req, res) => {
       });
     }
 
-    // derive ±14-day window (timezone-safe)
+    // ----- build ±14-day sweep -----
     const base = new Date(payload.date + "T00:00:00");
     const start = new Date(base);
-    const end   = new Date(base);
     start.setDate(start.getDate() - 14);
+    const end = new Date(base);
     end.setDate(end.getDate() + 14);
-    
-    // force YYYY-MM-DD in local time (avoid UTC rollback)
+
     const toDateStr = d =>
       `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
         d.getDate()
       ).padStart(2, "0")}`;
-    
-    const startStr = toDateStr(start);
-    const endStr   = toDateStr(end);
-    
-    console.log(`📅 Expanded window (local-safe): ${startStr} → ${endStr}`);
-    
-    const apiResponse = await seatsService.searchFlights({
-      origin: payload.origin,
-      destination: payload.destination,
-      startDate: startStr,
-      endDate: endStr,
-      take: 40,
-    });
 
+    const results = [];
+    let day = new Date(start);
 
-    console.log("🛫 SA search returned:", apiResponse?.data?.length || 0, "results");
     console.log(
-      "🧠 RAW SA RESPONSE SAMPLE:",
-      JSON.stringify(apiResponse?.data?.slice(0, 3), null, 2)
+      `📅 Running multi-day Seats.Aero sweep: ${toDateStr(start)} → ${toDateStr(
+        end
+      )}`
     );
 
+    while (day <= end) {
+      const dateStr = toDateStr(day);
+      console.log(`🔍 Fetching ${dateStr}`);
+      try {
+        const resp = await seatsService.searchFlights({
+          origin: payload.origin,
+          destination: payload.destination,
+          startDate: dateStr,
+          endDate: dateStr,
+          take: 40,
+        });
+        if (resp?.data?.length) results.push(...resp.data);
+      } catch (innerErr) {
+        console.warn(`⚠️  Failed on ${dateStr}:`, innerErr.message);
+      }
+      day.setDate(day.getDate() + 1);
+    }
+
+    console.log(`🧩 Combined ${results.length} results across ±14 days`);
+
     // (optional) sanity filter before returning
-    const filtered = applySanityFilter(apiResponse.data || []);
+    const filtered = applySanityFilter(results);
 
     // --- Filter by selected program if provided ---
-    let finalResults = filtered;
     const selectedProgram = payload.program?.toLowerCase();
-    
-    // only filter if a specific program was chosen
-    if (selectedProgram) {
-      finalResults = filtered.filter(
-        r => r.Source?.toLowerCase() === selectedProgram
-      );
-    }
-    
+    const finalResults = selectedProgram
+      ? filtered.filter(r => r.Source?.toLowerCase() === selectedProgram)
+      : filtered;
+
     res.status(200).json({
-    sessionId: Date.now(),
-    results: finalResults,
-  });
+      sessionId: Date.now(),
+      results: finalResults,
+    });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     res.status(500).json({
