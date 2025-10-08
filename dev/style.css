@@ -26,3 +26,25 @@
   font-style: italic;
   line-height: 1.6;
 }
+
+footer {
+  background-color: #08172e; /* slightly darker than body */
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 22px 0 18px;
+  margin-top: 40px;
+  border-top: 1px solid rgba(191, 161, 74, 0.3); /* thin gold line */
+  line-height: 1.4; /* tighten vertical spacing */
+}
+
+footer p {
+  margin: 4px 0;
+  font-style: italic;
+  color: rgba(191, 161, 74, 0.7);
+}
+
+footer small {
+  color: rgba(255, 255, 255, 0.7);
+  font-style: normal;
+}
