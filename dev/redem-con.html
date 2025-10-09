@@ -454,11 +454,24 @@
         console.log("Submitting search:", payload); // confirm data in console
     
         try {
-          const res = await fetch("/api/search", {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify(payload)
-          });
+          const res = await fetch("/api/redemption", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            origin: document.getElementById("origin")?.value || "",
+            destination: document.getElementById("destination")?.value || "",
+            passengers: document.getElementById("passengers")?.value || "1",
+            cabin: document.getElementById("cabin")?.value || "Economy",
+            program: document.getElementById("program")?.value || "",
+            date: document.getElementById("departDate")?.value || "",
+            flexDays: document.getElementById("flexDays")?.value || "1",
+            mode: document.querySelector("#exactBtn.active") ? "exact" : "flex",
+            direct: document.querySelector("#directStop .active")?.dataset.val || "yes",
+            multi: document.querySelector("#multiConn .active")?.dataset.val || "no",
+            positioning: document.querySelector("#posFlight .active")?.dataset.val || "no"
+          })
+        });
+
           if (!res.ok) throw new Error("Search request failed");
         
           const data = await res.json();
