@@ -130,6 +130,17 @@ footer * {
   align-items: start;
 }
 
+html, body {
+  height: 100%;
+}
+body {
+  display: flex;
+  flex-direction: column;
+}
+main.console-container {
+  flex: 1;
+}
+
 @media (max-width: 760px) {
   .search-panel {
     grid-template-columns: 1fr;
