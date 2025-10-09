@@ -173,6 +173,21 @@ app.post("/api/redemption", async (req, res) => {
 });
 
 // ===============================================
+// Redemption Save Endpoint (for DB capture)
+// ===============================================
+app.post("/api/redemption/save", async (req, res) => {
+  try {
+    const payload = req.body;  // full { sessionId, results: [...] }
+    // For now just log it — we’ll wire DB insert later
+    console.log("🪣 Capturing redemption batch:", payload.sessionId, "records:", payload.results?.length);
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("DB capture error:", err);
+    res.status(500).json({ error: "db_capture_failed" });
+  }
+});
+
+// ===============================================
 // Bulk Test Route (optional diagnostic)
 // ===============================================
 app.get("/api/redemption/testBulk", async (req, res) => {
