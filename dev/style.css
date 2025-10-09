@@ -164,6 +164,13 @@ footer * {
   align-items: start;
 }
 
+/* Ensure readable dark text on white cards */
+.cs-card,
+.search-wrapper,
+.wallet-card {
+   color: #111; /* deep gray/black text inside white cards */
+}
+
 @media (max-width: 760px) {
   .search-panel {
     grid-template-columns: 1fr;
