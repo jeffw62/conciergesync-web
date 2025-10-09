@@ -71,8 +71,15 @@ function renderResults(results) {
   });
 
   // === Meta Row Update and DB Capture ===
-  try {
-    const stored = JSON.parse(localStorage.getItem("latestRedemptionResults") || sessionStorage.getItem("latestRedemptionResults"));
+  window.addEventListener("load", () => {
+    try {
+      const storedText =
+        localStorage.getItem("latestRedemptionResults") ||
+        sessionStorage.getItem("latestRedemptionResults");
+      if (!storedText) return;
+  
+      const stored = JSON.parse(storedText);
+      console.log("Loaded stored results:", stored);
     if (stored && stored.results && stored.results.length > 0) {
       const ts = stored.results[0].UpdatedAt || stored.results[0].ParsedDate;
       const formatted = ts
