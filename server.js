@@ -199,7 +199,7 @@ app.get("/api/redemption/testBulk", async (req, res) => {
       Array.isArray(data) ? Object.keys(data[0]) :
       data.results ? Object.keys(data.results[0]) :
       Object.keys(data)
-
+    );
     res.json(data);
     } catch (err) {
       console.error("❌ Bulk API error:", err);
