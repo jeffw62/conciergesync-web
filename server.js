@@ -194,24 +194,13 @@ app.get("/api/redemption/testBulk", async (req, res) => {
     }
 
     let data;
-    try {
-      data = await response.json();
-    } catch (parseErr) {
-      const rawText = await response.text();
-      console.error("⚠️ JSON parse failed, raw response text below:");
-      console.error(rawText);
-      throw new Error("Response was not valid JSON");
-    }
-
-    console.log("===== DATA STRUCTURE INSPECTION =====");
-    if (Array.isArray(data)) {
-      console.log("Top-level array, sample keys:", Object.keys(data[0]));
-    } else if (data.results && Array.isArray(data.results)) {
-      console.log("data.results array, sample keys:", Object.keys(data.results[0]));
-    } else {
-      console.log("Top-level object keys:", Object.keys(data));
-    }
-    console.log("===== END DATA STRUCTURE INSPECTION =====");
+    const data = await response.json();
+    console.log("🔍 SeatsAero keys:", 
+      Array.isArray(data) ? Object.keys(data[0]) :
+      data.results ? Object.keys(data.results[0]) :
+      Object.keys(data)
+    );
+    res.json(data);
 
     res.json(data);
     } catch (err) {
