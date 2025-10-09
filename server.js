@@ -196,10 +196,15 @@ app.get("/api/redemption/testBulk", async (req, res) => {
     const data = await response.json();
     
     // log immediately, before any response is sent
-    console.log("===== SAMPLE RECORD KEYS BELOW =====");
-    console.log(Object.keys(data[0] || (data.results ? data.results[0] : {})));
-    console.log("===== END SAMPLE RECORD KEYS =====");
-    
+    console.log("===== RAW DATA PREVIEW BELOW =====");
+    if (Array.isArray(data)) {
+      console.log("Top-level array detected, keys of first record:", Object.keys(data[0]));
+    } else if (data.results && Array.isArray(data.results)) {
+      console.log("Found data.results array, keys of first record:", Object.keys(data.results[0]));
+    } else {
+      console.log("Top-level keys:", Object.keys(data));
+    }
+    console.log("===== RAW DATA PREVIEW END =====");
     res.json(data);
     } catch (err) {
       console.error("❌ Bulk API error:", err);
