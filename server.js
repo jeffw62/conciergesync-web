@@ -203,6 +203,16 @@ app.get("/api/redemption/testBulk", async (req, res) => {
       throw new Error("Response was not valid JSON");
     }
 
+    console.log("===== DATA STRUCTURE INSPECTION =====");
+    if (Array.isArray(data)) {
+      console.log("Top-level array, sample keys:", Object.keys(data[0]));
+    } else if (data.results && Array.isArray(data.results)) {
+      console.log("data.results array, sample keys:", Object.keys(data.results[0]));
+    } else {
+      console.log("Top-level object keys:", Object.keys(data));
+    }
+    console.log("===== END DATA STRUCTURE INSPECTION =====");
+
     res.json(data);
     } catch (err) {
       console.error("❌ Bulk API error:", err);
