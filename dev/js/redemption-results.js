@@ -69,5 +69,34 @@ function renderResults(results) {
 
     tbody.appendChild(row);
   });
+
+  // === Meta Row Update and DB Capture ===
+  try {
+    const stored = JSON.parse(localStorage.getItem("latestRedemptionResults"));
+    if (stored && stored.results && stored.results.length > 0) {
+      const ts = stored.results[0].UpdatedAt || stored.results[0].ParsedDate;
+      const formatted = ts
+        ? new Date(ts).toLocaleString("en-US", {
+            year: "numeric", month: "short", day: "numeric",
+            hour: "2-digit", minute: "2-digit", second: "2-digit",
+            timeZoneName: "short"
+          })
+        : "—";
+      const metaCell = document.getElementById("metaCell");
+      if (metaCell) {
+        metaCell.textContent =
+          `Last seen: ${formatted}  |  Records: ${stored.results.length}  |  Session ID: ${stored.sessionId}`;
+      }
+  
+      // optional backend capture
+      fetch("/api/redemption/save", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(stored)
+      }).catch(err => console.error("DB capture failed:", err));
+    }
+  } catch (err) {
+    console.error("Meta row update failed:", err);
+  }
 }
 
