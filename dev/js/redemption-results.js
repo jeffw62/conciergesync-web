@@ -76,17 +76,18 @@ function renderResults(results) {
       <td data-label="Business">${jMiles ? jMiles.toLocaleString() + " pts" : "—"}</td>
       <td data-label="First">${fMiles ? fMiles.toLocaleString() + " pts" : "—"}</td>
       <td data-label="Taxes / Fees">${taxes !== "-" ? "$" + taxes : "—"}</td>
-      <td data-label="Last Seen">
-        ${result.UpdatedAt
-          ? new Date(result.UpdatedAt).toLocaleString("en-US", {
+      <td data-label="Last Seen">${
+        r.UpdatedAt
+          ? new Date(r.UpdatedAt).toLocaleString("en-US", {
               month: "short",
               day: "numeric",
               hour: "2-digit",
-              minute: "2-digit"
+              minute: "2-digit",
             })
-          : "—"}
-      </td>
-    `;
+          : "—"
+      }</td>
+    </td>
+  `;
 
     tbody.appendChild(row);
   });
