@@ -193,18 +193,16 @@ app.get("/api/redemption/testBulk", async (req, res) => {
       throw new Error(`Seats.Aero error ${response.status}: ${text}`);
     }
 
-    const data = await response.json();
-    
-    // log immediately, before any response is sent
-    console.log("===== RAW DATA PREVIEW BELOW =====");
-    if (Array.isArray(data)) {
-      console.log("Top-level array detected, keys of first record:", Object.keys(data[0]));
-    } else if (data.results && Array.isArray(data.results)) {
-      console.log("Found data.results array, keys of first record:", Object.keys(data.results[0]));
-    } else {
-      console.log("Top-level keys:", Object.keys(data));
+    let data;
+    try {
+      data = await response.json();
+    } catch (parseErr) {
+      const rawText = await response.text();
+      console.error("⚠️ JSON parse failed, raw response text below:");
+      console.error(rawText);
+      throw new Error("Response was not valid JSON");
     }
-    console.log("===== RAW DATA PREVIEW END =====");
+
     res.json(data);
     } catch (err) {
       console.error("❌ Bulk API error:", err);
