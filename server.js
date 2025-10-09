@@ -195,8 +195,10 @@ app.get("/api/redemption/testBulk", async (req, res) => {
 
     const data = await response.json();
     
-    console.log("🔍 SA sample record keys:",
-      Object.keys(data[0] || (data.results ? data.results[0] : {}))
+    // log immediately, before any response is sent
+    console.log("===== SAMPLE RECORD KEYS BELOW =====");
+    console.log(Object.keys(data[0] || (data.results ? data.results[0] : {})));
+    console.log("===== END SAMPLE RECORD KEYS =====");
     );
     
     res.json(data);
