@@ -153,7 +153,7 @@ app.post("/api/redemption", async (req, res) => {
     });
     
     // --- Filter by selected program if provided ---
-    const selectedProgram = (payload.program || "").toLowerCase();
+    const selectedProgram = payload.program.toLowerCase();
     const finalResults = selectedProgram
       ? cabinAdjusted.filter(r => r.Source?.toLowerCase() === selectedProgram)
       : cabinAdjusted;
@@ -169,21 +169,6 @@ app.post("/api/redemption", async (req, res) => {
       message: err.message,
       stack: err.stack,
     });
-  }
-});
-
-// ===============================================
-// Redemption Save Endpoint (for DB capture)
-// ===============================================
-app.post("/api/redemption/save", async (req, res) => {
-  try {
-    const payload = req.body;  // full { sessionId, results: [...] }
-    // For now just log it — we’ll wire DB insert later
-    console.log("🪣 Capturing redemption batch:", payload.sessionId, "records:", payload.results?.length);
-    res.json({ ok: true });
-  } catch (err) {
-    console.error("DB capture error:", err);
-    res.status(500).json({ error: "db_capture_failed" });
   }
 });
 
@@ -207,18 +192,16 @@ app.get("/api/redemption/testBulk", async (req, res) => {
       const text = await response.text();
       throw new Error(`Seats.Aero error ${response.status}: ${text}`);
     }
-    
-    const data = await response.json();
-    console.log(`✅ Seats.Aero returned ${Array.isArray(data) ? data.length : 0} records`);
-    res.json(data);
 
-    } catch (err) {
-      console.error("❌ Bulk API error:", err);
-      res.status(500).json({
-        error: "server_error",
-        message: err.message,
-      });
-    }
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error("❌ Bulk API error:", err);
+    res.status(500).json({
+      error: "server_error",
+      message: err.message,
+    });
+  }
 });
 
 // ===============================================
