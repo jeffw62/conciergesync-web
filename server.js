@@ -194,6 +194,7 @@ app.get("/api/redemption/testBulk", async (req, res) => {
     }
 
     const data = await response.json();
+    console.log("🔍 SA sample record:", data[0] || data.results?.[0]);
     res.json(data);
   } catch (err) {
     console.error("❌ Bulk API error:", err);
