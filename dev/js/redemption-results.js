@@ -40,21 +40,32 @@ function renderResults(results) {
 
   results.forEach((r) => {
     const row = document.createElement("tr");
-
+  
     const date = r.Date || "—";
     const origin = r.Route?.OriginAirport || r.Origin || "—";
     const destination = r.Route?.DestinationAirport || r.Destination || "—";
     const program = r.Source || r.Program || "—";
-
+  
     // --- Cabin data direct from API ---
     const yMiles = r.YMileageCost || 0;
     const pMiles = r.PMileageCost || 0;
     const jMiles = r.JMileageCost || 0;
     const fMiles = r.FMileageCost || 0;
-    const taxes = r.YTotalTaxesRaw && r.YTotalTaxesRaw > 0
-      ? (r.YTotalTaxesRaw / 100).toFixed(2)
+    const taxes =
+      r.YTotalTaxesRaw && r.YTotalTaxesRaw > 0
+        ? (r.YTotalTaxesRaw / 100).toFixed(2)
+        : "—";
+  
+    // --- Last seen timestamp ---
+    const updated = r.UpdatedAt
+      ? new Date(r.UpdatedAt).toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        })
       : "—";
-
+    
     row.innerHTML = `
       <td data-label="Date">${date}</td>
       <td data-label="Origin">${origin}</td>
@@ -64,7 +75,17 @@ function renderResults(results) {
       <td data-label="Premium">${pMiles ? pMiles.toLocaleString() + " pts" : "—"}</td>
       <td data-label="Business">${jMiles ? jMiles.toLocaleString() + " pts" : "—"}</td>
       <td data-label="First">${fMiles ? fMiles.toLocaleString() + " pts" : "—"}</td>
-      <td data-label="Taxes / Fees">${taxes !== "—" ? "$" + taxes : "—"}</td>
+      <td data-label="Taxes / Fees">${taxes !== "-" ? "$" + taxes : "—"}</td>
+      <td data-label="Last Seen">
+        ${result.UpdatedAt
+          ? new Date(result.UpdatedAt).toLocaleString("en-US", {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit"
+            })
+          : "—"}
+      </td>
     `;
 
     tbody.appendChild(row);
