@@ -192,20 +192,9 @@ app.get("/api/redemption/testBulk", async (req, res) => {
       const text = await response.text();
       throw new Error(`Seats.Aero error ${response.status}: ${text}`);
     }
-
+    
     const data = await response.json();
-    
-    let keys;
-    if (Array.isArray(data)) {
-      keys = Object.keys(data[0]);
-    } else if (data.results && Array.isArray(data.results)) {
-      keys = Object.keys(data.results[0]);
-    } else {
-      keys = Object.keys(data);
-    }
-    
-    console.log("💡 SeatsAero keys:", keys);
-    
+    console.log(`✅ Seats.Aero returned ${Array.isArray(data) ? data.length : 0} records`);
     res.json(data);
 
     } catch (err) {
