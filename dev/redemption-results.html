@@ -69,7 +69,6 @@
     <img src="/dev/asset/CS_Logo_v1.svg" alt="InfiniteSync Logo">
     <h2>Redemption Results</h2>
     <p id="results-summary" style="margin-top:5px;color:#777;">Loading results...</p>
-    <p id="lastSeen" class="timestamp" style="font-size:0.9rem;color:#888;margin-top:4px;"></p>
   </div>
 
   <table id="resultsTable">
@@ -86,17 +85,7 @@
         <th>Taxes / Fees</th>
       </tr>
     </thead>
-
-    <tbody id="meta-row">
-      <tr>
-        <td colspan="9"
-            id="metaCell"
-            style="text-align:right;font-size:0.9rem;color:#777;padding:6px 12px;">
-          Last seen: — | Records: — | Session ID: —
-        </td>
-      </tr>
-    </tbody>
-
+  
     <tbody id="results-body"></tbody>
   </table>
   
@@ -123,34 +112,6 @@
   <div class="footer">
     ConciergeSync™ Internal Use Only
   </div>
-  <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const stored = JSON.parse(sessionStorage.getItem("latestRedemptionResults"));
-    if (stored?.results?.length) {
-      const ts = stored.results[0].UpdatedAt || stored.results[0].ParsedDate;
-      const formatted = ts
-        ? new Date(ts).toLocaleString("en-US", {
-            year: "numeric", month: "short", day: "numeric",
-            hour: "2-digit", minute: "2-digit", second: "2-digit",
-            timeZoneName: "short"
-          })
-        : "—";
-  
-      const meta = document.getElementById("metaCell");
-      if (meta) {
-        meta.textContent =
-          `Last seen: ${formatted}  |  Records: ${stored.results.length}  |  Session ID: ${stored.sessionId}`;
-      }
-  
-      // --- prepare for DB persistence ---
-      fetch("/api/redemption/save", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(stored)
-      }).catch(err => console.error("DB capture failed:", err));
-    }
-  });
-  </script>
 
   <script src="/dev/js/redemption-results.js"></script>
 </body>
