@@ -72,7 +72,7 @@ function renderResults(results) {
 
   // === Meta Row Update and DB Capture ===
   try {
-    const stored = JSON.parse(localStorage.getItem("latestRedemptionResults"));
+    const stored = JSON.parse(localStorage.getItem("latestRedemptionResults") || sessionStorage.getItem("latestRedemptionResults"));
     if (stored && stored.results && stored.results.length > 0) {
       const ts = stored.results[0].UpdatedAt || stored.results[0].ParsedDate;
       const formatted = ts
