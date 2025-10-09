@@ -194,15 +194,19 @@ app.get("/api/redemption/testBulk", async (req, res) => {
     }
 
     const data = await response.json();
-    console.log("🔍 SA sample record:", data.results ? data.results[0] : data[0]);
+    
+    console.log("🔍 SA sample record keys:",
+      Object.keys(data[0] || (data.results ? data.results[0] : {}))
+    );
+    
     res.json(data);
-  } catch (err) {
-    console.error("❌ Bulk API error:", err);
-    res.status(500).json({
-      error: "server_error",
-      message: err.message,
-    });
-  }
+    } catch (err) {
+      console.error("❌ Bulk API error:", err);
+      res.status(500).json({
+        error: "server_error",
+        message: err.message,
+      });
+    }
 });
 
 // ===============================================
