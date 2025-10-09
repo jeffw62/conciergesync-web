@@ -82,6 +82,7 @@
         <th>Business</th>
         <th>First</th>
         <th>Taxes / Fees</th>
+        <th>Last Seen</th>      <!-- 👈 new header for the new column -->
       </tr>
     </thead>
   
@@ -100,7 +101,15 @@
       <td data-label="Business">${jMiles ? jMiles.toLocaleString() + " pts" : "—"}</td>
       <td data-label="First">${fMiles ? fMiles.toLocaleString() + " pts" : "—"}</td>
       <td data-label="Taxes / Fees">${taxes ? "$" + taxes.toFixed(2) : "—"}</td>
-    </tr>
+      <td data-label="Last Seen">
+        ${updated ? new Date(updated).toLocaleString("en-US", {
+          month: "short",
+          day: "numeric",
+          hour: "2-digit",
+          minute: "2-digit"
+        }) : "—"}
+      </td>
+  </tr>
   </script>
 
     </tbody>
