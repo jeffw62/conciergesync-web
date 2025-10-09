@@ -199,7 +199,6 @@ app.get("/api/redemption/testBulk", async (req, res) => {
     console.log("===== SAMPLE RECORD KEYS BELOW =====");
     console.log(Object.keys(data[0] || (data.results ? data.results[0] : {})));
     console.log("===== END SAMPLE RECORD KEYS =====");
-    );
     
     res.json(data);
     } catch (err) {
