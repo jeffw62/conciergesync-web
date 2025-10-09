@@ -21,6 +21,31 @@ body {
   flex-direction: column;
 }
 
+/* ===============================
+   CROSS-BROWSER NORMALIZATION
+   =============================== */
+
+/* Reserve scrollbar width, unify box sizing, and prevent footer rounding */
+html {
+  box-sizing: border-box;
+  overflow-y: scroll; /* keeps layout width consistent across browsers */
+}
+
+*, *::before, *::after {
+  box-sizing: inherit;
+}
+
+body {
+  position: relative;
+  min-height: 100vh;
+  overflow-x: hidden;
+  -webkit-font-smoothing: antialiased; /* Chrome/Edge font consistency */
+}
+
+footer {
+  flex-shrink: 0; /* prevent footer from collapsing or floating in Edge */
+}
+
 main.console-container {
   flex: 1; /* keeps footer anchored at bottom on short pages */
 }
