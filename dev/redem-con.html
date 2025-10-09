@@ -487,10 +487,10 @@
           console.log("sessionStorage write complete");
         
           // Wait a tick before redirect
-          // setTimeout(() => {
-            // console.log("redirecting…");
-            // window.location.href = "/dev/redemption-results.html";
-          // }, 100);
+          setTimeout(() => {
+          console.log("redirecting…");
+          window.location.href = "/dev/redemption-results.html";
+          }, 100);
         } catch (err) {
           console.error("Search error:", err);
         }
