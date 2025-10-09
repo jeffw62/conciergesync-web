@@ -153,7 +153,7 @@ app.post("/api/redemption", async (req, res) => {
     });
     
     // --- Filter by selected program if provided ---
-    const selectedProgram = payload.program.toLowerCase();
+    const selectedProgram = (payload.program || "").toLowerCase();
     const finalResults = selectedProgram
       ? cabinAdjusted.filter(r => r.Source?.toLowerCase() === selectedProgram)
       : cabinAdjusted;
