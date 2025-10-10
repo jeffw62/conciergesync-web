@@ -9,7 +9,6 @@
     /* ========================
        CORE BASELINE STYLES
     ========================= */
-    /* --- moved to /dev/style.css ---
     body {
       margin: 0;
       padding: 0;
@@ -32,7 +31,7 @@
       grid-template-columns: 1fr 1fr;
       gap: 32px;
       align-items: start;
-    }*/
+    }
 
     h3 {
       font-size: 1.15rem;
@@ -194,10 +193,10 @@
     }
 
     /* Responsive collapse */
-    /*@media (max-width: 760px) {
+    @media (max-width: 760px) {
       .search-panel {
         grid-template-columns: 1fr;
-      }*/
+      }
     }
 
     .suggestions {
@@ -356,57 +355,90 @@
     </div>
   </div>
 
-<!-- ===================== JS SECTION ===================== -->
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // ----- Exact / Flexible date toggle -----
-    const exactBtn = document.getElementById("exactBtn");
-    const flexBtn = document.getElementById("flexBtn");
-    const flexPicker = document.getElementById("flexPicker");
-  
-    if (exactBtn && flexBtn) {
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const exactBtn = document.getElementById("exactBtn");
+      const flexBtn = document.getElementById("flexBtn");
+      const flexPicker = document.getElementById("flexPicker");
+    
+      if (!exactBtn || !flexBtn) return;
+    
+      // Handle Exact Date
       exactBtn.addEventListener("click", () => {
         exactBtn.classList.add("active");
         flexBtn.classList.remove("active");
         if (flexPicker) flexPicker.style.display = "none";
       });
-  
+    
+      // Handle Flexible
       flexBtn.addEventListener("click", () => {
         flexBtn.classList.add("active");
         exactBtn.classList.remove("active");
         if (flexPicker) flexPicker.style.display = "block";
       });
-    }
+    });
   
-    // ----- Load airports (API or fallback) -----
-    fetch("/api/airports")
-      .then(res => {
-        const ct = res.headers.get("content-type") || "";
-        if (!ct.includes("application/json")) {
-          console.warn("⚠️ /api/airports returned HTML — using local fallback.");
-          throw new Error("html response");
-        }
-        return res.json();
-      })
-      .then(data => {
-        const airports = Array.isArray(data) ? data : [];
-        console.log("✅ Loaded airports:", airports.length);
-        initAutocomplete(airports);
-      })
-      .catch(err => {
-        console.warn("airport fetch failed:", err.message);
-        const airports = window.airportsData || [];
-        console.log("🪄 Using fallback airports:", airports.length);
-        initAutocomplete(airports);
-      });
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      fetch("/api/airports")  // adjust route if different
+        .then(res => res.json())
+        .then(data => {
+          const airports = Array.isArray(data) ? data : [];
+    
+          const originInput = document.getElementById("origin");
+          const originSuggestions = document.getElementById("origin-suggestions");
+          const destinationInput = document.getElementById("destination");
+          const destinationSuggestions = document.getElementById("destination-suggestions");
+    
+          const showSuggestions = (val, box) => {
+            box.innerHTML = "";
+            if (!val) return;
+            const match = airports.filter(a =>
+              a.code.toUpperCase().startsWith(val.toUpperCase()) ||
+              a.name.toUpperCase().includes(val.toUpperCase())
+            ).slice(0, 10);
+            match.forEach(a => {
+              const div = document.createElement("div");
+              div.textContent = `${a.code} – ${a.name}`;
+              div.addEventListener("click", () => {
+                const inputEl = box === originSuggestions ? originInput : destinationInput;
+                inputEl.value = a.code;
+                box.innerHTML = "";
+              });
+              box.appendChild(div);
+            });
+          };
+    
+          originInput?.addEventListener("input", e =>
+            showSuggestions(e.target.value, originSuggestions)
+          );
+          destinationInput?.addEventListener("input", e =>
+            showSuggestions(e.target.value, destinationSuggestions)
+          );
+    
+          document.addEventListener("click", e => {
+            if (!e.target.closest(".suggestions")) {
+              originSuggestions.innerHTML = "";
+              destinationSuggestions.innerHTML = "";
+            }
+          });
+        })
+        .catch(err => console.error("Airport data load failed:", err));
+    });
   
-    // ----- Search button handler -----
-    const searchBtn = document.getElementById("searchBtn");
-    if (searchBtn) {
+  </script>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchBtn = document.getElementById("searchBtn");
+    
+      if (!searchBtn) return;
+    
       searchBtn.addEventListener("click", async () => {
+        // disable while loading
         searchBtn.disabled = true;
         searchBtn.textContent = "Searching…";
-  
+    
+        // gather form values
         const payload = {
           origin: document.getElementById("origin")?.value || "",
           destination: document.getElementById("destination")?.value || "",
@@ -417,102 +449,40 @@
           flexDays: document.getElementById("flexDays")?.value || "0",
           includePartners: document.getElementById("partnerSpace")?.checked || false
         };
-        console.log("Submitting search:", payload);
-  
+    
+        console.log("Submitting search:", payload); // confirm data in console
+    
         try {
-          const res = await fetch("/api/redemption", {
+          const res = await fetch("/api/search", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              origin: payload.origin,
-              destination: payload.destination,
-              passengers: payload.passengers,
-              cabin: payload.cabin,
-              program: document.getElementById("program")?.value || "",
-              date: payload.departDate,
-              flexDays: payload.flexDays,
-              mode: document.querySelector("#exactBtn.active") ? "exact" : "flex",
-              direct: document.querySelector("#directStop .active")?.dataset.val || "yes",
-              multi: document.querySelector("#multiConn .active")?.dataset.val || "no",
-              positioning: document.querySelector("#posFlight .active")?.dataset.val || "no"
-            })
+            body: JSON.stringify(payload)
           });
-  
           if (!res.ok) throw new Error("Search request failed");
+        
           const data = await res.json();
           console.log("Search results:", data);
-  
+        
+          // NEW logs
+          console.log("Type of data:", typeof data);
+          console.log("Stringified:", JSON.stringify(data).slice(0,200));
+        
+          // Save results for results page
           sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data));
+          console.log("Checking write immediately:", sessionStorage.getItem("latestRedemptionResults"));
           console.log("sessionStorage write complete");
-  
-          // Safe redirect once data is confirmed saved
-          setTimeout(() => {
-            try {
-              const check = sessionStorage.getItem("latestRedemptionResults");
-              if (check) {
-                console.log("✅ Data saved — redirecting to results page…");
-                window.location.href = "/dev/redemption-results.html";
-              } else {
-                console.warn("⚠️ No data found in sessionStorage — staying on page.");
-              }
-            } catch (err) {
-              console.error("Redirect check failed:", err);
-            }
-          }, 200);
+        
+          // Wait a tick before redirect
+          // setTimeout(() => {
+            // console.log("redirecting…");
+            // window.location.href = "/dev/redemption-results.html";
+          // }, 100);
         } catch (err) {
           console.error("Search error:", err);
-        } finally {
-          searchBtn.disabled = false;
-          searchBtn.textContent = "Search";
         }
       });
-    }
-  });
-  
-  // ----- Autocomplete helper -----
-  function initAutocomplete(airports) {
-    const originInput = document.getElementById("origin");
-    const originSuggestions = document.getElementById("origin-suggestions");
-    const destinationInput = document.getElementById("destination");
-    const destinationSuggestions = document.getElementById("destination-suggestions");
-  
-    const showSuggestions = (val, box) => {
-      box.innerHTML = "";
-      if (!val) return;
-      const match = airports
-        .filter(a =>
-          a.code.toUpperCase().startsWith(val.toUpperCase()) ||
-          a.name.toUpperCase().includes(val.toUpperCase())
-        )
-        .slice(0, 10);
-      match.forEach(a => {
-        const li = document.createElement("li");
-        li.textContent = `${a.code} – ${a.name}`;
-        li.onclick = () => {
-          const inputEl = box === originSuggestions ? originInput : destinationInput;
-          inputEl.value = a.code;
-          box.innerHTML = "";
-        };
-        box.appendChild(li);
-      });
-    };
-  
-    originInput?.addEventListener("input", e =>
-      showSuggestions(e.target.value, originSuggestions)
-    );
-    destinationInput?.addEventListener("input", e =>
-      showSuggestions(e.target.value, destinationSuggestions)
-    );
-  
-    document.addEventListener("click", e => {
-      if (!e.target.closest(".suggestions")) {
-        originSuggestions.innerHTML = "";
-        destinationSuggestions.innerHTML = "";
-      }
     });
-  }
-  </script>
-  <!-- ===================== END JS SECTION ===================== -->
+    </script>
 
   <!-- your JS link -->
   <script src="/dev/js/redemption-module.js?v=121"></script>
