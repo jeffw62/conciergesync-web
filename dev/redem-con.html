@@ -355,8 +355,17 @@
     </div>
   </div>
 
-  <!-- ========== SCRIPT SECTION (FIXED) ========== -->
+<!-- your JS link -->
+<script src="/dev/js/redemption-module.js?v=121"></script>
 
+<!-- Optional guard -->
+<script>
+  if (!window.redemptionModuleInitialized) {
+    window.redemptionModuleInitialized = true;
+    console.log("Redemption module initialized standalone.");
+  }
+</script>
+  
 <!-- Step 1: Exact / Flexible toggle -->
 <script>
 document.addEventListener("DOMContentLoaded", () => {
@@ -379,58 +388,6 @@ document.addEventListener("DOMContentLoaded", () => {
     exactBtn.classList.remove("active");
     if (flexPicker) flexPicker.style.display = "block";
   });
-});
-</script>
-
-<!-- Step 2: Airport Autocomplete -->
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  fetch("/api/airports") // adjust route if different
-    .then(res => res.json())
-    .then(data => {
-      const airports = Array.isArray(data) ? data : [];
-
-      const originInput = document.getElementById("origin");
-      const originSuggestions = document.getElementById("origin-suggestions");
-      const destinationInput = document.getElementById("destination");
-      const destinationSuggestions = document.getElementById("destination-suggestions");
-
-      const showSuggestions = (val, box) => {
-        box.innerHTML = "";
-        if (!val) return;
-        const match = airports
-          .filter(a =>
-            a.code.toUpperCase().startsWith(val.toUpperCase()) ||
-            a.name.toUpperCase().includes(val.toUpperCase())
-          )
-          .slice(0, 10);
-        match.forEach(a => {
-          const div = document.createElement("div");
-          div.textContent = `${a.code} – ${a.name}`;
-          div.addEventListener("click", () => {
-            const inputEl = box === originSuggestions ? originInput : destinationInput;
-            inputEl.value = a.code;
-            box.innerHTML = "";
-          });
-          box.appendChild(div);
-        });
-      };
-
-      originInput?.addEventListener("input", e =>
-        showSuggestions(e.target.value, originSuggestions)
-      );
-      destinationInput?.addEventListener("input", e =>
-        showSuggestions(e.target.value, destinationSuggestions)
-      );
-
-      document.addEventListener("click", e => {
-        if (!e.target.closest(".suggestions")) {
-          originSuggestions.innerHTML = "";
-          destinationSuggestions.innerHTML = "";
-        }
-      });
-    })
-    .catch(err => console.error("Airport data load failed:", err));
 });
 </script>
 
@@ -483,8 +440,5 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 <!-- ========== END SCRIPT SECTION ========== -->
 
-
-  <!-- your JS link -->
-  <script src="/dev/js/redemption-module.js?v=121"></script>
 </body>
 </html>
