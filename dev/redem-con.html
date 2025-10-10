@@ -356,12 +356,10 @@
   </div>
 
   <!-- ConciergeSync™ Spinner Bridge -->
-  <div id="spinner-overlay" class="spinner-overlay hidden">
-    <div class="spinner-card">
-      <img src="/dev/asset/CS_Logo_Spinner.svg" alt="ConciergeSync Spinner" class="spinner-logo" />
-      <p class="spinner-text">Preparing your personalized <br>ConciergeSync™ results…</br></p>
-    </div>
-  </div>
+  <p class="spinner-text">
+    Preparing your personalized<br>
+    <span class="indent-line">ConciergeSync™ results...</span>
+  </p>
 
 <!-- your JS link -->
 <script src="/dev/js/redemption-module.js?v=121"></script>
@@ -485,6 +483,11 @@ document.addEventListener("DOMContentLoaded", () => {
       text-shadow: 0 0 8px rgba(255,255,255,0.35);
       font-family: "Segoe UI", "Helvetica Neue", sans-serif;
       transition: opacity 0.4s ease;
+    }
+
+    .indent-line {
+      display: inline-block;
+      padding-left: 2em; /* tweak this for desired indent */
     }
     .spinner-logo {
       width: 100px;
