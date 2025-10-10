@@ -357,16 +357,10 @@
 
   <!-- ConciergeSync™ Spinner Bridge -->
   <div id="spinner-overlay" class="spinner-overlay hidden">
-    <div class="spinner-card bordered">
-      <div class="spinner-inner">
-        <img src="/dev/asset/CS_Logo_Spinner.svg" alt="ConciergeSync Spinner" class="spinner-logo" />
-        <p class="spinner-message">
-          Preparing your personalized ConciergeSync™ results...
-        </p>
-      </div>
+    <div class="gold-card">
+      <p>Your personalized ConciergeSync™ results...</p>
     </div>
   </div>
-
 
 <!-- your JS link -->
 <script src="/dev/js/redemption-module.js?v=121"></script>
@@ -475,40 +469,25 @@ document.addEventListener("DOMContentLoaded", () => {
       visibility: visible;
     }
     
-    /* ---------- Gold-Border Card ---------- */
-    .spinner-card.bordered {
+    .gold-card {
       position: relative;
-      padding: 9px; /* ↑ 3x thicker gold frame */
-      border-radius: 0px;
-      background: linear-gradient(135deg,#d4b256 0%,#f5e3a1 40%,#d4b256 80%);
-      background-size: 200% auto;
-      animation: shimmer 4s linear infinite;
-      box-shadow:
-        0 0 28px rgba(191,161,74,0.35),
-        inset 0 1px 0 rgba(255,255,255,0.15),
-        inset 0 -1px 2px rgba(0,0,0,0.4);
-    }
-    
-    /* ---------- Inner Navy Panel ---------- */
-    .spinner-inner {
-      background: #0a1a33;
-      border-radius: 18px;
-      padding: 56px 48px;
-      text-align: center;
-      width: 300px;
-      height: 440px;
+      width: 420px;
+      height: 640px;
+      background: url('/dev/asset/CS_logo_vert_gold_card.png') no-repeat center/cover;
       display: flex;
-      flex-direction: column;
       justify-content: center;
-      align-items: center;
+      align-items: flex-end;   /* anchor text toward lower half */
+      padding-bottom: 120px;   /* adjust as needed */
     }
     
-    /* ---------- Quiet ConciergeSync™ Logo ---------- */
-    .spinner-logo {
-      width: 140px;
-      height: 140px;
-      /* no animation or glow now */
-      filter: drop-shadow(0 0 4px rgba(191,161,74,0.4));
+    .gold-card p {
+      font-family: "Playfair Display", serif;
+      font-size: 1.15rem;
+      letter-spacing: 0.8px;
+      color: #0a1a33; /* ConciergeSync™ navy */
+      text-shadow: 0 1px 1px rgba(0,0,0,0.15); /* slight seated effect */
+      opacity: 0.92;
+      text-align: center;
     }
     
     /* ---------- Refined Message Text ---------- */
