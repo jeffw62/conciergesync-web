@@ -458,7 +458,7 @@ document.addEventListener("DOMContentLoaded", () => {
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap');
     
-    /* ---------- Overlay Container ---------- */
+    /* ---------- Overlay ---------- */
     .spinner-overlay {
       position: fixed;
       inset: 0;
@@ -479,12 +479,9 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ---------- Gold-Border Card ---------- */
     .spinner-card.bordered {
       position: relative;
-      padding: 3px; /* border thickness */
-      border-radius: 26px;
-      background: linear-gradient(135deg,
-        #d4b256 0%,
-        #f5e3a1 40%,
-        #d4b256 80%);
+      padding: 3px;
+      border-radius: 22px;
+      background: linear-gradient(135deg,#d4b256 0%,#f5e3a1 40%,#d4b256 80%);
       background-size: 200% auto;
       animation: shimmer 4s linear infinite;
       box-shadow:
@@ -496,40 +493,47 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ---------- Inner Navy Panel ---------- */
     .spinner-inner {
       background: #0a1a33;
-      border-radius: 22px;
-      padding: 48px 72px;
+      border-radius: 18px;
+      padding: 56px 48px;         /* taller, narrower proportions */
       text-align: center;
-      min-width: 320px;
+      width: 300px;               /* ↓ narrower width */
+      height: 440px;              /* ↑ more vertical */
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
     }
     
-    /* ---------- Glowing ConciergeSync Logo ---------- */
+    /* ---------- Glowing ConciergeSync™ Logo ---------- */
     .spinner-logo {
-      width: 110px;
-      height: 110px;
+      width: 135px;               /* ↑ larger logo */
+      height: 135px;
       animation: glow 2.6s ease-in-out infinite;
       filter: drop-shadow(0 0 10px rgba(191,161,74,0.6));
     }
     
-    /* ---------- Elegant Message Text ---------- */
+    /* ---------- Message Text ---------- */
     .spinner-message {
-      margin-top: 32px;
+      margin-top: 38px;
       font-family: "Playfair Display", "Segoe UI", serif;
-      font-size: 1.3rem;
+      font-size: 1.15rem;         /* ↓ slightly smaller font */
       line-height: 1.6;
+      letter-spacing: 1px;        /* ↑ more spacing between letters */
       font-weight: 400;
-      letter-spacing: 0.3px;
       color: #ffffff;
       text-shadow: 0 0 8px rgba(255,255,255,0.25);
+      text-align: center;
+      max-width: 240px;
     }
     
     /* ---------- Animations ---------- */
     @keyframes shimmer {
-      0%   { background-position: 0 0; }
+      0% { background-position: 0 0; }
       100% { background-position: 200% 0; }
     }
     
     @keyframes glow {
-      0%, 100% {
+      0%,100% {
         transform: scale(1);
         filter: drop-shadow(0 0 8px rgba(191,161,74,0.4));
       }
