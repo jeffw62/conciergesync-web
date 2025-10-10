@@ -47,6 +47,19 @@ function renderResults(results) {
     const program = r.Source || r.Program || "—";
   
     // --- Cabin data direct from API ---
+    
+    // 🆕 Determine operating airline ("metal")
+    let metal = "-";
+    if (r.JAirlinesRaw && r.JAirlinesRaw.trim() !== "") {
+      metal = r.JAirlinesRaw;
+    } else if (r.YAirlinesRaw && r.YAirlinesRaw.trim() !== "") {
+      metal = r.YAirlinesRaw;
+    } else if (r.JAirlines && r.JAirlines.trim() !== "") {
+      metal = r.JAirlines;
+    } else if (r.YAirlines && r.YAirlines.trim() !== "") {
+      metal = r.YAirlines;
+    }
+
     const yMiles = r.YMileageCost || 0;
     const pMiles = r.PMileageCost || 0;
     const jMiles = r.JMileageCost || 0;
@@ -71,6 +84,7 @@ function renderResults(results) {
       <td data-label="Origin">${origin}</td>
       <td data-label="Destination">${destination}</td>
       <td data-label="Program">${program}</td>
+      <td data-label="Airline">${metal}</td>
       <td data-label="Economy">${yMiles ? yMiles.toLocaleString() + " pts" : "—"}</td>
       <td data-label="Premium">${pMiles ? pMiles.toLocaleString() + " pts" : "—"}</td>
       <td data-label="Business">${jMiles ? jMiles.toLocaleString() + " pts" : "—"}</td>
