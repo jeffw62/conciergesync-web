@@ -356,13 +356,12 @@
   </div>
 
   <!-- ConciergeSync™ Spinner Bridge -->
-  <div class="spinner-overlay active">
+  <div id="spinner-overlay" class="spinner-overlay hidden">
     <div class="spinner-card bordered">
       <div class="spinner-inner">
-        <img src="/dev/asset/CS_Logo_Spinner.svg" class="spinner-logo" alt="ConciergeSync Spinner" />
+        <img src="/dev/asset/CS_Logo_Spinner.svg" alt="ConciergeSync Spinner" class="spinner-logo" />
         <p class="spinner-message">
-          Preparing your personalized<br>
-          ConciergeSync™ results...
+          Preparing your personalized ConciergeSync™ results...
         </p>
       </div>
     </div>
@@ -456,7 +455,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
   <!-- ConciergeSync™ Spinner Overlay : Gold-Border Luxury Card -->
   <style>
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400&display=swap');
     
     /* ---------- Overlay ---------- */
     .spinner-overlay {
@@ -479,13 +478,13 @@ document.addEventListener("DOMContentLoaded", () => {
     /* ---------- Gold-Border Card ---------- */
     .spinner-card.bordered {
       position: relative;
-      padding: 3px;
+      padding: 9px; /* ↑ 3x thicker gold frame */
       border-radius: 22px;
       background: linear-gradient(135deg,#d4b256 0%,#f5e3a1 40%,#d4b256 80%);
       background-size: 200% auto;
       animation: shimmer 4s linear infinite;
       box-shadow:
-        0 0 20px rgba(191,161,74,0.25),
+        0 0 28px rgba(191,161,74,0.35),
         inset 0 1px 0 rgba(255,255,255,0.15),
         inset 0 -1px 2px rgba(0,0,0,0.4);
     }
@@ -494,36 +493,36 @@ document.addEventListener("DOMContentLoaded", () => {
     .spinner-inner {
       background: #0a1a33;
       border-radius: 18px;
-      padding: 56px 48px;         /* taller, narrower proportions */
+      padding: 56px 48px;
       text-align: center;
-      width: 300px;               /* ↓ narrower width */
-      height: 440px;              /* ↑ more vertical */
+      width: 300px;
+      height: 440px;
       display: flex;
       flex-direction: column;
       justify-content: center;
       align-items: center;
     }
     
-    /* ---------- Glowing ConciergeSync™ Logo ---------- */
+    /* ---------- Quiet ConciergeSync™ Logo ---------- */
     .spinner-logo {
-      width: 135px;               /* ↑ larger logo */
-      height: 135px;
-      animation: glow 2.6s ease-in-out infinite;
-      filter: drop-shadow(0 0 10px rgba(191,161,74,0.6));
+      width: 140px;
+      height: 140px;
+      /* no animation or glow now */
+      filter: drop-shadow(0 0 4px rgba(191,161,74,0.4));
     }
     
-    /* ---------- Message Text ---------- */
+    /* ---------- Refined Message Text ---------- */
     .spinner-message {
-      margin-top: 38px;
-      font-family: "Playfair Display", "Segoe UI", serif;
-      font-size: 1.15rem;         /* ↓ slightly smaller font */
-      line-height: 1.6;
-      letter-spacing: 1px;        /* ↑ more spacing between letters */
+      margin-top: 40px;
+      font-family: "Libre Baskerville", "Georgia", serif;
+      font-size: 1rem;             /* ↓ smaller for space */
+      letter-spacing: 1.4px;       /* ↑ relaxed spacing */
+      line-height: 1.5;
       font-weight: 400;
-      color: #ffffff;
-      text-shadow: 0 0 8px rgba(255,255,255,0.25);
+      color: #f5f5f5;
+      text-shadow: 0 0 6px rgba(255,255,255,0.15);
       text-align: center;
-      max-width: 240px;
+      white-space: nowrap;         /* keeps single line */
     }
     
     /* ---------- Animations ---------- */
@@ -531,17 +530,8 @@ document.addEventListener("DOMContentLoaded", () => {
       0% { background-position: 0 0; }
       100% { background-position: 200% 0; }
     }
-    
-    @keyframes glow {
-      0%,100% {
-        transform: scale(1);
-        filter: drop-shadow(0 0 8px rgba(191,161,74,0.4));
-      }
-      50% {
-        transform: scale(1.04);
-        filter: drop-shadow(0 0 18px rgba(191,161,74,0.9));
-      }
-    }
+</style>
+
   </style>
 
 </body>
