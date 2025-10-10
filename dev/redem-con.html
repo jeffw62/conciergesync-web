@@ -356,17 +356,18 @@
   </div>
 
   <!-- ConciergeSync™ Spinner Bridge -->
-  <div id="spinner-overlay" class="spinner-overlay hidden">
-    <div class="spinner-card">
-      <img src="/dev/asset/CS_Logo_Spinner.svg" alt="ConciergeSync Spinner" class="spinner-logo" />
-      <div class="spinner-caption">
-        <p>
+  <div class="spinner-overlay active">
+    <div class="spinner-card bordered">
+      <div class="spinner-inner">
+        <img src="/dev/asset/CS_Logo_Spinner.svg" class="spinner-logo" alt="ConciergeSync Spinner" />
+        <p class="spinner-message">
           Preparing your personalized<br>
-          <span class="indent-line">ConciergeSync™ results...</span>
+          ConciergeSync™ results...
         </p>
       </div>
     </div>
   </div>
+
 
 <!-- your JS link -->
 <script src="/dev/js/redemption-module.js?v=121"></script>
@@ -453,14 +454,14 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 <!-- ========== END SCRIPT SECTION ========== -->
 
+  <!-- ConciergeSync™ Spinner Overlay : Gold-Border Luxury Card -->
   <style>
-  /* ---------- Spinner Overlay ---------- */
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500&display=swap');
+    
+    /* ---------- Overlay Container ---------- */
     .spinner-overlay {
       position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
+      inset: 0;
       background: rgba(10, 26, 51, 0.88);
       display: flex;
       justify-content: center;
@@ -470,78 +471,74 @@ document.addEventListener("DOMContentLoaded", () => {
       transition: opacity 0.4s ease, visibility 0.4s ease;
       z-index: 9999;
     }
-    
     .spinner-overlay.active {
       opacity: 1;
       visibility: visible;
     }
     
-    /* ---------- Spinner Card ---------- */
-    .spinner-card {
-      text-align: center;
-      font-family: "Segoe UI", -apple-system, Roboto, sans-serif;
-      color: #bfa14a;
+    /* ---------- Gold-Border Card ---------- */
+    .spinner-card.bordered {
+      position: relative;
+      padding: 3px; /* border thickness */
+      border-radius: 26px;
+      background: linear-gradient(135deg,
+        #d4b256 0%,
+        #f5e3a1 40%,
+        #d4b256 80%);
+      background-size: 200% auto;
+      animation: shimmer 4s linear infinite;
+      box-shadow:
+        0 0 20px rgba(191,161,74,0.25),
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        inset 0 -1px 2px rgba(0,0,0,0.4);
     }
     
-    /* ---------- Logo Glow ---------- */
+    /* ---------- Inner Navy Panel ---------- */
+    .spinner-inner {
+      background: #0a1a33;
+      border-radius: 22px;
+      padding: 48px 72px;
+      text-align: center;
+      min-width: 320px;
+    }
+    
+    /* ---------- Glowing ConciergeSync Logo ---------- */
     .spinner-logo {
-      width: 100px;
-      height: 100px;
-      animation: glow 2.4s ease-in-out infinite;
+      width: 110px;
+      height: 110px;
+      animation: glow 2.6s ease-in-out infinite;
       filter: drop-shadow(0 0 10px rgba(191,161,74,0.6));
+    }
+    
+    /* ---------- Elegant Message Text ---------- */
+    .spinner-message {
+      margin-top: 32px;
+      font-family: "Playfair Display", "Segoe UI", serif;
+      font-size: 1.3rem;
+      line-height: 1.6;
+      font-weight: 400;
+      letter-spacing: 0.3px;
+      color: #ffffff;
+      text-shadow: 0 0 8px rgba(255,255,255,0.25);
+    }
+    
+    /* ---------- Animations ---------- */
+    @keyframes shimmer {
+      0%   { background-position: 0 0; }
+      100% { background-position: 200% 0; }
     }
     
     @keyframes glow {
       0%, 100% {
-        filter: drop-shadow(0 0 8px rgba(191,161,74,0.3));
         transform: scale(1);
+        filter: drop-shadow(0 0 8px rgba(191,161,74,0.4));
       }
       50% {
+        transform: scale(1.04);
         filter: drop-shadow(0 0 18px rgba(191,161,74,0.9));
-        transform: scale(1.03);
       }
     }
-    
-    /* ---------- Embossed Caption Card ---------- */
-    .spinner-caption {
-      display: inline-block;
-      margin-top: 28px;
-      padding: 14px 28px;
-      border-radius: 14px;
-      background: linear-gradient(
-        145deg,
-        rgba(255, 215, 0, 0.08),
-        rgba(255, 215, 0, 0.02)
-      );
-      box-shadow:
-        inset 0 1px 0 rgba(255,255,255,0.15),
-        inset 0 -1px 2px rgba(0,0,0,0.4),
-        0 0 12px rgba(191,161,74,0.25);
-      border: 1px solid rgba(191,161,74,0.35);
-      text-align: center;
-      backdrop-filter: blur(4px);
-    }
-    
-    /* ---------- Caption Text ---------- */
-    .spinner-caption p {
-      margin: 0;
-      font-size: 1.05rem;
-      letter-spacing: 0.4px;
-      line-height: 1.5;
-      font-weight: 300;
-      color: #ffffff;
-      text-shadow: 0 0 6px rgba(255,255,255,0.3);
-      font-family: "Segoe UI", "Helvetica Neue", sans-serif;
-    }
-    
-    /* ---------- Indented Second Line ---------- */
-    .indent-line {
-      display: inline-block;
-      padding-left: 4em;
-    }
   </style>
-
-
 
 </body>
 </html>
