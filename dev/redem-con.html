@@ -359,10 +359,12 @@
   <div id="spinner-overlay" class="spinner-overlay hidden">
     <div class="spinner-card">
       <img src="/dev/asset/CS_Logo_Spinner.svg" alt="ConciergeSync Spinner" class="spinner-logo" />
-      <p class="spinner-text">
-        Preparing your personalized<br>
-        <span class="indent-line">ConciergeSync™ results...</span>
-      </p>
+      <div class="spinner-caption">
+        <p>
+          Preparing your personalized<br>
+          <span class="indent-line">ConciergeSync™ results...</span>
+        </p>
+      </div>
     </div>
   </div>
 
@@ -452,6 +454,7 @@ document.addEventListener("DOMContentLoaded", () => {
 <!-- ========== END SCRIPT SECTION ========== -->
 
   <style>
+  /* ---------- Spinner Overlay ---------- */
     .spinner-overlay {
       position: fixed;
       top: 0;
@@ -473,27 +476,14 @@ document.addEventListener("DOMContentLoaded", () => {
       visibility: visible;
     }
     
+    /* ---------- Spinner Card ---------- */
     .spinner-card {
       text-align: center;
+      font-family: "Segoe UI", -apple-system, Roboto, sans-serif;
       color: #bfa14a;
-      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
     }
-
-    .spinner-text {
-      margin-top: 16px;
-      font-size: 1.1rem;
-      letter-spacing: 0.4px;
-      font-weight: 400;
-      color: #ffffff; /* pure white */
-      text-shadow: 0 0 8px rgba(255,255,255,0.35);
-      font-family: "Segoe UI", "Helvetica Neue", sans-serif;
-      transition: opacity 0.4s ease;
-    }
-
-    .indent-line {
-      display: inline-block;
-      padding-left: 4em; /* tweak this for desired indent */
-    }
+    
+    /* ---------- Logo Glow ---------- */
     .spinner-logo {
       width: 100px;
       height: 100px;
@@ -506,13 +496,51 @@ document.addEventListener("DOMContentLoaded", () => {
         filter: drop-shadow(0 0 8px rgba(191,161,74,0.3));
         transform: scale(1);
       }
-
-    50% {
-      filter: drop-shadow(0 0 18px rgba(191,161,74,0.9));
-      transform: scale(1.03);
+      50% {
+        filter: drop-shadow(0 0 18px rgba(191,161,74,0.9));
+        transform: scale(1.03);
+      }
     }
-  }
+    
+    /* ---------- Embossed Caption Card ---------- */
+    .spinner-caption {
+      display: inline-block;
+      margin-top: 28px;
+      padding: 14px 28px;
+      border-radius: 14px;
+      background: linear-gradient(
+        145deg,
+        rgba(255, 215, 0, 0.08),
+        rgba(255, 215, 0, 0.02)
+      );
+      box-shadow:
+        inset 0 1px 0 rgba(255,255,255,0.15),
+        inset 0 -1px 2px rgba(0,0,0,0.4),
+        0 0 12px rgba(191,161,74,0.25);
+      border: 1px solid rgba(191,161,74,0.35);
+      text-align: center;
+      backdrop-filter: blur(4px);
+    }
+    
+    /* ---------- Caption Text ---------- */
+    .spinner-caption p {
+      margin: 0;
+      font-size: 1.05rem;
+      letter-spacing: 0.4px;
+      line-height: 1.5;
+      font-weight: 300;
+      color: #ffffff;
+      text-shadow: 0 0 6px rgba(255,255,255,0.3);
+      font-family: "Segoe UI", "Helvetica Neue", sans-serif;
+    }
+    
+    /* ---------- Indented Second Line ---------- */
+    .indent-line {
+      display: inline-block;
+      padding-left: 4em;
+    }
   </style>
+
 
 
 </body>
