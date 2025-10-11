@@ -488,13 +488,16 @@ document.addEventListener("DOMContentLoaded", () => {
     width: 100vw;
     height: 100vh;
     background: rgba(10, 26, 51, 0.75); /* softer fade */
-    display: flex;
+    display: none;             /* 🔹 hidden by default */
     justify-content: center;
     align-items: center;
-    z-index: 9990; /* fade layer */
+    z-index: 9990;             /* fade layer */
+    opacity: 0;                /* optional for transition smoothness */
+    transition: opacity 0.4s ease;
   }
   
   .spinner-overlay.active {
+    display: flex;             /* 🔹 becomes visible only when .active is added */
     opacity: 1;
     visibility: visible;
   }
@@ -541,27 +544,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
   <script>
     document.addEventListener("DOMContentLoaded", () => {
-      const searchBtn = document.querySelector("#search-btn");
+      const searchBtn = document.getElementById("search-btn");
       const spinner = document.getElementById("spinner-overlay");
     
       if (!searchBtn || !spinner) return;
     
-      // Hide overlay initially
-      spinner.style.display = "none";
+      // Ensure spinner starts hidden
+      spinner.classList.remove("active");
     
       searchBtn.addEventListener("click", (e) => {
-        e.preventDefault(); // prevents form auto-submit during test
-        // show overlay
-        spinner.style.display = "flex";
-        spinner.style.opacity = "1";
-    
-        // (optional temporary auto-hide for testing)
-        setTimeout(() => {
-          spinner.style.display = "none";
-        }, 3000);
+        e.preventDefault(); // stop any form submission or reload
+        spinner.classList.add("active");              // show overlay
+        setTimeout(() => spinner.classList.remove("active"), 3000); // temporary auto-hide for test
       });
     });
-  </script>
+</script>
 
 
 </body>
