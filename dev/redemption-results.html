@@ -76,11 +76,28 @@
     const searchRaw  = sessionStorage.getItem("latestRedemptionSearch");
     const resultsRaw = sessionStorage.getItem("latestRedemptionResults");
   
+    // Wait briefly for sessionStorage population (Render timing guard)
     if (!searchRaw || !resultsRaw) {
-      console.warn("No stored search data found — redirecting back to console.");
-      window.location.href = "/dev/redem-con.html";
-      return;
+      console.warn("No stored search data found yet — waiting briefly before redirect...");
+      for (let i = 0; i < 10; i++) {
+        await new Promise(r => setTimeout(r, 200)); // wait 200ms
+        const checkSearch  = sessionStorage.getItem("latestRedemptionSearch");
+        const checkResults = sessionStorage.getItem("latestRedemptionResults");
+        if (checkSearch && checkResults) {
+          searchRaw  = checkSearch;
+          resultsRaw = checkResults;
+          break;
+        }
+      }
+    
+      // after waiting, if still nothing, redirect
+      if (!searchRaw || !resultsRaw) {
+        console.warn("No stored search data found — redirecting back to console.");
+        window.location.href = "/dev/redem-con.html";
+        return;
+      }
     }
+
   
     // 🔹 2️⃣  Parse and stage for InfiniteSync™
     const searchData  = JSON.parse(searchRaw);
