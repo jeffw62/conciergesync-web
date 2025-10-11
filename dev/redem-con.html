@@ -539,6 +539,30 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 </style>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchBtn = document.querySelector("#search-btn");
+      const spinner = document.getElementById("spinner-overlay");
+    
+      if (!searchBtn || !spinner) return;
+    
+      // Hide overlay initially
+      spinner.style.display = "none";
+    
+      searchBtn.addEventListener("click", (e) => {
+        e.preventDefault(); // prevents form auto-submit during test
+        // show overlay
+        spinner.style.display = "flex";
+        spinner.style.opacity = "1";
+    
+        // (optional temporary auto-hide for testing)
+        setTimeout(() => {
+          spinner.style.display = "none";
+        }, 3000);
+      });
+    });
+  </script>
+
 
 </body>
 </html>
