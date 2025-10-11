@@ -542,24 +542,35 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 </style>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const searchBtn = document.getElementById("search-btn");
-      const spinner = document.getElementById("spinner-overlay");
-    
-      if (!searchBtn || !spinner) return;
-    
-      // Ensure spinner starts hidden
-      spinner.classList.remove("active");
-    
-      searchBtn.addEventListener("click", (e) => {
-        e.preventDefault(); // stop any form submission or reload
-        spinner.classList.add("active");              // show overlay
-        setTimeout(() => spinner.classList.remove("active"), 3000); // temporary auto-hide for test
-      });
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchBtn = document.getElementById("search-btn");
+    const spinner = document.getElementById("spinner-overlay");
+    const form = document.querySelector("#redemptionForm"); // outer form wrapper
+  
+    if (!searchBtn || !spinner || !form) return;
+  
+    searchBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+  
+      // 1️⃣ Gather form data for InfiniteSync™
+      const formData = Object.fromEntries(new FormData(form).entries());
+  
+      // 2️⃣ Bank locally so redemption-results.html can analyze
+      sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(formData));
+  
+      // 3️⃣ Begin UX transition
+      document.body.classList.add("fade-out"); // triggers form fade
+      spinner.classList.add("active");         // shows gold card overlay
+  
+      // 4️⃣ Short pause for animation before redirect
+      await new Promise(r => setTimeout(r, 2000));
+  
+      // 5️⃣ Navigate to results page (IS will read from sessionStorage)
+      window.location.href = "redemption-results.html";
     });
+  });
 </script>
-
 
 </body>
 </html>
