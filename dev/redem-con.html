@@ -376,76 +376,64 @@
   
 <!-- Step 1: Exact / Flexible toggle -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const exactBtn = document.getElementById("exactBtn");
-  const flexBtn = document.getElementById("flexBtn");
-  const flexPicker = document.getElementById("flexPicker");
-
-  if (!exactBtn || !flexBtn) return;
-
-  // Handle Exact Date
-  exactBtn.addEventListener("click", () => {
-    exactBtn.classList.add("active");
-    flexBtn.classList.remove("active");
-    if (flexPicker) flexPicker.style.display = "none";
+  document.addEventListener("DOMContentLoaded", () => {
+    const searchBtn = document.getElementById("searchBtn");   // ✅ matches your HTML id
+    const spinner   = document.getElementById("spinner-overlay");
+  
+    if (!searchBtn || !spinner) return;
+  
+    // ensure spinner hidden on load
+    spinner.classList.remove("active");
+  
+    // monitor button for when your existing logic enables it
+    const observer = new MutationObserver(() => {
+      if (!searchBtn.disabled) {
+        observer.disconnect();
+  
+        searchBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
+  
+          // show overlay + fade effect
+          spinner.classList.add("active");
+  
+          // gather form data for backend + IS
+          const payload = {
+            origin:        document.getElementById("origin")?.value || "",
+            destination:   document.getElementById("destination")?.value || "",
+            passengers:    document.getElementById("passengers")?.value || "1",
+            cabin:         document.getElementById("cabin")?.value || "Economy",
+            departDate:    document.getElementById("departDate")?.value || "",
+            returnDate:    document.getElementById("returnDate")?.value || "",
+            flexDays:      document.getElementById("flexDays")?.value || "0",
+            includePartners: document.getElementById("partnerSpace")?.checked || false
+          };
+  
+          try {
+            const res = await fetch("/api/search", {
+              method: "POST",
+              headers: { "Content-Type": "application/json" },
+              body: JSON.stringify(payload)
+            });
+            if (!res.ok) throw new Error("Search request failed");
+  
+            const data = await res.json();
+            sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data));
+            sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(payload));
+          } catch (err) {
+            console.error("Search error:", err);
+          }
+  
+          // short delay for fade before redirect
+          await new Promise(r => setTimeout(r, 1800));
+          window.location.href = "/dev/redemption-results.html";
+        });
+      }
+    });
+  
+    observer.observe(searchBtn, { attributes: true, attributeFilter: ["disabled"] });
   });
-
-  // Handle Flexible
-  flexBtn.addEventListener("click", () => {
-    flexBtn.classList.add("active");
-    exactBtn.classList.remove("active");
-    if (flexPicker) flexPicker.style.display = "block";
-  });
-});
 </script>
 
-<!-- Step 3: Search Handler -->
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  const searchBtn = document.getElementById("searchBtn");
-  if (!searchBtn) return;
-
-  searchBtn.addEventListener("click", async () => {
-    searchBtn.disabled = true;
-    searchBtn.textContent = "Searching…";
-
-    const payload = {
-      origin: document.getElementById("origin")?.value || "",
-      destination: document.getElementById("destination")?.value || "",
-      passengers: document.getElementById("passengers")?.value || "1",
-      cabin: document.getElementById("cabin")?.value || "Economy",
-      departDate: document.getElementById("departDate")?.value || "",
-      returnDate: document.getElementById("returnDate")?.value || "",
-      flexDays: document.getElementById("flexDays")?.value || "0",
-      includePartners: document.getElementById("partnerSpace")?.checked || false
-    };
-    console.log("Submitting search:", payload);
-
-    try {
-      const res = await fetch("/api/search", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
-      });
-      if (!res.ok) throw new Error("Search request failed");
-
-      const data = await res.json();
-      console.log("Search results:", data);
-
-      sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data));
-      console.log("sessionStorage write complete");
-
-      // Redirect disabled for now; uncomment when endpoint is ready
-      // window.location.href = "/dev/redemption-results.html";
-    } catch (err) {
-      console.error("Search error:", err);
-    } finally {
-      searchBtn.disabled = false;
-      searchBtn.textContent = "Search";
-    }
-  });
-});
-</script>
 <!-- ========== END SCRIPT SECTION ========== -->
 
 <!-- ConciergeSync™ Spinner Overlay : Gold-Border Luxury Card -->
