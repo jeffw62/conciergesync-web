@@ -416,17 +416,22 @@
             });
             if (!res.ok) throw new Error("Search request failed");
   
-            const data = await res.json();
-            sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data));
-            sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(payload));
-          } catch (err) {
-            console.error("Search error:", err);
-          }
-  
-          // short delay for fade before redirect
-          await new Promise(r => setTimeout(r, 1800));
-          window.location.href = "/dev/redemption-results.html";
-        });
+            // 🔹 ensure session writes complete before redirect
+            await Promise.all([
+              sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data)),
+              sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(payload))
+            ]);
+            
+            // 🔹 give visual animation time to settle
+            await new Promise(r => setTimeout(r, 2600));
+            
+            // 🔹 navigate once both storage + fade are done
+            window.location.assign("/dev/redemption-results.html");
+            
+            } catch (err) {
+              console.error("Search error:", err);
+            }
+          });
       }
     });
   
