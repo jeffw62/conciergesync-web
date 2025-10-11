@@ -350,7 +350,7 @@
 
         <!-- STEP 3 -->
         <h3 style="margin-top: 20px;">Step 3:&nbsp;Search</h3>
-        <button id="search-btn" class="search-btn" type="button">Search</button>
+        <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
         <p id="searchWarning" style="display: block;">Complete Step 2 to continue.</p>
       </div>
     </div>
@@ -542,43 +542,22 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 </style>
 
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const searchBtn = document.getElementById("search-btn");
-    const spinner = document.getElementById("spinner-overlay");
-    const formWrapper = document.querySelector("#redemptionForm") || document.body;
-  
-    if (!searchBtn || !spinner) return;
-  
-    // observe when the button becomes enabled
-    const observer = new MutationObserver(() => {
-      if (!searchBtn.disabled) {
-        // once enabled, attach the click handler (only once)
-        observer.disconnect();
-        searchBtn.addEventListener("click", async (e) => {
-          e.preventDefault();
-  
-          // gather field values
-          const inputs = formWrapper.querySelectorAll("input, select, textarea");
-          const formData = {};
-          inputs.forEach(el => (formData[el.name] = el.value));
-          sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(formData));
-  
-          // begin fade + overlay
-          document.body.classList.add("fade-out");
-          spinner.classList.add("active");
-  
-          // short pause before redirect
-          await new Promise(r => setTimeout(r, 2000));
-  
-          window.location.href = "redemption-results.html";
-        });
-      }
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchBtn = document.getElementById("search-btn");
+      const spinner = document.getElementById("spinner-overlay");
+    
+      if (!searchBtn || !spinner) return;
+    
+      // Ensure spinner starts hidden
+      spinner.classList.remove("active");
+    
+      searchBtn.addEventListener("click", (e) => {
+        e.preventDefault(); // stop any form submission or reload
+        spinner.classList.add("active");              // show overlay
+        setTimeout(() => spinner.classList.remove("active"), 3000); // temporary auto-hide for test
+      });
     });
-  
-    // watch for disabled → enabled transition
-    observer.observe(searchBtn, { attributes: true, attributeFilter: ["disabled"] });
-  });
 </script>
 
 
