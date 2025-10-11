@@ -480,17 +480,17 @@ document.addEventListener("DOMContentLoaded", () => {
     font-display: swap;
   }
   
-  /* ---------- Overlay ---------- */
+  /* ---------- Spinner Overlay ---------- */
   .spinner-overlay {
     position: fixed;
-    inset: 0;
-    background: rgba(10, 26, 51, 0.88);
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 26, 51, 0.75); /* softer fade */
     display: flex;
     justify-content: center;
     align-items: center;
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.4s ease, visibility 0.4s ease;
     z-index: 9990; /* fade layer */
   }
   
@@ -499,8 +499,12 @@ document.addEventListener("DOMContentLoaded", () => {
     visibility: visible;
   }
   
+  /* ---------- Gold Card ---------- */
   .gold-card {
-    position: relative;
+    position: absolute;          /* absolute so it can stack independently */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     width: 210px;
     height: 320px;
     background: url("/dev/assets/CS_logo_vert_gold_card.png") no-repeat center/cover;
@@ -508,28 +512,26 @@ document.addEventListener("DOMContentLoaded", () => {
     box-shadow:
       0 0 18px rgba(0,0,0,0.25),
       inset 0 1px 0 rgba(255,255,255,0.08);
+    z-index: 10000;              /* sits above fade */
     display: flex;
     justify-content: center;
-    align-items: flex-end;
-    padding-bottom: 50px;
-    z-index: 10000; /* make sure the card floats above everything */
+    align-items: flex-end;        /* text near bottom */
+    padding-bottom: 50px;         /* adjust vertical placement */
   }
   
-  /* ---------- ConciergeSync™ Gold Card Text ---------- */
+  /* ---------- Gold Card Text ---------- */
   .gold-card p {
-    font-family: "Cormorant Garamond", "Libre Baskerville", serif !important;
-    font-size: 1rem;
+    font-family: "Cormorant Garamond", "Libre Baskerville", serif;
     font-weight: 500;
+    font-size: 1rem;
     letter-spacing: 1.3px;
-    color: #0a1a33;                       /* ConciergeSync™ navy */
+    color: #0a1a33;
     text-align: center;
     text-shadow:
-      0 0.5px 0 rgba(255, 255, 255, 0.25),
-      0 -0.5px 0 rgba(0, 0, 0, 0.2);
-    mix-blend-mode: multiply;
-    opacity: 0.96;
+      0 0.8px 0 rgba(255,255,255,0.25),
+      0 -0.8px 0 rgba(0,0,0,0.2);
   }
-  
+
   /* ---------- Optional shimmer (for gold animation, if desired) ---------- */
   @keyframes shimmer {
     0% { background-position: 0 0; }
