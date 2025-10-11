@@ -507,28 +507,28 @@ document.addEventListener("DOMContentLoaded", () => {
     position: relative;
     width: 210px;
     height: 320px;
-    background: url("/dev/asset/CS_logo_vert_gold_card.png") no-repeat center/cover;
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;
-    padding-bottom: 120px;
-    border-radius: 16px;                  /* softened corners */
+    background: url("/dev/assets/CS_logo_vert_gold_card.png") no-repeat center/cover;
+    border-radius: 16px;
     box-shadow:
-      0 0 18px rgba(0, 0, 0, 0.25),      /* depth shadow */
-      inset 0 1px 0 rgba(255, 255, 255, 0.08); /* subtle rim sheen */
+      0 0 18px rgba(0,0,0,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+    display: flex;
+    justify-content: center;  /* keep it horizontally centered */
+    align-items: flex-end;    /* move content to the bottom */
+    padding-bottom: 50px;     /* adjust this to set exact height above bottom edge */
   }
   
   /* ---------- ConciergeSync™ Gold Card Text ---------- */
   .gold-card p {
-    font-family: "Cormorant Garamond", "Libre Baskerville", serif;
-    font-size: 0.95rem;
+    font-family: "Cormorant Garamond", "Libre Baskerville", serif !important;
+    font-size: 1rem;
     font-weight: 500;
-    letter-spacing: 1.2px;
+    letter-spacing: 1.3px;
     color: #0a1a33;                       /* ConciergeSync™ navy */
     text-align: center;
     text-shadow:
       0 0.5px 0 rgba(255, 255, 255, 0.25),
-      0 -0.5px 0 rgba(0, 0, 0, 0.1);
+      0 -0.5px 0 rgba(0, 0, 0, 0.2);
     mix-blend-mode: multiply;
     opacity: 0.96;
   }
