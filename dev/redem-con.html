@@ -491,14 +491,14 @@ document.addEventListener("DOMContentLoaded", () => {
     opacity: 0;
     visibility: hidden;
     transition: opacity 0.4s ease, visibility 0.4s ease;
-    z-index: 9999;
+    z-index: 9990; /* fade layer */
   }
+  
   .spinner-overlay.active {
     opacity: 1;
     visibility: visible;
   }
   
-  /* ---------- Gold Card ---------- */
   .gold-card {
     position: relative;
     width: 210px;
@@ -509,9 +509,10 @@ document.addEventListener("DOMContentLoaded", () => {
       0 0 18px rgba(0,0,0,0.25),
       inset 0 1px 0 rgba(255,255,255,0.08);
     display: flex;
-    justify-content: center;  /* keep it horizontally centered */
-    align-items: flex-end;    /* move content to the bottom */
-    padding-bottom: 50px;     /* adjust this to set exact height above bottom edge */
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 50px;
+    z-index: 10000; /* make sure the card floats above everything */
   }
   
   /* ---------- ConciergeSync™ Gold Card Text ---------- */
