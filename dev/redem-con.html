@@ -452,78 +452,94 @@ document.addEventListener("DOMContentLoaded", () => {
 </script>
 <!-- ========== END SCRIPT SECTION ========== -->
 
-  <!-- ConciergeSync™ Spinner Overlay : Gold-Border Luxury Card -->
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400&display=swap');
-    
-    /* ---------- Overlay ---------- */
-    .spinner-overlay {
-      position: fixed;
-      inset: 0;
-      background: rgba(10, 26, 51, 0.88);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.4s ease, visibility 0.4s ease;
-      z-index: 9999;
-    }
-    .spinner-overlay.active {
-      opacity: 1;
-      visibility: visible;
-    }
-    
-    .gold-card {
-      position: relative;
-      width: 210px;
-      height: 320px;
-      background: url('/dev/asset/CS_logo_vert_gold_card.png') no-repeat center/cover;
-      display: flex;
-      justify-content: center;
-      align-items: flex-end;
-      padding-bottom: 120px;
-      border-radius: 16px;          /* ✨ softened edges */
-      box-shadow:
-        0 0 18px rgba(0,0,0,0.25),  /* subtle depth shadow */
-        inset 0 1px 0 rgba(255,255,255,0.08); /* light rim sheen */
-    }
+<!-- ConciergeSync™ Spinner Overlay : Gold-Border Luxury Card -->
+<style>
+/* ---------- Self-Hosted ConciergeSync™ Fonts ---------- */
+  @font-face {
+    font-family: "Cormorant Garamond";
+    src: url("/dev/font/CormorantGaramond-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Cormorant Garamond";
+    src: url("/dev/font/CormorantGaramond-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Libre Baskerville";
+    src: url("/dev/font/LibreBaskerville-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Libre Baskerville";
+    src: url("/dev/font/LibreBaskerville-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  /* ---------- Overlay ---------- */
+  .spinner-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(10, 26, 51, 0.88);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.4s ease, visibility 0.4s ease;
+    z-index: 9999;
+  }
+  .spinner-overlay.active {
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* ---------- Gold Card ---------- */
+  .gold-card {
+    position: relative;
+    width: 210px;
+    height: 320px;
+    background: url("/dev/asset/CS_logo_vert_gold_card.png") no-repeat center/cover;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-bottom: 120px;
+    border-radius: 16px;                  /* softened corners */
+    box-shadow:
+      0 0 18px rgba(0, 0, 0, 0.25),      /* depth shadow */
+      inset 0 1px 0 rgba(255, 255, 255, 0.08); /* subtle rim sheen */
+  }
+  
+  /* ---------- ConciergeSync™ Gold Card Text ---------- */
+  .gold-card p {
+    font-family: "Cormorant Garamond", "Libre Baskerville", serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    letter-spacing: 1.2px;
+    color: #0a1a33;                       /* ConciergeSync™ navy */
+    text-align: center;
+    text-shadow:
+      0 0.5px 0 rgba(255, 255, 255, 0.25),
+      0 -0.5px 0 rgba(0, 0, 0, 0.1);
+    mix-blend-mode: multiply;
+    opacity: 0.96;
+  }
+  
+  /* ---------- Optional shimmer (for gold animation, if desired) ---------- */
+  @keyframes shimmer {
+    0% { background-position: 0 0; }
+    100% { background-position: 200% 0; }
+  }
+</style>
 
-    /* ---------- ConciergeSync™ Gold Card Text ---------- */
-    .spinner-overlay .gold-card p {
-      font-family: "Cormorant Garamond", "Georgia", serif !important;
-      font-size: 0.95rem !important;
-      font-weight: 500 !important;
-      letter-spacing: 1.2px !important;
-      color: #0a1a33 !important; /* ConciergeSync™ navy */
-      text-align: center !important;
-      text-shadow:
-        0 0.5px 0 rgba(255,255,255,0.25),
-        0 -0.5px 0 rgba(0,0,0,0.1) !important;
-      mix-blend-mode: multiply !important;
-      opacity: 0.96 !important;
-    }
-    
-    /* ---------- Refined Message Text ---------- */
-    .spinner-message {
-      margin-top: 40px;
-      font-family: "Libre Baskerville", "Georgia", serif;
-      font-size: 1rem;             /* ↓ smaller for space */
-      letter-spacing: 1.4px;       /* ↑ relaxed spacing */
-      line-height: 1.5;
-      font-weight: 400;
-      color: #f5f5f5;
-      text-shadow: 0 0 6px rgba(255,255,255,0.15);
-      text-align: center;
-      white-space: nowrap;         /* keeps single line */
-    }
-    
-    /* ---------- Animations ---------- */
-    @keyframes shimmer {
-      0% { background-position: 0 0; }
-      100% { background-position: 200% 0; }
-    }
-  </style>
 
 </body>
 </html>
