@@ -69,6 +69,47 @@
     <img src="/dev/asset/CS_Logo_v1.svg" alt="InfiniteSync Logo">
     <h2>Redemption Results</h2>
   </div>
+  
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // 🔹 1️⃣  Retrieve what redem-con.html banked
+    const searchRaw  = sessionStorage.getItem("latestRedemptionSearch");
+    const resultsRaw = sessionStorage.getItem("latestRedemptionResults");
+  
+    if (!searchRaw || !resultsRaw) {
+      console.warn("No stored search data found — redirecting back to console.");
+      window.location.href = "/dev/redem-con.html";
+      return;
+    }
+  
+    // 🔹 2️⃣  Parse and stage for InfiniteSync™
+    const searchData  = JSON.parse(searchRaw);
+    const resultsData = JSON.parse(resultsRaw);
+  
+    window.IS = window.IS || {};
+    IS.currentSearch = searchData;
+    IS.currentResults = resultsData;
+  
+    console.log("🔍 IS handoff ready:", { searchData, resultsData });
+  
+    // 🔹 3️⃣  Optional placeholder: render minimal summary
+    const summary = document.getElementById("results-summary");
+    if (summary) {
+      summary.innerHTML = `
+        <p><strong>Route:</strong> ${searchData.origin} → ${searchData.destination}</p>
+        <p><strong>Depart:</strong> ${searchData.departDate}</p>
+        <p><strong>Passengers:</strong> ${searchData.passengers}</p>
+      `;
+    }
+  
+    // 🔹 4️⃣  Hand off to InfiniteSync™ analyzer (placeholder hook)
+    if (typeof IS.analyzeRedemptions === "function") {
+      IS.analyzeRedemptions(resultsData, searchData);
+    } else {
+      console.log("IS analyzer not yet loaded — data staged successfully.");
+    }
+  });
+</script>
 
   <table id="resultsTable">
     <thead>
