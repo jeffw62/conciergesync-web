@@ -350,7 +350,7 @@
 
         <!-- STEP 3 -->
         <h3 style="margin-top: 20px;">Step 3:&nbsp;Search</h3>
-        <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
+        <button id="search-btn" class="search-btn" type="button">Search</button>
         <p id="searchWarning" style="display: block;">Complete Step 2 to continue.</p>
       </div>
     </div>
@@ -546,31 +546,41 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("DOMContentLoaded", () => {
     const searchBtn = document.getElementById("search-btn");
     const spinner = document.getElementById("spinner-overlay");
-    const form = document.querySelector("#redemptionForm"); // outer form wrapper
+    const formWrapper = document.querySelector("#redemptionForm") || document.body;
   
-    if (!searchBtn || !spinner || !form) return;
+    if (!searchBtn || !spinner) return;
   
-    searchBtn.addEventListener("click", async (e) => {
-      e.preventDefault();
+    // observe when the button becomes enabled
+    const observer = new MutationObserver(() => {
+      if (!searchBtn.disabled) {
+        // once enabled, attach the click handler (only once)
+        observer.disconnect();
+        searchBtn.addEventListener("click", async (e) => {
+          e.preventDefault();
   
-      // 1️⃣ Gather form data for InfiniteSync™
-      const formData = Object.fromEntries(new FormData(form).entries());
+          // gather field values
+          const inputs = formWrapper.querySelectorAll("input, select, textarea");
+          const formData = {};
+          inputs.forEach(el => (formData[el.name] = el.value));
+          sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(formData));
   
-      // 2️⃣ Bank locally so redemption-results.html can analyze
-      sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(formData));
+          // begin fade + overlay
+          document.body.classList.add("fade-out");
+          spinner.classList.add("active");
   
-      // 3️⃣ Begin UX transition
-      document.body.classList.add("fade-out"); // triggers form fade
-      spinner.classList.add("active");         // shows gold card overlay
+          // short pause before redirect
+          await new Promise(r => setTimeout(r, 2000));
   
-      // 4️⃣ Short pause for animation before redirect
-      await new Promise(r => setTimeout(r, 2000));
-  
-      // 5️⃣ Navigate to results page (IS will read from sessionStorage)
-      window.location.href = "redemption-results.html";
+          window.location.href = "redemption-results.html";
+        });
+      }
     });
+  
+    // watch for disabled → enabled transition
+    observer.observe(searchBtn, { attributes: true, attributeFilter: ["disabled"] });
   });
 </script>
+
 
 </body>
 </html>
