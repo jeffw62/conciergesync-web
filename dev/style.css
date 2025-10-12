@@ -211,6 +211,10 @@ footer * {
   display: flex;
   align-items: center;
   justify-content: center;
+
+  /* make the form occupy vertical space so flex-centering works */
+  min-height: 80vh;   /* 80 % of the viewport height */
+  width: 100%;
 }
 
 @media (max-width: 760px) {
