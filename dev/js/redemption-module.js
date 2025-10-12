@@ -19,6 +19,18 @@ function setupRedemptionModule() {
   if (window._redemptionInitialized) return;
   window._redemptionInitialized = true;
   console.log("💗 Redemption module initializing...");
+
+  // --- Ensure redemption form centers spinner bridge correctly ---
+  const centerFixStyle = document.createElement("style");
+  centerFixStyle.textContent = `
+    #redemption-form {
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+  `;
+  document.head.appendChild(centerFixStyle);
   
   // === ConciergeSync™ Spinner Bridge + Gold Card Overlay ===
     const spinnerBridge = document.createElement("div");
