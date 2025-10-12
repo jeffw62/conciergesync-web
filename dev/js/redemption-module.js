@@ -64,31 +64,41 @@ function setupRedemptionModule() {
   });
   goldCard.appendChild(cardImg);
   
-  // === Scoped shimmer overlay (locked to card bounds) ===
+  // === Scoped shimmer overlay (perfectly aligned to gold card) ===
   const shimmer = document.createElement("div");
   shimmer.id = "shimmer-overlay";
   Object.assign(shimmer.style, {
     position: "absolute",
     top: "0",
     left: "0",
-    right: "0",
-    bottom: "0",
+    width: "100%",
+    height: "100%",
     background:
-      "linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.5) 35%, rgba(255,255,255,0.65) 50%, transparent 65%)",
-    backgroundSize: "120% 100%",
+      "linear-gradient(100deg, transparent 10%, rgba(255,255,255,0.55) 48%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0.55) 52%, transparent 90%)",
+    backgroundRepeat: "no-repeat",
+    backgroundSize: "200% 100%",
+    backgroundPosition: "-100% 0", // start completely off left edge
     mixBlendMode: "overlay",
     animation: "shimmerMove 3.2s ease-in-out infinite",
     pointerEvents: "none",
-    overflow: "hidden",
-    borderRadius: "8px"
+    borderRadius: "8px",
+    overflow: "hidden"
   });
   
-  // ensure shimmer alignment relative to card, not bridge
   goldCard.style.position = "relative";
-  goldCard.style.display = "inline-block";
   goldCard.style.overflow = "hidden";
-  
   goldCard.appendChild(shimmer);
+  
+  // === Keyframes tuned to card width ===
+  const shimmerStyle = document.createElement("style");
+  shimmerStyle.textContent = `
+  @keyframes shimmerMove {
+    0%   { background-position: -100% 0; }
+    50%  { background-position: 0% 0; }
+    100% { background-position: 100% 0; }
+  }`;
+  document.head.appendChild(shimmerStyle);
+
   
   // === Keyframes for shimmer ===
   const shimmerStyle = document.createElement("style");
