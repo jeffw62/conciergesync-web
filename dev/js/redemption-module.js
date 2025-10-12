@@ -64,7 +64,7 @@ function setupRedemptionModule() {
   });
   goldCard.appendChild(cardImg);
   
-  // === Scoped shimmer overlay (baseline reset) ===
+  // === Scoped shimmer overlay (baseline reset with containment timing) ===
   const shimmer = document.createElement("div");
   shimmer.id = "shimmer-overlay";
   Object.assign(shimmer.style, {
@@ -79,7 +79,8 @@ function setupRedemptionModule() {
     backgroundSize: "200% 100%",
     backgroundPosition: "-100% 0",
     mixBlendMode: "overlay",
-    animation: "shimmerMove 3.2s ease-in-out infinite",
+    /* pause animation until card is ready */
+    animation: "none",
     pointerEvents: "none",
     borderRadius: "8px",
     overflow: "hidden",
@@ -90,6 +91,11 @@ function setupRedemptionModule() {
   goldCard.style.position = "relative";
   goldCard.style.overflow = "hidden";
   goldCard.appendChild(shimmer);
+  
+  /* ➤ start shimmer only after goldCard is fully in DOM */
+  requestAnimationFrame(() => {
+    shimmer.style.animation = "shimmerMove 3.2s ease-in-out infinite";
+  });
   
   // === Keyframes (single global instance) ===
   (() => {
@@ -108,6 +114,7 @@ function setupRedemptionModule() {
     }
     styleEl.textContent = css;
   })();
+
 
   
   // === Add bridge & card to DOM ===
