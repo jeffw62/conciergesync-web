@@ -55,7 +55,7 @@ function setupRedemptionModule() {
   cardImg.src = "/dev/asset/CS_logo_vert_gold_card.png";
   cardImg.alt = "ConciergeSync™ Gold Card";
   Object.assign(cardImg.style, {
-    width: "100%",
+    width: "260px",    // final visible width ≈ two-thirds of previous size
     height: "auto",
     display: "block"
   });
@@ -89,6 +89,25 @@ function setupRedemptionModule() {
   spinnerBridge.appendChild(goldCard);
   document.body.appendChild(spinnerBridge);
   console.log("✅ Spinner bridge & gold card injected");
+
+  // === Fade-out and cleanup for Spinner Bridge ===
+  const fadeOutBridge = () => {
+    spinnerBridge.style.transition = "opacity 0.8s ease-in-out";
+    spinnerBridge.style.opacity = "0";
+    setTimeout(() => {
+      if (spinnerBridge.parentElement) spinnerBridge.remove();
+    }, 800);
+  };
+  
+  // Watch for the redemption form returning
+  const observer = new MutationObserver(() => {
+    const form = document.querySelector("#redemption-form");
+    if (form && form.style.display !== "none") {
+      fadeOutBridge();
+      observer.disconnect();
+    }
+  });
+  observer.observe(document.body, { attributes: true, childList: true, subtree: true });
   
   // --- Continue normal initialization ---
   loadAirports(); // fetch airport list
