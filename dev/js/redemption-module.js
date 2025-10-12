@@ -64,37 +64,38 @@ function setupRedemptionModule() {
   });
   goldCard.appendChild(cardImg);
   
-  // === Scoped shimmer overlay (baseline reset with containment timing) ===
-  const shimmer = document.createElement("div");
-  shimmer.id = "shimmer-overlay";
-  Object.assign(shimmer.style, {
-    position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
-    background:
-      "linear-gradient(100deg, transparent 10%, rgba(255,255,255,0.55) 48%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0.55) 52%, transparent 90%)",
-    backgroundRepeat: "no-repeat",
-    backgroundSize: "200% 100%",
-    backgroundPosition: "-100% 0",
-    mixBlendMode: "overlay",
-    /* pause animation until card is ready */
-    animation: "none",
-    pointerEvents: "none",
-    borderRadius: "8px",
-    overflow: "hidden",
-    zIndex: 2
-  });
+  // === Scoped shimmer overlay (stable containment) ===
+  function attachShimmer() {
+    const shimmer = document.createElement("div");
+    shimmer.id = "shimmer-overlay";
+    Object.assign(shimmer.style, {
+      position: "absolute",
+      top: "0",
+      left: "0",
+      width: "100%",
+      height: "100%",
+      background:
+        "linear-gradient(100deg, transparent 10%, rgba(255,255,255,0.55) 48%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0.55) 52%, transparent 90%)",
+      backgroundRepeat: "no-repeat",
+      backgroundSize: "200% 100%",
+      backgroundPosition: "-100% 0",
+      mixBlendMode: "overlay",
+      animation: "shimmerMove 3.2s ease-in-out infinite",
+      pointerEvents: "none",
+      borderRadius: "8px",
+      overflow: "hidden",
+      zIndex: 2
+    });
+    goldCard.appendChild(shimmer);
+  }
   
-  // ensure shimmer is positioned relative to card only
+  // ensure shimmer alignment relative to card only
   goldCard.style.position = "relative";
   goldCard.style.overflow = "hidden";
-  goldCard.appendChild(shimmer);
   
-  /* ➤ start shimmer only after goldCard is fully in DOM */
+  // wait for card to be painted, then attach shimmer
   requestAnimationFrame(() => {
-    shimmer.style.animation = "shimmerMove 3.2s ease-in-out infinite";
+    setTimeout(attachShimmer, 300); // delay guarantees card is visible
   });
   
   // === Keyframes (single global instance) ===
@@ -114,8 +115,6 @@ function setupRedemptionModule() {
     }
     styleEl.textContent = css;
   })();
-
-
   
   // === Add bridge & card to DOM ===
   spinnerBridge.appendChild(goldCard);
