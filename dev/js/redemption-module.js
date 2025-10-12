@@ -74,12 +74,12 @@ function setupRedemptionModule() {
     width: "100%",
     height: "100%",
     background:
-      "linear-gradient(100deg, transparent 20%, rgba(255,255,255,0.6) 47%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0.6) 53%, transparent 80%)",
+      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.65) 44%, rgba(255,255,255,0.8) 48%, rgba(255,255,255,0.65) 52%, transparent 100%)",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "140% 100%",   // tighter sweep
-    backgroundPosition: "-40% 0",  // centers gradient start
+    backgroundSize: "100% 100%",
+    backgroundPosition: "-50% 0", // begin well inside card edge
     mixBlendMode: "overlay",
-    animation: "shimmerMove 3.2s ease-in-out infinite",
+    animation: "shimmerMove 3s ease-in-out infinite",
     pointerEvents: "none",
     borderRadius: "8px",
     overflow: "hidden"
@@ -97,8 +97,8 @@ function setupRedemptionModule() {
     let styleEl = document.getElementById(styleId);
     const keyframes = `
       @keyframes shimmerMove {
-        0%   { background-position: -40% 0; }
-        100% { background-position: 40% 0; }
+        0%   { background-position: -50% 0; }
+        100% { background-position: 50% 0; }
       }`;
   
     if (styleEl) {
