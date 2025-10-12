@@ -38,6 +38,26 @@ function setupRedemptionModule() {
     overflow: "hidden"
   });
 
+  // --- Center spinner bridge within the search form ---
+  const formContainer = document.querySelector("#redemption-form");
+  if (formContainer) {
+    formContainer.style.position = "relative";
+    formContainer.style.display = "flex";
+    formContainer.style.alignItems = "center";
+    formContainer.style.justifyContent = "center";
+  
+    spinnerBridge.style.position = "absolute";
+    spinnerBridge.style.inset = 0;
+    spinnerBridge.style.display = "flex";
+    spinnerBridge.style.alignItems = "center";
+    spinnerBridge.style.justifyContent = "center";
+  
+    formContainer.appendChild(spinnerBridge);
+  } else {
+    // fallback if form not found
+    document.body.appendChild(spinnerBridge);
+  }
+
   // === attach bridge inside search form container ===
   const formContainer = document.querySelector("#redemption-form");
   if (formContainer) {
