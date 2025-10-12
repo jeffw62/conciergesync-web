@@ -97,8 +97,9 @@ function setupRedemptionModule() {
     let styleEl = document.getElementById(styleId);
     const keyframes = `
       @keyframes shimmerMove {
-        0%   { background-position: -50% 0; }
-        100% { background-position: 50% 0; }
+        0%   { background-position: -100% 0; }
+        50%  { background-position: 0% 0; }
+        100% { background-position: 100% 0; }
       }`;
   
     if (styleEl) {
