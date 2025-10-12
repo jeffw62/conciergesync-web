@@ -39,12 +39,12 @@ function setupRedemptionModule() {
   });
 
   // --- Center spinner bridge within the search form ---
-  formContainer = document.querySelector("#redemption-form");
-  if (formContainer) {
-    formContainer.style.position = "relative";
-    formContainer.style.display = "flex";
-    formContainer.style.alignItems = "center";
-    formContainer.style.justifyContent = "center";
+  const formContainerCenter = document.querySelector("#redemption-form");
+  if (formContainerCenter) {
+    formContainerCenter.style.position = "relative";
+    formContainerCenter.style.display = "flex";
+    formContainerCenter.style.alignItems = "center";
+    formContainerCenter.style.justifyContent = "center";
   
     spinnerBridge.style.position = "absolute";
     spinnerBridge.style.inset = 0;
@@ -52,7 +52,7 @@ function setupRedemptionModule() {
     spinnerBridge.style.alignItems = "center";
     spinnerBridge.style.justifyContent = "center";
   
-    formContainer.appendChild(spinnerBridge);
+    formContainerCenter.appendChild(spinnerBridge);
   } else {
     // fallback if form not found
     document.body.appendChild(spinnerBridge);
