@@ -205,8 +205,17 @@ footer * {
    color: #111; /* deep gray/black text inside white cards */
 }
 
+/* Center the spinner bridge and card inside the search form */
+#redemption-form {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 @media (max-width: 760px) {
   .search-panel {
     grid-template-columns: 1fr;
   }
 }
+
