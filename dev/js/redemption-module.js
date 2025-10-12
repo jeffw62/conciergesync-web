@@ -21,20 +21,29 @@ function setupRedemptionModule() {
   console.log("💗 Redemption module initializing...");
   
   // === ConciergeSync™ Spinner Bridge + Gold Card Overlay ===
-  const spinnerBridge = document.createElement("div");
-  spinnerBridge.id = "spinner-bridge";
   Object.assign(spinnerBridge.style, {
-    position: "fixed",
+    position: "absolute",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     top: 0,
     left: 0,
     width: "100%",
     height: "100%",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     background: "rgba(10,26,51,0.85)",
-    zIndex: 9998
+    zIndex: 9998,
+    overflow: "hidden"
   });
+
+  // === attach bridge inside search form container ===
+  const formContainer = document.querySelector("#redemption-form");
+  if (formContainer) {
+    formContainer.style.position = "relative";
+    formContainer.appendChild(spinnerBridge);
+  } else {
+    // fallback: full-screen center
+    document.body.appendChild(spinnerBridge);
+  }
   
   // === Gold Card ===
   const goldCard = document.createElement("div");
