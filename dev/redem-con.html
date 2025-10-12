@@ -535,24 +535,6 @@
   }
 </style>
 
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const searchBtn = document.getElementById("search-btn");
-      const spinner = document.getElementById("spinner-overlay");
-    
-      if (!searchBtn || !spinner) return;
-    
-      // Ensure spinner starts hidden
-      spinner.classList.remove("active");
-    
-      searchBtn.addEventListener("click", (e) => {
-        e.preventDefault(); // stop any form submission or reload
-        spinner.classList.add("active");              // show overlay
-        setTimeout(() => spinner.classList.remove("active"), 3000); // temporary auto-hide for test
-      });
-    });
-</script>
-
 <script>
   function showGoldCard() {
     const spinner = document.getElementById("spinner-overlay");
