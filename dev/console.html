@@ -606,31 +606,39 @@ document.querySelectorAll(".nav-link").forEach(link => {
       let html = "";
 
       if (page === "redemptions") {
-        const res = await fetch("/dev/redem-con.html");
-        html = await res.text();
-        workspace.innerHTML = html;
-
-        // Load Redemption module script only when needed
-        const redemptionScript = document.createElement("script");
-        redemptionScript.src = "/dev/js/redemption-module.js";
-        redemptionScript.onload = () => {
-          // Wait until workspace DOM has finished parsing before checking helper
-          requestAnimationFrame(() => {
-            setTimeout(() => {
-              if (typeof window.showGoldCard === "function") {
-                window.showGoldCard();
-              } else {
-                console.warn("Gold card helper still not loaded after workspace parse.");
-              }
-        
-              // continue normal module init
-              if (typeof initRedemptionModule === "function") initRedemptionModule();
-            }, 800); // short post-load buffer
-          });
-        };
-        document.body.appendChild(redemptionScript);
-
-      }
+      const res = await fetch("/dev/redem-con.html");
+      html = await res.text();
+      workspace.innerHTML = html;
+    
+      // --- run any inline scripts contained in the loaded HTML ---
+      workspace.querySelectorAll("script").forEach(oldScript => {
+        const newScript = document.createElement("script");
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        } else {
+          newScript.textContent = oldScript.textContent;
+        }
+        document.body.appendChild(newScript);
+        oldScript.remove();
+      });
+    
+      // --- trigger the gold card reveal after scripts execute ---
+      setTimeout(() => {
+        if (typeof window.showGoldCard === "function") {
+          window.showGoldCard();
+        } else {
+          console.warn("Gold card helper not found even after script execution.");
+        }
+      }, 600);
+    
+      // Load Redemption module script only when needed
+      const redemptionScript = document.createElement("script");
+      redemptionScript.src = "/dev/js/redemption-module.js";
+      redemptionScript.onload = () => {
+        if (typeof initRedemptionModule === "function") initRedemptionModule();
+      };
+      document.body.appendChild(redemptionScript);
+    }
 
       else if (page === "wallet") {
         const res = await fetch("/dev/wallet-con.html");
