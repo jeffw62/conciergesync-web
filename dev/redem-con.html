@@ -528,6 +528,11 @@
       0 -0.8px 0 rgba(0,0,0,0.2);
   }
 
+  .spinner-overlay {
+    ...
+    transition: opacity 1s ease;
+  }
+
   /* ---------- Optional shimmer (for gold animation, if desired) ---------- */
   @keyframes shimmer {
     0% { background-position: 0 0; }
@@ -537,28 +542,30 @@
 
 <script>
   function showGoldCard() {
-    const spinner = document.getElementById("spinner-overlay");
-    const wrapper = document.querySelector(".search-wrapper");
-  
-    if (!spinner || !wrapper) return;
-  
-    // fade form out
-    wrapper.style.transition = "opacity 0.6s ease";
-    wrapper.style.opacity = "0";
-  
-    // show overlay
+  const spinner = document.getElementById("spinner-overlay");
+  const wrapper = document.querySelector(".search-wrapper");
+
+  if (!spinner || !wrapper) return;
+
+  // fade form out
+  wrapper.style.transition = "opacity 1.2s ease";   // slower fade
+  wrapper.style.opacity = "0";
+
+  // show overlay with a slight delay for smoother handoff
+  setTimeout(() => {
     spinner.classList.add("active");
-  
-    // hide overlay after 2s (visual only)
-    setTimeout(() => {
-      spinner.classList.remove("active");
-      wrapper.style.opacity = "1"; // reset form for next load
-    }, 2000);
-  }
+  }, 300);
 
-  window.showGoldCard = showGoldCard;
+  // keep overlay visible a bit longer, then fade it out
+  setTimeout(() => {
+    spinner.classList.remove("active");
+    wrapper.style.opacity = "1"; // fade form back in
+  }, 3200);
+}
+
+window.showGoldCard = showGoldCard;
+
 </script>
-
 
 </body>
 </html>
