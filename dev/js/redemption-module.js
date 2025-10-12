@@ -68,20 +68,22 @@ function setupRedemptionModule() {
     position: "absolute",
     inset: 0,
     background:
-      "linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%)",
-    backgroundSize: "200% 100%",
+      "linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.55) 45%, transparent 90%)",
+    backgroundSize: "150% 100%",
     mixBlendMode: "overlay",
-    animation: "shimmerMove 2.5s linear infinite",
-    pointerEvents: "none"
+    animation: "shimmerMove 2.8s linear infinite",
+    pointerEvents: "none",
+    overflow: "hidden",
+    borderRadius: "8px"
   });
   goldCard.appendChild(shimmer);
   
   // === Keyframes for shimmer ===
   const shimmerStyle = document.createElement("style");
   shimmerStyle.textContent = `
-  @keyframes shimmerMove {
-    0% { background-position: 200% 0; }
-    100% { background-position: -200% 0; }
+    @keyframes shimmerMove {
+    0% { background-position: 150% 0; }
+    100% { background-position: -150% 0; }
   }`;
   document.head.appendChild(shimmerStyle);
   
