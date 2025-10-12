@@ -3,184 +3,563 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ConciergeSync™ – Redemption Results</title>
+  <title>ConciergeSync™ – Redemption Console</title>
 
   <style>
+
+    /* ========================
+       CORE BASELINE STYLES
+    ========================= */
     body {
-      font-family: system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
       margin: 0;
       padding: 0;
-      background-color: #f8f8f8;
-      color: #222;
-      text-align: center;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background-color: #0a1a33;
+      color: #111;
     }
 
-    .hero {
-      margin-top: 50px;
-    }
-
-    .hero img {
-      width: 160px;
-      opacity: 0.9;
-    }
-
-    h2 {
-      font-weight: 600;
-      margin-top: 16px;
-      color: #a47e3c; /* gold tone */
-    }
-
-    table {
-      border-collapse: collapse;
+    .search-wrapper {
+      max-width: 700px;
       margin: 40px auto;
-      width: 85%;
       background: #fff;
-      border-radius: 8px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      padding: 28px 32px 32px;
     }
 
-    th, td {
-      border: 1px solid #ddd;
-      padding: 10px 12px;
-      text-align: center;
+    .search-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #bfa14a;
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 7px 9px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      color: #111;
+      background: #fff;
+      box-sizing: border-box;
+    }
+
+    /* Two-field row pairs */
+    .inline-fields {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .inline-fields .field {
+      flex: 1 1 48%;
+    }
+
+    /* Exact / Flexible buttons */
+    .card-options {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+
+    .option-btn {
+      flex: 1 1 48%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 10px;
+      background: #f7f7f7;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .option-btn.active {
+      background: #bfa14a;
+      border-color: #bfa14a;
+      color: #fff;
+    }
+
+    .option-btn:hover {
+      background: #d6b658;
+      color: #fff;
+      border-color: #d6b658;
+    }
+
+    /* Checkbox row */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 8px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #bfa14a;
+      cursor: pointer;
+    }
+
+    .checkbox-row label {
+      font-size: 0.9rem;
+      color: #111;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    small.hint {
+      display: block;
+      font-size: 0.85rem;
       color: #333;
+      margin-top: 4px;
     }
 
-    th {
-      background-color: #f1e9da;
-      color: #6a4b00;
+    /* Step 2 + Step 3 */
+    .toggle-group {
+      display: inline-flex;
+      gap: 6px;
+      margin-bottom: 10px;
     }
 
-    .placeholder {
-      margin-top: 20px;
-      color: #777;
-      font-size: 15px;
+    .toggle-group button {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #f7f7f7;
+      cursor: pointer;
+      transition: 0.25s ease;
     }
 
-    .footer {
-      margin: 40px auto;
-      color: #777;
-      font-size: 13px;
+    .toggle-group button.active,
+    .toggle-group button:hover {
+      background: #bfa14a;
+      color: #fff;
+      border-color: #bfa14a;
     }
+
+    /* dim default (disabled) */
+    .search-btn {
+      width: 100%;
+      background: #e0cf9f;       /* pale gold */
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 1rem;
+      cursor: not-allowed;
+      opacity: 0.7;
+      transition: all 0.25s ease;
+    }
+    
+    /* bold active (enabled) */
+    .search-btn:enabled {
+      cursor: pointer;
+      background: #bfa14a;       /* strong gold */
+      box-shadow: 0 0 8px rgba(191,161,74,0.4);
+      opacity: 1;
+      transition: background-color 0.25s ease, opacity 0.25s ease;
+    }
+    
+    /* optional hover pop */
+    .search-btn:enabled:hover {
+      background: #d6b658;       /* slightly brighter on hover */
+    }
+
+    #searchWarning {
+      font-size: 0.85rem;
+      color: #a00;
+      margin-top: 6px;
+    }
+
+    /* Responsive collapse */
+    @media (max-width: 760px) {
+      .search-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .suggestions {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      max-height: 140px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      margin-top: 2px;
+      z-index: 100;
+    }
+    .suggestions div {
+      padding: 6px 8px;
+      cursor: pointer;
+    }
+    .suggestions div:hover {
+      background: #f5f5f5;
+    }
+
   </style>
 </head>
-<body>
-  <div class="hero">
-    <img src="/dev/asset/CS_Logo_v1.svg" alt="InfiniteSync Logo">
-    <h2>Redemption Results</h2>
-  </div>
-  
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // 🔹 1️⃣  Retrieve what redem-con.html banked
-    const searchRaw  = sessionStorage.getItem("latestRedemptionSearch");
-    const resultsRaw = sessionStorage.getItem("latestRedemptionResults");
-  
-    // Wait briefly for sessionStorage population (Render timing guard)
-    if (!searchRaw || !resultsRaw) {
-      console.warn("No stored search data found yet — waiting briefly before redirect...");
-      for (let i = 0; i < 10; i++) {
-        await new Promise(r => setTimeout(r, 200)); // wait 200ms
-        const checkSearch  = sessionStorage.getItem("latestRedemptionSearch");
-        const checkResults = sessionStorage.getItem("latestRedemptionResults");
-        if (checkSearch && checkResults) {
-          searchRaw  = checkSearch;
-          resultsRaw = checkResults;
-          break;
-        }
-      }
-    
-      // after waiting, if still nothing, redirect
-      if (!searchRaw || !resultsRaw) {
-        console.warn("No stored search data found — redirecting back to console.");
-        window.location.href = "/dev/redem-con.html";
-        return;
-      }
-    }
 
+<body>
+  <div class="search-wrapper">
+    <div class="search-panel" id="searchPanel">
+
+      <!-- STEP 1 -->
+      <div class="step">
+        <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
+
+        <!-- Origin / Destination -->
+        <div class="inline-fields">
+          <div class="field">
+            <label for="origin">Origin</label>
+            <input type="text" id="origin" placeholder="e.g. DFW" />
+            <!-- this div gives JS a place to inject dropdown options -->
+            <div id="origin-suggestions" class="suggestions"></div>
+          </div>
+          <div class="field">
+            <label for="destination">Destination</label>
+            <input type="text" id="destination" placeholder="e.g. LHR" />
+            <div id="destination-suggestions" class="suggestions"></div>
+            <!-- this div gives JS a place to inject dropdown options -->
+            <div id="origin-suggestions" class="suggestions"></div>
+          </div>
+        </div>
+
+        <!-- Passengers / Service Class -->
+        <div class="inline-fields">
+          <div class="field">
+            <label for="passengers">Passengers</label>
+            <input type="number" id="passengers" min="1" value="1" />
+          </div>
+          <div class="field">
+            <label for="cabin">Service Class</label>
+            <select id="cabin">
+              <option value="Economy">Economy</option>
+              <option value="Premium Economy">Premium Economy</option>
+              <option value="Business">Business</option>
+              <option value="First">First</option>
+            </select>
+          </div>
+        </div>
+
+        <!-- Departure / Return Date -->
+        <div class="inline-fields">
+          <div class="field">
+            <label for="departDate">Departure Date</label>
+            <input type="date" id="departDate" />
+          </div>
+          <div class="field">
+            <label for="returnDate">Return Date</label>
+            <input type="date" id="returnDate" />
+          </div>
+        </div>
+
+        <!-- Exact / Flexible -->
+        <div class="card-options">
+          <button class="option-btn active" id="exactBtn">Exact Date</button>
+          <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
+        </div>
+        <div id="flexPicker" class="flex-picker" style="display:none;">
+          
+          <label for="flexDays">Search Days +/- Date Selected:</label>
+          <select id="flexDays">
+            <option value="1">1 day</option>
+            <option value="3">3 days</option>
+            <option value="5">5 days</option>
+            <option value="7">7 days</option>
+            <option value="14">14 days</option>
+          </select>
+        </div>
+        
+        <small class="hint">
+          Select “Exact Date” to search only that day, or “Flexible” to include a +/- 14-day window.
+        </small>
+
+        <!-- Checkbox -->
+        <div class="checkbox-row">
+          <input type="checkbox" id="partnerSpace" />
+          <label for="partnerSpace">Include partner award space</label>
+        </div>
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step routing">
+        <h3>Step 2:&nbsp;Routing Preferences</h3>
+
+        <label>Direct Non-stop</label>
+        <div class="toggle-group" id="directStop">
+          <button data-val="yes">Yes</button>
+          <button data-val="no">No</button>
+        </div>
+
+        <label>Multiple Connections</label>
+        <div class="toggle-group" id="multiConn">
+          <button data-val="yes">Yes</button>
+          <button data-val="no">No</button>
+        </div>
+
+        <label>Positioning Flight Allowed</label>
+        <div class="toggle-group" id="posFlight">
+          <button data-val="yes">Yes</button>
+          <button data-val="no">No</button>
+        </div>
+
+        <label for="program">Airline Program:</label>
+        <select id="program">
+          <option value="">All Programs</option>
+          <option value="american">American Airlines</option>
+          <option value="alaska">Alaska Airlines</option>
+          <option value="united">United Airlines</option>
+          <option value="delta">Delta Air Lines</option>
+          <option value="jetblue">JetBlue</option>
+          <option value="southwest">Southwest Airlines</option>
+          <option value="aeroplan">Air Canada Aeroplan</option>
+          <option value="avios">British Airways Avios</option>
+          <option value="flyingblue">Air France / KLM Flying Blue</option>
+          <option value="virginatlantic">Virgin Atlantic</option>
+          <option value="qantas">Qantas</option>
+          <option value="qatar">Qatar Airways Privilege Club</option>
+          <option value="ana">ANA Mileage Club</option>
+          <option value="emirates">Emirates Skywards</option>
+          <option value="etihad">Etihad Guest</option>
+          <option value="singapore">Singapore KrisFlyer</option>
+          <option value="turkish">Turkish Miles & Smiles</option>
+        </select>
+
+        <!-- STEP 3 -->
+        <h3 style="margin-top: 20px;">Step 3:&nbsp;Search</h3>
+        <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
+        <p id="searchWarning" style="display: block;">Complete Step 2 to continue.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ConciergeSync™ Spinner Bridge -->
+  <div id="spinner-overlay" class="spinner-overlay">
+    <div class="gold-card">
+      <p>Your personalized ConciergeSync™ results...</p>
+    </div>
+  </div>
+
+<!-- your JS link -->
+<script src="/dev/js/redemption-module.js?v=121"></script>
+
+<!-- Optional guard -->
+<script>
+  if (!window.redemptionModuleInitialized) {
+    window.redemptionModuleInitialized = true;
+    console.log("Redemption module initialized standalone.");
+  }
+</script>
   
-    // 🔹 2️⃣  Parse and stage for InfiniteSync™
-    const searchData  = JSON.parse(searchRaw);
-    const resultsData = JSON.parse(resultsRaw);
-  
-    window.IS = window.IS || {};
-    IS.currentSearch = searchData;
-    IS.currentResults = resultsData;
-  
-    console.log("🔍 IS handoff ready:", { searchData, resultsData });
-  
-    // 🔹 3️⃣  Optional placeholder: render minimal summary
-    const summary = document.getElementById("results-summary");
-    if (summary) {
-      summary.innerHTML = `
-        <p><strong>Route:</strong> ${searchData.origin} → ${searchData.destination}</p>
-        <p><strong>Depart:</strong> ${searchData.departDate}</p>
-        <p><strong>Passengers:</strong> ${searchData.passengers}</p>
-      `;
-    }
-  
-    // 🔹 4️⃣  Hand off to InfiniteSync™ analyzer (placeholder hook)
-    if (typeof IS.analyzeRedemptions === "function") {
-      IS.analyzeRedemptions(resultsData, searchData);
-    } else {
-      console.log("IS analyzer not yet loaded — data staged successfully.");
-    }
+<!-- Step 1: Exact / Flexible toggle -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const exactBtn = document.getElementById("exactBtn");
+  const flexBtn = document.getElementById("flexBtn");
+  const flexPicker = document.getElementById("flexPicker");
+
+  if (!exactBtn || !flexBtn) return;
+
+  // Handle Exact Date
+  exactBtn.addEventListener("click", () => {
+    exactBtn.classList.add("active");
+    flexBtn.classList.remove("active");
+    if (flexPicker) flexPicker.style.display = "none";
   });
+
+  // Handle Flexible
+  flexBtn.addEventListener("click", () => {
+    flexBtn.classList.add("active");
+    exactBtn.classList.remove("active");
+    if (flexPicker) flexPicker.style.display = "block";
+  });
+});
 </script>
 
-  <table id="resultsTable">
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Origin</th>
-        <th>Destination</th>
-        <th>Program</th>
-        <th>Airline</th>
-        <th>Economy</th>
-        <th>Premium</th>
-        <th>Business</th>
-        <th>First</th>
-        <th>Taxes / Fees</th>
-        <th>Last Seen</th>      <!-- 👈 new header for the new column -->
-      </tr>
-    </thead>
+<!-- Step 3: Search Handler -->
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const searchBtn = document.getElementById("searchBtn");
+  if (!searchBtn) return;
+
+  searchBtn.addEventListener("click", async () => {
+    searchBtn.disabled = true;
+    searchBtn.textContent = "Searching…";
+
+    const payload = {
+      origin: document.getElementById("origin")?.value || "",
+      destination: document.getElementById("destination")?.value || "",
+      passengers: document.getElementById("passengers")?.value || "1",
+      cabin: document.getElementById("cabin")?.value || "Economy",
+      departDate: document.getElementById("departDate")?.value || "",
+      returnDate: document.getElementById("returnDate")?.value || "",
+      flexDays: document.getElementById("flexDays")?.value || "0",
+      includePartners: document.getElementById("partnerSpace")?.checked || false
+    };
+    console.log("Submitting search:", payload);
+
+    try {
+      const res = await fetch("/api/search", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload)
+      });
+      if (!res.ok) throw new Error("Search request failed");
+
+      const data = await res.json();
+      console.log("Search results:", data);
+
+      sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data));
+      console.log("sessionStorage write complete");
+
+      // Redirect disabled for now; uncomment when endpoint is ready
+      // window.location.href = "/dev/redemption-results.html";
+    } catch (err) {
+      console.error("Search error:", err);
+    } finally {
+      searchBtn.disabled = false;
+      searchBtn.textContent = "Search";
+    }
+  });
+});
+</script>
+<!-- ========== END SCRIPT SECTION ========== -->
+
+<!-- ConciergeSync™ Spinner Overlay : Gold-Border Luxury Card -->
+<style>
+/* ---------- Self-Hosted ConciergeSync™ Fonts ---------- */
+  @font-face {
+    font-family: "Cormorant Garamond";
+    src: url("/dev/fonts/CormorantGaramond-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Cormorant Garamond";
+    src: url("/dev/fonts/CormorantGaramond-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Libre Baskerville";
+    src: url("/dev/fonts/LibreBaskerville-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Libre Baskerville";
+    src: url("/dev/fonts/LibreBaskerville-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
   
-    <tbody id="results-body"></tbody>
-  </table>
+  /* ---------- Spinner Overlay ---------- */
+  .spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 26, 51, 0.75); /* softer fade */
+    display: none;             /* 🔹 hidden by default */
+    justify-content: center;
+    align-items: center;
+    z-index: 9990;             /* fade layer */
+    opacity: 0;                /* optional for transition smoothness */
+    transition: opacity 0.4s ease;
+  }
   
-  <!-- Rows dynamically injected -->
-  <script type="text/template" id="resultRowTemplate">
-    <tr>
-      <td data-label="Date">${date}</td>
-      <td data-label="Origin">${origin}</td>
-      <td data-label="Destination">${destination}</td>
-      <td data-label="Program">${program}</td>
-      <td data-label="Airline">${metal || '-'}</td>
-      <td data-label="Economy">${yMiles ? yMiles.toLocaleString() + " pts" : "—"}</td>
-      <td data-label="Premium">${pMiles ? pMiles.toLocaleString() + " pts" : "—"}</td>
-      <td data-label="Business">${jMiles ? jMiles.toLocaleString() + " pts" : "—"}</td>
-      <td data-label="First">${fMiles ? fMiles.toLocaleString() + " pts" : "—"}</td>
-      <td data-label="Taxes / Fees">${taxes ? "$" + taxes.toFixed(2) : "—"}</td>
-      <td data-label="Last Seen">
-        ${updated ? new Date(updated).toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
-        }) : "—"}
-      </td>
-  </tr>
-  </script>
+  .spinner-overlay.active {
+    display: flex;             /* 🔹 becomes visible only when .active is added */
+    opacity: 1;
+    visibility: visible;
+  }
+  
+  /* ---------- Gold Card ---------- */
+  .gold-card {
+    position: absolute;          /* absolute so it can stack independently */
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 210px;
+    height: 320px;
+    background: url("/dev/assets/CS_logo_vert_gold_card.png") no-repeat center/cover;
+    border-radius: 16px;
+    box-shadow:
+      0 0 18px rgba(0,0,0,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.08);
+    z-index: 10000;              /* sits above fade */
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;        /* text near bottom */
+    padding-bottom: 50px;         /* adjust vertical placement */
+  }
+  
+  /* ---------- Gold Card Text ---------- */
+  .gold-card p {
+    font-family: "Cormorant Garamond", "Libre Baskerville", serif;
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: 1.3px;
+    color: #0a1a33;
+    text-align: center;
+    text-shadow:
+      0 0.8px 0 rgba(255,255,255,0.25),
+      0 -0.8px 0 rgba(0,0,0,0.2);
+  }
 
-    </tbody>
-  </table>
+  /* ---------- Optional shimmer (for gold animation, if desired) ---------- */
+  @keyframes shimmer {
+    0% { background-position: 0 0; }
+    100% { background-position: 200% 0; }
+  }
+</style>
 
-  <!-- <div class="placeholder" id="noResults">No results to display yet.</div>-->
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const searchBtn = document.getElementById("search-btn");
+      const spinner = document.getElementById("spinner-overlay");
+    
+      if (!searchBtn || !spinner) return;
+    
+      // Ensure spinner starts hidden
+      spinner.classList.remove("active");
+    
+      searchBtn.addEventListener("click", (e) => {
+        e.preventDefault(); // stop any form submission or reload
+        spinner.classList.add("active");              // show overlay
+        setTimeout(() => spinner.classList.remove("active"), 3000); // temporary auto-hide for test
+      });
+    });
+</script>
 
-  <div class="footer">
-    ConciergeSync™ Internal Use Only
-  </div>
 
-  <script src="/dev/js/redemption-results.js"></script>
 </body>
 </html>
