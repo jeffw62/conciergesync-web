@@ -64,14 +64,13 @@ function setupRedemptionModule() {
   });
   goldCard.appendChild(cardImg);
   
-  // === Scoped shimmer overlay (perfectly aligned to gold card) ===
+  // === Scoped shimmer overlay (baseline reset) ===
   const shimmer = document.createElement("div");
   shimmer.id = "shimmer-overlay";
   Object.assign(shimmer.style, {
-    Object.assign(shimmer.style, {
     position: "absolute",
-    top: "0",
-    left: "0",
+    top: 0,
+    left: 0,
     width: "100%",
     height: "100%",
     background:
@@ -83,35 +82,33 @@ function setupRedemptionModule() {
     animation: "shimmerMove 3.2s ease-in-out infinite",
     pointerEvents: "none",
     borderRadius: "8px",
-    overflow: "hidden"
+    overflow: "hidden",
+    zIndex: 2
   });
   
-  // Ensure shimmer alignment relative to card only
+  // ensure shimmer is positioned relative to card only
   goldCard.style.position = "relative";
   goldCard.style.overflow = "hidden";
   goldCard.appendChild(shimmer);
   
-  // === Keyframes tuned to card width ===
-  // Create or update a single global <style> tag safely
-  (function addShimmerKeyframes() {
-    const styleId = "shimmer-style";
-    let styleEl = document.getElementById(styleId);
-    const keyframes = `
+  // === Keyframes (single global instance) ===
+  (() => {
+    const id = "shimmer-style";
+    const css = `
       @keyframes shimmerMove {
         0%   { background-position: -100% 0; }
         50%  { background-position: 0% 0; }
         100% { background-position: 100% 0; }
       }`;
-  
-    if (styleEl) {
-      styleEl.textContent = keyframes;
-    } else {
+    let styleEl = document.getElementById(id);
+    if (!styleEl) {
       styleEl = document.createElement("style");
-      styleEl.id = styleId;
-      styleEl.textContent = keyframes;
+      styleEl.id = id;
       document.head.appendChild(styleEl);
     }
+    styleEl.textContent = css;
   })();
+
   
   // === Add bridge & card to DOM ===
   spinnerBridge.appendChild(goldCard);
