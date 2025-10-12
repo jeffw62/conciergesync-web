@@ -624,6 +624,15 @@ document.querySelectorAll(".nav-link").forEach(link => {
         html = await res.text();
         workspace.innerHTML = html;
 
+        // --- ConciergeSync™ Gold Card Reveal ---
+        setTimeout(() => {
+          if (typeof window.showGoldCard === "function") {
+            window.showGoldCard();
+          } else {
+            console.warn("Gold card helper not yet loaded.");
+          }
+        }, 600);
+
         // If you add wallet-specific JS later, load it here
         // const walletScript = document.createElement("script");
         // walletScript.src = "/dev/js/wallet-module.js";
