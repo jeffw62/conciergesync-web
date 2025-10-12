@@ -85,12 +85,19 @@ function setupRedemptionModule() {
     overflow: "hidden"
   });
   
+  // ensure shimmer alignment relative to card only
   goldCard.style.position = "relative";
   goldCard.style.overflow = "hidden";
   goldCard.appendChild(shimmer);
   
   // === Keyframes tuned to card width ===
-  const shimmerStyle = document.createElement("style");
+  // use a single global <style> tag; update if it already exists
+  let shimmerStyle = document.getElementById("shimmer-style");
+  if (!shimmerStyle) {
+    shimmerStyle = document.createElement("style");
+    shimmerStyle.id = "shimmer-style";
+    document.head.appendChild(shimmerStyle);
+  }
   shimmerStyle.textContent = `
   @keyframes shimmerMove {
     0%   { background-position: -100% 0; }
