@@ -137,8 +137,11 @@ function setupRedemptionModule() {
 
   // ensure shimmer matches the card’s real painted size
   cardImg.onload = () => {
-    shimmer.style.width = cardImg.offsetWidth + "px";
-    shimmer.style.height = cardImg.offsetHeight + "px";
+    const shimmerEl = document.getElementById("shimmer-overlay");
+    if (shimmerEl) {
+      shimmerEl.style.width  = cardImg.offsetWidth  + "px";
+      shimmerEl.style.height = cardImg.offsetHeight + "px";
+    }
   };
   
   // ensure shimmer alignment relative to card only
