@@ -74,10 +74,10 @@ function setupRedemptionModule() {
     width: "100%",
     height: "100%",
     background:
-      "linear-gradient(100deg, transparent 10%, rgba(255,255,255,0.55) 48%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0.55) 52%, transparent 90%)",
+      "linear-gradient(100deg, transparent 20%, rgba(255,255,255,0.6) 47%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0.6) 53%, transparent 80%)",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "200% 100%",
-    backgroundPosition: "-100% 0", // start completely off left edge
+    backgroundSize: "140% 100%",   // tighter sweep
+    backgroundPosition: "-40% 0",  // centers gradient start
     mixBlendMode: "overlay",
     animation: "shimmerMove 3.2s ease-in-out infinite",
     pointerEvents: "none",
@@ -97,9 +97,8 @@ function setupRedemptionModule() {
     let styleEl = document.getElementById(styleId);
     const keyframes = `
       @keyframes shimmerMove {
-        0%   { background-position: -100% 0; }
-        50%  { background-position: 0% 0; }
-        100% { background-position: 100% 0; }
+        0%   { background-position: -40% 0; }
+        100% { background-position: 40% 0; }
       }`;
   
     if (styleEl) {
