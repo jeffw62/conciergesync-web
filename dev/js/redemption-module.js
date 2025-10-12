@@ -72,8 +72,10 @@ function setupRedemptionModule() {
       position: "absolute",
       top: "0",
       left: "0",
-      width: "100%",
-      height: "100%",
+      width: cardImg.offsetWidth + "px",   // exact card width
+      height: cardImg.offsetHeight + "px", // exact card height
+      maxWidth: "100%",
+      maxHeight: "100%",
       background:
         "linear-gradient(100deg, transparent 10%, rgba(255,255,255,0.55) 48%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0.55) 52%, transparent 90%)",
       backgroundRepeat: "no-repeat",
@@ -88,6 +90,12 @@ function setupRedemptionModule() {
     });
     goldCard.appendChild(shimmer);
   }
+
+  // ensure shimmer matches the card’s real painted size
+  cardImg.onload = () => {
+    shimmer.style.width = cardImg.offsetWidth + "px";
+    shimmer.style.height = cardImg.offsetHeight + "px";
+  };
   
   // ensure shimmer alignment relative to card only
   goldCard.style.position = "relative";
