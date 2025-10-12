@@ -614,18 +614,19 @@ document.querySelectorAll(".nav-link").forEach(link => {
         const redemptionScript = document.createElement("script");
         redemptionScript.src = "/dev/js/redemption-module.js";
         redemptionScript.onload = () => {
-          // ✅ Trigger gold-card animation once module + helper are ready
-          if (typeof window.showGoldCard === "function") {
-            window.showGoldCard();
-          } else {
-            console.warn("Gold card helper not yet loaded — will retry shortly.");
+          // Wait until workspace DOM has finished parsing before checking helper
+          requestAnimationFrame(() => {
             setTimeout(() => {
-              if (typeof window.showGoldCard === "function") window.showGoldCard();
-            }, 1000);
-          }
+              if (typeof window.showGoldCard === "function") {
+                window.showGoldCard();
+              } else {
+                console.warn("Gold card helper still not loaded after workspace parse.");
+              }
         
-          // Continue with module initialization
-          if (typeof initRedemptionModule === "function") initRedemptionModule();
+              // continue normal module init
+              if (typeof initRedemptionModule === "function") initRedemptionModule();
+            }, 800); // short post-load buffer
+          });
         };
         document.body.appendChild(redemptionScript);
 
