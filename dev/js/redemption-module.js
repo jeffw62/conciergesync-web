@@ -33,39 +33,50 @@ function setupRedemptionModule() {
     alignItems: "center",
     justifyContent: "center",
     background: "rgba(10,26,51,0.85)",
-    zIndex: 9998,
-    pointerEvents: "none"
+    zIndex: 9998
   });
   
-  // Gold Card
-  const goldCard = document.createElement("img");
+  // === Gold Card ===
+  const goldCard = document.createElement("div");
   goldCard.id = "gold-card";
-  goldCard.src = "/dev/asset/CS_logo_vert_gold_card.png";
   Object.assign(goldCard.style, {
+    position: "relative",
     width: "400px",
-    opacity: 1,
-    visibility: "visible",
+    height: "auto",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    overflow: "hidden",
     zIndex: 9999
   });
-  spinnerBridge.appendChild(goldCard);
   
-  // Optional shimmer overlay (will respect existing CSS if defined)
+  // Card image
+  const cardImg = document.createElement("img");
+  cardImg.src = "/dev/asset/CS_logo_vert_gold_card.png";
+  cardImg.alt = "ConciergeSync™ Gold Card";
+  Object.assign(cardImg.style, {
+    width: "100%",
+    height: "auto",
+    display: "block"
+  });
+  goldCard.appendChild(cardImg);
+  
+  // === Scoped shimmer overlay (restricted to gold card) ===
   const shimmer = document.createElement("div");
   shimmer.id = "shimmer-overlay";
   Object.assign(shimmer.style, {
     position: "absolute",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
+    inset: 0,
     background:
-      "linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)",
+      "linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.45) 50%, transparent 100%)",
     backgroundSize: "200% 100%",
-    animation: "shimmerMove 2s infinite"
+    mixBlendMode: "overlay",
+    animation: "shimmerMove 2.5s linear infinite",
+    pointerEvents: "none"
   });
-  spinnerBridge.appendChild(shimmer);
+  goldCard.appendChild(shimmer);
   
-  // Keyframes for shimmer
+  // === Keyframes for shimmer ===
   const shimmerStyle = document.createElement("style");
   shimmerStyle.textContent = `
   @keyframes shimmerMove {
@@ -74,17 +85,18 @@ function setupRedemptionModule() {
   }`;
   document.head.appendChild(shimmerStyle);
   
-  // Add bridge to DOM
+  // === Add bridge & card to DOM ===
+  spinnerBridge.appendChild(goldCard);
   document.body.appendChild(spinnerBridge);
   console.log("✅ Spinner bridge & gold card injected");
-
   
+  // --- Continue normal initialization ---
   loadAirports(); // fetch airport list
-
+  
   // activate autocompletes
   setupAutocomplete("origin", "origin-suggestions");
   setupAutocomplete("destination", "destination-suggestions");
-
+  
   // --- Routing Preference Button Logic (moved from redem-con.html) ---
   const directGroup = document.getElementById("directStop");
   const multiGroup  = document.getElementById("multiConn");
@@ -133,10 +145,10 @@ function setupRedemptionModule() {
       });
     });
   }
-
   
   const searchBtn = document.getElementById("searchBtn");
   const warning = document.getElementById("searchWarning");
+
 
   // ---- toggle groups (Step 2)
   document.querySelectorAll(".toggle-group").forEach(group => {
