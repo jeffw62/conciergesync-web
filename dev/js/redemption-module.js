@@ -68,18 +68,19 @@ function setupRedemptionModule() {
   const shimmer = document.createElement("div");
   shimmer.id = "shimmer-overlay";
   Object.assign(shimmer.style, {
+    Object.assign(shimmer.style, {
     position: "absolute",
     top: "0",
     left: "0",
     width: "100%",
     height: "100%",
     background:
-      "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.65) 44%, rgba(255,255,255,0.8) 48%, rgba(255,255,255,0.65) 52%, transparent 100%)",
+      "linear-gradient(100deg, transparent 10%, rgba(255,255,255,0.55) 48%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0.55) 52%, transparent 90%)",
     backgroundRepeat: "no-repeat",
-    backgroundSize: "100% 100%",
-    backgroundPosition: "-50% 0", // begin well inside card edge
+    backgroundSize: "200% 100%",
+    backgroundPosition: "-100% 0",
     mixBlendMode: "overlay",
-    animation: "shimmerMove 3s ease-in-out infinite",
+    animation: "shimmerMove 3.2s ease-in-out infinite",
     pointerEvents: "none",
     borderRadius: "8px",
     overflow: "hidden"
