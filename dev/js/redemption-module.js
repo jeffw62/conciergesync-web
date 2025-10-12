@@ -64,21 +64,30 @@ function setupRedemptionModule() {
   });
   goldCard.appendChild(cardImg);
   
-  // === Scoped shimmer overlay (restricted to gold card) ===
+  // === Scoped shimmer overlay (locked to card bounds) ===
   const shimmer = document.createElement("div");
   shimmer.id = "shimmer-overlay";
   Object.assign(shimmer.style, {
     position: "absolute",
-    inset: 0,
+    top: "0",
+    left: "0",
+    right: "0",
+    bottom: "0",
     background:
-      "linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.55) 45%, transparent 90%)",
-    backgroundSize: "150% 100%",
+      "linear-gradient(100deg, transparent 0%, rgba(255,255,255,0.5) 35%, rgba(255,255,255,0.65) 50%, transparent 65%)",
+    backgroundSize: "120% 100%",
     mixBlendMode: "overlay",
-    animation: "shimmerMove 2.8s linear infinite",
+    animation: "shimmerMove 3.2s ease-in-out infinite",
     pointerEvents: "none",
     overflow: "hidden",
     borderRadius: "8px"
   });
+  
+  // ensure shimmer alignment relative to card, not bridge
+  goldCard.style.position = "relative";
+  goldCard.style.display = "inline-block";
+  goldCard.style.overflow = "hidden";
+  
   goldCard.appendChild(shimmer);
   
   // === Keyframes for shimmer ===
