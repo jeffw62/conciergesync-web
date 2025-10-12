@@ -480,13 +480,13 @@
     left: 0;
     width: 100vw;
     height: 100vh;
-    background: rgba(10, 26, 51, 0.75); /* softer fade */
-    display: none;             /* 🔹 hidden by default */
+    background: rgba(10, 26, 51, 0.55); /* was 0.75 → lightens the scene */
+    display: none;
     justify-content: center;
     align-items: center;
-    z-index: 9990;             /* fade layer */
-    opacity: 0;                /* optional for transition smoothness */
-    transition: opacity 0.4s ease;
+    z-index: 9990;
+    opacity: 0;
+    transition: opacity 1s ease;
   }
   
   .spinner-overlay.active {
@@ -503,11 +503,20 @@
     transform: translate(-50%, -50%);
     width: 210px;
     height: 320px;
-    background: url("/dev/assets/CS_logo_vert_gold_card.png") no-repeat center/cover;
+    background: linear-gradient(
+        100deg,
+        rgba(255,255,255,0.05) 0%,
+        rgba(255,255,255,0.25) 25%,
+        rgba(255,255,255,0.05) 50%
+      ),
+      url("/dev/assets/CS_logo_vert_gold_card.png") no-repeat center/cover;
+    background-size: 200% 100%;
+    animation: shimmer 3s linear infinite;
     border-radius: 16px;
     box-shadow:
-      0 0 18px rgba(0,0,0,0.25),
-      inset 0 1px 0 rgba(255,255,255,0.08);
+      0 0 30px rgba(191,161,74,0.45),    /* soft outer gold glow */
+      0 18px rgba(0,0,0,0.25),
+      inset 0 1px 0 rgba(255,255,255,0.25);
     z-index: 10000;              /* sits above fade */
     display: flex;
     justify-content: center;
