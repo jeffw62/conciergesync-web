@@ -21,7 +21,10 @@ function setupRedemptionModule() {
   console.log("💗 Redemption module initializing...");
   
   // === ConciergeSync™ Spinner Bridge + Gold Card Overlay ===
-  Object.assign(spinnerBridge.style, {
+    const spinnerBridge = document.createElement("div");
+    spinnerBridge.id = "spinner-bridge";
+    
+    Object.assign(spinnerBridge.style, {
     position: "absolute",
     display: "flex",
     alignItems: "center",
