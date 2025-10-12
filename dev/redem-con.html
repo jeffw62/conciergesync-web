@@ -496,34 +496,19 @@
   }
   
   /* ---------- Gold Card ---------- */
-  .gold-card {
-    position: absolute;          /* absolute so it can stack independently */
-    top: 50%;
+  /* === ConciergeSync™ Gold Card — Visibility Lock === */
+  #gold-card {
+    all: unset;
+    display: block !important;
+    visibility: visible !important;
+    opacity: 1 !important;
+    position: absolute !important;
+    top: 20%;
     left: 50%;
-    transform: translate(-50%, -50%);
-    width: 210px;
-    height: auto;                     /* let height follow image ratio */
-    aspect-ratio: 2 / 3;              /* keeps proper card proportions */
-    background: linear-gradient(
-        linear-gradient(180deg,#e6cc80 0%,#bfa14a 50%,#8f6b29 100%), 
-        url("/dev/asset/CS_logo_vert_gold_card.png") no-repeat center;
-    background-size: contain;         /* show full card, no stretch */
-    background-repeat: no-repeat;
-    background-position: center;
-    background-blend-mode: overlay;
-    animation: shimmer 3s linear infinite;
-    filter: brightness(1.25) contrast(1.1);
-    border-radius: 16px;
-    box-shadow:
-      0 0 30px rgba(191,161,74,0.55),    /* warmer outer gold glow */
-      0 10px 12px rgba(0,0,0,0.25),
-      inset 0 1px 0 rgba(255,255,255,0.25);
-    
-    z-index: 0;                    /* sits above fade */
-    display: flex;
-    justify-content: center;
-    align-items: flex-end;        /* text near bottom */
-    padding-bottom: 50px;         /* adjust vertical placement */
+    transform: translateX(-50%);
+    width: 400px;
+    z-index: 9999 !important;
+    pointer-events: none; /* allows shimmer clicks to pass through */
   }
 
     .gold-card::after {
