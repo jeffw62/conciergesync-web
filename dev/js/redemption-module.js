@@ -55,9 +55,12 @@ function setupRedemptionModule() {
   cardImg.src = "/dev/asset/CS_logo_vert_gold_card.png";
   cardImg.alt = "ConciergeSync™ Gold Card";
   Object.assign(cardImg.style, {
-    width: "260px",    // final visible width ≈ two-thirds of previous size
+    width: "260px",
     height: "auto",
-    display: "block"
+    display: "block",
+    borderRadius: "8px",       // same radius as shimmer overlay
+    overflow: "hidden",
+    clipPath: "inset(0 round 8px)"  // ensures the image itself respects radius
   });
   goldCard.appendChild(cardImg);
   
