@@ -19,7 +19,66 @@ function setupRedemptionModule() {
   if (window._redemptionInitialized) return;
   window._redemptionInitialized = true;
   console.log("💗 Redemption module initializing...");
+  
+  // === ConciergeSync™ Spinner Bridge + Gold Card Overlay ===
+  const spinnerBridge = document.createElement("div");
+  spinnerBridge.id = "spinner-bridge";
+  Object.assign(spinnerBridge.style, {
+    position: "fixed",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+    background: "rgba(10,26,51,0.85)",
+    zIndex: 9998,
+    pointerEvents: "none"
+  });
+  
+  // Gold Card
+  const goldCard = document.createElement("img");
+  goldCard.id = "gold-card";
+  goldCard.src = "/dev/asset/CS_logo_vert_gold_card.png";
+  Object.assign(goldCard.style, {
+    width: "400px",
+    opacity: 1,
+    visibility: "visible",
+    zIndex: 9999
+  });
+  spinnerBridge.appendChild(goldCard);
+  
+  // Optional shimmer overlay (will respect existing CSS if defined)
+  const shimmer = document.createElement("div");
+  shimmer.id = "shimmer-overlay";
+  Object.assign(shimmer.style, {
+    position: "absolute",
+    top: 0,
+    left: 0,
+    width: "100%",
+    height: "100%",
+    background:
+      "linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)",
+    backgroundSize: "200% 100%",
+    animation: "shimmerMove 2s infinite"
+  });
+  spinnerBridge.appendChild(shimmer);
+  
+  // Keyframes for shimmer
+  const shimmerStyle = document.createElement("style");
+  shimmerStyle.textContent = `
+  @keyframes shimmerMove {
+    0% { background-position: 200% 0; }
+    100% { background-position: -200% 0; }
+  }`;
+  document.head.appendChild(shimmerStyle);
+  
+  // Add bridge to DOM
+  document.body.appendChild(spinnerBridge);
+  console.log("✅ Spinner bridge & gold card injected");
 
+  
   loadAirports(); // fetch airport list
 
   // activate autocompletes
