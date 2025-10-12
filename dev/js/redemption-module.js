@@ -39,7 +39,7 @@ function setupRedemptionModule() {
   });
 
   // --- Center spinner bridge within the search form ---
-  const formContainer = document.querySelector("#redemption-form");
+  formContainer = document.querySelector("#redemption-form");
   if (formContainer) {
     formContainer.style.position = "relative";
     formContainer.style.display = "flex";
