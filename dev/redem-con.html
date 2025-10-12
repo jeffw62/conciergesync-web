@@ -553,6 +553,28 @@
     });
 </script>
 
+<script>
+  function showGoldCard() {
+    const spinner = document.getElementById("spinner-overlay");
+    const wrapper = document.querySelector(".search-wrapper");
+  
+    if (!spinner || !wrapper) return;
+  
+    // fade form out
+    wrapper.style.transition = "opacity 0.6s ease";
+    wrapper.style.opacity = "0";
+  
+    // show overlay
+    spinner.classList.add("active");
+  
+    // hide overlay after 2s (visual only)
+    setTimeout(() => {
+      spinner.classList.remove("active");
+      wrapper.style.opacity = "1"; // reset form for next load
+    }, 2000);
+  }
+</script>
+
 
 </body>
 </html>
