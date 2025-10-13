@@ -134,9 +134,17 @@ function setupRedemptionModule() {
           shimmerEl.style.transition = 'opacity 1.2s ease';
           shimmerEl.style.opacity = '0';
         }
+        
+        // === Fade out the on-card message ===
+        const msg = document.getElementById("card-message");
+        if (msg) {
+        msg.style.transition = "opacity 0.8s ease";
+        msg.style.opacity = "0";
+        }
+        
         setTimeout(() => {
-          console.log("🚀 Transition handoff triggered.");
-          proceedToNextStage();
+        console.log("🚀 Transition handoff triggered.");
+        proceedToNextStage();
         }, 1300);
     
         // stop further counting once fade starts
