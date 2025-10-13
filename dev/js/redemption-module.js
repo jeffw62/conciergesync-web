@@ -171,11 +171,24 @@ function setupRedemptionModule() {
     
       // Option B – Temporary redirect to flight-cards.html (our current test)
       else {
-        console.log("🔁 Redirecting to /dev/flight-cards.html ...");
-        setTimeout(() => {
-          window.location.href = "/dev/flight-cards.html";
-        }, 300); // small pause for smooth handoff
+      console.log("🔁 Redirecting to /dev/flight-cards.html ...");
+    
+      // Smooth fade-out of gold card and bridge before redirect
+      const bridge = document.getElementById("spinner-bridge");
+      const card = document.querySelector(".gold-card");
+      if (card) {
+        card.style.transition = "opacity 1s ease";
+        card.style.opacity = "0";
       }
+      if (bridge) {
+        bridge.style.transition = "opacity 1.3s ease";
+        bridge.style.opacity = "0";
+      }
+    
+      // Wait for fade to complete before redirect
+      setTimeout(() => {
+        window.location.href = "/dev/flight-cards.html";
+      }, 1000); // matches fade duration
     }
     
     const shimmer = document.createElement("div");
