@@ -256,7 +256,10 @@ function setupRedemptionModule() {
   // Hide the search form container so it doesn't reappear behind the card
   const searchForm = document.getElementById('redem-con-form'); // adjust ID if different
   if (searchForm) {
-    searchForm.style.display = 'none';
+    searchForm.style.opacity = '0';
+    searchForm.style.pointerEvents = 'none';
+    searchForm.style.visibility = 'hidden';
+    searchForm.classList.add('locked');
   }
 
   // === Fade-out and cleanup for Spinner Bridge ===
