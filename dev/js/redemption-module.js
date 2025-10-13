@@ -108,18 +108,15 @@ function setupRedemptionModule() {
   });
   goldCard.appendChild(cardImg);
   
-  // === Scoped shimmer overlay (stable containment) ===
+  // === Scoped shimmer overlay (locked to card face) ===
   function attachShimmer() {
     const shimmer = document.createElement("div");
     shimmer.id = "shimmer-overlay";
     Object.assign(shimmer.style, {
       position: "absolute",
-      top: "0",
-      left: "0",
-      width: cardImg.offsetWidth + "px",   // exact card width
-      height: cardImg.offsetHeight + "px", // exact card height
-      maxWidth: "100%",
-      maxHeight: "100%",
+      inset: "0",                     // pin to all edges of the card
+      width: "100%",
+      height: "100%",
       background:
         "linear-gradient(100deg, transparent 10%, rgba(255,255,255,0.55) 48%, rgba(255,255,255,0.75) 50%, rgba(255,255,255,0.55) 52%, transparent 90%)",
       backgroundRepeat: "no-repeat",
@@ -132,7 +129,16 @@ function setupRedemptionModule() {
       overflow: "hidden",
       zIndex: 2
     });
-    goldCard.appendChild(shimmer);
+  
+    // Append shimmer after the card is sized
+    const waitForCard = () => {
+      if (goldCard.offsetWidth > 0) {
+        goldCard.appendChild(shimmer);
+      } else {
+        requestAnimationFrame(waitForCard);
+      }
+    };
+    waitForCard();
   }
 
   // ensure shimmer matches the card’s real painted size
