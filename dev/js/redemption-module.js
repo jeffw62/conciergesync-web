@@ -254,13 +254,13 @@ function setupRedemptionModule() {
   console.log("✅ Spinner bridge & gold card injected");
 
   // === Hard hide redemption form and its container ===
-  const formContainer = document.querySelector('#redem-con-form, .redem-con-form, #search-form, .search-form');
-  if (formContainer) {
+  const formContainerDeep = document.querySelector('#redem-con-form, .redem-con-form, #search-form, .search-form');
+  if (formContainerDeep) {
     console.log("🧱 Locking form container completely...");
-    formContainer.style.setProperty('display', 'none', 'important');
-    formContainer.style.setProperty('visibility', 'hidden', 'important');
-    formContainer.style.setProperty('opacity', '0', 'important');
-    formContainer.style.setProperty('pointer-events', 'none', 'important');
+    formContainerDeep.style.setProperty('display', 'none', 'important');
+    formContainerDeep.style.setProperty('visibility', 'hidden', 'important');
+    formContainerDeep.style.setProperty('opacity', '0', 'important');
+    formContainerDeep.style.setProperty('pointer-events', 'none', 'important');
     
     // Deep recursion — hide all parent containers up the chain that might be visible
     let parent = formContainer.parentElement;
