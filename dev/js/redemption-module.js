@@ -133,7 +133,7 @@ function setupRedemptionModule() {
     // Append shimmer after the card is sized
     const waitForCard = () => {
       if (goldCard.offsetWidth > 0) {
-        goldCard.appendChild(shimmer)),
+        goldCard.appendChild(shimmer);
       } else {
         requestAnimationFrame(waitForCard);
       }
