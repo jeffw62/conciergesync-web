@@ -133,22 +133,7 @@ function setupRedemptionModule() {
     // Append shimmer after the card is sized
     const waitForCard = () => {
       if (goldCard.offsetWidth > 0) {
-        // Append shimmer after the card is sized
-    const waitForCard = () => {
-      if (goldCard.offsetWidth > 0) {
-    
-        // --- overlay text (under shimmer) ---
-        const cardText = document.createElement("div");
-        cardText.className = "card-overlay-text";
-        cardText.innerHTML = `
-          <h2>ConciergeSync™</h2>
-          <p>Preparing your optimized redemption...</p>
-        `;
-        goldCard.appendChild(cardText);
-    
-        // --- shimmer layer above text ---
-        goldCard.appendChild(shimmer);
-    
+        goldCard.appendChild(shimmer)),
       } else {
         requestAnimationFrame(waitForCard);
       }
