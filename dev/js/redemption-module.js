@@ -278,10 +278,11 @@ function setupRedemptionModule() {
     transform: "translate(-50%, -50%)",
     width: "80%",
     textAlign: "center",
-    color: "#0a1a33",
+    color: "rgba(10, 26, 51, 0.9)"
     fontSize: "1.05rem",
     fontWeight: "500",
     textShadow: "0 0 6px rgba(0,0,0,0.3)",
+    textShadow: "0 1px 1px rgba(255,255,255,0.25)"
     opacity: "0",
     transition: "opacity 1.2s ease",
     pointerEvents: "none",
