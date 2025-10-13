@@ -278,6 +278,41 @@ function setupRedemptionModule() {
   document.body.appendChild(spinnerBridge);
   console.log("✅ Spinner bridge & gold card injected");
 
+  spinnerBridge.appendChild(goldCard);
+  document.body.appendChild(spinnerBridge);
+  console.log("✅ Spinner bridge & gold card injected");
+  
+  // === Add processing text overlay to gold card ===
+  const cardMessage = document.createElement("div");
+  cardMessage.id = "card-message";
+  cardMessage.textContent =
+    "Analyzing your award miles across routes and partners — please stand by.";
+  
+  Object.assign(cardMessage.style, {
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "80%",
+    textAlign: "center",
+    color: "#f8f8f8",
+    fontSize: "1.05rem",
+    fontWeight: "500",
+    textShadow: "0 0 6px rgba(0,0,0,0.3)",
+    opacity: "0",
+    transition: "opacity 1.2s ease",
+    pointerEvents: "none",
+    zIndex: "10000"
+  });
+  
+  goldCard.appendChild(cardMessage);
+  
+  // === Fade in message after card is visible ===
+  setTimeout(() => {
+    const msg = document.getElementById("card-message");
+    if (msg) msg.style.opacity = "1";
+  }, 500);
+
   // === Hard hide redemption form and its container ===
   const formContainerDeep = document.querySelector('#redem-con-form, .redem-con-form, #search-form, .search-form');
   if (formContainerDeep) {
