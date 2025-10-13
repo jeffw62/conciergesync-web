@@ -85,7 +85,7 @@ function setupRedemptionModule() {
   goldCard.id = "gold-card";
   Object.assign(goldCard.style, {
     position: "relative",
-    width: "400px",
+    width: "260px",
     height: "auto",
     display: "flex",
     alignItems: "center",
