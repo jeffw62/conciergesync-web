@@ -145,6 +145,12 @@ function setupRedemptionModule() {
       } 
     });
 
+    // === Placeholder for next screen transition ===
+    function proceedToNextStage() {
+      console.log("🪄 Placeholder: load next module or results screen here.");
+      // Future: insert logic to reveal next panel or redirect
+    }
+    
     const shimmer = document.createElement("div");
     shimmer.id = "shimmer-overlay";
     Object.assign(shimmer.style, {
