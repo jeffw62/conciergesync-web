@@ -123,7 +123,7 @@ function setupRedemptionModule() {
       backgroundSize: "200% 100%",
       backgroundPosition: "-100% 0",
       mixBlendMode: "overlay",
-      animation: "shimmerMove 3.2s ease-in-out infinite",
+      animation: "shimmerMove 5s ease-in-out infinite",
       pointerEvents: "none",
       borderRadius: "8px",
       overflow: "hidden",
@@ -162,11 +162,23 @@ function setupRedemptionModule() {
   (() => {
     const id = "shimmer-style";
     const css = `
-      @keyframes shimmerMove {
-        0%   { background-position: -100% 0; }
-        50%  { background-position: 0% 0; }
-        100% { background-position: 100% 0; }
-      }`;
+       @keyframes shimmerMove {
+        0% {
+          background-position: -120% 0;
+          opacity: 0;
+        }
+        15% {
+          opacity: 1;
+        }
+        85% {
+          opacity: 1;
+        }
+        100% {
+          background-position: 120% 0;
+          opacity: 0;
+        }
+      }
+    `;
     let styleEl = document.getElementById(id);
     if (!styleEl) {
       styleEl = document.createElement("style");
