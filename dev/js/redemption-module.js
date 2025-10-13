@@ -15,7 +15,7 @@ function loadAirports() {
     .catch(err => console.error("❌ Failed to load airports:", err));
 }
 
-function setupRedemptionModule()
+function setupRedemptionModule() {
   if (window._redemptionInitialized) return;
   window._redemptionInitialized = true;
   console.log("💗 Redemption module initializing...");
@@ -189,6 +189,7 @@ function setupRedemptionModule()
       setTimeout(() => {
         window.location.href = "/dev/flight-cards.html";
       }, 1000); // matches fade duration
+    }
     }
     
     const shimmer = document.createElement("div");
