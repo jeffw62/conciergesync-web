@@ -152,7 +152,7 @@ function setupRedemptionModule() {
   // ensure shimmer alignment relative to card only
   goldCard.style.position = "relative";
   goldCard.style.overflow = "hidden";
-  
+  }
   // wait for card to be painted, then attach shimmer
   requestAnimationFrame(() => {
     setTimeout(attachShimmer, 300); // delay guarantees card is visible
