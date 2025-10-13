@@ -491,21 +491,35 @@
     opacity: 1;
     visibility: visible;
   }
-  
+
+  /* === Spinner Bridge Alignment Layer === */
+  #spinner-bridge {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;              /* full viewport width */
+    height: 100vh;             /* full viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 26, 51, 0.85);
+    z-index: 9998;
+    overflow: hidden;
+  }
+
   /* ---------- Gold Card ---------- */
   /* === ConciergeSync™ Gold Card — Visibility Lock === */
   #gold-card {
     all: unset;
-    display: block !important;
     visibility: visible !important;
     opacity: 1 !important;
-    position: absolute !important;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    display: flex !important;          /* keeps shimmer centered inside */
+    align-items: center;
+    justify-content: center;
+    position: relative !important;     /* participate in flex centering */
     width: 260px;
     z-index: 9999 !important;
-    pointer-events: none; /* allows shimmer clicks to pass through */
+    pointer-events: none;              /* lets clicks pass through */
   }
 
     .gold-card::after {
