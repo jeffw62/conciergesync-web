@@ -147,8 +147,27 @@ function setupRedemptionModule() {
 
     // === Placeholder for next screen transition ===
     function proceedToNextStage() {
-      console.log("🪄 Placeholder: load next module or results screen here.");
-      // Future: insert logic to reveal next panel or redirect
+      console.log("🪄 Transitioning to flight cards view...");
+    
+      // Option A – Inline fade-in (if flight cards are a hidden container in same DOM)
+      const nextPanel = document.getElementById('flight-results');
+      if (nextPanel) {
+        nextPanel.style.opacity = 0;
+        nextPanel.style.display = 'block';
+        nextPanel.style.transition = 'opacity 1.2s ease';
+        setTimeout(() => {
+          nextPanel.style.opacity = 1;
+          console.log("✈️  Flight cards revealed.");
+        }, 100);
+      }
+    
+      // Option B – Temporary redirect to flight-cards.html (our current test)
+      else {
+        console.log("🔁 Redirecting to /dev/flight-cards.html ...");
+        setTimeout(() => {
+          window.location.href = "/dev/flight-cards.html";
+        }, 300); // small pause for smooth handoff
+      }
     }
     
     const shimmer = document.createElement("div");
