@@ -217,6 +217,14 @@ footer * {
   width: 100%;
 }
 
+/* === Form lock override (prevents reappearance behind gold card) === */
+.locked {
+  display: none !important;
+  visibility: hidden !important;
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
 @media (max-width: 760px) {
   .search-panel {
     grid-template-columns: 1fr;
