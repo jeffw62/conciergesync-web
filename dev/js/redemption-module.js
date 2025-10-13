@@ -253,22 +253,31 @@ function setupRedemptionModule() {
   document.body.appendChild(spinnerBridge);
   console.log("✅ Spinner bridge & gold card injected");
 
-  // Hide the search form container so it doesn't reappear behind the card
-  const searchForm = document.getElementById('redem-con-form'); // adjust ID if different
-  if (searchForm) {
-    requestAnimationFrame(() => {
-      searchForm.style.display = 'none';
-      searchForm.style.opacity = '0';
-      searchForm.style.visibility = 'hidden';
-      searchForm.style.pointerEvents = 'none';
-    });
-  
-    // Extra failsafe: repeat once more after 500ms
-    setTimeout(() => {
-      if (getComputedStyle(searchForm).display !== 'none') {
-        searchForm.style.display = 'none';
+  // === Hard hide redemption form and its container ===
+  const formContainer = document.querySelector('#redem-con-form, .redem-con-form, #search-form, .search-form');
+  if (formContainer) {
+    console.log("🧱 Locking form container completely...");
+    formContainer.style.setProperty('display', 'none', 'important');
+    formContainer.style.setProperty('visibility', 'hidden', 'important');
+    formContainer.style.setProperty('opacity', '0', 'important');
+    formContainer.style.setProperty('pointer-events', 'none', 'important');
+    
+    // Deep recursion — hide all parent containers up the chain that might be visible
+    let parent = formContainer.parentElement;
+    for (let i = 0; i < 3 && parent; i++) {
+      if (parent.matches('section, div, form')) {
+        parent.style.setProperty('visibility', 'hidden', 'important');
+        parent.style.setProperty('opacity', '0', 'important');
       }
-    }, 500);
+      parent = parent.parentElement;
+    }
+  
+    // Kill any fade-in classes that might reappear
+    formContainer.classList.forEach(cls => {
+      if (cls.toLowerCase().includes('fade') || cls.toLowerCase().includes('show')) {
+        formContainer.classList.remove(cls);
+      }
+    });
   }
 
   // === Fade-out and cleanup for Spinner Bridge ===
