@@ -563,24 +563,10 @@
   }
 
   /* ----------- Gold card shimmer animation ----------- */
-  @keyframes shimmer {
-    0% {
-      background-position: -150% 0;
-      opacity: 0;           /* invisible off left edge */
-    }
-    10% {
-      opacity: 1;           /* fade in as it enters */
-    }
-    90% {
-      opacity: 1;           /* stay bright through center */
-    }
-    100% {
-      background-position: 150% 0;
-      opacity: 0;           /* fade out before looping */
-    }
-  }
-
-  
+    @keyframes shimmer {
+    0%   { background-position: -300% 0; }
+    100% { background-position: 300% 0; }
+  } 
 </style>
 
 <script>
