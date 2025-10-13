@@ -169,34 +169,32 @@ function setupRedemptionModule() {
         }, 100);
       }
     
-      // Option B – Temporary redirect to flight-cards.html (our current test)
-      else {
+     // Option B – Temporary redirect to flight-cards.html (our current test)
+    else {
       console.log("🔁 Redirecting to /dev/flight-cards.html ...");
-
-      // Keep the redemption form suppressed until redirect completes
-      const form = document.getElementById("redemption-form");
-      if (form) {
-        form.style.visibility = "hidden";
-        form.style.opacity = "0";
-        form.style.display = "none";
-      }
-
-      // Smooth fade-out of gold card and bridge before redirect
+    
+      // Keep form hidden and maintain opaque cover during fade-out
       const bridge = document.getElementById("spinner-bridge");
       const card = document.querySelector(".gold-card");
+    
+      if (bridge) {
+        // keep bridge opaque so the form never reappears
+        bridge.style.background = "rgba(10,26,51,1)";
+        bridge.style.transition = "opacity 1s ease";
+        bridge.style.opacity = "1";
+        bridge.style.pointerEvents = "none";
+      }
+    
       if (card) {
+        // fade the gold card only
         card.style.transition = "opacity 1s ease";
         card.style.opacity = "0";
       }
-      if (bridge) {
-        bridge.style.transition = "opacity 1.3s ease";
-        bridge.style.opacity = "0";
-      }
     
-      // Wait for fade to complete before redirect
+      // wait for fade to finish before redirect
       setTimeout(() => {
         window.location.href = "/dev/flight-cards.html";
-      }, 1000); // matches fade duration
+      }, 1000);
     }
     }
     
