@@ -110,6 +110,17 @@ function setupRedemptionModule() {
   
   // === Scoped shimmer overlay (locked to card face) ===
   function attachShimmer() {
+    // === Shimmer Cycle Counter ===
+    let shimmerCount = 0;
+    
+    // Wait until the shimmer element exists in the DOM
+    document.addEventListener('animationiteration', (e) => {
+      if (e.target.id === 'shimmer-overlay') {
+        shimmerCount++;
+        console.log(`✨ Shimmer cycle #${shimmerCount}`);
+      }
+    });
+
     const shimmer = document.createElement("div");
     shimmer.id = "shimmer-overlay";
     Object.assign(shimmer.style, {
