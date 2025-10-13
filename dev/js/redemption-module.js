@@ -317,8 +317,16 @@ function setupRedemptionModule() {
 
   // === Fade-out and cleanup for Spinner Bridge ===
   const fadeOutBridge = () => {
+    // fade the message slightly before bridge fades
+    const msg = document.getElementById("card-message");
+    if (msg) {
+      msg.style.transition = "opacity 0.8s ease";
+      msg.style.opacity = "0";
+    }
+  
     spinnerBridge.style.transition = "opacity 0.8s ease-in-out";
     spinnerBridge.style.opacity = "0";
+  
     setTimeout(() => {
       if (spinnerBridge.parentElement) spinnerBridge.remove();
     }, 800);
