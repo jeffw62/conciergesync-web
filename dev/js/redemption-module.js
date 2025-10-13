@@ -155,14 +155,6 @@ function setupRedemptionModule() {
     };
     waitForCard();
 
-        goldCard.appendChild(shimmer);
-      } else {
-        requestAnimationFrame(waitForCard);
-      }
-    };
-    waitForCard();
-  }
-
   // ensure shimmer matches the card’s real painted size
   cardImg.onload = () => {
     const shimmerEl = document.getElementById("shimmer-overlay");
