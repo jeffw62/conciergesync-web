@@ -510,19 +510,18 @@
   /* ---------- Gold Card ---------- */
   /* === ConciergeSync™ Gold Card — Visibility Lock === */
   #gold-card {
-    all: unset;
     visibility: visible !important;
     opacity: 1 !important;
-    display: flex !important;          /* keeps shimmer centered inside */
+    display: flex !important;
     align-items: center;
     justify-content: center;
-    position: relative !important;     /* participate in flex centering */
+    position: absolute !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%); /* proportional, device-responsive bias */
     width: 260px;
     z-index: 9999 !important;
-    pointer-events: none;              /* lets clicks pass through */
-
-    /* ↓ shift card slightly downward */
-    transform: translateY(60px);
+    pointer-events: none;
   }
 
     .gold-card::after {
