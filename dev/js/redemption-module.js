@@ -172,7 +172,15 @@ function setupRedemptionModule() {
       // Option B – Temporary redirect to flight-cards.html (our current test)
       else {
       console.log("🔁 Redirecting to /dev/flight-cards.html ...");
-    
+
+      // Keep the redemption form suppressed until redirect completes
+      const form = document.getElementById("redemption-form");
+      if (form) {
+        form.style.visibility = "hidden";
+        form.style.opacity = "0";
+        form.style.display = "none";
+      }
+
       // Smooth fade-out of gold card and bridge before redirect
       const bridge = document.getElementById("spinner-bridge");
       const card = document.querySelector(".gold-card");
