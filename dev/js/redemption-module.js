@@ -116,8 +116,27 @@ function setupRedemptionModule() {
     // Wait until the shimmer element exists in the DOM
     document.addEventListener('animationiteration', (e) => {
       if (e.target.id === 'shimmer-overlay') {
-        shimmerCount++;
-        console.log(`✨ Shimmer cycle #${shimmerCount}`);
+      shimmerCount++;
+      console.log(`✨ Shimmer cycle #${shimmerCount}`);
+    
+      // === Fade trigger after 3 passes ===
+      if (shimmerCount === 3) {
+        console.log("🌙 3 shimmer cycles complete — beginning fade-out.");
+    
+        const goldCard = document.querySelector('.gold-card');
+        const shimmerEl = document.getElementById('shimmer-overlay');
+    
+        if (goldCard) {
+          goldCard.style.transition = 'opacity 1.2s ease';
+          goldCard.style.opacity = '0';
+        }
+        if (shimmerEl) {
+          shimmerEl.style.transition = 'opacity 1.2s ease';
+          shimmerEl.style.opacity = '0';
+        }
+    
+        // stop further counting once fade starts
+        e.target.style.animationIterationCount = '0';
       }
     });
 
