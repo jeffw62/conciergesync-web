@@ -273,7 +273,7 @@ function setupRedemptionModule() {
   
   Object.assign(cardMessage.style, {
     position: "absolute",
-    top: "50%",
+    top: "72%",
     left: "50%",
     transform: "translate(-50%, -50%)",
     width: "80%",
