@@ -134,10 +134,15 @@ function setupRedemptionModule() {
           shimmerEl.style.transition = 'opacity 1.2s ease';
           shimmerEl.style.opacity = '0';
         }
+        setTimeout(() => {
+          console.log("🚀 Transition handoff triggered.");
+          proceedToNextStage();
+        }, 1300);
     
         // stop further counting once fade starts
         e.target.style.animationIterationCount = '0';
-      }
+        }
+      } 
     });
 
     const shimmer = document.createElement("div");
