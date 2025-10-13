@@ -253,6 +253,12 @@ function setupRedemptionModule() {
   document.body.appendChild(spinnerBridge);
   console.log("✅ Spinner bridge & gold card injected");
 
+  // Hide the search form container so it doesn't reappear behind the card
+  const searchForm = document.getElementById('redem-con-form'); // adjust ID if different
+  if (searchForm) {
+    searchForm.style.display = 'none';
+  }
+
   // === Fade-out and cleanup for Spinner Bridge ===
   const fadeOutBridge = () => {
     spinnerBridge.style.transition = "opacity 0.8s ease-in-out";
