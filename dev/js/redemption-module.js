@@ -107,12 +107,12 @@ function setupRedemptionModule() {
     clipPath: "inset(0 round 8px)"  // ensures the image itself respects radius
   });
   goldCard.appendChild(cardImg);
-  
+
+    // Global shimmer loop counter (persistent)
+    let shimmerCount = 0;
   // === Scoped shimmer overlay (locked to card face) ===
   function attachShimmer() {
-    // === Shimmer Cycle Counter ===
-    let shimmerCount = 0;
-    
+        
     // Wait until the shimmer element exists in the DOM
     document.addEventListener('animationiteration', (e) => {
       if (e.target.id === 'shimmer-overlay') {
