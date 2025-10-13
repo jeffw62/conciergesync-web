@@ -45,7 +45,7 @@ function setupRedemptionModule() {
     left: 0,
     width: "100%",
     height: "100%",
-    background: "rgba(10,26,51,0.85)",
+    background: "linear-gradient(180deg, rgba(10,26,51,0.98) 0%, rgba(10,26,51,1) 100%)",
     zIndex: 9998,
     overflow: "hidden"
   });
