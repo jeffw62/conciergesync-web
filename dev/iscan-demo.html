@@ -1,0 +1,144 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>ConciergeSync – Top 3 Recommendations</title>
+  <style>
+    body {
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+      padding: 40px;
+      background: #f8f9fa;
+      color: #222;
+    }
+    h1 {
+      margin-bottom: 24px;
+      font-size: 1.5rem;
+      text-align: center;
+    }
+    .cards {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+      justify-content: center;
+    }
+    .card {
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 6px 18px rgba(0,0,0,0.1);
+      padding: 20px;
+      width: 300px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+    }
+    .card h2 {
+      margin: 0 0 8px;
+      font-size: 1.1rem;
+    }
+    .route {
+      font-size: 0.95rem;
+      margin-bottom: 10px;
+      color: #444;
+    }
+    .confirm-line {
+      font-size: 0.85rem;
+      font-style: italic;
+      margin-bottom: 12px;
+    }
+    .confirm-line.success { color: #28a745; }
+    .confirm-line.fallback { color: #856404; }
+    .confirm-line.unavailable { color: #dc3545; }
+
+    .details {
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+      color: #333;
+    }
+    .pricing {
+      font-size: 0.9rem;
+      margin-bottom: 14px;
+    }
+    .value {
+      font-weight: 600;
+      color: #0b74da;
+    }
+    button {
+      padding: 10px;
+      border: none;
+      border-radius: 6px;
+      font-size: 0.9rem;
+      cursor: pointer;
+      background: #0b74da;
+      color: white;
+      transition: background 0.2s;
+    }
+    button:hover { background: #095bb0; }
+  </style>
+</head>
+<body>
+  <h1>Top 3 Recommendations</h1>
+
+  <div class="cards">
+    <!-- Card 1 -->
+    <div class="card">
+      <h2>American Airlines – Business Class</h2>
+      <div class="route">DFW → SFO · Oct 21–28</div>
+      <div class="confirm-line success">
+        ✅ Confirmed available at 08:34 AM (Sep 26)
+      </div>
+      <div class="details">
+        Flight: AA1949 (A321neo)<br>
+        Departs: 7:00 AM DFW<br>
+        Arrives: 8:45 AM SFO
+      </div>
+      <div class="pricing">
+        Award: <strong>35,000 miles</strong><br>
+        Cash: <strong>$345.70</strong><br>
+        Value: <span class="value">1.2¢/mile</span>
+      </div>
+      <button>Open Booking</button>
+    </div>
+
+    <!-- Card 2 -->
+    <div class="card">
+      <h2>United Airlines – Economy</h2>
+      <div class="route">DFW → SFO · Oct 21–28</div>
+      <div class="confirm-line fallback">
+        ⚠️ Confirmed via fallback at 08:36 AM (Sep 26)
+      </div>
+      <div class="details">
+        Flight: UA2045 (737-900)<br>
+        Departs: 9:15 AM DFW<br>
+        Arrives: 11:35 AM SFO
+      </div>
+      <div class="pricing">
+        Award: <strong>25,000 miles</strong><br>
+        Cash: <strong>$360.00</strong><br>
+        Value: <span class="value">1.4¢/mile</span>
+      </div>
+      <button>Open Booking</button>
+    </div>
+
+    <!-- Card 3 -->
+    <div class="card">
+      <h2>Delta Airlines – Economy</h2>
+      <div class="route">DFW → SFO · Oct 21–28</div>
+      <div class="confirm-line unavailable">
+        ❌ No availability at 08:37 AM (Sep 26)
+      </div>
+      <div class="details">
+        Flight: DL1432 (A220-300)<br>
+        Departs: 6:55 PM DFW<br>
+        Arrives: 9:20 PM SFO
+      </div>
+      <div class="pricing">
+        Award: <strong>N/A</strong><br>
+        Cash: <strong>N/A</strong><br>
+        Value: <span class="value">N/A</span>
+      </div>
+      <button disabled style="background:#ccc; cursor:not-allowed;">Try Again</button>
+    </div>
+  </div>
+</body>
+</html>
