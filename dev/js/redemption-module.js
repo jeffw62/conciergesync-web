@@ -108,32 +108,7 @@ function setupRedemptionModule() {
   });
   goldCard.appendChild(cardImg);
 
-  // === Add processing text overlay to gold card ===
-  const cardMessage = document.createElement("div");
-  cardMessage.id = "card-message";
-  cardMessage.textContent =
-    "Analyzing your award miles across routes and partners — please stand by.";
-  
-  Object.assign(cardMessage.style, {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "80%",
-    textAlign: "center",
-    color: "#f8f8f8",
-    fontSize: "1.05rem",
-    fontWeight: "500",
-    textShadow: "0 0 6px rgba(0,0,0,0.3)",
-    opacity: "0",
-    transition: "opacity 1.2s ease",
-    pointerEvents: "none",
-    zIndex: "2"
-  });
-  
-  goldCard.appendChild(cardMessage);
-  
-    // Global shimmer loop counter (persistent)
+  // Global shimmer loop counter (persistent)
     let shimmerCount = 0;
   // === Scoped shimmer overlay (locked to card face) ===
   function attachShimmer() {
