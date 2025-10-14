@@ -114,15 +114,61 @@
   </tr>
   </script>
 
-    </tbody>
-  </table>
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("🔍 Loading redemption results…");
+    
+      const stored = localStorage.getItem("latestRedemptionResults");
+      if (!stored) {
+        console.warn("⚠️ No stored results found.");
+        document.getElementById("results-body").innerHTML =
+          "<tr><td colspan='11'>No stored results found. Run a search from redemption.html.</td></tr>";
+        return;
+      }
+    
+      console.log("✅ Found stored results in localStorage");
+      const data = JSON.parse(stored);
+    
+      // Normalize possible structures
+      const results = Array.isArray(data.results)
+        ? data.results
+        : Array.isArray(data.data)
+        ? data.data
+        : Array.isArray(data)
+        ? data
+        : [];
+    
+      console.log(`📦 Normalized results: ${results.length}`);
+      const tbody = document.getElementById("results-body");
+      tbody.innerHTML = "";
+    
+      if (results.length === 0) {
+        tbody.innerHTML = "<tr><td colspan='11'>No results found in stored data.</td></tr>";
+        return;
+      }
+    
+      // Render simplified rows until full schema defined
+      results.forEach((r, i) => {
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${r.Date || "—"}</td>
+          <td>${r.Route?.OriginAirport || "—"}</td>
+          <td>${r.Route?.DestinationAirport || "—"}</td>
+          <td>${r.Source || "—"}</td>
+          <td>${r.Airline || "—"}</td>
+          <td>${r.YMileageCostRaw?.toLocaleString() || "—"}</td>
+          <td>${r.WMileageCostRaw?.toLocaleString() || "—"}</td>
+          <td>${r.JMileageCostRaw?.toLocaleString() || "—"}</td>
+          <td>${r.FMileageCostRaw?.toLocaleString() || "—"}</td>
+          <td>${r.TotalTaxesRaw ? "$" + (r.TotalTaxesRaw / 100).toFixed(2) : "—"}</td>
+          <td>${r.LastUpdated ? new Date(r.LastUpdated).toLocaleString() : "—"}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    });
+    </script>
 
-  <!-- <div class="placeholder" id="noResults">No results to display yet.</div>-->
-
-  <div class="footer">
-    ConciergeSync™ Internal Use Only
-  </div>
-
+  
   <script src="/dev/js/redemption-results.js"></script>
 </body>
 </html>
