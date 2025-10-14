@@ -572,7 +572,7 @@
   const flexBtn = document.getElementById('flexBtn');
   const flexPicker = document.getElementById('flexPicker');
   
-  function setMode(mode) 
+  function setMode(mode) {
     if (mode === 'exact') {
       exactBtn.classList.add('active');
       flexBtn.classList.remove('active');
@@ -582,8 +582,8 @@
       exactBtn.classList.remove('active');
       flexPicker.style.display = 'block';
     }
-  
-  
+  }
+    
   exactBtn.addEventListener('click', () => setMode('exact'));
   flexBtn.addEventListener('click', () => setMode('flexible'));
   
@@ -832,7 +832,7 @@
   setupAutocomplete('destination', 'destination-suggestions');
 
   // --- Seats.aero API Hook ---
-  document.querySelector('.search-btn').addEventListener'click', () => 
+  document.querySelector('.search-btn').addEventListener('click', () => {
     const origin = document.getElementById('origin').value.trim().toUpperCase();
     const destination = document.getElementById('destination').value.trim().toUpperCase();
     const departDate = document.getElementById('departDate').value;
@@ -875,42 +875,38 @@
       startDate,
       endDate,
       passengers,
-      cabin,       // stays as "economy", "business", etc.
+      cabin,
       flexMode,
       flexDays,
-      routing: {
-        direct: directPref,
-        multi: multiPref,
-        positioning
-      },
+      routing: { direct: directPref, multi: multiPref, positioning },
       program
     };
   
     console.log("➡️ Payload being sent:", payload);
   
     fetch("/api/redemption", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(payload),
-  })
-    .then(res => {
-      if (!res.ok) throw new Error(`Backend error: ${res.status}`);
-      return res.json();
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
     })
-    .then(data => {
-      console.log("🔎 Raw API data:", data);
+      .then(res => {
+        if (!res.ok) throw new Error(`Backend error: ${res.status}`);
+        return res.json();
+      })
+      .then(data => {
+        console.log("🔎 Raw API data:", data);
   
-      // Save results locally so results page can read them
-      localStorage.setItem("latestRedemptionResults", JSON.stringify(data));
-      localStorage.setItem("lastSearchParams", JSON.stringify(payload));
+        localStorage.setItem("latestRedemptionResults", JSON.stringify(data));
+        localStorage.setItem("lastSearchParams", JSON.stringify(payload));
   
-      // Redirect to the internal results viewer
-      window.location.href = "/dev/redemption-results.html";
-    })
-    .catch(err => {
-      console.error("❌ Redemption API error:", err);
-      alert("Redemption search failed — check console for details.");
-    });
+        window.location.href = "/dev/redemption-results.html";
+      })
+      .catch(err => {
+        console.error("❌ Redemption API error:", err);
+        alert("Redemption search failed — check console for details.");
+      });
+  }); // 👈 closes addEventListener correctly
+
 
 </script>
 </body>
