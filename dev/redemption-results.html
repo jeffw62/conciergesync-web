@@ -115,73 +115,64 @@
   </script>
 
   <script>
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("🔍 Loading redemption results…");
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("🔍 Loading redemption results…");
+    
+      const stored = localStorage.getItem("latestRedemptionResults");
+      if (!stored) {
+        console.warn("⚠️ No stored results found.");
+        document.getElementById("results-body").innerHTML =
+          "<tr><td colspan='11'>No stored results found. Run a search from redemption.html.</td></tr>";
+        return;
+      }
+    
+      console.log("✅ Found stored results in localStorage");
+      const data = JSON.parse(stored);
+      const rawResults = Array.isArray(data.results) ? data.results : [];
+      console.log("📦 Normalized results:", rawResults.length);
+    
+      // Map API data to table schema
+      const results = rawResults.map(item => ({
+        date: new Date().toISOString().split("T")[0],
+        origin: item.RouteID?.substring(0, 3) || "—",
+        destination: item.RouteID?.substring(3, 6) || "—",
+        program: item.Source || "Internal",
+        airline: item.Airline || "—",
+        yMiles: item.YMileageCostRaw || null,
+        pMiles: item.WMileageCostRaw || null,
+        jMiles: item.JMileageCostRaw || null,
+        fMiles: item.FMileageCostRaw || null,
+        taxes: item.TotalTaxesRaw ? item.TotalTaxesRaw / 100 : null,
+        updated: item.LastUpdated || Date.now(),
+      }));
+    
+      // 🧩 Render rows using the template
+      const tbody = document.getElementById("results-body");
+      const template = document.getElementById("resultRowTemplate").innerHTML;
+    
+      tbody.innerHTML = results
+        .map(r => template
+          .replace("${date}", r.date)
+          .replace("${origin}", r.origin)
+          .replace("${destination}", r.destination)
+          .replace("${program}", r.program)
+          .replace("${airline}", r.airline)
+          .replace("${yMiles}", r.yMiles ? r.yMiles.toLocaleString() : "—")
+          .replace("${pMiles}", r.pMiles ? r.pMiles.toLocaleString() : "—")
+          .replace("${jMiles}", r.jMiles ? r.jMiles.toLocaleString() : "—")
+          .replace("${fMiles}", r.fMiles ? r.fMiles.toLocaleString() : "—")
+          .replace("${taxes}", r.taxes ? r.taxes.toFixed(2) : "—")
+          .replace("${updated}", new Date(r.updated).toLocaleString("en-US", {
+            month: "short",
+            day: "numeric",
+            hour: "2-digit",
+            minute: "2-digit"
+          }))
+        )
+        .join("");
+    });
+    </script>
 
-  const stored = localStorage.getItem("latestRedemptionResults");
-  if (!stored) {
-    console.warn("⚠️ No stored results found.");
-    document.getElementById("results-body").innerHTML =
-      "<tr><td colspan='11'>No stored results found. Run a search from redemption.html.</td></tr>";
-    return;
-  }
-
-  console.log("✅ Found stored results in localStorage");
-  const data = JSON.parse(stored);
-  const rawResults = Array.isArray(data.results) ? data.results : [];
-
-  console.log("📦 Normalized results:", rawResults.length, rawResults);
-
-  // 🔧 Map current API output to your table schema
-  const results = rawResults.map(item => {
-    return {
-      date: new Date().toISOString().split("T")[0],
-      origin: item.RouteID?.substring(0, 3) || "—",
-      destination: item.RouteID?.substring(3, 6) || "—",
-      program: item.Source || "Internal",
-      airline: item.Airline || "—",
-      yMiles: item.YMileageCostRaw || null,
-      pMiles: item.WMileageCostRaw || null,
-      jMiles: item.JMileageCostRaw || null,
-      fMiles: item.FMileageCostRaw || null,
-      taxes: item.TotalTaxesRaw ? item.TotalTaxesRaw / 100 : null,
-      updated: item.LastUpdated || Date.now(),
-    };
-  });
-
-  const tbody = document.getElementById("results-body");
-  tbody.innerHTML = "";
-
-  if (results.length === 0) {
-    tbody.innerHTML = "<tr><td colspan='11'>No results found in stored data.</td></tr>";
-    return;
-  }
-
-  // 🧩 Render rows using your existing table structure
-  results.forEach(r => {
-    const tr = document.createElement("tr");
-    tr.innerHTML = `
-      <td>${r.date}</td>
-      <td>${r.origin}</td>
-      <td>${r.destination}</td>
-      <td>${r.program}</td>
-      <td>${r.airline}</td>
-      <td>${r.yMiles ? r.yMiles.toLocaleString() + " pts" : "—"}</td>
-      <td>${r.pMiles ? r.pMiles.toLocaleString() + " pts" : "—"}</td>
-      <td>${r.jMiles ? r.jMiles.toLocaleString() + " pts" : "—"}</td>
-      <td>${r.fMiles ? r.fMiles.toLocaleString() + " pts" : "—"}</td>
-      <td>${r.taxes ? "$" + r.taxes.toFixed(2) : "—"}</td>
-      <td>${r.updated ? new Date(r.updated).toLocaleString("en-US", {
-        month: "short",
-        day: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      }) : "—"}</td>
-    `;
-    tbody.appendChild(tr);
-  });
-});
-</script>
 
 
   
