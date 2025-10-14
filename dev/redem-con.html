@@ -659,6 +659,17 @@ window.showGoldCard = showGoldCard;
   });
   </script>
 
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const bridge = document.getElementById("spinner-bridge");
+      const card   = document.querySelector(".gold-card");
+  
+      // remove any leftover overlay/card from previous runs
+      if (bridge) bridge.remove();
+      if (card)   card.remove();
+    });
+  </script>
+
   
 </body>
 </html>
