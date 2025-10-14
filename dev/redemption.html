@@ -572,7 +572,7 @@
   const flexBtn = document.getElementById('flexBtn');
   const flexPicker = document.getElementById('flexPicker');
   
-  function setMode(mode) {
+  function setMode(mode) 
     if (mode === 'exact') {
       exactBtn.classList.add('active');
       flexBtn.classList.remove('active');
@@ -582,7 +582,7 @@
       exactBtn.classList.remove('active');
       flexPicker.style.display = 'block';
     }
-  }
+  
   
   exactBtn.addEventListener('click', () => setMode('exact'));
   flexBtn.addEventListener('click', () => setMode('flexible'));
@@ -832,7 +832,7 @@
   setupAutocomplete('destination', 'destination-suggestions');
 
   // --- Seats.aero API Hook ---
-  document.querySelector('.search-btn').addEventListener('click', () => {
+  document.querySelector('.search-btn').addEventListener'click', () => 
     const origin = document.getElementById('origin').value.trim().toUpperCase();
     const destination = document.getElementById('destination').value.trim().toUpperCase();
     const departDate = document.getElementById('departDate').value;
@@ -913,6 +913,5 @@
     });
 
 </script>
-
 </body>
 </html>
