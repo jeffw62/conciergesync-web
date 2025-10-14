@@ -409,8 +409,18 @@
 </style>
 
 <style>
+  /* Leave the header fixed at the very top */
+  header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+  }
+
+  /* Push page content down by the header's height */
   body {
-    padding-top: 80px; /* space for fixed header */
+    margin: 0;
+    padding-top: 80px; /* adjust to match your header’s exact height */
   }
 </style>
   
