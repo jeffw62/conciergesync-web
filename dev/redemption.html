@@ -426,11 +426,6 @@
   </nav>
 </header>
 
-<section class="hero">
-  <h1>Redemption Engine</h1>
-  <p>Scan and compare the best redemption opportunities across your programs. Sort, filter, and act with confidence.</p>
-</section>
-
 <!-- Guided Search Panel -->
 <div class="search-panel" id="searchPanel">
   <!-- Step 1 -->
@@ -894,23 +889,28 @@
     console.log("➡️ Payload being sent:", payload);
   
     fetch("/api/redemption", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(payload),
+  })
+    .then(res => {
+      if (!res.ok) throw new Error(`Backend error: ${res.status}`);
+      return res.json();
     })
-      .then(res => {
-        if (!res.ok) throw new Error(`Backend error: ${res.status}`);
-        return res.json();
-      })
-      .then(data => {
-        console.log("🔎 Raw API data:", data);
-        displayResults(data, cabin);   // <-- must be `data`, not `data.results`
-      })
-      .catch(err => {
-        console.error("❌ Redemption API error:", err);
-      });
-  });
-
+    .then(data => {
+      console.log("🔎 Raw API data:", data);
+  
+      // Save results locally so results page can read them
+      localStorage.setItem("latestRedemptionResults", JSON.stringify(data));
+      localStorage.setItem("lastSearchParams", JSON.stringify(payload));
+  
+      // Redirect to the internal results viewer
+      window.location.href = "/dev/redemption-results.html";
+    })
+    .catch(err => {
+      console.error("❌ Redemption API error:", err);
+      alert("Redemption search failed — check console for details.");
+    });
 
 </script>
 
