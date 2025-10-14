@@ -70,7 +70,7 @@ function setupRedemptionModule() {
     formContainerCenter.appendChild(spinnerBridge);
   } else {
     // fallback if form not found
-    document.body.appendChild(spinnerBridge);
+    // document.body.appendChild(spinnerBridge);
   }
 
   // === attach bridge inside search form container ===
@@ -80,7 +80,7 @@ function setupRedemptionModule() {
     formContainer.appendChild(spinnerBridge);
   } else {
     // fallback: full-screen center
-    document.body.appendChild(spinnerBridge);
+    // document.body.appendChild(spinnerBridge);
   }
   
   // === Gold Card ===
@@ -281,11 +281,11 @@ function setupRedemptionModule() {
   
   // === Add bridge & card to DOM ===
   spinnerBridge.appendChild(goldCard);
-  document.body.appendChild(spinnerBridge);
+  // document.body.appendChild(spinnerBridge);
   console.log("✅ Spinner bridge & gold card injected");
 
   spinnerBridge.appendChild(goldCard);
-  document.body.appendChild(spinnerBridge);
+  // document.body.appendChild(spinnerBridge);
   console.log("✅ Spinner bridge & gold card injected");
   
   // === Add processing text overlay to gold card ===
