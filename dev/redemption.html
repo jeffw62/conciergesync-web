@@ -449,16 +449,24 @@
 </main>
 
 <script>
-  // Footer loader
-  fetch("/dev/footer.html")
-    .then(res => res.text())
-    .then(html => { document.getElementById("footer").innerHTML = html; })
-    .catch(err => console.error("Footer failed to load:", err));
+  // === Header & Footer Safe Loaders ===
 
-  // Hamburger toggle
-  const toggleBtn = document.querySelector(".menu-toggle");
-  const nav = document.querySelector("header nav");
+// Footer loader (safe for pages without footer)
+fetch("/dev/footer.html")
+  .then(res => res.text())
+  .then(html => {
+    const footer = document.getElementById("footer");
+    if (footer) footer.innerHTML = html; // ✅ only update if footer exists
+  })
+  .catch(err => console.error("Footer failed to load:", err));
+
+// Hamburger toggle (safe for pages without header/menu)
+const toggleBtn = document.querySelector(".menu-toggle");
+const nav = document.querySelector("header nav");
+if (toggleBtn && nav) {
   toggleBtn.addEventListener("click", () => nav.classList.toggle("active"));
+}
+
 
   // Date selection card logic
   const exactBtn = document.getElementById('exactBtn');
