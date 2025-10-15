@@ -98,11 +98,11 @@
       <td data-label="Destination">${destination}</td>
       <td data-label="Program">${program}</td>
       <td data-label="Airline">${airline}</td>
-      <td data-label="Economy">${yMiles}</td>
-      <td data-label="Premium">${pMiles)</td>
-      <td data-label="Business">${jMiles)</td>
-      <td data-label="First">${fMiles)</td>
-      <td data-label="Taxes / Fees">${taxes}</td>
+      <td data-label="Economy">${yMiles ? yMiles.toLocaleString() + " pts" : "—"}</td>
+      <td data-label="Premium">${pMiles ? pMiles.toLocaleString() + " pts" : "—"}</td>
+      <td data-label="Business">${jMiles ? jMiles.toLocaleString() + " pts" : "—"}</td>
+      <td data-label="First">${fMiles ? fMiles.toLocaleString() + " pts" : "—"}</td>
+      <td data-label="Taxes / Fees">${taxes ? "$" + taxes.toFixed(2) : "—"}</td>
       <td data-label="Last Seen">
         ${updated ? new Date(updated).toLocaleString("en-US", {
           month: "short",
