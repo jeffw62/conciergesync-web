@@ -24,6 +24,7 @@ async function fetchCashFare({ origin, destination, departDate }) {
   };
 
   try {
+    console.log("🔗 SerpApi request params:", JSON.stringify(params, null, 2));
     const response = await axios.get("https://serpapi.com/search.json", { params });
     // Try both shapes (depends on route richness)
     const priceRaw =
