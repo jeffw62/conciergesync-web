@@ -9,8 +9,8 @@ document.addEventListener("DOMContentLoaded", () => {
   if (stored) {
     console.log("✅ Found stored results in localStorage");
     const results = JSON.parse(stored);
-      console.log("🔍 Loaded results object:", results);
-    renderResults(results);
+    const list = results.results || results;
+    renderResults(list);
   } else {
     console.warn("❌ No results found in localStorage");
     const body = document.getElementById("results-body");
