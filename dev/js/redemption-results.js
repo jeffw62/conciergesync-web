@@ -100,7 +100,12 @@ function renderResults(results) {
             })
           : "—"
       }</td>
-    </td>
+    <td data-label="Cash Value">${
+        r.cashValue ? "$" + Number(r.cashValue).toLocaleString() : "—"
+      }</td>
+      <td data-label="CPM">${
+        r.CPM ? r.CPM.toFixed(2) + " ¢/mi" : "—"
+      }</td>
   `;
 
     tbody.appendChild(row);
