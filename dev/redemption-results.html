@@ -144,7 +144,18 @@
         pMiles: item.WMileageCostRaw || null,
         jMiles: item.JMileageCostRaw || null,
         fMiles: item.FMileageCostRaw || null,
-        taxes: item.TotalTaxesRaw ? item.TotalTaxesRaw / 100 : null,
+        taxes:
+          item.TotalTaxesRaw ||
+          item.YTotalTaxesRaw ||
+          item.JTotalTaxesRaw ||
+          item.FTotalTaxesRaw ||
+          item.TotalTaxes
+            ? (item.TotalTaxesRaw ||
+               item.YTotalTaxesRaw ||
+               item.JTotalTaxesRaw ||
+               item.FTotalTaxesRaw ||
+               item.TotalTaxes) / 100
+            : null,
         updated: item.LastUpdated || Date.now(),
       }));
     
