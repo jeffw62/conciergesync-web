@@ -149,8 +149,8 @@
       }));
     
       // 🧩 Render rows using the template
-      const tbody = document.getElementById("results-body");
       const template = document.getElementById("resultRowTemplate").innerHTML;
+      console.log("Template preview:", template.slice(0,150));   // <-- here, after it's defined
 
       console.log("Rendering rows:", results.length);
       console.log("First mapped record:", results[0]);
