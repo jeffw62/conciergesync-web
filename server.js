@@ -129,21 +129,6 @@ let cashValue = null;
     }
   }
     
-// ----------------------------------------------
-// Fetch indicative cash fare via SerpApi
-// ----------------------------------------------
-let cashValue = null;
-  try {
-    cashValue = await fetchCashFare({
-      origin: payload.origin,
-      destination: payload.destination,
-      departDate: payload.date,
-    });
-    console.log(`💵 Indicative cash fare for ${payload.origin}-${payload.destination}:`, cashValue);
-  } catch (err) {
-    console.warn("⚠️ SerpApi call failed:", err.message);
-  }
-    
     // determine search window based on mode (exact vs flexible)
     const flexDays = parseInt(payload.flexDays || 0, 10);
     const mode = payload.mode || "exact";
