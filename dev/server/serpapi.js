@@ -16,8 +16,8 @@ async function fetchCashFare({ origin, destination, departDate }) {
 
   const params = {
     engine: "google_flights",
-    departure_id: origin,
-    arrival_id: destination,
+    departure_airport: origin,
+    arrival_airport: destination,
     outbound_date: departDate,
     currency: "USD",
     api_key: apiKey,
