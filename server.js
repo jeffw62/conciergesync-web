@@ -229,6 +229,42 @@ let cashValue = null;
       const cpm = miles > 0 && cash > 0 ? ((cash - fees) / miles) * 100 : null;
       return { ...r, cashValue: cashValue, CPM: cpm };
     });
+
+    // ----------------------------------------------
+    // Attach live cash fare and CPM to each result
+    // ----------------------------------------------
+    for (const r of finalResults) {
+      const travelClassMap = { economy: 1, premium: 2, business: 3, first: 4 };
+      const travelClass =
+        travelClassMap[(r.cabin || "economy").toLowerCase()] || 1;
+    
+      const key = serpKey(r.origin || payload.origin, r.destination || payload.destination, payload.date, travelClass);
+    
+      // Reuse cache first
+      let cashValue = serpCache.get(key);
+      if (!cashValue) {
+        try {
+          cashValue = await fetchCashFare({
+            origin: r.origin || payload.origin,
+            destination: r.destination || payload.destination,
+            departDate: payload.date,
+            travelClass,
+          });
+          serpCache.set(key, cashValue);
+          console.log(`💵 Cached SerpApi fare for ${key}:`, cashValue);
+        } catch (err) {
+          console.warn("⚠️ SerpApi fetch failed in fusion loop:", err.message);
+        }
+      }
+    
+      const miles = r.MilesNeeded || 0;
+      const fees = parseFloat(r.TaxesAndFeesUSD || 0);
+      const cash = parseFloat(cashValue || 0);
+      const cpm = miles > 0 && cash > 0 ? ((cash - fees) / miles) * 100 : null;
+    
+      r.cashValue = cashValue;
+      r.CPM = cpm;
+    }
     
     res.status(200).json({
       sessionId: Date.now(),
