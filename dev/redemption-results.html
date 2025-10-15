@@ -98,19 +98,12 @@
       <td data-label="Destination">${destination}</td>
       <td data-label="Program">${program}</td>
       <td data-label="Airline">${airline}</td>
-      <td data-label="Economy">${yMiles ? yMiles.toLocaleString() + " pts" : "—"}</td>
-      <td data-label="Premium">${pMiles ? pMiles.toLocaleString() + " pts" : "—"}</td>
-      <td data-label="Business">${jMiles ? jMiles.toLocaleString() + " pts" : "—"}</td>
-      <td data-label="First">${fMiles ? fMiles.toLocaleString() + " pts" : "—"}</td>
-      <td data-label="Taxes / Fees">${taxes ? "$" + taxes.toFixed(2) : "—"}</td>
-      <td data-label="Last Seen">
-        ${updated ? new Date(updated).toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
-        }) : "—"}
-      </td>
+      <td data-label="Economy">${yMiles}</td>
+      <td data-label="Premium">${pMiles}</td>
+      <td data-label="Business">${jMiles}</td>
+      <td data-label="First">${fMiles}</td>
+      <td data-label="Taxes / Fees">${taxes}</td>
+      <td data-label="Last Seen">${updated}</td>
   </tr>
   </script>
 
@@ -168,12 +161,14 @@
         .replace(/\$\{jMiles\}/g, r.jMiles ? r.jMiles.toLocaleString() + " pts" : "—")
         .replace(/\$\{fMiles\}/g, r.fMiles ? r.fMiles.toLocaleString() + " pts" : "—")
         .replace(/\$\{taxes\}/g, r.taxes ? "$" + r.taxes.toFixed(2) : "—")
-        .replace(/\$\{updated\}/g, new Date(r.updated).toLocaleString("en-US", {
-          month: "short",
-          day: "numeric",
-          hour: "2-digit",
-          minute: "2-digit"
-        }))
+        .replace(/\$\{updated\}/g, r.updated
+          ? new Date(r.updated).toLocaleString("en-US", {
+              month: "short",
+              day: "numeric",
+              hour: "2-digit",
+              minute: "2-digit"
+            })
+          : "—")
       )
       .join("");
       console.log("🧱 Rendered HTML output:", tbody.innerHTML.slice(0, 500));
