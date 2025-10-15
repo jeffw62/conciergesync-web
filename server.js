@@ -277,8 +277,8 @@ let cashValue = null;
     
     res.status(200).json({
       sessionId: Date.now(),
-      results: enrichedResults,
-    });
+      results: finalResults,
+  });
 
   } catch (err) {
     console.error("❌ Redemption API error:", err);
