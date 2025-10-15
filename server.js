@@ -77,12 +77,6 @@ function applySanityFilter(results) {
 }
 
 // ===============================================
-// Static File Handling
-// ===============================================
-// Serve static files from the dev directory
-app.use("/dev", express.static(path.join(__dirname, "dev")));
-
-// ===============================================
 // Live Redemption Search Endpoint (dynamic window)
 // ===============================================
 app.post("/api/redemption", async (req, res) => {
@@ -380,6 +374,11 @@ app.get("/api/test-fusion", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+
+// ===============================================
+// Static File Handling (must come after all APIs)
+// ===============================================
+app.use("/dev", express.static(path.join(__dirname, "dev")));
 
 // ===============================================
 // Start Server
