@@ -49,15 +49,18 @@ async function fetchCashFare({ origin, destination, departDate, travelClass = 1 
       return null;
     }
 
-    // ✅ Temporary simulation: apply slight random or program-based variance
-    let fare = parseFloat(String(price).replace(/[^\d.]/g, ""));
-    if (arguments[0].program) {
-      const seed = arguments[0].program.charCodeAt(0) % 5; // 0–4
-      fare += seed * 10; // bump by up to $40 depending on program
-    } else {
-      fare += Math.floor(Math.random() * 25); // add small random delta
-    }
-    return fare;
+   // ✅ Temporary simulation: apply slight random or program-based variance
+  let fare = parseFloat(String(price).replace(/[^\d.]/g, ""));
+  if (arguments[0].program) {
+    // derive a simple hash from the entire program string
+    const chars = arguments[0].program.split("");
+    const seed = chars.reduce((acc, ch) => acc + ch.charCodeAt(0), 0) % 11; // 0–10
+    fare += seed * 3; // bump by up to $30 depending on program
+  } else {
+    fare += Math.floor(Math.random() * 25); // add small random delta
+  }
+  return fare;
+
   } catch (err) {
     console.error("SerpApi fetch error:", err.response?.data || err.message);
     return null;
