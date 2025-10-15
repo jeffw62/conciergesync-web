@@ -245,7 +245,12 @@ let cashValue = null;
       const travelClass =
         travelClassMap[(r.cabin || "economy").toLowerCase()] || 1;
     
-      const key = serpKey(r.origin || payload.origin, r.destination || payload.destination, payload.date, travelClass);
+      const key = serpKey(
+        r.origin || payload.origin,
+        r.destination || payload.destination,
+        r.date || payload.date,
+        `${travelClass}-${r.program || payload.program || "default"}`
+      );
     
       // Reuse cache first
       let cashValue = serpCache.get(key);
