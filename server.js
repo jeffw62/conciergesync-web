@@ -254,8 +254,9 @@ let cashValue = null;
           cashValue = await fetchCashFare({
             origin: r.origin || payload.origin,
             destination: r.destination || payload.destination,
-            departDate: payload.date,
+            departDate: r.date || payload.date,
             travelClass,
+            program: r.program || payload.program || null
           });
           serpCache.set(key, cashValue);
           console.log(`💵 Cached SerpApi fare for ${key}:`, cashValue);
