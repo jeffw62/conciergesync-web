@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", () => {
   } else {
     console.warn("❌ No results found in localStorage");
     const body = document.getElementById("results-body");
-    if (body) {
+    if (body && body.querySelectorAll("tr").length === 0) {
       body.innerHTML =
         '<tr><td colspan="8" style="text-align:center;">No results to display.</td></tr>';
     }
