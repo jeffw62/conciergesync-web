@@ -126,10 +126,10 @@
       console.log("📦 Normalized results:", rawResults.length);
     
       // Map API data to table schema
-        const results = rawResults.map(item => ({
+      const results = rawResults.map(item => ({
         date: new Date().toISOString().split("T")[0],
-        origin: item.RouteID?.substring(0, 3) || "—",
-        destination: item.RouteID?.substring(3, 6) || "—",
+        origin: item.Route?.OriginAirport || item.Origin || "—",
+        destination: item.Route?.DestinationAirport || item.Destination || "—",
         program: item.Source || "Internal",
         airline: item.Airline || "—",
         yMiles: item.YMileageCostRaw || null,
