@@ -133,6 +133,7 @@
       console.log("📦 Normalized results:", rawResults.length);
     
       // Map API data to table schema
+      console.log("Template preview:", template.slice(0, 150));
       const results = rawResults.map(item => ({
         date: new Date().toISOString().split("T")[0],
         origin: item.RouteID?.substring(0, 3) || "—",
