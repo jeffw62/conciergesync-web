@@ -158,17 +158,17 @@
       
       tbody.innerHTML = results
       .map(r => template
-        .replace("${date}", r.date)
-        .replace("${origin}", r.origin)
-        .replace("${destination}", r.destination)
-        .replace("${program}", r.program)
-        .replace("${airline}", r.airline)
-        .replace("${yMiles}", r.yMiles ? r.yMiles.toLocaleString() + " pts" : "—")
-        .replace("${pMiles}", r.pMiles ? r.pMiles.toLocaleString() + " pts" : "—")
-        .replace("${jMiles}", r.jMiles ? r.jMiles.toLocaleString() + " pts" : "—")
-        .replace("${fMiles}", r.fMiles ? r.fMiles.toLocaleString() + " pts" : "—")
-        .replace("${taxes}", r.taxes ? "$" + r.taxes.toFixed(2) : "—")
-        .replace("${updated}", new Date(r.updated).toLocaleString("en-US", {
+        .replace(/\$\{date\}/g, r.date)
+        .replace(/\$\{origin\}/g, r.origin)
+        .replace(/\$\{destination\}/g, r.destination)
+        .replace(/\$\{program\}/g, r.program)
+        .replace(/\$\{airline\}/g, r.airline)
+        .replace(/\$\{yMiles\}/g, r.yMiles ? r.yMiles.toLocaleString() + " pts" : "—")
+        .replace(/\$\{pMiles\}/g, r.pMiles ? r.pMiles.toLocaleString() + " pts" : "—")
+        .replace(/\$\{jMiles\}/g, r.jMiles ? r.jMiles.toLocaleString() + " pts" : "—")
+        .replace(/\$\{fMiles\}/g, r.fMiles ? r.fMiles.toLocaleString() + " pts" : "—")
+        .replace(/\$\{taxes\}/g, r.taxes ? "$" + r.taxes.toFixed(2) : "—")
+        .replace(/\$\{updated\}/g, new Date(r.updated).toLocaleString("en-US", {
           month: "short",
           day: "numeric",
           hour: "2-digit",
