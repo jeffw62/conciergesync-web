@@ -785,11 +785,11 @@ if (toggleBtn && nav) {
   
     console.log("➡️ Payload being sent:", payload);
   
-    fetch("/api/redemption", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    })
+      fetch("https://conciergesync.ai/api/redemption", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      })
       .then(res => {
         if (!res.ok) throw new Error(`Backend error: ${res.status}`);
         return res.json();
