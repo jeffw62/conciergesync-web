@@ -87,6 +87,21 @@ app.post("/api/redemption", async (req, res) => {
       });
     }
 
+// ----------------------------------------------
+// Fetch indicative cash fare via SerpApi
+// ----------------------------------------------
+let cashValue = null;
+  try {
+    cashValue = await fetchCashFare({
+      origin: payload.origin,
+      destination: payload.destination,
+      departDate: payload.date,
+    });
+    console.log(`💵 Indicative cash fare for ${payload.origin}-${payload.destination}:`, cashValue);
+  } catch (err) {
+    console.warn("⚠️ SerpApi call failed:", err.message);
+  }
+    
     // determine search window based on mode (exact vs flexible)
     const flexDays = parseInt(payload.flexDays || 0, 10);
     const mode = payload.mode || "exact";
@@ -155,17 +170,32 @@ app.post("/api/redemption", async (req, res) => {
       const miles = r[cabinField] || r.YMileageCost || 0;
       return { ...r, MilesNeeded: miles };
     });
-    
+
+    // Attach indicative cash value to each record
+    const withCashValues = cabinAdjusted.map(r => ({
+      ...r,
+      cashValue: cashValue,
+    }));
+
+    // Compute CPM (cents per mile)
+    const withCpm = withCashValues.map(r => {
+      const miles = r.MilesNeeded || 0;
+      const fees = parseFloat(r.TaxesAndFeesUSD || 0);
+      const cash = parseFloat(r.cashValue || 0);
+      const cpm = miles > 0 && cash > 0 ? ((cash - fees) / miles) * 100 : null;
+      return { ...r, CPM: cpm };
+    });
+
     // --- Filter by selected program if provided ---
-    const selectedProgram = payload.program.toLowerCase();
+    const selectedProgram = (payload.program || "").toLowerCase();
     const finalResults = selectedProgram
-      ? cabinAdjusted.filter(r => r.Source?.toLowerCase() === selectedProgram)
-      : cabinAdjusted;
+      ? withCpm.filter(r => r.Source?.toLowerCase() === selectedProgram)
+      : withCpm;
 
     res.status(200).json({
-      sessionId: Date.now(),
-      results: finalResults,
-    });
+    sessionId: Date.now(),
+    results: finalResults,
+  });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     res.status(500).json({
