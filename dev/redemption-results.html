@@ -150,7 +150,11 @@
       // 🧩 Render rows using the template
       const tbody = document.getElementById("results-body");
       const template = document.getElementById("resultRowTemplate").innerHTML;
-    
+
+      console.log("Rendering rows:", results.length);
+      console.log("First mapped record:", results[0]);
+
+      
       tbody.innerHTML = results
         .map(r => template
           .replace("${date}", r.date)
