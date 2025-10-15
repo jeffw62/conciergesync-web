@@ -224,6 +224,19 @@ let cashValue = null;
       return { ...r, cashValue: cashValue, CPM: cpm };
     });
 
+    // ✅ Normalize cashValue and CPM fields for all records before sending
+    enrichedResults.forEach(r => {
+      if (r.cashValue == null || r.cashValue === undefined) r.cashValue = cashValue || 0;
+      if (r.CPM == null || r.CPM === undefined) {
+        const miles = r.MilesNeeded || 0;
+        const fees = parseFloat(r.TaxesAndFeesUSD || 0);
+        const cash = parseFloat(r.cashValue || 0);
+        r.CPM = miles > 0 && cash > 0 ? ((cash - fees) / miles) * 100 : null;
+      }
+    });
+
+    console.log("📊 Enriched sample record (post-normalization):", enrichedResults[0]);
+
     // ----------------------------------------------
     // Attach live cash fare and CPM to each result
     // ----------------------------------------------
