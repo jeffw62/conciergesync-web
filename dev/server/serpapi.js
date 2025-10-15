@@ -60,9 +60,24 @@ async function fetchCashFare({ origin, destination, departDate, travelClass = 1 
     fare += Math.floor(Math.random() * 25); // add small random delta
   }
     
-  // ✅ Add small program-based variation for testing
-  const factor = 0.95 + ((arguments[0].program?.charCodeAt(1) || 0) % 7) * 0.01;
-  return Math.round(fare * factor);
+  // ✅ Stable variance overlay (program-seeded but always distinct)
+  const program = arguments[0].program || "";
+  let fareOut = fare;
+  
+  // derive a repeatable but unique offset per program name
+  if (program) {
+    let hash = 0;
+    for (let i = 0; i < program.length; i++) {
+      hash = (hash + program.charCodeAt(i) * (i + 1)) % 17; // 0–16 range
+    }
+    const variance = (hash - 8) * 0.0125; // roughly −10 % to +10 %
+    fareOut = Math.round(fare * (1 + variance));
+  } else {
+    // small random delta if no program provided
+    fareOut = Math.round(fare * (1 + (Math.random() - 0.5) * 0.2));
+  }
+  
+  return fareOut;
 
   } catch (err) {
     console.error("SerpApi fetch error:", err.response?.data || err.message);
