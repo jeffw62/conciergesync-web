@@ -129,6 +129,7 @@
       console.log("✅ Found stored results in localStorage");
       const data = JSON.parse(stored);
       const rawResults = Array.isArray(data.results) ? data.results : [];
+      console.log("🔬 Sample record from script:", rawResults[0]);
       console.log("📦 Normalized results:", rawResults.length);
     
       // Map API data to table schema
