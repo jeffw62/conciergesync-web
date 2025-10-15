@@ -177,7 +177,9 @@
       )
       .join("");
       console.log("🧱 Rendered HTML output:", tbody.innerHTML.slice(0, 500));
-
+      setTimeout(() => {
+        console.log("🔍 After delay, row count:", document.querySelectorAll("#results-body tr").length);
+      }, 2000);  // wait 2 seconds to see if rows disappear
     });
     </script>
 
