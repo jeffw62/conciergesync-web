@@ -259,6 +259,8 @@ let cashValue = null;
       r.cashValue = cashValue;
       r.CPM = cpm;
     }
+
+    console.log("📊 Enriched sample record:", enrichedResults[0]);
     
     res.status(200).json({
       sessionId: Date.now(),
