@@ -14,19 +14,24 @@ async function fetchCashFare({ origin, destination, departDate, travelClass = 1 
     return null;
   }
 
-  const params = {
-    engine: "google_flights",
-    departure_id: origin,
-    arrival_id: destination,
-    outbound_date: departDate,
-    travel_class: travelClass,  // 1=Econ,2=PremEcon,3=Biz,4=First
-    type: 2,                    // 2 = One-way (default for redemptions)
-    currency: "USD",
-    gl: "us",
-    hl: "en",
-    deep_search: false,         // optional, can flip to true later
-    api_key: apiKey,
-  };
+    const params = {
+      engine: "google_flights",
+      departure_id: origin,
+      arrival_id: destination,
+      outbound_date: departDate,
+      travel_class: travelClass,  // 1=Econ,2=PremEcon,3=Biz,4=First
+      type: 2,                    // 2 = One-way (default for redemptions)
+      currency: "USD",
+      gl: "us",
+      hl: "en",
+      deep_search: false,         // optional, can flip to true later
+      api_key: apiKey,
+  
+      // ✅ Add slight noise so each program/date call is unique
+      context_token: `${origin}-${destination}-${departDate}-${travelClass}-${Math.random()
+        .toString(36)
+        .slice(2, 8)}`,
+    };
 
   try {
     console.log("🔗 SerpApi request:", JSON.stringify(params, null, 2));
