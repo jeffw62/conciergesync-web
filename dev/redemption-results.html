@@ -122,71 +122,66 @@
       console.log("✅ Found stored results in localStorage");
       const data = JSON.parse(stored);
       const rawResults = Array.isArray(data.results) ? data.results : [];
-      console.log("🔬 Sample record from script:", rawResults[0]);
-      console.log("📦 Normalized results:", rawResults.length);
-    
-      // === Universal field resolver ===
-      function getValue(item, baseKey, divideBy100 = false) {
-        const cabins = ["Y", "W", "J", "F"];
-        for (const c of cabins) {
-          const rawKey = `${c}${baseKey}Raw`;
-          const directKey = `${c}Direct${baseKey}Raw`;
-          const plainKey = `${c}${baseKey}`;
-          const directPlain = `${c}Direct${baseKey}`;
-          if (item[rawKey]) return divideBy100 ? item[rawKey] / 100 : item[rawKey];
-          if (item[directKey]) return divideBy100 ? item[directKey] / 100 : item[directKey];
-          if (item[plainKey]) return divideBy100 ? item[plainKey] / 100 : item[plainKey];
-          if (item[directPlain]) return divideBy100 ? item[directPlain] / 100 : item[directPlain];
-        }
-        return null;
+      console.log("🧠 Normalized results:", rawResults.length);
+      if (rawResults.length === 0) {
+        document.getElementById("results-body").innerHTML =
+          "<tr><td colspan='11' style='text-align:center;'>No results found</td></tr>";
+        return;
       }
       
-      // === Simplified mapping ===
-      const results = rawResults.map(item => ({
-        date: item.Date || new Date().toISOString().split("T")[0],
-        origin: item.Route?.OriginAirport || item.Origin || "—",
-        destination: item.Route?.DestinationAirport || item.Destination || "—",
-        program: item.Source || "Internal",
-        airline: getValue(item, "Airlines") || "—",
-        yMiles: getValue(item, "MileageCost"),
-        pMiles: getValue(item, "MileageCost"),
-        jMiles: getValue(item, "MileageCost"),
-        fMiles: getValue(item, "MileageCost"),
-        taxes: getValue(item, "TotalTaxes", true),
-        updated: item.UpdatedAt || item.LastUpdated || Date.now(),
-      }));
-    
-      // 🧩 Render rows using the template
-      const tbody = document.getElementById("results-body");
-      const template = document.getElementById("resultRowTemplate").innerHTML;  // define first!
-
-      console.log("Template preview:", template.slice(0, 150));
+      // 🔍 Map the API data into the table fields exactly once per cabin
+      const results = rawResults.map(item => {
+        const taxesRaw =
+          item.YTotalTaxesRaw || item.JTotalTaxesRaw || item.FTotalTaxesRaw || item.TotalTaxesRaw || 0;
+        const airlineRaw =
+          item.YAirlinesRaw || item.JAirlinesRaw || item.FAirlinesRaw || item.Airlines || "—";
       
-      console.log("Rendering rows:", results.length);
-      console.log("First mapped record:", results[0]);
+        return {
+          date: item.Date || new Date().toISOString().split("T")[0],
+          origin: item.Route?.OriginAirport || item.Origin || "—",
+          destination: item.Route?.DestinationAirport || item.Destination || "—",
+          program: item.Source || "Internal",
+          airline: airlineRaw,
+          yMiles: item.YMileageCostRaw || null,
+          pMiles: item.WMileageCostRaw || null,
+          jMiles: item.JMileageCostRaw || null,
+          fMiles: item.FMileageCostRaw || null,
+          taxes: taxesRaw ? (taxesRaw / 100).toFixed(2) : null,
+          updated: item.UpdatedAt || item.LastUpdated || Date.now(),
+        };
+      });
+      
+      console.log("🧩 First mapped record:", results[0]);
+      
+      // 🧱 Render rows into the table
+      const tbody = document.getElementById("results-body");
+      const template = document.getElementById("resultRowTemplate").innerHTML;
       
       tbody.innerHTML = results
-      .map(r => template
-        .replace(/\$\{date\}/g, r.date)
-        .replace(/\$\{origin\}/g, r.origin)
-        .replace(/\$\{destination\}/g, r.destination)
-        .replace(/\$\{program\}/g, r.program)
-        .replace(/\$\{airline\}/g, r.airline)
-        .replace(/\$\{yMiles\}/g, r.yMiles ? r.yMiles.toLocaleString() + " pts" : "—")
-        .replace(/\$\{pMiles\}/g, r.pMiles ? r.pMiles.toLocaleString() + " pts" : "—")
-        .replace(/\$\{jMiles\}/g, r.jMiles ? r.jMiles.toLocaleString() + " pts" : "—")
-        .replace(/\$\{fMiles\}/g, r.fMiles ? r.fMiles.toLocaleString() + " pts" : "—")
-        .replace(/\$\{taxes\}/g, r.taxes ? "$" + r.taxes.toFixed(2) : "—")
-        .replace(/\$\{updated\}/g, r.updated
-          ? new Date(r.updated).toLocaleString("en-US", {
-              month: "short",
-              day: "numeric",
-              hour: "2-digit",
-              minute: "2-digit"
-            })
-          : "—")
-      )
-      .join("");
+        .map(r =>
+          template
+            .replace("${date}", r.date)
+            .replace("${origin}", r.origin)
+            .replace("${destination}", r.destination)
+            .replace("${program}", r.program)
+            .replace("${airline}", r.airline)
+            .replace("${yMiles}", r.yMiles ? r.yMiles.toLocaleString() : "—")
+            .replace("${pMiles}", r.pMiles ? r.pMiles.toLocaleString() : "—")
+            .replace("${jMiles}", r.jMiles ? r.jMiles.toLocaleString() : "—")
+            .replace("${fMiles}", r.fMiles ? r.fMiles.toLocaleString() : "—")
+            .replace("${taxes}", r.taxes ? r.taxes : "—")
+            .replace(
+              "${updated}",
+              new Date(r.updated).toLocaleString("en-US", {
+                month: "short",
+                day: "numeric",
+                hour: "2-digit",
+                minute: "2-digit"
+              })
+            )
+        )
+        .join("");
+
       console.log("🧱 Rendered HTML output:", tbody.innerHTML.slice(0, 500));
       setTimeout(() => {
         console.log("🔍 After delay, row count:", document.querySelectorAll("#results-body tr").length);
