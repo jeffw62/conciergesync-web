@@ -235,7 +235,6 @@ let cashValue = null;
       results: enrichedResults,
     });
 
-  });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
     res.status(500).json({
