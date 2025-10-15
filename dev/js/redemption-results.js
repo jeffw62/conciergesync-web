@@ -25,6 +25,7 @@ document.addEventListener("DOMContentLoaded", () => {
 // Render Function – Multi-Cabin Output
 // =====================================================
 function renderResults(results) {
+  console.log("🧭 renderResults input:", results);
   const tbody = document.getElementById("results-body");
   if (!tbody) {
     console.warn("⚠️ Table body not found.");
