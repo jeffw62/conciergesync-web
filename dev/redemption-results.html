@@ -125,38 +125,35 @@
       console.log("🔬 Sample record from script:", rawResults[0]);
       console.log("📦 Normalized results:", rawResults.length);
     
-      // Map API data to table schema
+      // === Universal field resolver ===
+      function getValue(item, baseKey, divideBy100 = false) {
+        const cabins = ["Y", "W", "J", "F"];
+        for (const c of cabins) {
+          const rawKey = `${c}${baseKey}Raw`;
+          const directKey = `${c}Direct${baseKey}Raw`;
+          const plainKey = `${c}${baseKey}`;
+          const directPlain = `${c}Direct${baseKey}`;
+          if (item[rawKey]) return divideBy100 ? item[rawKey] / 100 : item[rawKey];
+          if (item[directKey]) return divideBy100 ? item[directKey] / 100 : item[directKey];
+          if (item[plainKey]) return divideBy100 ? item[plainKey] / 100 : item[plainKey];
+          if (item[directPlain]) return divideBy100 ? item[directPlain] / 100 : item[directPlain];
+        }
+        return null;
+      }
+      
+      // === Simplified mapping ===
       const results = rawResults.map(item => ({
-        date: new Date().toISOString().split("T")[0],
+        date: item.Date || new Date().toISOString().split("T")[0],
         origin: item.Route?.OriginAirport || item.Origin || "—",
         destination: item.Route?.DestinationAirport || item.Destination || "—",
         program: item.Source || "Internal",
-        airline:
-          item.Airline ||
-          item.WAirlines ||
-          item.JAirlines ||
-          item.FAirlines ||
-          item.WAirlinesRaw ||
-          item.JAirlinesRaw ||
-          item.FAirlinesRaw ||
-          "—",
-        yMiles: item.YMileageCostRaw || null,
-        pMiles: item.WMileageCostRaw || null,
-        jMiles: item.JMileageCostRaw || null,
-        fMiles: item.FMileageCostRaw || null,
-        taxes:
-          item.TotalTaxesRaw ||
-          item.YTotalTaxesRaw ||
-          item.JTotalTaxesRaw ||
-          item.FTotalTaxesRaw ||
-          item.TotalTaxes
-            ? (item.TotalTaxesRaw ||
-               item.YTotalTaxesRaw ||
-               item.JTotalTaxesRaw ||
-               item.FTotalTaxesRaw ||
-               item.TotalTaxes) / 100
-            : null,
-        updated: item.LastUpdated || Date.now(),
+        airline: getValue(item, "Airlines") || "—",
+        yMiles: getValue(item, "MileageCost"),
+        pMiles: getValue(item, "MileageCost"),
+        jMiles: getValue(item, "MileageCost"),
+        fMiles: getValue(item, "MileageCost"),
+        taxes: getValue(item, "TotalTaxes", true),
+        updated: item.UpdatedAt || item.LastUpdated || Date.now(),
       }));
     
       // 🧩 Render rows using the template
