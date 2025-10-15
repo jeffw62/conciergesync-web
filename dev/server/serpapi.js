@@ -36,6 +36,7 @@ async function fetchCashFare({ origin, destination, departDate, travelClass = 1 
   try {
     console.log("🔗 SerpApi request:", JSON.stringify(params, null, 2));
     const response = await axios.get("https://serpapi.com/search.json", { params });
+    console.log("🧭 SerpApi raw response keys:", Object.keys(response.data || {}));
 
     // Try common return shapes
     const price =
@@ -44,6 +45,7 @@ async function fetchCashFare({ origin, destination, departDate, travelClass = 1 
       response.data?.price_insights?.lowest_price ||
       null;
 
+    console.log("🧾 SerpApi sample response snippet:", JSON.stringify(response.data?.best_flight || response.data?.best_flights?.[0] || response.data?.price_insights || response.data, null, 2));
     if (!price) {
       console.log(`No price found for ${origin}-${destination} ${departDate}`);
       return null;
