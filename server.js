@@ -3,6 +3,9 @@
 // ===============================================
 const express = require("express");
 const path = require("path");
+// SerpApi helper (fetches indicative cash fares)
+const { fetchCashFare } = require("./server/serpapi");
+
 console.log("SerpApi key detected:", !!process.env.SERP_API_KEY);
 const app = express();
 
@@ -205,9 +208,28 @@ app.get("/api/redemption/testBulk", async (req, res) => {
   }
 });
 
+// =====================================================
+// Temporary test route for SerpApi integration
+// =====================================================
+app.get("/api/test-serp", async (req, res) => {
+  try {
+    const result = await fetchCashFare({
+      origin: "DFW",
+      destination: "LHR",
+      departDate: "2025-12-01",
+    });
+    res.json({ cashValue: result });
+  } catch (err) {
+    console.error("Test /api/test-serp error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
+
 // ===============================================
 // Start Server
 // ===============================================
 app.listen(PORT, () => {
   console.log(`ConciergeSync Web running on port ${PORT}`);
 });
+
+
