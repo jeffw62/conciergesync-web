@@ -239,18 +239,22 @@ app.get("/api/redemption/testBulk", async (req, res) => {
 });
 
 // =====================================================
-// Temporary test route for SerpApi integration
+// Dynamic SerpApi test route
+// Usage: /api/test-serp?origin=JFK&destination=LAX&date=2025-11-05
 // =====================================================
 app.get("/api/test-serp", async (req, res) => {
   try {
-    const result = await fetchCashFare({
-      origin: "DFW",
-      destination: "LHR",
-      departDate: "2025-12-01",
-    });
-    res.json({ cashValue: result });
+    const origin = (req.query.origin || "DFW").toUpperCase();
+    const destination = (req.query.destination || "LHR").toUpperCase();
+    const departDate = req.query.date || "2025-12-01";
+
+    console.log(`🔍 Test SerpApi lookup: ${origin} → ${destination} (${departDate})`);
+
+    const result = await fetchCashFare({ origin, destination, departDate });
+
+    res.json({ origin, destination, departDate, cashValue: result });
   } catch (err) {
-    console.error("Test /api/test-serp error:", err);
+    console.error("❌ Test /api/test-serp error:", err);
     res.status(500).json({ error: err.message });
   }
 });
