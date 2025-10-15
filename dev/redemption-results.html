@@ -131,7 +131,15 @@
         origin: item.Route?.OriginAirport || item.Origin || "—",
         destination: item.Route?.DestinationAirport || item.Destination || "—",
         program: item.Source || "Internal",
-        airline: item.Airline || "—",
+        airline:
+          item.Airline ||
+          item.WAirlines ||
+          item.JAirlines ||
+          item.FAirlines ||
+          item.WAirlinesRaw ||
+          item.JAirlinesRaw ||
+          item.FAirlinesRaw ||
+          "—",
         yMiles: item.YMileageCostRaw || null,
         pMiles: item.WMileageCostRaw || null,
         jMiles: item.JMileageCostRaw || null,
