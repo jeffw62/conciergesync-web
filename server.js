@@ -4,7 +4,7 @@
 const express = require("express");
 const path = require("path");
 // SerpApi helper (fetches indicative cash fares)
-const { fetchCashFare } = require("./server/serpapi");
+const { fetchCashFare } = require("./server/serpapi.js");
 
 console.log("SerpApi key detected:", !!process.env.SERP_API_KEY);
 const app = express();
