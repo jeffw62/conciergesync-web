@@ -59,7 +59,10 @@ async function fetchCashFare({ origin, destination, departDate, travelClass = 1 
   } else {
     fare += Math.floor(Math.random() * 25); // add small random delta
   }
-  return fare;
+    
+  // ✅ Add small program-based variation for testing
+  const factor = 0.95 + ((arguments[0].program?.charCodeAt(1) || 0) % 7) * 0.01;
+  return Math.round(fare * factor);
 
   } catch (err) {
     console.error("SerpApi fetch error:", err.response?.data || err.message);
