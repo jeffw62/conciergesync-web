@@ -3,6 +3,7 @@
 // ===============================================
 const express = require("express");
 const path = require("path");
+console.log("SerpApi key detected:", !!process.env.SERP_API_KEY);
 const app = express();
 
 app.use(express.json());
