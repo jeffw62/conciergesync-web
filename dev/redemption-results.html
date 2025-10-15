@@ -133,8 +133,7 @@
       console.log("📦 Normalized results:", rawResults.length);
     
       // Map API data to table schema
-      console.log("Template preview:", template.slice(0, 150));
-      const results = rawResults.map(item => ({
+        const results = rawResults.map(item => ({
         date: new Date().toISOString().split("T")[0],
         origin: item.RouteID?.substring(0, 3) || "—",
         destination: item.RouteID?.substring(3, 6) || "—",
@@ -152,9 +151,10 @@
       const tbody = document.getElementById("results-body");
       const template = document.getElementById("resultRowTemplate").innerHTML;  // define first!
 
+      console.log("Template preview:", template.slice(0, 150));
+      
       console.log("Rendering rows:", results.length);
       console.log("First mapped record:", results[0]);
-
       
       tbody.innerHTML = results
         .map(r => template
