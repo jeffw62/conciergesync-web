@@ -296,6 +296,54 @@ app.get("/api/test-serp", async (req, res) => {
     res.status(500).json({ error: err.message });
   }
 });
+// =====================================================
+// Fusion Test Route (browser friendly)
+// Simulates a redemption call and returns CPM output
+// =====================================================
+app.get("/api/test-fusion", async (req, res) => {
+  try {
+    const origin = (req.query.origin || "JFK").toUpperCase();
+    const destination = (req.query.destination || "LAX").toUpperCase();
+    const departDate = req.query.date || "2025-11-05";
+    const cabin = (req.query.cabin || "business").toLowerCase();
+
+    // Map cabin to SerpApi travel_class
+    const travelClassMap = { economy: 1, premium: 2, business: 3, first: 4 };
+    const travelClass = travelClassMap[cabin] || 1;
+
+    // get cash baseline
+    const cashValue = await fetchCashFare({ origin, destination, departDate, travelClass });
+
+    // mock example Seats.Aero award data
+    const award = {
+      origin,
+      destination,
+      date: departDate,
+      MilesNeeded: 57000,
+      TaxesAndFeesUSD: 87.6,
+      cabin
+    };
+
+    // compute CPM
+    const miles = award.MilesNeeded || 0;
+    const fees = parseFloat(award.TaxesAndFeesUSD || 0);
+    const cash = parseFloat(cashValue || 0);
+    const cpm = miles > 0 && cash > 0 ? ((cash - fees) / miles) * 100 : null;
+
+    res.json({
+      origin,
+      destination,
+      cabin,
+      cashValue,
+      award,
+      CPM: cpm
+    });
+
+  } catch (err) {
+    console.error("❌ Fusion test error:", err);
+    res.status(500).json({ error: err.message });
+  }
+});
 
 // ===============================================
 // Start Server
