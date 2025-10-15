@@ -252,7 +252,7 @@ let cashValue = null;
 app.get("/api/redemption/testBulk", async (req, res) => {
   try {
     const url = `${seatsService.baseUrl}/bulk-availability?sources=aeroplan&region=NorthAmerica-Europe&month=2025-10`;
-    console.log("➡️  SA Bulk request URL:", url);
+    console.log("📦 SA Bulk request URL:", url);
 
     const response = await fetch(url, {
       method: "GET",
@@ -269,14 +269,13 @@ app.get("/api/redemption/testBulk", async (req, res) => {
 
     const data = await response.json();
     res.json(data);
+
   } catch (err) {
-    console.error("❌ Bulk API error:", err);
-    res.status(500).json({
-      error: "server_error",
-      message: err.message,
-    });
+    console.error("❌ testBulk route error:", err);
+    res.status(500).json({ error: err.message });
   }
 });
+
 
 // =====================================================
 // Dynamic SerpApi test route
