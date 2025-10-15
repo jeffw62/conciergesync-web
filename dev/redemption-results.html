@@ -152,6 +152,8 @@
           fMiles: item.FMileageCostRaw || null,
           taxes: taxesRaw ? (taxesRaw / 100).toFixed(2) : null,
           updated: item.UpdatedAt || item.LastUpdated || Date.now(),
+          cashValue: item.cashValue || 0,
+          CPM: item.CPM || null,
         };
       });
       
