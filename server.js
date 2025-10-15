@@ -6,6 +6,16 @@ const path = require("path");
 // SerpApi helper (fetches indicative cash fares)
 const { fetchCashFare } = require("./dev/server/serpapi.js");
 
+// ===========================================
+// Simple in-memory cache for SerpApi results
+// ===========================================
+const serpCache = new Map();
+
+// helper: builds a unique key
+function serpKey(origin, destination, date, travelClass) {
+  return `${origin}-${destination}-${date}-${travelClass}`;
+}
+
 console.log("SerpApi key detected:", !!process.env.SERP_API_KEY);
 const app = express();
 
@@ -86,7 +96,39 @@ app.post("/api/redemption", async (req, res) => {
         message: "Origin, destination, and date are required.",
       });
     }
-
+// ----------------------------------------------
+// Prepare SerpApi cash value (cached lookup)
+// ----------------------------------------------
+let cashValue = null;
+  const travelClassMap = {
+    economy: 1,
+    premium: 2,
+    business: 3,
+    first: 4,
+  };
+  const travelClass =
+    travelClassMap[(payload.cabin || "economy").toLowerCase()] || 1;
+  
+  const cacheKey = serpKey(payload.origin, payload.destination, payload.date, travelClass);
+  
+  if (serpCache.has(cacheKey)) {
+    cashValue = serpCache.get(cacheKey);
+    console.log(`♻️ Using cached SerpApi value for ${cacheKey}:`, cashValue);
+  } else {
+    try {
+      cashValue = await fetchCashFare({
+        origin: payload.origin,
+        destination: payload.destination,
+        departDate: payload.date,
+        travelClass,
+      });
+      serpCache.set(cacheKey, cashValue);
+      console.log(`💵 Cached new SerpApi value for ${cacheKey}:`, cashValue);
+    } catch (err) {
+      console.warn("⚠️ SerpApi call failed:", err.message);
+    }
+  }
+    
 // ----------------------------------------------
 // Fetch indicative cash fare via SerpApi
 // ----------------------------------------------
@@ -192,9 +234,22 @@ let cashValue = null;
       ? withCpm.filter(r => r.Source?.toLowerCase() === selectedProgram)
       : withCpm;
 
+    // ----------------------------------------------
+    // Attach cashValue and compute CPM for each result
+    // ----------------------------------------------
+    const enrichedResults = finalResults.map(r => {
+      const miles = r.MilesNeeded || 0;
+      const fees = parseFloat(r.TaxesAndFeesUSD || 0);
+      const cash = parseFloat(cashValue || 0);
+      const cpm = miles > 0 && cash > 0 ? ((cash - fees) / miles) * 100 : null;
+      return { ...r, cashValue: cashValue, CPM: cpm };
+    });
+    
     res.status(200).json({
-    sessionId: Date.now(),
-    results: finalResults,
+      sessionId: Date.now(),
+      results: enrichedResults,
+    });
+
   });
   } catch (err) {
     console.error("❌ Redemption API error:", err);
