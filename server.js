@@ -285,19 +285,19 @@ app.post("/api/redemption", async (req, res) => {
       // Reuse cache first
       let cashValue = serpCache.get(key);
       if (!cashValue) {
-        try {
-          cashValue = await fetchCashFare({
-            origin: r.origin || payload.origin,
-            destination: r.destination || payload.destination,
-            departDate: r.date || payload.date,
-            travelClass,
-            program: r.program || payload.program || null
-          });
-          serpCache.set(key, cashValue);
-          console.log(`💵 Cached SerpApi fare for ${key}:`, cashValue);
-        } catch (err) {
-          console.warn("⚠️ SerpApi fetch failed in fusion loop:", err.message);
-        }
+//        try {
+//          cashValue = await fetchCashFare({
+//            origin: r.origin || payload.origin,
+//            destination: r.destination || payload.destination,
+//            departDate: r.date || payload.date,
+//            travelClass,
+//            program: r.program || payload.program || null
+//          });
+//          serpCache.set(key, cashValue);
+//          console.log(`💵 Cached SerpApi fare for ${key}:`, cashValue);
+//        } catch (err) {
+//          console.warn("⚠️ SerpApi fetch failed in fusion loop:", err.message);
+//        }
       }
     
       const miles = r.MilesNeeded || 0;
