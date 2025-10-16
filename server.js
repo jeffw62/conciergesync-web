@@ -273,7 +273,7 @@ app.post("/api/redemption", async (req, res) => {
     // ----------------------------------------------
     // Attach live cash fare and CPM to each result
     // ----------------------------------------------
-    for (const r of finalResults) {
+    for (const r of (globalThis.finalResults || [])) {
       const travelClassMap = { economy: 1, premium: 2, business: 3, first: 4 };
       const travelClass =
         travelClassMap[(r.cabin || "economy").toLowerCase()] || 1;
