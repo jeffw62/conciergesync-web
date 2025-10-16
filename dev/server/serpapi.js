@@ -38,14 +38,33 @@ async function fetchCashFare({ origin, destination, departDate, travelClass = 1 
     const response = await axios.get("https://serpapi.com/search.json", { params });
     console.log("🧭 SerpApi raw response keys:", Object.keys(response.data || {}));
 
-    // Try common return shapes
-    const price =
-      response.data?.best_flight?.price ||
-      response.data?.best_flights?.[0]?.price ||
-      response.data?.price_insights?.lowest_price ||
-      null;
+    // ✅ Parse all possible SerpApi price shapes accurately
+    let price = null;
+    
+    // 1. Try "best_flights" array first
+    if (Array.isArray(response.data?.best_flights) && response.data.best_flights.length > 0) {
+      price = response.data.best_flights[0]?.price || null;
+    }
+    
+    // 2. If missing, check price_insights
+    if (!price && response.data?.price_insights?.lowest_price) {
+      price = response.data.price_insights.lowest_price;
+    }
+    
+    // 3. As a fallback, check nested structures in "best_flights[0].flights"
+    if (!price && Array.isArray(response.data?.best_flights?.[0]?.flights)) {
+      const inner = response.data.best_flights[0].flights.find(f => f.price);
+      if (inner) price = inner.price;
+    }
+    
+    // 4. Final fallback — top-level price
+    if (!price && typeof response.data?.price === "number") {
+      price = response.data.price;
+    }
+    
+    // ✅ Log for transparency
+    console.log("💰 Parsed SerpApi fare:", { origin, destination, departDate, travelClass, price });
 
-    console.log("🧾 SerpApi sample response snippet:", JSON.stringify(response.data?.best_flight || response.data?.best_flights?.[0] || response.data?.price_insights || response.data, null, 2));
     if (!price) {
       console.log(`No price found for ${origin}-${destination} ${departDate}`);
       return null;
