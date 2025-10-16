@@ -246,13 +246,15 @@ app.post("/api/redemption", async (req, res) => {
     // ----------------------------------------------
     // Attach cashValue and compute CPM for each result
     // ----------------------------------------------
-    const enrichedResults = finalResults.map(r => {
-      const miles = r.MilesNeeded || 0;
-      const fees = parseFloat(r.TaxesAndFeesUSD || 0);
-      const cash = parseFloat(cashValue || 0);
-      const cpm = miles > 0 && cash > 0 ? ((cash - fees) / miles) * 100 : null;
-      return { ...r, cashValue: cashValue, CPM: cpm };
-    });
+    const enrichedResults = (typeof finalResults !== "undefined" && Array.isArray(finalResults))
+    ? finalResults.map(r => {
+        const miles = r.MilesNeeded || 0;
+        const fees = parseFloat(r.TaxesAndFeesUSD || 0);
+        const cash = parseFloat(cashValue || 0);
+        const cpm = miles > 0 && cash > 0 ? ((cash - fees) / miles) * 100 : null;
+        return { ...r, cashValue, CPM: cpm };
+      })
+    : [];
 
     // ✅ Normalize cashValue and CPM fields for all records before sending
     enrichedResults.forEach(r => {
