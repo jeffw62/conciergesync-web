@@ -489,12 +489,28 @@ function setupRedemptionModule() {
       positioning: document.querySelector("#posFlight button.active")?.dataset.val,
     };
 
-    if (!payload.origin || !payload.destination || !payload.date) {
+    // Expand flexDays into a date array
+    const departDate = document.getElementById("departDate").value;
+    const flexRange = parseInt(document.getElementById("flexDays").value) || 0;
+    const searchDates = [];
+    
+    for (let i = -flexRange; i <= flexRange; i++) {
+      const d = new Date(departDate);
+      d.setDate(d.getDate() + i);
+      searchDates.push(d.toISOString().split("T")[0]);
+    }
+    
+    // Replace single date with array for the API payload
+    payload.searchDates = searchDates;
+    delete payload.date;
+
+    
+    if (!payload.origin || !payload.destination || !payload.searchDates?.length) {
       alert("Please complete all Step 1 fields before searching.");
       return;
     }
 
-    console.log("📦 Sending payload:", payload);
+    console.log("IS outbound search payload:", payload);
 
     try {
       const res = await fetch("/api/redemption", {
