@@ -316,7 +316,7 @@ app.post("/api/redemption", async (req, res) => {
       results: finalResults,
   });
 
-  } catch (err) {
+  catch (err) {
     console.error("❌ Redemption API error:", err);
     res.status(500).json({
       error: "server_error",
@@ -324,7 +324,6 @@ app.post("/api/redemption", async (req, res) => {
       stack: err.stack,
     });
   }
-});
 
 // ===============================================
 // Bulk Test Route (optional diagnostic)
