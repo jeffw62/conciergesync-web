@@ -314,10 +314,10 @@ app.post("/api/redemption", async (req, res) => {
 
     console.log("📊 Enriched sample record:", enrichedResults[0]);
     
-    res.status(200).json({
-      sessionId: Date.now(),
-      results: finalResults,
-  });
+//    res.status(200).json({
+//      sessionId: Date.now(),
+//     results: finalResults,
+//  });
 
 // } catch (err) {
 //    console.error("❌ Redemption API error:", err);
