@@ -82,18 +82,172 @@ function applySanityFilter(results) {
 app.post("/api/redemption", async (req, res) => {
   try {
     const payload = req.body;
-    console.log("📦 Received redemption payload:", payload);
+    console.log("🧭 Received redemption payload:", payload);
 
-    if (!payload.origin || !payload.destination || !payload.date) {
+    const { origin, destination, searchDates = [], ...rest } = payload;
+
+    // Validate required inputs
+    if (!origin || !destination) {
       return res.status(400).json({
         error: "missing_parameters",
-        message: "Origin, destination, and date are required.",
+        message: "Origin and destination are required.",
       });
     }
+
+    const datesToSearch =
+      Array.isArray(searchDates) && searchDates.length > 0
+        ? searchDates
+        : [payload.date || new Date().toISOString().split("T")[0]];
+
+    console.log("📅 Dates to search:", datesToSearch);
+
+    let allResults = [];
+
+    // This loop replaces the single-day search
+    for (const date of datesToSearch) {
+      console.log(`🔍 Running redemption search for ${origin} → ${destination} on ${date}`);
+
+      // Create a shallow copy of payload for this date
+      const singleSearch = { ...rest, origin, destination, date };
+
+     let cashValue = null;
+      const travelClassMap = {
+        economy: 1,
+        premium: 2,
+        business: 3,
+        first: 4,
+      };
+      const travelClass =
+        travelClassMap[(payload.cabin || "economy").toLowerCase()] || 1;
+      
+      const cacheKey = serpKey(payload.origin, payload.destination, payload.date, travelClass);
+      
+      if (serpCache.has(cacheKey)) {
+        cashValue = serpCache.get(cacheKey);
+        console.log(`♻️ Using cached SerpApi value for ${cacheKey}:`, cashValue);
+      } else {
+        try {
+          cashValue = await fetchCashFare({
+            origin: payload.origin,
+            destination: payload.destination,
+            departDate: payload.date,
+            travelClass,
+          });
+          serpCache.set(cacheKey, cashValue);
+          console.log(`💵 Cached new SerpApi value for ${cacheKey}:`, cashValue);
+        } catch (err) {
+          console.warn("⚠️ SerpApi call failed:", err.message);
+        }
+      }
+        
+        // determine search window based on mode (exact vs flexible)
+        const flexDays = parseInt(payload.flexDays || 0, 10);
+        const mode = payload.mode || "exact";
+        const windowDays = mode === "flex" ? flexDays : 0;
+    
+        const base = new Date(payload.date + "T00:00:00");
+        const start = new Date(base);
+        start.setDate(start.getDate() - windowDays);
+        const end = new Date(base);
+        end.setDate(end.getDate() + windowDays);
+    
+        const toDateStr = d =>
+          `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(
+            d.getDate()
+          ).padStart(2, "0")}`;
+    
+        const results = [];
+        let day = new Date(start);
+    
+        console.log(
+          `📅 Mode: ${mode.toUpperCase()} | Window: ${windowDays} days | Range: ${toDateStr(
+            start
+          )} → ${toDateStr(end)}`
+        );
+    
+        // loop daily if flex mode, single call if exact
+        while (day <= end) {
+          const dateStr = toDateStr(day);
+          console.log(`🔍 Fetching ${dateStr}`);
+          try {
+            const resp = await seatsService.searchFlights({
+              origin: payload.origin,
+              destination: payload.destination,
+              startDate: dateStr,
+              endDate: dateStr,
+              take: 40,
+            });
+            if (resp?.data?.length) results.push(...resp.data);
+          } catch (innerErr) {
+            console.warn(`⚠️  Failed on ${dateStr}:`, innerErr.message);
+          }
+          if (mode === "exact") break; // stop after one iteration
+          day.setDate(day.getDate() + 1);
+        }
+    
+        console.log(`🧩 Combined ${results.length} results total`);
+    
+        // (optional) sanity filter before returning
+        const filtered = applySanityFilter(results);
+    
+        // --- Cabin filter and normalization ---
+        const cabin = (payload.cabin || "Economy").toLowerCase();
+        
+        const cabinFieldMap = {
+          economy: "YMileageCost",
+          premium: "PMileageCost",
+          business: "JMileageCost",
+          first: "FMileageCost",
+        };
+        
+        // Determine which field to read for miles
+        const cabinField = cabinFieldMap[cabin] || "YMileageCost";
+        
+        // Replace generic MilesNeeded with cabin-specific value
+        const cabinAdjusted = filtered.map(r => {
+          const miles = r[cabinField] || r.YMileageCost || 0;
+          return { ...r, MilesNeeded: miles };
+        });
+    
+        // Attach indicative cash value to each record
+        const withCashValues = cabinAdjusted.map(r => ({
+          ...r,
+          cashValue: cashValue,
+        }));
+    
+        // Compute CPM (cents per mile)
+        const withCpm = withCashValues.map(r => {
+          const miles = r.MilesNeeded || 0;
+          const fees = parseFloat(r.TaxesAndFeesUSD || 0);
+          const cash = parseFloat(r.cashValue || 0);
+          const cpm = miles > 0 && cash > 0 ? ((cash - fees) / miles) * 100 : null;
+          return { ...r, CPM: cpm };
+        });
+    
+        // --- Filter by selected program if provided ---
+        const selectedProgram = (payload.program || "").toLowerCase();
+        const finalResults = selectedProgram
+          ? withCpm.filter(r => r.Source?.toLowerCase() === selectedProgram)
+          : withCpm;
+      
+        allResults.push(...finalResults);
+      }
+
+      console.log(`✅ Aggregated ${allResults.length} total results across ${datesToSearch.length} days.`);
+      // Send the combined results back
+      return res.json({ success: true, results: allResults });
+
+      } catch (err) {
+          console.error("❌ Redemption search error:", err);
+          res.status(500).json({ error: "internal_error", message: err.message });
+      }
+    });
+
+  
 // ----------------------------------------------
 // Prepare SerpApi cash value (cached lookup)
 // ----------------------------------------------
-let cashValue = null;
+/*let cashValue = null;
   const travelClassMap = {
     economy: 1,
     premium: 2,
@@ -211,7 +365,7 @@ let cashValue = null;
     const selectedProgram = (payload.program || "").toLowerCase();
     const finalResults = selectedProgram
       ? withCpm.filter(r => r.Source?.toLowerCase() === selectedProgram)
-      : withCpm;
+      : withCpm;*/
 
     // ----------------------------------------------
     // Attach cashValue and compute CPM for each result
