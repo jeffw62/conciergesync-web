@@ -158,7 +158,15 @@ app.post("/api/redemption", async (req, res) => {
           console.warn("⚠️ SerpApi call failed:", err.message);
         }
       }
-        
+
+        console.log("✅ Redemption route completed. Returning response...");
+
+        // Temporary placeholder response until full CPM enrichment is reactivated
+        return res.json({
+          success: true,
+          message: "Search complete (placeholder response)",
+        });
+
         // determine search window based on mode (exact vs flexible)
         const flexDays = parseInt(payload.flexDays || 0, 10);
         const mode = payload.mode || "exact";
