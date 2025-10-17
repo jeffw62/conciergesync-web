@@ -93,6 +93,25 @@ app.post("/api/redemption", async (req, res) => {
         message: "Origin and destination are required.",
       });
     }
+ 
+    // === Expand flexDays into individual search dates ===
+    const baseDate = new Date(payload.date);
+    const range = parseInt(payload.flexDays) || 0;
+    const dateList = [];
+  
+    for (let offset = -range; offset <= range; offset++) {
+      const d = new Date(baseDate);
+      d.setDate(d.getDate() + offset);
+      dateList.push(d.toISOString().split("T")[0]);
+    }
+  
+    console.log("📅 Expanded searchDates:", dateList);
+  
+    // === Iterate over each date ===
+    for (const travelDate of dateList) {
+      console.log(`🔍 Searching ${origin} → ${destination} on ${travelDate}`);
+      // Seats.Aero / SerpApi logic will go here later
+    }
 
     const datesToSearch =
       Array.isArray(searchDates) && searchDates.length > 0
