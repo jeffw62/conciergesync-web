@@ -595,4 +595,3 @@ function setupAutocomplete(inputId, suggestionsId) {
     }
   });
 }
-}
