@@ -242,8 +242,13 @@ function setupRedemptionModule() {
     };
     waitForCard();
 
-  // ensure spinnerBridge and attachShimmer are defined before use
-    
+  // ensure spinnerBridge is defined globally once
+  let spinnerBridge = document.getElementById("spinner-bridge");
+  if (!spinnerBridge) {
+    spinnerBridge = document.createElement("div");
+    spinnerBridge.id = "spinner-bridge";
+  }
+      
   function attachShimmer() {
     const goldCard = document.querySelector(".gold-card");
     if (!goldCard) return;
