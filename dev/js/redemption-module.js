@@ -8,6 +8,8 @@ window.launchGoldCard = setupRedemptionModule;
 // --- Airport Autocomplete (IATA/ICAO) ---
 let airports = [];
 
+let spinnerBridge; // global reference for ConciergeSync™ spinner bridge
+
 function loadAirports() {
   fetch("/dev/asset/iata-icao.json")
     .then(res => res.json())
@@ -247,7 +249,7 @@ function setupRedemptionModule() {
     waitForCard();
 
   // ensure spinnerBridge is defined globally once
-  var spinnerBridge = document.getElementById("spinner-bridge") || document.createElement("div");
+  spinnerBridge = document.getElementById("spinner-bridge") || document.createElement("div");
   spinnerBridge.id = "spinner-bridge";
     }
       
@@ -270,18 +272,20 @@ function setupRedemptionModule() {
 
   
   // ensure shimmer matches the card’s real painted size
-  const cardImg = document.querySelector("#gold-card");
-  if (cardImg) {
-    cardImg.onload = () => {
-      const shimmerEl = document.getElementById("shimmer-overlay");
-      if (shimmerEl) {
-        shimmerEl.style.width = cardImg.offsetWidth + "px";
-        shimmerEl.style.height = cardImg.offsetHeight + "px";
-      }
-    };
-  } else {
-    console.warn("⚠️ gold-card image not found; skipping onload assignment.");
-  }
+    window.addEventListener("load", () => {
+    const cardImg = document.querySelector("#gold-card");
+    if (cardImg) {
+      cardImg.onload = () => {
+        const shimmerEl = document.getElementById("shimmer-overlay");
+        if (shimmerEl) {
+          shimmerEl.style.width = cardImg.offsetWidth + "px";
+          shimmerEl.style.height = cardImg.offsetHeight + "px";
+        }
+      };
+    } else {
+      console.warn("⚠ gold-card image not found; skipping onload assignment.");
+    }
+  });
 
   // ensure shimmer alignment relative to card only
   const goldCard = document.querySelector(".gold-card");
