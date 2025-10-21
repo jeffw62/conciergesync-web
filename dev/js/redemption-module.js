@@ -36,6 +36,7 @@ function setupRedemptionModule() {
   document.head.appendChild(centerFixStyle);
   
   // === ConciergeSync™ Spinner Bridge + Gold Card Overlay ===
+    if (spinnerBridge) spinnerBridge.id = "spinner-bridge";
     spinnerBridge.id = "spinner-bridge";
     
     Object.assign(spinnerBridge.style, {
@@ -265,7 +266,8 @@ function setupRedemptionModule() {
 
   
   // ensure shimmer matches the card’s real painted size
-  cardImg.onload = () => {
+const cardImg = document.querySelector("#gold-card")  
+cardImg.onload = () => {
     const shimmerEl = document.getElementById("shimmer-overlay");
     if (shimmerEl) {
       shimmerEl.style.width  = cardImg.offsetWidth  + "px";
