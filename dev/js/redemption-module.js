@@ -242,6 +242,28 @@ function setupRedemptionModule() {
     };
     waitForCard();
 
+  // ensure spinnerBridge and attachShimmer are defined before use
+  const spinnerBridge = document.createElement("div");
+  spinnerBridge.id = "spinner-bridge";
+  
+  function attachShimmer() {
+    const goldCard = document.querySelector(".gold-card");
+    if (!goldCard) return;
+    
+    const shimmerEl = document.createElement("div");
+    shimmerEl.className = "card-shimmer";
+    shimmerEl.style.position = "absolute";
+    shimmerEl.style.top = 0;
+    shimmerEl.style.left = 0;
+    shimmerEl.style.width = "100%";
+    shimmerEl.style.height = "100%";
+    shimmerEl.style.background = "linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent)";
+    shimmerEl.style.animation = "shimmerMove 3s infinite";
+  
+    goldCard.appendChild(shimmerEl);
+  }
+
+  
   // ensure shimmer matches the card’s real painted size
   cardImg.onload = () => {
     const shimmerEl = document.getElementById("shimmer-overlay");
