@@ -36,8 +36,12 @@ function setupRedemptionModule() {
   document.head.appendChild(centerFixStyle);
   
   // === ConciergeSync™ Spinner Bridge + Gold Card Overlay ===
-    if (spinnerBridge) spinnerBridge.id = "spinner-bridge";
+  if (typeof spinnerBridge === "undefined" || !spinnerBridge) {
+    spinnerBridge = document.createElement("div");
     spinnerBridge.id = "spinner-bridge";
+  } else {
+    spinnerBridge.id = "spinner-bridge";
+  }
     
     Object.assign(spinnerBridge.style, {
     position: "absolute",
@@ -266,15 +270,19 @@ function setupRedemptionModule() {
 
   
   // ensure shimmer matches the card’s real painted size
-const cardImg = document.querySelector("#gold-card")  
-cardImg.onload = () => {
-    const shimmerEl = document.getElementById("shimmer-overlay");
-    if (shimmerEl) {
-      shimmerEl.style.width  = cardImg.offsetWidth  + "px";
-      shimmerEl.style.height = cardImg.offsetHeight + "px";
-    }
-  };
-  
+  const cardImg = document.querySelector("#gold-card");
+  if (cardImg) {
+    cardImg.onload = () => {
+      const shimmerEl = document.getElementById("shimmer-overlay");
+      if (shimmerEl) {
+        shimmerEl.style.width = cardImg.offsetWidth + "px";
+        shimmerEl.style.height = cardImg.offsetHeight + "px";
+      }
+    };
+  } else {
+    console.warn("⚠️ gold-card image not found; skipping onload assignment.");
+  }
+
   // ensure shimmer alignment relative to card only
   goldCard.style.position = "relative";
   goldCard.style.overflow = "hidden";
