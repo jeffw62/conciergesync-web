@@ -284,8 +284,13 @@ function setupRedemptionModule() {
   }
 
   // ensure shimmer alignment relative to card only
-  goldCard.style.position = "relative";
-  goldCard.style.overflow = "hidden";
+  const goldCard = document.querySelector(".gold-card");
+  if (goldCard) {
+    goldCard.style.position = "relative";
+    goldCard.style.overflow = "hidden";
+  } else {
+    console.warn("⚠️ gold-card not found; shimmer alignment skipped.");
+  }
   
   // wait for card to be painted, then attach shimmer
   requestAnimationFrame(() => {
