@@ -172,9 +172,22 @@ function setupRedemptionModule() {
         }, 100);
       }
     
-     // Option B – Temporary redirect to flight-cards.html (our current test)
-    else {
-      console.log("🔁 Redirecting to /dev/flight-cards.html ...");
+     // ✅ Load flight cards internally inside console workspace
+      try {
+        const resModule = await fetch("/dev/flight-cards-con.html");
+        const resHTML = await resModule.text();
+        const workspace = document.getElementById("workspace");
+        if (workspace) {
+          workspace.innerHTML = resHTML;
+          console.log("Loaded flight cards into console workspace.");
+        } else {
+          console.warn("Workspace not found — fallback to full page load.");
+          window.location.assign("/dev/flight-cards.html");
+        }
+      } catch (err) {
+        console.error("Failed to load flight cards internally:", err);
+      }
+
     
       // Keep form hidden and maintain opaque cover during fade-out
       const bridge = document.getElementById("spinner-bridge");
