@@ -243,9 +243,7 @@ function setupRedemptionModule() {
     waitForCard();
 
   // ensure spinnerBridge and attachShimmer are defined before use
-  const spinnerBridge = document.createElement("div");
-  spinnerBridge.id = "spinner-bridge";
-  
+    
   function attachShimmer() {
     const goldCard = document.querySelector(".gold-card");
     if (!goldCard) return;
