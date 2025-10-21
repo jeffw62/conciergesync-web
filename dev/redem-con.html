@@ -412,8 +412,17 @@
             // 🔹 give visual animation time to settle
             await new Promise(r => setTimeout(r, 2600));
             
-            // 🔹 navigate once both storage + fade are done
-            window.location.assign("/dev/redemption-results.html");
+            // ✅ Load redemption results internally inside console workspace
+            const resModule = await fetch("/dev/redemption-results-con.html");
+            const resHTML = await resModule.text();
+            const workspace = document.getElementById("workspace");
+            if (workspace) {
+              workspace.innerHTML = resHTML;
+              console.log("Loaded redemption results into console workspace.");
+            } else {
+              console.warn("Workspace not found — fallback to full page load.");
+              window.location.assign("/dev/redemption-results.html");
+            }
             
             } catch (err) {
               console.error("Search error:", err);
