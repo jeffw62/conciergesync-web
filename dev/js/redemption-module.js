@@ -332,10 +332,6 @@ function setupRedemptionModule() {
   document.body.appendChild(spinnerBridge);
   console.log("✅ Spinner bridge & gold card injected");
 
-  spinnerBridge.appendChild(goldCard);
-  document.body.appendChild(spinnerBridge);
-  console.log("✅ Spinner bridge & gold card injected");
-  
   // === Add processing text overlay to gold card ===
   const cardMessage = document.createElement("div");
   cardMessage.id = "card-message";
