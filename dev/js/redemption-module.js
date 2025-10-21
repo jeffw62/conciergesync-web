@@ -1,4 +1,4 @@
-function initRedemptionModule() { 
+function initRedemptionModule() {
   setupRedemptionModule();
 }
 // document.addEventListener("DOMContentLoaded", setupRedemptionModule);
