@@ -38,6 +38,24 @@ html {
   box-sizing: inherit;
 }
 
+header .logo span {
+  font-family: "Source Sans 3", "Myriad Pro", sans-serif;
+  font-weight: 700;        /* make ConciergeSync™ name bold */
+  font-size: 1.15rem;
+  letter-spacing: 0.3px;
+  color: #fff;
+}
+
+header .console-nav .nav-link {
+  font-weight: 500;        /* slightly stronger for readability */
+  color: rgba(255, 255, 255, 0.75);
+}
+
+header .console-nav .nav-link:hover {
+  color: #fff;
+  font-weight: 600;
+}
+
 body {
   position: relative;
   min-height: 100vh;
