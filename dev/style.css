@@ -56,6 +56,17 @@ header .console-nav .nav-link:hover {
   font-weight: 600;
 }
 
+/* Adjust secondary nav links (Helpful Hints, Contact) */
+header .console-nav .nav-link.secondary {
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.7);
+}
+
+header .console-nav .nav-link.secondary:hover {
+  color: #fff;
+  font-weight: 600;
+}
+
 body {
   position: relative;
   min-height: 100vh;
