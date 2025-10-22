@@ -289,7 +289,7 @@ function setupRedemptionModule() {
   });
 
   // ensure shimmer alignment relative to card only
-  const goldCard = document.querySelector(".gold-card");
+  goldCard = document.querySelector(".gold-card");
   if (goldCard) {
     goldCard.style.position = "relative";
     goldCard.style.overflow = "hidden";
