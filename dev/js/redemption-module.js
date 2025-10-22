@@ -64,7 +64,7 @@ if (!spinnerBridge) {
   }
     
     Object.assign(spinnerBridge.style, {
-    position: "absolute",
+    position: "fixed",
     inset: "0",
     display: "flex",
     alignItems: "center",
