@@ -74,7 +74,7 @@ if (!spinnerBridge) {
     width: "100%",
     height: "100%",
     background: "linear-gradient(180deg, rgba(10,26,51,0.98) 0%, rgba(10,26,51,1) 100%)",
-    zIndex: 9998,
+    zIndex: "99999",
     overflow: "hidden"
   });
 
