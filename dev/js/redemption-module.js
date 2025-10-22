@@ -609,7 +609,10 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
   
   // run gold-card sequence on demand
   await window.launchGoldCard();
-
+  if (typeof window.createSpinnerBridge === "function") {
+  window.createSpinnerBridge();
+}
+  
   // === ConciergeSync™ Gold Card Animation ===
   const goldCard = document.getElementById("gold-card");
   const spinnerBridge = document.getElementById("spinner-bridge");
