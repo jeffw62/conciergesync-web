@@ -30,6 +30,11 @@ const consoleContainer =
   document.querySelector("main.console-container") ||
   document.getElementById("workspace") ||
   document.body;
+
+if (consoleContainer) {
+  consoleContainer.style.position = "relative";
+  consoleContainer.style.overflow = "hidden";
+}
   
 // === Ensure spinner bridge exists before fade/animation ===
 if (!spinnerBridge) {
