@@ -574,18 +574,25 @@ if (!spinnerBridge) {
 
   // ---- search click
   searchBtn.addEventListener("click", async (e) => {
-  e.preventDefault();
-
-  // === ConciergeSync™ Gold Card Animation ===
+    e.preventDefault();
+    if (searchBtn.disabled) return; // early guard stays near the top
+  
+    // === ConciergeSync™ Gold Card Animation ===
     const goldCard = document.getElementById("gold-card");
     const spinnerBridge = document.getElementById("spinner-bridge");
     const form = document.getElementById("redemption-form");
+  
     if (goldCard && spinnerBridge && form) {
+      // Fade out the search form
       form.style.transition = "opacity 0.6s ease";
       form.style.opacity = "0";
+  
+      // Show shimmer bridge
       spinnerBridge.style.visibility = "visible";
       spinnerBridge.style.opacity = "1";
       goldCard.classList.add("active");
+  
+      // Run shimmer for ~3 seconds before loading next screen
       setTimeout(() => {
         fetch("/dev/flight-cards.html")
           .then((res) => res.text())
@@ -593,12 +600,19 @@ if (!spinnerBridge) {
             const workspace = document.getElementById("workspace");
             if (workspace) workspace.innerHTML = html;
           })
-          .catch((err) => console.error("Failed to load flight cards:", err));
+          .catch((err) =>
+            console.error("Failed to load flight cards:", err)
+          );
       }, 3000);
     }
   
-    if (searchBtn.disabled) return;
-    // ...existing code continues here
+    // === existing search logic continues ===
+    const payload = {
+      origin: document.getElementById("origin").value.trim().toUpperCase(),
+      // ... your other existing payload fields ...
+    };
+  
+    // Continue your existing logic below
   });
 
     const payload = {
@@ -614,7 +628,7 @@ if (!spinnerBridge) {
       multi: document.querySelector("#multiConn button.active")?.dataset.val,
       positioning: document.querySelector("#posFlight button.active")?.dataset.val,
     };
-
+    
     // Expand flexDays into a date array
     const departDate = document.getElementById("departDate").value;
     const flexRange = parseInt(document.getElementById("flexDays").value) || 0;
@@ -626,38 +640,40 @@ if (!spinnerBridge) {
       searchDates.push(d.toISOString().split("T")[0]);
     }
     
-    // Replace single date with array for the API payload
     payload.searchDates = searchDates;
     delete payload.date;
-
     
+    // ✅ Field validation (safe placement inside listener)
     if (!payload.origin || !payload.destination || !payload.searchDates?.length) {
       alert("Please complete all Step 1 fields before searching.");
       return;
     }
-
+    
     console.log("IS outbound search payload:", payload);
-
+    
     try {
       const res = await fetch("/api/redemption", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
+    
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    
       const data = await res.json();
-
       console.log("🧠 Redemption API response:", data);
-
-      // --- Save the API results for the results page ---
-      localStorage.setItem("latestRedemptionResults", JSON.stringify(data.results));
-      console.log("✅ sessionStorage write complete:", sessionStorage.getItem("latestRedemptionResults"));
-      
-      // --- Redirect after short delay ---
-      setTimeout(() => {
-        console.log("Redirecting to results page...");
-        window.location.href = "https://conciergesync.ai/dev/redemption-results.html";
-      }, 500);
+    
+      // Save results once (remove duplicate)
+      localStorage.setItem("latestRedemptionResults", JSON.stringify(data.results || []));
+    
+      // Redirect cleanly
+      console.log("Redirecting to results page...");
+      window.location.href = "/dev/redemption-results.html";
+    
+    } catch (err) {
+      console.error("❌ Redemption fetch error:", err);
+      alert("Search failed – check console for details.");
+    }
 
       localStorage.setItem(
         "latestRedemptionResults",
