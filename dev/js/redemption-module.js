@@ -42,8 +42,6 @@ function setupRedemptionModule() {
   if (typeof spinnerBridge === "undefined" || !spinnerBridge) {
     spinnerBridge = document.createElement("div");
     spinnerBridge.id = "spinner-bridge";
-  } else {
-    spinnerBridge.id = "spinner-bridge";
   }
     
     Object.assign(spinnerBridge.style, {
