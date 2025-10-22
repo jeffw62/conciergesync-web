@@ -116,7 +116,6 @@ if (!spinnerBridge) {
     zIndex: 9999
   });
 
-  const consoleContainer = document.querySelector("#workspace") || document.querySelector(".console-container") || document.body;
   consoleContainer.appendChild(goldCard);
 
   console.log("📦 Gold card parent is:", goldCard.parentElement);
