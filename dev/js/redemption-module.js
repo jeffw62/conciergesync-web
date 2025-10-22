@@ -23,6 +23,13 @@ function loadAirports() {
 
 function setupRedemptionModule() {
   if (window._redemptionInitialized) return;
+
+  // 🔒 Prevent auto-execution on page load
+  if (!window._manualLaunch) {
+    console.log("🔒 Setup skipped — waiting for manual launch");
+    return;
+  }
+
   window._redemptionInitialized = true;
   console.log("💗 Redemption module initializing...");
 
@@ -572,13 +579,31 @@ if (!spinnerBridge) {
     };
   }
 
-  // ---- search click
+  /// ---- search click
   searchBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     if (searchBtn.disabled) return; // early guard
   
+    // enable manual launch
+    window._manualLaunch = true;
+  
+    // run gold-card sequence on demand
     await window.launchGoldCard();
   
+    // === ConciergeSync™ Gold Card Animation ===
+    const goldCard = document.getElementById("gold-card");
+    const spinnerBridge = document.getElementById("spinner-bridge");
+    const form = document.getElementById("redemption-form");
+  
+    if (goldCard && spinnerBridge && form) {
+      // 🔒 Instantly hide the search form before shimmer begins
+      form.style.transition = "none";
+      form.style.opacity = "0";
+      form.style.visibility = "hidden";
+      form.style.pointerEvents = "none";
+    }
+  });
+
     // === ConciergeSync™ Gold Card Animation ===
     const goldCard = document.getElementById("gold-card");
     const spinnerBridge = document.getElementById("spinner-bridge");
