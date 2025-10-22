@@ -583,22 +583,35 @@ if (!spinnerBridge) {
     const form = document.getElementById("redemption-form");
   
     if (goldCard && spinnerBridge && form) {
-      // Fade out the search form
-      form.style.transition = "opacity 0.4s ease";
+    // 🔒 Instantly hide the search form before shimmer begins
+      form.style.transition = "none";
       form.style.opacity = "0";
-      setTimeout(() => {
-        form.style.visibility = "hidden";
-        form.style.pointerEvents = "none";
-      }, 400);
-  
-      // Show shimmer bridge
+      form.style.visibility = "hidden";
+      form.style.pointerEvents = "none";
+    
+      // 🌟 Activate shimmer bridge + gold card
+      spinnerBridge.style.zIndex = "99999";
       spinnerBridge.style.visibility = "visible";
       spinnerBridge.style.opacity = "1";
+      spinnerBridge.style.display = "flex";
       goldCard.classList.add("active");
-  
-      // Run shimmer for ~3 seconds before continuing
-      await new Promise((resolve) => setTimeout(resolve, 3000));
+    
+      console.log("✨ Gold card shimmer engaged.");
+    
+      // Wait 3s for shimmer, then load flight cards
+      await new Promise(resolve => setTimeout(resolve, 3000));
+      console.log("✨ Shimmer complete — loading flight cards...");
+    
+      try {
+        const res = await fetch("/dev/flight-cards.html");
+        const html = await res.text();
+        const workspace = document.getElementById("workspace");
+        if (workspace) workspace.innerHTML = html;
+      } catch (err) {
+        console.error("Failed to load flight cards:", err);
+      }
     }
+
   
     // === Build payload after shimmer completes ===
     const payload = {
