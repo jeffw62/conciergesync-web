@@ -653,29 +653,16 @@ if (!spinnerBridge) {
     }
   });
 
-      localStorage.setItem(
-        "latestRedemptionResults",
-        JSON.stringify(data.results || [])
-      );
-      
-      const sessionId = data.sessionId || Date.now();
-      window.location.href = "/dev/redemption-results.html";
-    } catch (err) {
-      console.error("❌ Redemption fetch error:", err);
-      alert("Search failed – check console for details.");
-    }
-  });
-
   // --- Autocomplete Setup Function ---
-function setupAutocomplete(inputId, suggestionsId) {
-  const input = document.getElementById(inputId);
-  const suggestions = document.getElementById(suggestionsId);
-  if (!input || !suggestions) return;
-
-  input.addEventListener("input", () => {
-    const query = input.value.toLowerCase();
-    suggestions.innerHTML = "";
-    if (query.length < 2) return;
+  function setupAutocomplete(inputId, suggestionsId) {
+    const input = document.getElementById(inputId);
+    const suggestions = document.getElementById(suggestionsId);
+    if (!input || !suggestions) return;
+  
+    input.addEventListener("input", () => {
+      const query = input.value.toLowerCase();
+      suggestions.innerHTML = "";
+      if (query.length < 2) return;
 
     const matches = airports
       .filter(a =>
