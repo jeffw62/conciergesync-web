@@ -47,10 +47,7 @@ window.launchGoldCard = async () => {
     console.log("✅ setupRedemptionModule initialized manually.");
   }
 
-  window._redemptionInitialized = true;
-  console.log("💗 Redemption module initializing...");
-
-const consoleContainer =
+ const consoleContainer =
   document.querySelector("main.console-container") ||
   document.getElementById("workspace") ||
   document.body;
