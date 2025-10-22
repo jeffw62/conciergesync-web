@@ -579,45 +579,94 @@ if (!spinnerBridge) {
     };
   }
 
-  /// ---- search click
-  searchBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
-    if (searchBtn.disabled) return; // early guard
-  
-    // enable manual launch
-    window._manualLaunch = true;
-  
-    // run gold-card sequence on demand
-    await window.launchGoldCard();
-  
-    // === ConciergeSync™ Gold Card Animation ===
-    const goldCard = document.getElementById("gold-card");
-    const spinnerBridge = document.getElementById("spinner-bridge");
-    const form = document.getElementById("redemption-form");
-  
-    if (goldCard && spinnerBridge && form) {
-      // 🔒 Instantly hide the search form before shimmer begins
-      form.style.transition = "none";
-      form.style.opacity = "0";
-      form.style.visibility = "hidden";
-      form.style.pointerEvents = "none";
-    }
-  });
-   
-  // 🌟 Activate shimmer bridge + gold card
+ ... (earlier code like validateStep2, date toggle, etc.)
+
+// ---- search click
+searchBtn.addEventListener("click", async (e) => {     // <== START of click handler
+  e.preventDefault();
+  if (searchBtn.disabled) return; // early guard
+
+  // enable manual launch
+  window._manualLaunch = true;
+
+  // run gold-card sequence on demand
+  await window.launchGoldCard();
+
+  // === ConciergeSync™ Gold Card Animation ===
+  const goldCard = document.getElementById("gold-card");
+  const spinnerBridge = document.getElementById("spinner-bridge");
+  const form = document.getElementById("redemption-form");
+
+  if (goldCard && spinnerBridge && form) {
+    form.style.transition = "none";
+    form.style.opacity = "0";
+    form.style.visibility = "hidden";
+    form.style.pointerEvents = "none";
+  }
+
+  // === Build payload ===
+  const payload = {
+    origin: document.getElementById("origin").value.trim().toUpperCase(),
+    destination: document.getElementById("destination").value.trim().toUpperCase(),
+    passengers: document.getElementById("passengers").value,
+    cabin: document.getElementById("cabin").value,
+    program: document.getElementById("program").value,
+    date: document.getElementById("departDate").value,
+    flexDays: document.getElementById("flexDays")?.value || 0,
+    mode: flexBtn.classList.contains("active") ? "flex" : "exact",
+    direct: document.querySelector("#directStop button.active")?.dataset.val,
+    multi: document.querySelector("#multiConn button.active")?.dataset.val,
+    positioning: document.querySelector("#posFlight button.active")?.dataset.val,
+  };
+
+  // === Expand flexDays into date array ===
+  const departDate = document.getElementById("departDate").value;
+  const flexRange = parseInt(document.getElementById("flexDays").value) || 0;
+  const searchDates = [];
+  for (let i = -flexRange; i <= flexRange; i++) {
+    const d = new Date(departDate);
+    d.setDate(d.getDate() + i);
+    searchDates.push(d.toISOString().split("T")[0]);
+  }
+
+  payload.searchDates = searchDates;
+  delete payload.date;
+
+  // === Validate before fetch ===
+  if (!payload.origin || !payload.destination || !payload.searchDates?.length) {
+    alert("Please complete all Step 1 fields before searching.");
+    return;
+  }
+
+  console.log("IS outbound search payload:", payload);
+
+  try {
+    const res = await fetch("/api/redemption", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    });
+
+    if (!res.ok) throw new Error(`HTTP ${res.status}`);
+    const data = await res.json();
+
+    console.log("💗 Redemption API response:", data);
+    localStorage.setItem("latestRedemptionResults", JSON.stringify(data.results || []));
+    console.log("Redirecting to results page...");
+    window.location.href = "/dev/redemption-results.html";
+
+    // === Optional shimmer bridge ===
     (async () => {
       spinnerBridge.style.zIndex = "99999";
       spinnerBridge.style.visibility = "visible";
       spinnerBridge.style.opacity = "1";
       spinnerBridge.style.display = "flex";
       goldCard.classList.add("active");
-    
+
       console.log("✨ Gold card shimmer engaged.");
-    
-      // Wait 3s for shimmer, then load flight cards
       await new Promise((resolve) => setTimeout(resolve, 3000));
       console.log("✨ Shimmer complete — loading flight cards...");
-    
+
       try {
         const res = await fetch("/dev/flight-cards.html");
         const html = await res.text();
@@ -627,74 +676,22 @@ if (!spinnerBridge) {
         console.error("Failed to load flight cards:", err);
       }
     })();
-  
-    // === Build payload after shimmer completes ===
-    const payload = {
-      origin: document.getElementById("origin").value.trim().toUpperCase(),
-      destination: document.getElementById("destination").value.trim().toUpperCase(),
-      passengers: document.getElementById("passengers").value,
-      cabin: document.getElementById("cabin").value,
-      program: document.getElementById("program").value,
-      date: document.getElementById("departDate").value,
-      flexDays: document.getElementById("flexDays")?.value || 0,
-      mode: flexBtn.classList.contains("active") ? "flex" : "exact",
-      direct: document.querySelector("#directStop button.active")?.dataset.val,
-      multi: document.querySelector("#multiConn button.active")?.dataset.val,
-      positioning: document.querySelector("#posFlight button.active")?.dataset.val,
-    };
-  
-    // Expand flexDays into date array
-    const departDate = document.getElementById("departDate").value;
-    const flexRange = parseInt(document.getElementById("flexDays").value) || 0;
-    const searchDates = [];
-    for (let i = -flexRange; i <= flexRange; i++) {
-      const d = new Date(departDate);
-      d.setDate(d.getDate() + i);
-      searchDates.push(d.toISOString().split("T")[0]);
-    }
-  
-    payload.searchDates = searchDates;
-    delete payload.date;
-  
-    // ✅ Validation safely inside listener
-    if (!payload.origin || !payload.destination || !payload.searchDates?.length) {
-      alert("Please complete all Step 1 fields before searching.");
-      return;
-    }
-  
-    console.log("IS outbound search payload:", payload);
-  
-    try {
-      const res = await fetch("/api/redemption", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-  
-      if (!res.ok) throw new Error(`HTTP ${res.status}`);
-      const data = await res.json();
-  
-      console.log("🧠 Redemption API response:", data);
-      localStorage.setItem("latestRedemptionResults", JSON.stringify(data.results || []));
-      console.log("Redirecting to results page...");
-      window.location.href = "/dev/redemption-results.html";
-  
-    } catch (err) {
-      console.error("❌ Redemption fetch error:", err);
-      alert("Search failed – check console for details.");
-    }
-  });
+  } catch (err) {
+    console.error("❌ Redemption fetch error:", err);
+    alert("Search failed – check console for details.");
+  }
+});   // <== END of click handler (ONLY ONE CLOSE HERE)
 
-  // --- Autocomplete Setup Function ---
-  function setupAutocomplete(inputId, suggestionsId) {
-    const input = document.getElementById(inputId);
-    const suggestions = document.getElementById(suggestionsId);
-    if (!input || !suggestions) return;
-  
-    input.addEventListener("input", () => {
-      const query = input.value.toLowerCase();
-      suggestions.innerHTML = "";
-      if (query.length < 2) return;
+// --- Autocomplete Setup Function ---
+function setupAutocomplete(inputId, suggestionsId) {
+  const input = document.getElementById(inputId);
+  const suggestions = document.getElementById(suggestionsId);
+  if (!input || !suggestions) return;
+
+  input.addEventListener("input", () => {
+    const query = input.value.toLowerCase();
+    suggestions.innerHTML = "";
+    if (query.length < 2) return;
 
     const matches = airports
       .filter(a =>
