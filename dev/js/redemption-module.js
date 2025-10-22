@@ -109,6 +109,8 @@ if (!spinnerBridge) {
     overflow: "hidden",
     zIndex: 9999
   });
+
+  document.body.appendChild(goldCard);
   
   // Card image
   const cardImg = document.createElement("img");
