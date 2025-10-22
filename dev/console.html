@@ -630,23 +630,56 @@ document.querySelectorAll(".nav-link").forEach(link => {
       html = await res.text();
       workspace.innerHTML = html;
     
-  // --- run any inline scripts contained in the loaded HTML ---
-  const scripts = workspace.querySelectorAll("script");
-  scripts.forEach((oldScript) => {
-    const newScript = document.createElement("script");
-    if (oldScript.src) {
-      newScript.src = oldScript.src;
-    } else {
-      newScript.textContent = oldScript.textContent;
+  // --- SAFER: run inline/external scripts from loaded HTML without auto-calling helpers ---
+  (async function runLoadedScriptsSafely() {
+    const scripts = [...workspace.querySelectorAll("script")];
+  
+    for (const oldScript of scripts) {
+      // external script -> append with defer to keep predictable load order
+      if (oldScript.src) {
+        await new Promise((resolve, reject) => {
+          const s = document.createElement("script");
+          s.src = oldScript.src;
+          s.defer = true;
+          s.onload = () => { console.log("Loaded external script:", oldScript.src); resolve(); };
+          s.onerror = (e) => { console.warn("Failed loading script:", oldScript.src, e); resolve(); };
+          document.body.appendChild(s);
+        });
+        oldScript.remove();
+        continue;
+      }
+  
+      // Inline script: parse text and prevent any immediate calls to guarded helpers.
+      // We'll create a wrapped function which defines the same code but returns it as a function to be called later.
+      const text = oldScript.textContent || "";
+  
+      // If the inline script *explicitly* calls one of these auto-run helpers, skip executing the call.
+      // Allowed helpers (will remain defined): setupRedemptionModule, launchGoldCard, createSpinnerBridge, showGoldCard
+      // We'll remove patterns like "setupRedemptionModule();" or "window.launchGoldCard();" to avoid auto-run.
+      const guarded = text
+        .replace(/\bsetupRedemptionModule\s*\(\s*\)\s*;?/g, "/* blocked auto-call: setupRedemptionModule() */")
+        .replace(/\bwindow\.setupRedemptionModule\s*\(\s*\)\s*;?/g, "/* blocked auto-call: window.setupRedemptionModule() */")
+        .replace(/\blaunchGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: launchGoldCard() */")
+        .replace(/\bwindow\.launchGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: window.launchGoldCard() */")
+        .replace(/\bcreateSpinnerBridge\s*\(\s*\)\s*;?/g, "/* blocked auto-call: createSpinnerBridge() */")
+        .replace(/\bwindow\.createSpinnerBridge\s*\(\s*\)\s*;?/g, "/* blocked auto-call: window.createSpinnerBridge() */")
+        .replace(/\bshowGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: showGoldCard() */")
+        .replace(/\bwindow\.showGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: window.showGoldCard() */");
+  
+      // Append as an inline script but wrapped: it defines any helper functions, variables, etc.,
+      // but prevents any explicit immediate call to guarded helpers.
+      const wrapperScript = document.createElement("script");
+      wrapperScript.type = "text/javascript";
+      wrapperScript.textContent = `try {
+  ${guarded}
+  } catch (err) { console.error("Error in injected inline script (safely wrapped):", err); }`;
+      document.body.appendChild(wrapperScript);
+      oldScript.remove();
     }
   
-    // ensure inline scripts run *after* DOM is painted
-    requestAnimationFrame(() => {
-      document.body.appendChild(newScript);
-    });
+    console.log("✅ Inline/external scripts from loaded HTML injected safely (auto-calls blocked).");
+  })();
 
-  oldScript.remove();
-});
 
     
       // --- trigger the gold card reveal after scripts execute ---
@@ -668,6 +701,35 @@ document.querySelectorAll(".nav-link").forEach(link => {
       document.body.appendChild(redemptionScript);
       }
 
+    // delegated search click -> ensure manual launch happens in a predictable way
+    document.body.addEventListener('click', (ev) => {
+      const btn = ev.target.closest && ev.target.closest('#searchBtn');
+      if (!btn) return;
+      // allow the original page listener to run; but also guarantee the gold-card helpers are invoked
+      console.log("🟣 Delegated: searchBtn clicked (console loader).");
+    
+      // if redemption module helper exists, call it (manual safe trigger)
+      if (typeof window.launchGoldCard === 'function') {
+        try {
+          window.launchGoldCard();
+          console.log("🟣 Delegated: launchGoldCard() called.");
+        } catch (e) {
+          console.warn("Delegated launchGoldCard() failed:", e);
+        }
+      }
+    
+      // if a simple bridge creator exists, call it too (non-fatal)
+      if (typeof window.createSpinnerBridge === 'function') {
+        try {
+          window.createSpinnerBridge();
+          console.log("🟣 Delegated: createSpinnerBridge() called.");
+        } catch (e) {
+          console.warn("Delegated createSpinnerBridge() failed:", e);
+        }
+      }
+    });
+
+        
       else if (page === "wallet") {
         const res = await fetch("/dev/wallet-con.html");
         html = await res.text();
