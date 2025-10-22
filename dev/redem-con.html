@@ -655,4 +655,25 @@ window.showGoldCard = showGoldCard;
 
   </script>
 
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const btn = document.getElementById("searchBtn");
+      if (!btn) {
+        console.warn("⚠️ searchBtn not found on DOMContentLoaded.");
+        return;
+      }
+    
+      btn.addEventListener("click", (e) => {
+        e.preventDefault();
+        console.log("🟢 Search click detected — calling createSpinnerBridge().");
+        if (typeof window.createSpinnerBridge === "function") {
+          window.createSpinnerBridge();
+        } else {
+          console.warn("⚠️ createSpinnerBridge not defined.");
+        }
+      });
+    });
+</script>
+
+
   <!-- <script src="/dev/js/redemption-bridge.js"></script> -->
