@@ -77,6 +77,11 @@ if (!spinnerBridge) {
     overflow: "hidden"
   });
 
+  spinnerBridge.style.position = "absolute";
+  spinnerBridge.style.inset = "0"; // shorthand for top:0; right:0; bottom:0; left:0
+  spinnerBridge.style.maxWidth = "100%";
+  spinnerBridge.style.maxHeight = "100%";
+  
   // --- Center spinner bridge within the search form ---
   const formContainerCenter = document.querySelector("#redemption-form");
   if (formContainerCenter) {
