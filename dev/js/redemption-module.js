@@ -45,7 +45,6 @@ window.launchGoldCard = async () => {
     // 🧩 Prevent double execution after unlock
     window._redemptionInitialized = true;
     console.log("✅ setupRedemptionModule initialized manually.");
-  }
 
  const consoleContainer =
   document.querySelector("main.console-container") ||
@@ -739,3 +738,4 @@ function setupAutocomplete(inputId, suggestionsId) {
     }
   });
 }
+  }
