@@ -655,8 +655,8 @@ document.querySelectorAll(".nav-link").forEach(link => {
       const redemptionScript = document.createElement("script");
       redemptionScript.src = "/dev/js/redemption-module.js";
       redemptionScript.onload = () => {
-        if (typeof initRedemptionModule === "function") initRedemptionModule();
-      };
+      // if (typeof initRedemptionModule === "function") initRedemptionModule();
+    };
       document.body.appendChild(redemptionScript);
     }
 
