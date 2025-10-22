@@ -1,47 +1,48 @@
-// 🧭 ConciergeSync™ Redemption Module — Safe Initialization
-window._manualLaunch = false; // default: not manually launched yet
-
-// 🟡 Entry point — define only, do NOT auto-run
-function initRedemptionModule() {
-  console.log("initRedemptionModule defined — waiting for manual trigger.");
-}
-
-// ✅ Make gold-card sequence callable on demand (manual only)
-window.launchGoldCard = async () => {
-  window._manualLaunch = true;
-  await setupRedemptionModule();
-};
-
-
-// --- Airport Autocomplete (IATA/ICAO) ---
-let airports = [];
-
-let spinnerBridge;  // global reference for ConciergeSync™ spinner bridge
-let goldCard;       // global reference for ConciergeSync™ gold card
-
-function loadAirports() {
-  fetch("/dev/asset/iata-icao.json")
-    .then(res => res.json())
-    .then(data => {
-      airports = data;
-      console.log("🛫 Loaded airports:", airports.length);
-    })
-    .catch(err => console.error("❌ Failed to load airports:", err));
-}
-
-function setupRedemptionModule() {
-  // 🚫 Hard guard to block any auto-load initialization
-  if (!window._manualLaunch) {
-    console.log("🛑 setupRedemptionModule() blocked — awaiting manual trigger.");
-    return;
+// 🧱 Prevent premature auto-execution globally
+  window._manualLaunch = window._manualLaunch || false;
+  window._setupLocked = true;
+  
+  // 🧭 Entry point — define only, do NOT auto-run
+  function initRedemptionModule() {
+    console.log("initRedemptionModule defined – waiting for manual trigger.");
   }
-
-  if (window._redemptionInitialized) return;
-
-  // 🔒 Prevent auto-execution on page load
-  if (!window._manualLaunch) {
-    console.log("🔒 Setup skipped — waiting for manual launch");
-    return;
+  
+  // ✅ Make gold-card sequence callable on demand (manual only)
+  window.launchGoldCard = async () => {
+    window._manualLaunch = true;
+    window._setupLocked = false; // ✅ unlock setup so it can now run
+    await setupRedemptionModule();
+  };
+  
+  // --- Airport Autocomplete (IATA/ICAO) ---
+  let airports = [];
+  
+  let spinnerBridge; // global reference for ConciergeSync™ spinner bridge
+  let goldCard;      // global reference for ConciergeSync™ gold card
+  
+  function loadAirports() {
+    fetch("/dev/asset/iata-icao.json")
+      .then(res => res.json())
+      .then(data => {
+        airports = data;
+        console.log("🛫 Loaded airports:", airports.length);
+      })
+      .catch(err => console.error("❌ Failed to load airports:", err));
+  }
+  
+  // 🚦 Setup Redemption Module (guarded)
+  function setupRedemptionModule() {
+    // 🚫 Hard global guard to block any auto-load initialization
+    if (window._setupLocked && !window._manualLaunch) {
+      console.log("🛑 setupRedemptionModule blocked — global lock active.");
+      return;
+    }
+  
+    if (window._redemptionInitialized) return;
+  
+    // 🧩 Prevent double execution after unlock
+    window._redemptionInitialized = true;
+    console.log("✅ setupRedemptionModule initialized manually.");
   }
 
   window._redemptionInitialized = true;
