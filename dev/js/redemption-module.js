@@ -113,6 +113,9 @@ if (!spinnerBridge) {
   const consoleContainer = document.querySelector("#workspace") || document.querySelector(".console-container") || document.body;
   consoleContainer.appendChild(goldCard);
 
+  console.log("📦 Gold card parent is:", goldCard.parentElement);
+  console.log("📍 Spinner bridge parent is:", spinnerBridge?.parentElement);
+
   // attach spinner bridge to the same console workspace
   consoleContainer.appendChild(spinnerBridge);
   
