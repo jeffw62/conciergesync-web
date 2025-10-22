@@ -574,8 +574,32 @@ if (!spinnerBridge) {
 
   // ---- search click
   searchBtn.addEventListener("click", async (e) => {
-    e.preventDefault();
+  e.preventDefault();
+
+  // === ConciergeSync™ Gold Card Animation ===
+    const goldCard = document.getElementById("gold-card");
+    const spinnerBridge = document.getElementById("spinner-bridge");
+    const form = document.getElementById("redemption-form");
+    if (goldCard && spinnerBridge && form) {
+      form.style.transition = "opacity 0.6s ease";
+      form.style.opacity = "0";
+      spinnerBridge.style.visibility = "visible";
+      spinnerBridge.style.opacity = "1";
+      goldCard.classList.add("active");
+      setTimeout(() => {
+        fetch("/dev/flight-cards.html")
+          .then((res) => res.text())
+          .then((html) => {
+            const workspace = document.getElementById("workspace");
+            if (workspace) workspace.innerHTML = html;
+          })
+          .catch((err) => console.error("Failed to load flight cards:", err));
+      }, 3000);
+    }
+  
     if (searchBtn.disabled) return;
+    // ...existing code continues here
+  });
 
     const payload = {
       origin: document.getElementById("origin").value.trim().toUpperCase(),
