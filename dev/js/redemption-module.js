@@ -344,11 +344,18 @@ if (!spinnerBridge) {
     document.body.appendChild(spinnerBridge);
     console.log("✅ Spinner bridge & gold card injected");
   } else {
-    if (!spinnerBridge) {
-      console.warn("⚠️ spinnerBridge missing; creating dynamically");
-      spinnerBridge = document.createElement("div");
-      spinnerBridge.id = "spinner-bridge";
-      document.body.appendChild(spinnerBridge);
+    // === Ensure spinnerBridge reference stays valid ===
+    setTimeout(() => {
+      spinnerBridge = document.getElementById("spinner-bridge");
+      if (!spinnerBridge) {
+        console.warn("⚠️ spinnerBridge still missing after delay; creating dynamically");
+        spinnerBridge = document.createElement("div");
+        spinnerBridge.id = "spinner-bridge";
+        document.body.appendChild(spinnerBridge);
+      } else {
+        console.log("✅ spinnerBridge found and re-linked");
+      }
+    }, 50);
     }
     if (!goldCard) console.warn("⚠️ goldCard missing at DOM injection time");
   }
