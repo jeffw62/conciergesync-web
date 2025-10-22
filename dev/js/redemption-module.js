@@ -1,11 +1,17 @@
-// 🧭 Entry point — define only, do not auto-run
-  function initRedemptionModule() {
-// intentionally empty — no immediate call
-  console.log("initRedemptionModule defined, awaiting manual trigger...");
-  }
+// 🧭 ConciergeSync™ Redemption Module — Safe Initialization
+window._manualLaunch = false; // default: not manually launched yet
 
-// ✅ Make gold-card sequence callable on demand
-  window.launchGoldCard = () => setupRedemptionModule();
+// 🟡 Entry point — define only, do NOT auto-run
+function initRedemptionModule() {
+  console.log("initRedemptionModule defined — waiting for manual trigger.");
+}
+
+// ✅ Make gold-card sequence callable on demand (manual only)
+window.launchGoldCard = async () => {
+  window._manualLaunch = true;
+  await setupRedemptionModule();
+};
+
 
 // --- Airport Autocomplete (IATA/ICAO) ---
 let airports = [];
