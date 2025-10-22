@@ -1,9 +1,11 @@
-function initRedemptionModule() {
-  setupRedemptionModule();
-}
-// document.addEventListener("DOMContentLoaded", setupRedemptionModule);
-// make the gold-card sequence callable on demand
-window.launchGoldCard = () => setupRedemptionModule();
+// 🧭 Entry point — define only, do not auto-run
+  function initRedemptionModule() {
+// intentionally empty — no immediate call
+  console.log("initRedemptionModule defined, awaiting manual trigger...");
+  }
+
+// ✅ Make gold-card sequence callable on demand
+  window.launchGoldCard = () => setupRedemptionModule();
 
 // --- Airport Autocomplete (IATA/ICAO) ---
 let airports = [];
