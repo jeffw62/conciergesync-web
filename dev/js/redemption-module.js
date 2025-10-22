@@ -8,7 +8,8 @@ window.launchGoldCard = setupRedemptionModule;
 // --- Airport Autocomplete (IATA/ICAO) ---
 let airports = [];
 
-let spinnerBridge; // global reference for ConciergeSync™ spinner bridge
+let spinnerBridge;  // global reference for ConciergeSync™ spinner bridge
+let goldCard;       // global reference for ConciergeSync™ gold card
 
 function loadAirports() {
   fetch("/dev/asset/iata-icao.json")
@@ -90,7 +91,7 @@ function setupRedemptionModule() {
   }
   
   // === Gold Card ===
-  const goldCard = document.createElement("div");
+  goldCard = document.createElement("div");
   goldCard.id = "gold-card";
   Object.assign(goldCard.style, {
     position: "relative",
@@ -331,10 +332,15 @@ function setupRedemptionModule() {
     styleEl.textContent = css;
   })();
   
-  // === Add bridge & card to DOM ===
-  spinnerBridge.appendChild(goldCard);
-  document.body.appendChild(spinnerBridge);
-  console.log("✅ Spinner bridge & gold card injected");
+  // === Add bridge & card to DOM safely ===
+  if (spinnerBridge && goldCard) {
+    spinnerBridge.appendChild(goldCard);
+    document.body.appendChild(spinnerBridge);
+    console.log("✅ Spinner bridge & gold card injected");
+  } else {
+    if (!spinnerBridge) console.warn("⚠️ spinnerBridge missing");
+    if (!goldCard) console.warn("⚠️ goldCard missing at DOM injection time");
+  }
 
   // === Add processing text overlay to gold card ===
   const cardMessage = document.createElement("div");
