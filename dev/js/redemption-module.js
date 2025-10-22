@@ -309,9 +309,13 @@ if (!spinnerBridge) {
     waitForCard();
 
   // ensure spinnerBridge is defined globally once
-  spinnerBridge = document.getElementById("spinner-bridge") || document.createElement("div");
-  spinnerBridge.id = "spinner-bridge";
+    spinnerBridge = document.getElementById("spinner-bridge");
+    if (!spinnerBridge) {
+      spinnerBridge = document.createElement("div");
+      spinnerBridge.id = "spinner-bridge";
+      document.body.appendChild(spinnerBridge);
     }
+
       
   function attachShimmer() {
     const goldCard = document.querySelector(".gold-card");
