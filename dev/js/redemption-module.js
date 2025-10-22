@@ -63,16 +63,12 @@ if (!spinnerBridge) {
     spinnerBridge.id = "spinner-bridge";
   }
     
-    Object.assign(spinnerBridge.style, {
-    position: "fixed",
-    inset: "0",
+  Object.assign(spinnerBridge.style, {
+    position: "absolute",
+    inset: "0",                     // anchors it to all four edges of parent
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    top: 0,
-    left: 0,
-    width: "100%",
-    height: "100%",
     background: "linear-gradient(180deg, rgba(10,26,51,0.98) 0%, rgba(10,26,51,1) 100%)",
     zIndex: "99999",
     overflow: "hidden"
