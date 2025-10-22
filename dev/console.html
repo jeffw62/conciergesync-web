@@ -688,12 +688,11 @@ document.querySelectorAll(".nav-link").forEach(link => {
             console.log("🩵 Redemption script loaded — idle until Search is clicked.");
           };
           document.body.appendChild(redemptionScript);
-        } // 👈 closes if (page === "redemptions")
-    
-      } catch (err) {
-        console.error("Error loading module:", err);
-        workspace.innerHTML = "<p>Failed to load this section.</p>";
-      }
+          } // closes if (page === "redemptions")
+        } catch (err) {
+          console.error("Error loading module:", err);
+          workspace.innerHTML = "<p>Failed to load this section.</p>";
+        }
     }); // 👈 closes link.addEventListener("click", …)
     }); // 👈 closes document.querySelectorAll(".nav-link").forEach
     
@@ -704,7 +703,8 @@ document.querySelectorAll(".nav-link").forEach(link => {
     
       console.log("🟣 Delegated: searchBtn clicked (console loader).");
     
-      if (typeof window.launchGoldCard === "function")
+      // --- gold card launch ---
+      if (typeof window.launchGoldCard === "function") {
         try {
           window.launchGoldCard();
           console.log("🟣 Delegated: launchGoldCard() called.");
@@ -713,6 +713,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
         }
       }
     
+      // --- spinner bridge creation ---
       if (typeof window.createSpinnerBridge === "function") {
         try {
           window.createSpinnerBridge();
@@ -721,10 +722,8 @@ document.querySelectorAll(".nav-link").forEach(link => {
           console.warn("Delegated createSpinnerBridge() failed:", e);
         }
       }
-    }); // 👈 closes document.body.addEventListener
+    }); // closes document.body.addEventListener
 </script>
-
-
 
 </body>
 </html>
