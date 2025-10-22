@@ -630,17 +630,24 @@ document.querySelectorAll(".nav-link").forEach(link => {
       html = await res.text();
       workspace.innerHTML = html;
     
-      // --- run any inline scripts contained in the loaded HTML ---
-      workspace.querySelectorAll("script").forEach(oldScript => {
-        const newScript = document.createElement("script");
-        if (oldScript.src) {
-          newScript.src = oldScript.src;
-        } else {
-          newScript.textContent = oldScript.textContent;
-        }
-        document.body.appendChild(newScript);
-        oldScript.remove();
-      });
+  // --- run any inline scripts contained in the loaded HTML ---
+  const scripts = workspace.querySelectorAll("script");
+  scripts.forEach((oldScript) => {
+    const newScript = document.createElement("script");
+    if (oldScript.src) {
+      newScript.src = oldScript.src;
+    } else {
+      newScript.textContent = oldScript.textContent;
+    }
+  
+    // ensure inline scripts run *after* DOM is painted
+    requestAnimationFrame(() => {
+      document.body.appendChild(newScript);
+    });
+
+  oldScript.remove();
+});
+
     
       // --- trigger the gold card reveal after scripts execute ---
       setTimeout(() => {
