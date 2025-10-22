@@ -1,6 +1,8 @@
 // 🧱 Prevent premature auto-execution globally
-  window._manualLaunch = window._manualLaunch || false;
+  window._manualLaunch = false;
   window._setupLocked = true;
+  window._redemptionInitialized = false;
+
   
   // 🧭 Entry point — define only, do NOT auto-run
   function initRedemptionModule() {
@@ -606,6 +608,9 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
   // enable manual launch
   window._manualLaunch = true;
 
+  window._setupLocked = false;
+  console.log("🟡 Unlocking redemption setup manually on click...");
+  
   // run gold-card sequence on demand
   await window.launchGoldCard();
 
