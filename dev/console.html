@@ -763,9 +763,9 @@ document.querySelectorAll(".nav-link").forEach(link => {
       console.error("Error loading module:", err);
       workspace.innerHTML = "<p>Failed to load this section.</p>";
     }
-    // ✅ close outer async IIFE correctly
-    })(); 
-  </script>
+  }); // ← closes the .addEventListener("click", async (e) => { ... )
+});   // ← closes the outer querySelectorAll loop
+</script>
 
 </body>
 </html>
