@@ -575,7 +575,7 @@ if (!spinnerBridge) {
   // ---- search click
   searchBtn.addEventListener("click", async (e) => {
     e.preventDefault();
-    if (searchBtn.disabled) return; // early guard stays near the top
+    if (searchBtn.disabled) return; // early guard
   
     // === ConciergeSync™ Gold Card Animation ===
     const goldCard = document.getElementById("gold-card");
@@ -592,29 +592,11 @@ if (!spinnerBridge) {
       spinnerBridge.style.opacity = "1";
       goldCard.classList.add("active");
   
-      // Run shimmer for ~3 seconds before loading next screen
-      setTimeout(() => {
-        fetch("/dev/flight-cards.html")
-          .then((res) => res.text())
-          .then((html) => {
-            const workspace = document.getElementById("workspace");
-            if (workspace) workspace.innerHTML = html;
-          })
-          .catch((err) =>
-            console.error("Failed to load flight cards:", err)
-          );
-      }, 3000);
+      // Run shimmer for ~3 seconds before continuing
+      await new Promise((resolve) => setTimeout(resolve, 3000));
     }
   
-    // === existing search logic continues ===
-    const payload = {
-      origin: document.getElementById("origin").value.trim().toUpperCase(),
-      // ... your other existing payload fields ...
-    };
-  
-    // Continue your existing logic below
-  });
-
+    // === Build payload after shimmer completes ===
     const payload = {
       origin: document.getElementById("origin").value.trim().toUpperCase(),
       destination: document.getElementById("destination").value.trim().toUpperCase(),
@@ -628,52 +610,48 @@ if (!spinnerBridge) {
       multi: document.querySelector("#multiConn button.active")?.dataset.val,
       positioning: document.querySelector("#posFlight button.active")?.dataset.val,
     };
-    
-    // Expand flexDays into a date array
+  
+    // Expand flexDays into date array
     const departDate = document.getElementById("departDate").value;
     const flexRange = parseInt(document.getElementById("flexDays").value) || 0;
     const searchDates = [];
-    
     for (let i = -flexRange; i <= flexRange; i++) {
       const d = new Date(departDate);
       d.setDate(d.getDate() + i);
       searchDates.push(d.toISOString().split("T")[0]);
     }
-    
+  
     payload.searchDates = searchDates;
     delete payload.date;
-    
-    // ✅ Field validation (safe placement inside listener)
+  
+    // ✅ Validation safely inside listener
     if (!payload.origin || !payload.destination || !payload.searchDates?.length) {
       alert("Please complete all Step 1 fields before searching.");
       return;
     }
-    
+  
     console.log("IS outbound search payload:", payload);
-    
+  
     try {
       const res = await fetch("/api/redemption", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
-    
+  
       if (!res.ok) throw new Error(`HTTP ${res.status}`);
-    
       const data = await res.json();
+  
       console.log("🧠 Redemption API response:", data);
-    
-      // Save results once (remove duplicate)
       localStorage.setItem("latestRedemptionResults", JSON.stringify(data.results || []));
-    
-      // Redirect cleanly
       console.log("Redirecting to results page...");
       window.location.href = "/dev/redemption-results.html";
-    
+  
     } catch (err) {
       console.error("❌ Redemption fetch error:", err);
       alert("Search failed – check console for details.");
     }
+  });
 
       localStorage.setItem(
         "latestRedemptionResults",
