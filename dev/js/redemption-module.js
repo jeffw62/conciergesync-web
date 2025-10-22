@@ -603,41 +603,29 @@ if (!spinnerBridge) {
       form.style.pointerEvents = "none";
     }
   });
-
-    // === ConciergeSync™ Gold Card Animation ===
-    const goldCard = document.getElementById("gold-card");
-    const spinnerBridge = document.getElementById("spinner-bridge");
-    const form = document.getElementById("redemption-form");
+   
+    // 🌟 Activate shimmer bridge + gold card
+    spinnerBridge.style.zIndex = "99999";
+    spinnerBridge.style.visibility = "visible";
+    spinnerBridge.style.opacity = "1";
+    spinnerBridge.style.display = "flex";
+    goldCard.classList.add("active");
   
-    if (goldCard && spinnerBridge && form) {
-    // 🔒 Instantly hide the search form before shimmer begins
-      form.style.transition = "none";
-      form.style.opacity = "0";
-      form.style.visibility = "hidden";
-      form.style.pointerEvents = "none";
-    
-      // 🌟 Activate shimmer bridge + gold card
-      spinnerBridge.style.zIndex = "99999";
-      spinnerBridge.style.visibility = "visible";
-      spinnerBridge.style.opacity = "1";
-      spinnerBridge.style.display = "flex";
-      goldCard.classList.add("active");
-    
-      console.log("✨ Gold card shimmer engaged.");
-    
-      // Wait 3s for shimmer, then load flight cards
-      await new Promise(resolve => setTimeout(resolve, 3000));
-      console.log("✨ Shimmer complete — loading flight cards...");
-    
-      try {
-        const res = await fetch("/dev/flight-cards.html");
-        const html = await res.text();
-        const workspace = document.getElementById("workspace");
-        if (workspace) workspace.innerHTML = html;
-      } catch (err) {
-        console.error("Failed to load flight cards:", err);
-      }
+    console.log("✨ Gold card shimmer engaged.");
+  
+    // Wait 3s for shimmer, then load flight cards
+    await new Promise(resolve => setTimeout(resolve, 3000));
+    console.log("✨ Shimmer complete — loading flight cards...");
+  
+    try {
+      const res = await fetch("/dev/flight-cards.html");
+      const html = await res.text();
+      const workspace = document.getElementById("workspace");
+      if (workspace) workspace.innerHTML = html;
+    } catch (err) {
+      console.error("Failed to load flight cards:", err);
     }
+  }
 
   
     // === Build payload after shimmer completes ===
