@@ -729,7 +729,9 @@ document.querySelectorAll(".nav-link").forEach(link => {
       }
 
         
-     else if (page === "wallet") {
+    else if (page === "wallet") {
+      // wrap fetch in an async IIFE so we can use await,
+      // but keep it INSIDE the else-if block
       (async () => {
         try {
           const res = await fetch("/dev/wallet-con.html");
@@ -747,11 +749,16 @@ document.querySelectorAll(".nav-link").forEach(link => {
         } catch (err) {
           console.error("Failed to load wallet-con.html:", err);
         }
-      })(); // <-- IIFE call
+      })(); // end IIFE
+    } 
+    else if (page === "bonuses") {
+      workspace.innerHTML = "<h2>Bonuses panel placeholder...</h2>";
+    }
+    else {
+      // Default home / welcome
+      workspace.innerHTML = document.getElementById("welcome-section").outerHTML;
+    }
 
-      else if (page === "bonuses") {
-        workspace.innerHTML = "<h2>Bonuses panel placeholder...</h2>";
-      }
 
       else {
         // Default home / welcome
