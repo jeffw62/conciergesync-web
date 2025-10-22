@@ -729,25 +729,26 @@ document.querySelectorAll(".nav-link").forEach(link => {
       }
 
         
-      else if (page === "wallet") {
-        const res = await fetch("/dev/wallet-con.html");
-        html = await res.text();
-        workspace.innerHTML = html;
-
-        // --- ConciergeSync™ Gold Card Reveal ---
-        setTimeout(() => {
-          if (typeof window.showGoldCard === "function") {
-            window.showGoldCard();
-          } else {
-            console.warn("Gold card helper not yet loaded.");
-          }
-        }, 600);
-
-        // If you add wallet-specific JS later, load it here
-        // const walletScript = document.createElement("script");
-        // walletScript.src = "/dev/js/wallet-module.js";
-        // document.body.appendChild(walletScript);
-      }
+     else if (page === "wallet") {
+      (async () => {
+        try {
+          const res = await fetch("/dev/wallet-con.html");
+          const html = await res.text();
+          workspace.innerHTML = html;
+    
+          // --- ConciergeSync™ Gold Card Reveal ---
+          setTimeout(() => {
+            if (typeof window.showGoldCard === "function") {
+              window.showGoldCard();
+            } else {
+              console.warn("Gold card helper not yet loaded.");
+            }
+          }, 600);
+        } catch (err) {
+          console.error("Failed to load wallet-con.html:", err);
+        }
+      })(); // <-- IIFE call
+    }
 
       else if (page === "bonuses") {
         workspace.innerHTML = "<h2>Bonuses panel placeholder...</h2>";
