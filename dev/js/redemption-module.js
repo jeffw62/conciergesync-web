@@ -738,4 +738,3 @@ function setupAutocomplete(inputId, suggestionsId) {
     }
   });
 }
-  }
