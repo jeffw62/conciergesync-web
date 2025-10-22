@@ -26,6 +26,14 @@ function setupRedemptionModule() {
   window._redemptionInitialized = true;
   console.log("💗 Redemption module initializing...");
 
+// === Ensure spinner bridge exists before fade/animation ===
+if (!spinnerBridge) {
+  spinnerBridge = document.createElement("div");
+  spinnerBridge.id = "spinner-bridge";
+  document.body.appendChild(spinnerBridge);
+  console.log("✅ spinnerBridge pre-injected before animation");
+}
+
   // --- Ensure redemption form centers spinner bridge correctly ---
   const centerFixStyle = document.createElement("style");
   centerFixStyle.textContent = `
