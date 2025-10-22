@@ -1,20 +1,20 @@
-// 🧱 Prevent premature auto-execution globally
-  window._manualLaunch = false;
-  window._setupLocked = true;
-  window._redemptionInitialized = false;
+// 🧱 Global Safety Flags — Prevent premature execution
+window._manualLaunch = false;
+window._setupLocked = true;
+window._redemptionInitialized = false;
 
-  
-  // 🧭 Entry point — define only, do NOT auto-run
-  function initRedemptionModule() {
-    console.log("initRedemptionModule defined – waiting for manual trigger.");
-  }
-  
-  // ✅ Make gold-card sequence callable on demand (manual only)
-  window.launchGoldCard = async () => {
-    window._manualLaunch = true;
-    window._setupLocked = false; // ✅ unlock setup so it can now run
-    await setupRedemptionModule();
-  };
+// 🧭 Entry point (define only, never auto-run)
+function initRedemptionModule() {
+  console.log("🩷 initRedemptionModule defined — waiting for manual trigger only.");
+}
+
+// ✅ Callable launch sequence (manual only)
+window.launchGoldCard = async () => {
+  console.log("🎯 Manual gold-card launch requested.");
+  window._manualLaunch = true;
+  window._setupLocked = false;
+  await setupRedemptionModule();
+};
   
   // --- Airport Autocomplete (IATA/ICAO) ---
   let airports = [];
