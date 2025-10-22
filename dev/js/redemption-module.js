@@ -699,6 +699,7 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
     alert("Search failed – check console for details.");
   }
 });   // <== END of click handler (ONLY ONE CLOSE HERE)
+  }
 
 // --- Autocomplete Setup Function ---
 function setupAutocomplete(inputId, suggestionsId) {
