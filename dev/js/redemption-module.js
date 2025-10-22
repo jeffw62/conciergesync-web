@@ -77,6 +77,14 @@ if (!spinnerBridge) {
     overflow: "hidden"
   });
 
+  // 🔧 Ensure spinner bridge positions relative to the console container
+  const consoleContainer = document.querySelector("#workspace.console-container");
+  if (consoleContainer) {
+    consoleContainer.style.position = "relative";
+    consoleContainer.appendChild(spinnerBridge);
+    console.log("📦 spinnerBridge now anchored to consoleContainer");
+  }
+
   spinnerBridge.style.position = "absolute";
   spinnerBridge.style.inset = "0"; // shorthand for top:0; right:0; bottom:0; left:0
   spinnerBridge.style.maxWidth = "100%";
