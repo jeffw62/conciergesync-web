@@ -110,7 +110,7 @@ if (!spinnerBridge) {
     zIndex: 9999
   });
 
-  const consoleContainer = document.querySelector("#workspace.console-container") || document.body;
+  const consoleContainer = document.querySelector("#workspace") || document.querySelector(".console-container") || document.body;
   consoleContainer.appendChild(goldCard);
 
   // attach spinner bridge to the same console workspace
