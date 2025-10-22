@@ -30,6 +30,12 @@ function loadAirports() {
 }
 
 function setupRedemptionModule() {
+  // 🚫 Hard guard to block any auto-load initialization
+  if (!window._manualLaunch) {
+    console.log("🛑 setupRedemptionModule() blocked — awaiting manual trigger.");
+    return;
+  }
+
   if (window._redemptionInitialized) return;
 
   // 🔒 Prevent auto-execution on page load
