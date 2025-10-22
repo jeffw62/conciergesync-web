@@ -568,7 +568,7 @@
   } 
 </style>
 
-<script>
+<!-- <script>
   function showGoldCard() {
   const spinner = document.getElementById("spinner-overlay");
   const wrapper = document.querySelector(".search-wrapper");
@@ -593,10 +593,10 @@
 
 window.showGoldCard = showGoldCard;
 
-</script>
+</script> -->
 
 <script>
-  window.createSpinnerBridge = () => {
+// window.createSpinnerBridge = () => { 
   const old = document.getElementById('spinner-bridge');
   if (old) old.remove();
 
@@ -666,8 +666,8 @@ window.showGoldCard = showGoldCard;
       btn.addEventListener("click", (e) => {
         e.preventDefault();
         console.log("🟢 Search click detected — calling createSpinnerBridge().");
-        if (typeof window.createSpinnerBridge === "function") {
-          window.createSpinnerBridge();
+        // if (typeof window.createSpinnerBridge === "function") {
+        //  window.createSpinnerBridge();
         } else {
           console.warn("⚠️ createSpinnerBridge not defined.");
         }
