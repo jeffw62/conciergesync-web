@@ -358,7 +358,6 @@ if (!spinnerBridge) {
     }, 50);
     }
     if (!goldCard) console.warn("⚠️ goldCard missing at DOM injection time");
-  }
 
   // === Add processing text overlay to gold card ===
   const cardMessage = document.createElement("div");
