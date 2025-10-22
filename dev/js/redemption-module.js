@@ -110,8 +110,22 @@ if (!spinnerBridge) {
     zIndex: 9999
   });
 
-  document.body.appendChild(goldCard);
+  const consoleContainer = document.querySelector("#workspace.console-container") || document.body;
+  consoleContainer.appendChild(goldCard);
+
+  // attach spinner bridge to the same console workspace
+  consoleContainer.appendChild(spinnerBridge);
   
+  // make sure it covers the workspace only
+  if (consoleContainer !== document.body) {
+    spinnerBridge.style.position = "absolute";
+    spinnerBridge.style.top = "0";
+    spinnerBridge.style.left = "0";
+    spinnerBridge.style.width = "100%";
+    spinnerBridge.style.height = "100%";
+    spinnerBridge.style.zIndex = "9998";
+  }
+
   // Card image
   const cardImg = document.createElement("img");
   cardImg.src = "/dev/asset/CS_logo_vert_gold_card.png";
