@@ -3,7 +3,7 @@ function initRedemptionModule() {
 }
 // document.addEventListener("DOMContentLoaded", setupRedemptionModule);
 // make the gold-card sequence callable on demand
-window.launchGoldCard = setupRedemptionModule;
+window.launchGoldCard = () => setupRedemptionModule();
 
 // --- Airport Autocomplete (IATA/ICAO) ---
 let airports = [];
@@ -576,6 +576,8 @@ if (!spinnerBridge) {
   searchBtn.addEventListener("click", async (e) => {
     e.preventDefault();
     if (searchBtn.disabled) return; // early guard
+  
+    await window.launchGoldCard();
   
     // === ConciergeSync™ Gold Card Animation ===
     const goldCard = document.getElementById("gold-card");
