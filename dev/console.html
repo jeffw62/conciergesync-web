@@ -679,37 +679,32 @@ document.querySelectorAll(".nav-link").forEach(link => {
   
     console.log("✅ Inline/external scripts from loaded HTML injected safely (auto-calls blocked).");
   })();
-
-
     
-      // --- trigger the gold card reveal after scripts execute ---
-      setTimeout(() => {
-        if (typeof window.showGoldCard === "function") {
-          window.showGoldCard();
-        } else {
-          console.warn("Gold card helper not found even after script execution.");
-        }
-      }, 600);
-    
-      /// === Redemption Module Loader (idle only) ===
+      // --- Redemption Module Loader (idle only) ---
       const redemptionScript = document.createElement("script");
-      redemptionScript.src = "/dev/js/redemption-module.js";
-      redemptionScript.defer = true;
-      redemptionScript.onload = () => {
-        console.log("🩵 Redemption script loaded — idle until Search is clicked.");
-      };
-      document.body.appendChild(redemptionScript);
+          redemptionScript.src = "/dev/js/redemption-module.js";
+          redemptionScript.defer = true;
+          redemptionScript.onload = () => {
+            console.log("🩵 Redemption script loaded — idle until Search is clicked.");
+          };
+          document.body.appendChild(redemptionScript);
+        } // 👈 closes if (page === "redemptions")
+    
+      } catch (err) {
+        console.error("Error loading module:", err);
+        workspace.innerHTML = "<p>Failed to load this section.</p>";
       }
-
-    // delegated search click -> ensure manual launch happens in a predictable way
-    document.body.addEventListener('click', (ev) => {
-      const btn = ev.target.closest && ev.target.closest('#searchBtn');
+    }); // 👈 closes link.addEventListener("click", …)
+    }); // 👈 closes document.querySelectorAll(".nav-link").forEach
+    
+    // === delegated search click ===
+    document.body.addEventListener("click", (ev) => {
+      const btn = ev.target.closest("#searchBtn");
       if (!btn) return;
-      // allow the original page listener to run; but also guarantee the gold-card helpers are invoked
+    
       console.log("🟣 Delegated: searchBtn clicked (console loader).");
     
-      // if redemption module helper exists, call it (manual safe trigger)
-      if (typeof window.launchGoldCard === 'function') {
+      if (typeof window.launchGoldCard === "function")
         try {
           window.launchGoldCard();
           console.log("🟣 Delegated: launchGoldCard() called.");
@@ -718,8 +713,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
         }
       }
     
-      // if a simple bridge creator exists, call it too (non-fatal)
-      if (typeof window.createSpinnerBridge === 'function') {
+      if (typeof window.createSpinnerBridge === "function") {
         try {
           window.createSpinnerBridge();
           console.log("🟣 Delegated: createSpinnerBridge() called.");
@@ -727,45 +721,10 @@ document.querySelectorAll(".nav-link").forEach(link => {
           console.warn("Delegated createSpinnerBridge() failed:", e);
         }
       }
-
-        
-    else if (page === "wallet") {
-      // wrap fetch in an async IIFE so we can use await,
-      // but keep it INSIDE the else-if block
-      (async () => {
-        try {
-          const res = await fetch("/dev/wallet-con.html");
-          const html = await res.text();
-          workspace.innerHTML = html;
-    
-          // --- ConciergeSync™ Gold Card Reveal ---
-          setTimeout(() => {
-            if (typeof window.showGoldCard === "function") {
-              window.showGoldCard();
-            } else {
-              console.warn("Gold card helper not yet loaded.");
-            }
-          }, 600);
-        } catch (err) {
-          console.error("Failed to load wallet-con.html:", err);
-        }
-      })(); // end IIFE
-    } 
-    else if (page === "bonuses") {
-      workspace.innerHTML = "<h2>Bonuses panel placeholder...</h2>";
-    } 
-    else {
-      // Default home / welcome
-      workspace.innerHTML = document.getElementById("welcome-section").outerHTML;
-    }
-    
-    } catch (err) {
-      console.error("Error loading module:", err);
-      workspace.innerHTML = "<p>Failed to load this section.</p>";
-    }
-  }); // ← closes the .addEventListener("click", async (e) => { ... )
-});   // ← closes the outer querySelectorAll loop
+    }); // 👈 closes document.body.addEventListener
 </script>
+
+
 
 </body>
 </html>
