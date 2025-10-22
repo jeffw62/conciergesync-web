@@ -596,66 +596,63 @@ window.showGoldCard = showGoldCard;
 </script>
 
 <script>
-  window.addEventListener('load', () => {
-    // remove any old bridge
-    const old = document.getElementById('spinner-bridge');
-    if (old) old.remove();
-  
-    // create bridge
-    const bridge = document.createElement('div');
-    bridge.id = 'spinner-bridge';
-    Object.assign(bridge.style, {
-      position: 'fixed',
-      top: 0,
-      left: 0,
-      width: '100%',
-      height: '100%',
-      display: 'flex',
-      alignItems: 'center',
-      justifyContent: 'center',
-      background: 'rgba(10,26,51,0.85)',
-      zIndex: 9998
-    });
-  
-    // gold card
-    const card = document.createElement('img');
-    card.id = 'gold-card';
-    card.src = '/dev/asset/CS_logo_vert_gold_card.png';
-    Object.assign(card.style, {
-      width: '400px',
-      opacity: 1,
-      visibility: 'visible',
-      zIndex: 9999
-    });
-    bridge.appendChild(card);
-  
-    // shimmer overlay (placeholder)
-    const shimmer = document.createElement('div');
-      shimmer.id = 'shimmer-overlay';
-      shimmer.style.position = 'absolute';
-      shimmer.style.top = 0;
-      shimmer.style.left = 0;
-      shimmer.style.width = '100%';
-      shimmer.style.height = '100%';
-      shimmer.style.background = 'linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)';
-      shimmer.style.backgroundSize = '200% 100%';
-      shimmer.style.animation = 'shimmerMove 2s infinite';
-      bridge.appendChild(shimmer);
-    
-      // shimmer animation keyframes
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes shimmerMove {
-          0% { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
-        }
-    `;
-    document.head.appendChild(style);
-  
-    // add bridge to page
-    document.body.appendChild(bridge);
-    console.log('✅ Spinner bridge & gold card restored');
+  window.createSpinnerBridge = () => {
+  const old = document.getElementById('spinner-bridge');
+  if (old) old.remove();
+
+  const bridge = document.createElement('div');
+  bridge.id = 'spinner-bridge';
+  Object.assign(bridge.style, {
+    position: 'fixed',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    background: 'rgba(10,26,51,0.85)',
+    zIndex: 9998
   });
+
+  const card = document.createElement('img');
+  card.id = 'gold-card';
+  card.src = '/dev/asset/CS_logo_vert_gold_card.png';
+  Object.assign(card.style, {
+    width: '400px',
+    opacity: 1,
+    visibility: 'visible',
+    zIndex: 9999
+  });
+  bridge.appendChild(card);
+
+  const shimmer = document.createElement('div');
+  shimmer.id = 'shimmer-overlay';
+  Object.assign(shimmer.style, {
+    position: 'absolute',
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    background: 'linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
+    backgroundSize: '200% 100%',
+    animation: 'shimmerMove 2s infinite'
+  });
+  bridge.appendChild(shimmer);
+
+  const style = document.createElement('style');
+  style.textContent = `
+    @keyframes shimmerMove {
+      0% { background-position: 200% 0; }
+      100% { background-position: -200% 0; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  document.body.appendChild(bridge);
+  console.log('✅ Spinner bridge & gold card created manually');
+};
+
   </script>
 
   <script src="/dev/js/redemption-bridge.js"></script>
