@@ -26,11 +26,17 @@ function setupRedemptionModule() {
   window._redemptionInitialized = true;
   console.log("💗 Redemption module initializing...");
 
+const consoleContainer =
+  document.querySelector("main.console-container") ||
+  document.getElementById("workspace") ||
+  document.body;
+  
 // === Ensure spinner bridge exists before fade/animation ===
 if (!spinnerBridge) {
   spinnerBridge = document.createElement("div");
   spinnerBridge.id = "spinner-bridge";
-  document.body.appendChild(spinnerBridge);
+  consoleContainer.appendChild(spinnerBridge);
+  console.log("📦 SpinnerBridge attached to:", spinnerBridge.parentElement);
   console.log("✅ spinnerBridge pre-injected before animation");
 }
 
@@ -83,7 +89,7 @@ if (!spinnerBridge) {
     formContainerCenter.appendChild(spinnerBridge);
   } else {
     // fallback if form not found
-    document.body.appendChild(spinnerBridge);
+    consoleContainer.appendChild(spinnerBridge);
   }
 
   // === attach bridge inside search form container ===
@@ -93,7 +99,7 @@ if (!spinnerBridge) {
     formContainer.appendChild(spinnerBridge);
   } else {
     // fallback: full-screen center
-    document.body.appendChild(spinnerBridge);
+    consoleContainer.appendChild(spinnerBridge);
   }
   
   // === Gold Card ===
@@ -360,7 +366,7 @@ if (!spinnerBridge) {
   // === Add bridge & card to DOM safely ===
   if (spinnerBridge && goldCard) {
     spinnerBridge.appendChild(goldCard);
-    document.body.appendChild(spinnerBridge);
+    consoleContainer.appendChild(spinnerBridge);
     console.log("✅ Spinner bridge & gold card injected");
   } else {
     // === Ensure spinnerBridge reference stays valid ===
@@ -370,7 +376,7 @@ if (!spinnerBridge) {
         console.warn("⚠️ spinnerBridge still missing after delay; creating dynamically");
         spinnerBridge = document.createElement("div");
         spinnerBridge.id = "spinner-bridge";
-        document.body.appendChild(spinnerBridge);
+        consoleContainer.appendChild(spinnerBridge);
       } else {
         console.log("✅ spinnerBridge found and re-linked");
       }
