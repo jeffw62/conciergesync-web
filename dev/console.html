@@ -464,15 +464,21 @@
       animation: fadeIn 0.6s ease;
     }
 
+    /* === Console container (single definitive rule) === */
     .console-container {
       position: relative;
-      width: 100%;
+      width: 100vw;
       height: 100vh;
+      margin: 0;                /* removes center auto-margins */
+      padding: 0;               /* gold card centers perfectly */
       overflow: hidden;
       isolation: isolate;
       display: flex;
+      flex-direction: column;
       justify-content: center;
       align-items: center;
+    
+      /* ensures absolute children anchor properly */
       transform: translateZ(0);
       contain: layout paint;
       will-change: transform;
