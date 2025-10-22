@@ -579,8 +579,6 @@ if (!spinnerBridge) {
     };
   }
 
- ... (earlier code like validateStep2, date toggle, etc.)
-
 // ---- search click
 searchBtn.addEventListener("click", async (e) => {     // <== START of click handler
   e.preventDefault();
