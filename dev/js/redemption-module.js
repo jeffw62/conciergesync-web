@@ -338,7 +338,12 @@ function setupRedemptionModule() {
     document.body.appendChild(spinnerBridge);
     console.log("✅ Spinner bridge & gold card injected");
   } else {
-    if (!spinnerBridge) console.warn("⚠️ spinnerBridge missing");
+    if (!spinnerBridge) {
+      console.warn("⚠️ spinnerBridge missing; creating dynamically");
+      spinnerBridge = document.createElement("div");
+      spinnerBridge.id = "spinner-bridge";
+      document.body.appendChild(spinnerBridge);
+    }
     if (!goldCard) console.warn("⚠️ goldCard missing at DOM injection time");
   }
 
