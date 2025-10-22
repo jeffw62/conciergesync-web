@@ -584,8 +584,12 @@ if (!spinnerBridge) {
   
     if (goldCard && spinnerBridge && form) {
       // Fade out the search form
-      form.style.transition = "opacity 0.6s ease";
+      form.style.transition = "opacity 0.4s ease";
       form.style.opacity = "0";
+      setTimeout(() => {
+        form.style.visibility = "hidden";
+        form.style.pointerEvents = "none";
+      }, 400);
   
       // Show shimmer bridge
       spinnerBridge.style.visibility = "visible";
