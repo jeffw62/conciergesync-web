@@ -753,25 +753,18 @@ document.querySelectorAll(".nav-link").forEach(link => {
     } 
     else if (page === "bonuses") {
       workspace.innerHTML = "<h2>Bonuses panel placeholder...</h2>";
-    }
+    } 
     else {
       // Default home / welcome
       workspace.innerHTML = document.getElementById("welcome-section").outerHTML;
     }
-
-
-      else {
-        // Default home / welcome
-        workspace.innerHTML = document.getElementById("welcome-section").outerHTML;
-      }
-
+    
     } catch (err) {
       console.error("Error loading module:", err);
       workspace.innerHTML = "<p>Failed to load this section.</p>";
     }
-  });
-});
-</script>
+    });
+  </script>
 
 
 </body>
