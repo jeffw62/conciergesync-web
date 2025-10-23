@@ -705,10 +705,9 @@ document.querySelectorAll(".nav-link").forEach(link => {
           }
         `;
       try {
-        // 🔹 Wrap eval in an extra protective layer
         wrapperScript.textContent = `
           try {
-            (new Function(\`${guarded.replace(/[`\\]/g, "\\$&")}\`))();
+            (new Function(\`${guarded.replace(/[`$\\]/g, "\\$&")}\`))();
           } catch (innerErr) {
             console.error("💥 Inner eval failed:", innerErr);
             console.error("⛔️ The guarded script may be truncated or malformed.");
