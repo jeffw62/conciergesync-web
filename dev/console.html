@@ -670,9 +670,13 @@ document.querySelectorAll(".nav-link").forEach(link => {
       // but prevents any explicit immediate call to guarded helpers.
       const wrapperScript = document.createElement("script");
       wrapperScript.type = "text/javascript";
-      wrapperScript.textContent = `try {
-  ${guarded}
-  } catch (err) { console.error("Error in injected inline script (safely wrapped):", err); }`;
+      wrapperScript.textContent = `
+      try {
+        ${guarded}
+      } catch (err) {
+        console.error("Error in injected inline script (safely wrapped):", err);
+      }
+      `;
       document.body.appendChild(wrapperScript);
       oldScript.remove();
     }
