@@ -671,13 +671,13 @@ document.querySelectorAll(".nav-link").forEach(link => {
       const wrapperScript = document.createElement("script");
       wrapperScript.type = "text/javascript";
       console.log("Injecting guarded inline script full:", guarded);
-      wrapperScript.textContent = `
-      try {
-        ${guarded}
-      } catch (err) {
-        console.error("Error in injected inline script (safely wrapped):", err);
-      }
-      `;
+      wrapperScript.textContent = [
+        "try {",
+        guarded,
+        "} catch (err) {",
+        "  console.error('Error in injected inline script (safely wrapped):', err);",
+        "}"
+      ].join("\n");
       document.body.appendChild(wrapperScript);
       oldScript.remove();
     }
