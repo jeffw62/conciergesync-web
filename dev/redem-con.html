@@ -1,4 +1,4 @@
-<style>
+whee<style>
 
     /* ========================
        CORE BASELINE STYLES
@@ -674,6 +674,25 @@ window.showGoldCard = showGoldCard;
         }
       });
     });
+
+    // =======================================================
+    // ✅ Redemption Form Global Exports (called by console)
+    // =======================================================
+    // 🔹 Make sure these are global so the console can trigger them
+    window.initRedemptionForm = function() {
+      console.log("Redemption form initialized.");
+      // attach event listeners, validation, etc.
+    };
+    
+    window.fetchIATA = async function() {
+      console.log("Fetching IATA data...");
+      // your actual IATA fetch logic here
+    };
+    
+    window.attachYesNoHandlers = function() {
+      console.log("Attaching yes/no handlers...");
+      // your existing toggle logic here
+    };
 </script>
 
 
