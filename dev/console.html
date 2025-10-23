@@ -673,22 +673,23 @@ document.querySelectorAll(".nav-link").forEach(link => {
         const wrapperScript = document.createElement("script");
         wrapperScript.type = "text/javascript";
       
-        // Encode the guarded script as JSON so nothing breaks the parser
-        const safeCode = JSON.stringify(
-          `try {\n${guarded}\n} catch (err) {\n  console.error("Error in injected inline script (safely wrapped):", err);\n}`
-        );
-      
-        // Rebuild and execute it safely
-        wrapperScript.textContent = `eval(JSON.parse(${safeCode}));`;
+        // wrap the guarded code safely inside try/catch directly
+        wrapperScript.textContent = `
+          try {
+            ${guarded}
+          } catch (err) {
+            console.error("Error in injected inline script (safely wrapped):", err);
+          }
+        `;
       
         document.body.appendChild(wrapperScript);
       } catch (err) {
         console.error("💥 Wrapper append failed:", err);
       }
+      
       oldScript.remove();
-    }
-  
-    console.log("✅ Inline/external scripts from loaded HTML injected safely (auto-calls blocked).");
+          }
+  console.log("✅ Inline/external scripts from loaded HTML injected safely (auto-calls blocked).");
   })();
     
       // --- Redemption Module Loader (idle only) ---
