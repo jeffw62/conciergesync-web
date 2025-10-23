@@ -700,7 +700,7 @@ window.showGoldCard = showGoldCard;
       }
     };
     
-    // Delegated IATA handler (final corrected)
+    // 🧱 Delegated IATA handler (bulletproof version)
     window.fetchIATA = function () {
       console.log("Fetching IATA data (delegated)...");
       const ws = document.getElementById("workspace");
@@ -713,15 +713,16 @@ window.showGoldCard = showGoldCard;
     
       window.__redem_iata_blur_handler = function (evt) {
         try {
+          if (!evt || !evt.target) return;
           const t = evt.target;
           if (!(t instanceof HTMLInputElement)) return;
           if (!t.matches("[data-iata]")) return;
     
           console.log("Fetch IATA for:", t.value);
-          // TODO: real API call goes here
+          // TODO: replace with actual API call
           // fetch(`/api/iata?query=${encodeURIComponent(t.value)}`)
           //   .then(r => r.json())
-          //   .then(data => { console.log("IATA data:", data); })
+          //   .then(data => console.log("IATA:", data))
           //   .catch(err => console.warn("IATA fetch failed:", err));
         } catch (err) {
           console.error("IATA delegated handler error:", err);
@@ -738,10 +739,10 @@ window.showGoldCard = showGoldCard;
     
       window.__redem_iata_input_handler = function (evt) {
         try {
+          if (!evt || !evt.target) return;
           const t = evt.target;
           if (!(t instanceof HTMLInputElement)) return;
           if (!t.matches("[data-iata]")) return;
-    
           console.log("IATA input change:", t.value);
         } catch (err) {
           console.error("IATA input delegated handler error:", err);
