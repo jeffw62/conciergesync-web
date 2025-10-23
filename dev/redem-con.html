@@ -706,12 +706,13 @@ window.showGoldCard = showGoldCard;
       if (!ws) return;
     
       const inputs = ws.querySelectorAll("input[data-iata]");
-      inputs.forEach((inputEl) => {
+      for (let i = 0; i < inputs.length; i++) {
+        const inputEl = inputs[i];
         inputEl.addEventListener("blur", () => {
           console.log("Fetch IATA for:", inputEl.value);
           // fetch(`/api/iata?code=${inputEl.value}`)
         });
-      });
+      }
     };
     
     window.attachYesNoHandlers = function() {
