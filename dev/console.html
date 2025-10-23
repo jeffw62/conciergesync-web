@@ -657,14 +657,12 @@ document.querySelectorAll(".nav-link").forEach(link => {
       // Allowed helpers (will remain defined): setupRedemptionModule, launchGoldCard, createSpinnerBridge, showGoldCard
       // We'll remove patterns like "setupRedemptionModule();" or "window.launchGoldCard();" to avoid auto-run.
       const guarded = text
-        .replace(/\bsetupRedemptionModule\s*\(\s*\)\s*;?/g, "/* blocked auto-call: setupRedemptionModule() */")
-        .replace(/\bwindow\.setupRedemptionModule\s*\(\s*\)\s*;?/g, "/* blocked auto-call: window.setupRedemptionModule() */")
-        .replace(/\blaunchGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: launchGoldCard() */")
-        .replace(/\bwindow\.launchGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: window.launchGoldCard() */")
-        .replace(/\bcreateSpinnerBridge\s*\(\s*\)\s*;?/g, "/* blocked auto-call: createSpinnerBridge() */")
-        .replace(/\bwindow\.createSpinnerBridge\s*\(\s*\)\s*;?/g, "/* blocked auto-call: window.createSpinnerBridge() */")
-        .replace(/\bshowGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: showGoldCard() */")
-        .replace(/\bwindow\.showGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: window.showGoldCard() */");
+        .replace(/\b(window\.)?setupRedemptionModule\s*\(\s*\)\s*;?/g, "/* blocked auto-call: setupRedemptionModule() */")
+        .replace(/\b(window\.)?launchGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: launchGoldCard() */")
+        .replace(/\b(window\.)?createSpinnerBridge\s*\(\s*\)\s*;?/g, "/* blocked auto-call: createSpinnerBridge() */")
+        .replace(/\b(window\.)?showGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: showGoldCard() */")
+        + "\n// end guarded script safely\n";
+
   
       // Append as an inline script but wrapped: it defines any helper functions, variables, etc.,
       // but prevents any explicit immediate call to guarded helpers.
