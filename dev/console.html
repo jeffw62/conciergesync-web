@@ -674,22 +674,12 @@ document.querySelectorAll(".nav-link").forEach(link => {
         const wrapperScript = document.createElement("script");
         wrapperScript.type = "text/javascript";
       
-        // --- sanitize guarded content ---
-        let safeGuarded = guarded
-          // remove unmatched try or catch blocks
-          .replace(/try\s*{[\s\S]*?(?=$|<\/script>)/g, match => {
-            return match.endsWith('}') ? match : match + '\n}';
-          })
-          .replace(/\bcatch\s*\([^\)]*\)\s*{[\s\S]*?(?=$|<\/script>)/g, match => {
-            return match.endsWith('}') ? match : match + '\n}';
-          })
-          // remove rogue closing braces/brackets left open
-          .replace(/[)};]\s*<\/script>/g, ''); 
-      
-        // --- safely wrap and execute ---
+        // build the function dynamically so bad syntax inside can't break outer scope
         wrapperScript.textContent = `
           try {
-            ${safeGuarded}
+            (new Function(\`
+      ${guarded.replace(/[`\\]/g, '\\$&')}
+      \`))();
           } catch (err) {
             console.error("Error in injected inline script (safely wrapped):", err);
           }
