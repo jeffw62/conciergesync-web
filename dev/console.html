@@ -668,17 +668,23 @@ document.querySelectorAll(".nav-link").forEach(link => {
   
       // Append as an inline script but wrapped: it defines any helper functions, variables, etc.,
       // but prevents any explicit immediate call to guarded helpers.
-      const wrapperScript = document.createElement("script");
-      wrapperScript.type = "text/javascript";
       console.log("Injecting guarded inline script full:", guarded);
-      wrapperScript.textContent = [
-        "try {",
-        guarded,
-        "} catch (err) {",
-        "  console.error('Error in injected inline script (safely wrapped):', err);",
-        "}"
-      ].join("\n");
-      document.body.appendChild(wrapperScript);
+      try {
+        const wrapperScript = document.createElement("script");
+        wrapperScript.type = "text/javascript";
+      
+        // Encode the guarded script as JSON so nothing breaks the parser
+        const safeCode = JSON.stringify(
+          `try {\n${guarded}\n} catch (err) {\n  console.error("Error in injected inline script (safely wrapped):", err);\n}`
+        );
+      
+        // Rebuild and execute it safely
+        wrapperScript.textContent = `eval(JSON.parse(${safeCode}));`;
+      
+        document.body.appendChild(wrapperScript);
+      } catch (err) {
+        console.error("💥 Wrapper append failed:", err);
+      }
       oldScript.remove();
     }
   
