@@ -629,6 +629,26 @@ document.querySelectorAll(".nav-link").forEach(link => {
       const res = await fetch("/dev/redem-con.html");
       html = await res.text();
       workspace.innerHTML = html;
+
+      // ✅ Manually trigger embedded redemption form setup functions after injection
+      requestAnimationFrame(() => {
+        try {
+          if (window.initRedemptionForm) {
+            console.log("🟢 initRedemptionForm triggered manually");
+            window.initRedemptionForm();
+          }
+          if (window.fetchIATA) {
+            console.log("🟢 fetchIATA triggered manually");
+            window.fetchIATA();
+          }
+          if (window.attachYesNoHandlers) {
+            console.log("🟢 attachYesNoHandlers triggered manually");
+            window.attachYesNoHandlers();
+          }
+        } catch (err) {
+          console.warn("⚠️ Form initialization functions missing or failed:", err);
+        }
+      });
     
   // --- SAFER: run inline/external scripts from loaded HTML without auto-calling helpers ---
   (async function runLoadedScriptsSafely() {
