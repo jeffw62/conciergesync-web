@@ -674,12 +674,19 @@ document.querySelectorAll(".nav-link").forEach(link => {
         const wrapperScript = document.createElement("script");
         wrapperScript.type = "text/javascript";
       
-        // close any unterminated try/catch or function braces before wrapping
-        const safeGuarded = guarded
-          .replace(/try\s*{[^}]*$/g, 'try { /* truncated */ }')   // auto-close orphaned try
-          .replace(/function\s*\([^{]*$/g, 'function() { /* truncated */ }') // auto-close orphaned function
-          .replace(/[{([]$/g, ''); // remove trailing open braces/brackets
+        // --- sanitize guarded content ---
+        let safeGuarded = guarded
+          // remove unmatched try or catch blocks
+          .replace(/try\s*{[\s\S]*?(?=$|<\/script>)/g, match => {
+            return match.endsWith('}') ? match : match + '\n}';
+          })
+          .replace(/\bcatch\s*\([^\)]*\)\s*{[\s\S]*?(?=$|<\/script>)/g, match => {
+            return match.endsWith('}') ? match : match + '\n}';
+          })
+          // remove rogue closing braces/brackets left open
+          .replace(/[)};]\s*<\/script>/g, ''); 
       
+        // --- safely wrap and execute ---
         wrapperScript.textContent = `
           try {
             ${safeGuarded}
@@ -694,6 +701,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
       }
       
       oldScript.remove();
+
           }
   console.log("✅ Inline/external scripts from loaded HTML injected safely (auto-calls blocked).");
   })();
