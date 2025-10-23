@@ -629,7 +629,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
       const res = await fetch("/dev/redem-con.html");
       html = await res.text();
       workspace.innerHTML = html;
-
+      
       // ✅ Manually trigger embedded redemption form setup functions after injection
       requestAnimationFrame(() => {
         try {
