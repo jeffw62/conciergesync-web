@@ -668,7 +668,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
       // but prevents any explicit immediate call to guarded helpers.
       const wrapperScript = document.createElement("script");
       wrapperScript.type = "text/javascript";
-      console.log("Injecting guarded inline script:", guarded.slice(0, 100));
+      console.log("Injecting guarded inline script full:", guarded);
       wrapperScript.textContent = `
       try {
         ${guarded}
