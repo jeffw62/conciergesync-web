@@ -706,10 +706,10 @@ window.showGoldCard = showGoldCard;
       if (!ws) return;
     
       const inputs = ws.querySelectorAll("input[data-iata]");
-      inputs.forEach(el => {
-        el.addEventListener("blur", () => {
-          console.log("Fetch IATA for:", el.value);
-          // fetch(`/api/iata?code=${el.value}`) …
+      inputs.forEach((inputEl) => {
+        inputEl.addEventListener("blur", () => {
+          console.log("Fetch IATA for:", inputEl.value);
+          // fetch(`/api/iata?code=${inputEl.value}`)
         });
       });
     };
@@ -720,16 +720,18 @@ window.showGoldCard = showGoldCard;
       if (!ws) return;
     
       const yesNoButtons = ws.querySelectorAll("[data-yesno]");
-      yesNoButtons.forEach(btn => {
+      yesNoButtons.forEach((btn) => {
         btn.addEventListener("click", () => {
           console.log("Toggled:", btn.dataset.yesno);
           btn.classList.toggle("active");
+    
           // enable search if all required yes/no answered
           const searchBtn = ws.querySelector("#searchBtn");
           if (searchBtn) searchBtn.disabled = false;
         });
       });
     };
+
 
 </script>
 
