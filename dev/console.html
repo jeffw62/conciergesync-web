@@ -660,9 +660,11 @@ document.querySelectorAll(".nav-link").forEach(link => {
         .replace(/(\bwindow\.)?setupRedemptionModule\s*\(\s*\)\s*;?/g, "/* blocked auto-call: setupRedemptionModule() */")
         .replace(/(\bwindow\.)?launchGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: launchGoldCard() */")
         .replace(/(\bwindow\.)?createSpinnerBridge\s*\(\s*\)\s*;?/g, "/* blocked auto-call: createSpinnerBridge() */")
+        .replace(/if\s*\([^)]*createSpinnerBridge[^)]*\)\s*\{[\s\S]*?\}\s*else\s*\{[\s\S]*?\}/g, "/* blocked auto-call: createSpinnerBridge() (if–else removed) */")
         .replace(/if\s*\([^)]*createSpinnerBridge[^)]*\)\s*\{?/g, "/* blocked auto-call: createSpinnerBridge() (if-block removed) */")
         .replace(/(\bwindow\.)?showGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: showGoldCard() */")
         + "\n// end guarded script safely\n";
+
   
       // Append as an inline script but wrapped: it defines any helper functions, variables, etc.,
       // but prevents any explicit immediate call to guarded helpers.
