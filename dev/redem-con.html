@@ -355,10 +355,12 @@
 
 <!-- Optional guard -->
 <script>
-  if (!window.redemptionModuleInitialized) {
-    window.redemptionModuleInitialized = true;
-    console.log("Redemption module initialized standalone.");
-  }
+    if (!window.redemptionModuleInitialized) {
+      window.redemptionModuleInitialized = true;
+      (function() {
+        console.log("Redemption module initialized standalone.");
+      })();
+    }
 </script>
   
 <!-- Step 1: Exact / Flexible toggle -->
