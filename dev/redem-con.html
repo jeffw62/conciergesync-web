@@ -711,23 +711,18 @@ window.showGoldCard = showGoldCard;
         ws.removeEventListener("blur", window.__redem_iata_blur_handler, true);
       }
     
-      window.__redem_iata_blur_handler = function (evt) {
-        try {
-          if (!evt || !evt.target) return;
-          const t = evt.target;
-          if (!(t instanceof HTMLInputElement)) return;
-          if (!t.matches("[data-iata]")) return;
-    
-          console.log("Fetch IATA for:", t.value);
-          // TODO: replace with actual API call
-          // fetch(`/api/iata?query=${encodeURIComponent(t.value)}`)
-          //   .then(r => r.json())
-          //   .then(data => console.log("IATA:", data))
-          //   .catch(err => console.warn("IATA fetch failed:", err));
-        } catch (err) {
-          console.error("IATA delegated handler error:", err);
-        }
-      };
+      window.__redem_iata_blur_handler = function(evt) {
+          try {
+            if (!evt || typeof evt !== "object" || !evt.target) return;
+            const t = evt.target;
+            if (!(t instanceof HTMLInputElement)) return;
+            if (!t.matches || !t.matches("[data-iata]")) return;
+        
+            console.log("Fetch IATA for:", t.value);
+          } catch (err) {
+            console.error("IATA delegated handler error:", err);
+          }
+        };
     
       // blur doesn’t bubble → capture=true
       ws.addEventListener("blur", window.__redem_iata_blur_handler, true);
