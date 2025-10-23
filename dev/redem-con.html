@@ -700,7 +700,7 @@ window.showGoldCard = showGoldCard;
       }
     };
     
-    // Delegated IATA handler (no per-element closures)
+    // Delegated IATA handler (corrected + defensive)
     window.fetchIATA = function() {
       console.log("Fetching IATA data (delegated)...");
       const ws = document.getElementById("workspace");
@@ -712,49 +712,42 @@ window.showGoldCard = showGoldCard;
       }
     
       // store the handler on window so we can remove/replace it safely
-      window.__redem_iata_blur_handler = function (evt) {
+      window.__redem_iata_blur_handler = function(evt) {
         try {
           const t = evt.target;
           if (!(t instanceof HTMLInputElement)) return;
           if (!t.matches("[data-iata]")) return;
-          // Defensive: wrap everything in try/catch to avoid uncaught exceptions
-          try {
-            console.log("Fetch IATA for:", t.value);
-            // TODO: replace the following with your real API call
-            // fetch(`/api/iata?query=${encodeURIComponent(t.value)}`)
-            //   .then(r => r.json()).then(data => { /* populate suggestions */ })
-            //   .catch(err => console.warn("IATA fetch failed:", err));
-          } catch (innerErr) {
-            console.error("IATA handler inner error:", innerErr);
-          }
+    
+          console.log("Fetch IATA for:", t.value);
+          // TODO: replace the following with your real API call
+          // fetch(`/api/iata?query=${encodeURIComponent(t.value)}`)
+          //   .then(r => r.json()).then(data => { /* populate suggestions */ })
+          //   .catch(err => console.warn("IATA fetch failed:", err));
+    
         } catch (err) {
-          // Should never bubble to top-level wrapper
           console.error("IATA delegated handler error:", err);
         }
       };
     
-      // Use capture=true so blur (which doesn't bubble) is still caught.
+      // blur doesn’t bubble, so capture=true ensures it fires
       ws.addEventListener("blur", window.__redem_iata_blur_handler, true);
     
-      // Optional: also add delegated input handler for live suggestions
+      // optional live input feedback
       if (window.__redem_iata_input_handler) {
         ws.removeEventListener("input", window.__redem_iata_input_handler, false);
       }
-      window.__redem_iata_input_handler = function (evt) {
+      window.__redem_iata_input_handler = function(evt) {
         try {
           const t = evt.target;
           if (!(t instanceof HTMLInputElement)) return;
           if (!t.matches("[data-iata]")) return;
-          // lightweight debounce would be good here in real code
           console.log("IATA input change:", t.value);
-          // optionally call an autocomplete endpoint here
         } catch (err) {
           console.error("IATA input delegated handler error:", err);
         }
       };
       ws.addEventListener("input", window.__redem_iata_input_handler, false);
     };
-    
     
     // Delegated yes/no toggles (single handler)
     window.attachYesNoHandlers = function() {
@@ -767,19 +760,15 @@ window.showGoldCard = showGoldCard;
         ws.removeEventListener("click", window.__redem_yesno_click_handler, false);
       }
     
-      window.__redem_yesno_click_handler = function (evt) {
+      window.__redem_yesno_click_handler = function(evt) {
         try {
-          const btn = evt.target.closest && evt.target.closest("[data-yesno]");
+          const btn = evt.target.closest("[data-yesno]");
           if (!btn) return;
-          // toggle UI state
           btn.classList.toggle("active");
           console.log("Toggled:", btn.dataset.yesno);
     
-          // evaluate whether search should be enabled: replace this with your real rules
-          // Example: if at least one required toggle active, enable search
           const searchBtn = ws.querySelector("#searchBtn");
           if (searchBtn) {
-            // Example rule: if any data-yesno element has .active, enable
             const anyActive = !!ws.querySelector("[data-yesno].active");
             searchBtn.disabled = !anyActive;
             console.log("Search button disabled:", searchBtn.disabled);
@@ -790,25 +779,6 @@ window.showGoldCard = showGoldCard;
       };
     
       ws.addEventListener("click", window.__redem_yesno_click_handler, false);
-    };
-
-    
-    window.attachYesNoHandlers = function() {
-      console.log("Attaching yes/no handlers...");
-      const ws = document.getElementById("workspace");
-      if (!ws) return;
-    
-      const yesNoButtons = ws.querySelectorAll("[data-yesno]");
-      yesNoButtons.forEach((btn) => {
-        btn.addEventListener("click", () => {
-          console.log("Toggled:", btn.dataset.yesno);
-          btn.classList.toggle("active");
-    
-          // enable search if all required yes/no answered
-          const searchBtn = ws.querySelector("#searchBtn");
-          if (searchBtn) searchBtn.disabled = false;
-        });
-      });
     };
 
 
