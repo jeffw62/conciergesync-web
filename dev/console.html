@@ -669,14 +669,20 @@ document.querySelectorAll(".nav-link").forEach(link => {
       // Append as an inline script but wrapped: it defines any helper functions, variables, etc.,
       // but prevents any explicit immediate call to guarded helpers.
       console.log("Injecting guarded inline script full:", guarded);
+
       try {
         const wrapperScript = document.createElement("script");
         wrapperScript.type = "text/javascript";
       
-        // wrap the guarded code safely inside try/catch directly
+        // close any unterminated try/catch or function braces before wrapping
+        const safeGuarded = guarded
+          .replace(/try\s*{[^}]*$/g, 'try { /* truncated */ }')   // auto-close orphaned try
+          .replace(/function\s*\([^{]*$/g, 'function() { /* truncated */ }') // auto-close orphaned function
+          .replace(/[{([]$/g, ''); // remove trailing open braces/brackets
+      
         wrapperScript.textContent = `
           try {
-            ${guarded}
+            ${safeGuarded}
           } catch (err) {
             console.error("Error in injected inline script (safely wrapped):", err);
           }
