@@ -700,54 +700,57 @@ window.showGoldCard = showGoldCard;
       }
     };
     
-    // Delegated IATA handler (corrected + defensive)
-    window.fetchIATA = function() {
+    // Delegated IATA handler (final corrected)
+    window.fetchIATA = function () {
       console.log("Fetching IATA data (delegated)...");
       const ws = document.getElementById("workspace");
       if (!ws) return;
     
-      // remove any existing handler we placed earlier
+      // remove existing handlers safely
       if (window.__redem_iata_blur_handler) {
         ws.removeEventListener("blur", window.__redem_iata_blur_handler, true);
       }
     
-      // store the handler on window so we can remove/replace it safely
-      window.__redem_iata_blur_handler = function(evt) {
+      window.__redem_iata_blur_handler = function (evt) {
         try {
           const t = evt.target;
           if (!(t instanceof HTMLInputElement)) return;
           if (!t.matches("[data-iata]")) return;
     
           console.log("Fetch IATA for:", t.value);
-          // TODO: replace the following with your real API call
+          // TODO: real API call goes here
           // fetch(`/api/iata?query=${encodeURIComponent(t.value)}`)
-          //   .then(r => r.json()).then(data => { /* populate suggestions */ })
+          //   .then(r => r.json())
+          //   .then(data => { console.log("IATA data:", data); })
           //   .catch(err => console.warn("IATA fetch failed:", err));
-    
         } catch (err) {
           console.error("IATA delegated handler error:", err);
         }
       };
     
-      // blur doesn’t bubble, so capture=true ensures it fires
+      // blur doesn’t bubble → capture=true
       ws.addEventListener("blur", window.__redem_iata_blur_handler, true);
     
-      // optional live input feedback
+      // live input feedback (safe version)
       if (window.__redem_iata_input_handler) {
         ws.removeEventListener("input", window.__redem_iata_input_handler, false);
       }
-      window.__redem_iata_input_handler = function(evt) {
+    
+      window.__redem_iata_input_handler = function (evt) {
         try {
           const t = evt.target;
           if (!(t instanceof HTMLInputElement)) return;
           if (!t.matches("[data-iata]")) return;
+    
           console.log("IATA input change:", t.value);
         } catch (err) {
           console.error("IATA input delegated handler error:", err);
         }
       };
+    
       ws.addEventListener("input", window.__redem_iata_input_handler, false);
     };
+
     
     // Delegated yes/no toggles (single handler)
     window.attachYesNoHandlers = function() {
