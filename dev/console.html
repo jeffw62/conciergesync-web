@@ -652,6 +652,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
     
   // --- SAFER: run inline/external scripts from loaded HTML without auto-calling helpers ---
   (async function runLoadedScriptsSafely() {
+    console.log("🚀 ENTERED runLoadedScriptsSafely()");
     const scripts = [...workspace.querySelectorAll("script")];
   
     for (const oldScript of scripts) {
