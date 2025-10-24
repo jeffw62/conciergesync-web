@@ -689,21 +689,23 @@ document.querySelectorAll(".nav-link").forEach(link => {
       // Append as an inline script but wrapped: it defines any helper functions, variables, etc.,
       // but prevents any explicit immediate call to guarded helpers.
       console.log("Injecting guarded inline script full:", guarded);
-
-      try {
-        const wrapperScript = document.createElement("script");
-        wrapperScript.type = "text/javascript";
       
-        // build the function dynamically so bad syntax inside can't break outer scope
-        wrapperScript.textContent = `
-          try {
-            (new Function(\`
-      ${guarded.replace(/[`\\]/g, '\\$&')}
-      \`))();
-          } catch (err) {
-            console.error("Error in injected inline script (safely wrapped):", err);
-          }
-        `;
+      // --- DIAGNOSTIC: inspect guarded payload before injection ---
+      console.log("⏱ runLoadedScriptsSafely — injecting one script. oldScript id/src:", oldScript.id, oldScript.src);
+      console.log("guarded (length):", (guarded||"").length);
+      console.log("guarded start (0..120):", (guarded||"").slice(0,120));
+      console.log("guarded end (-120..end):", (guarded||"").slice(-120));
+      if (!window.wrapperScriptCreated) {
+        // ensure wrapperScript exists and is only created once per run
+        var wrapperScript = document.createElement("script");
+        wrapperScript.type = "text/javascript";
+        window.wrapperScriptCreated = true;
+      } else {
+        // create a fresh local wrapperScript for this script injection run
+        var wrapperScript = document.createElement("script");
+        wrapperScript.type = "text/javascript";
+      }
+
       try {
         wrapperScript.textContent = `
           try {
@@ -717,7 +719,6 @@ document.querySelectorAll(".nav-link").forEach(link => {
       } catch (outerErr) {
         console.error("💥 Wrapper append failed:", outerErr);
       }
-
       oldScript.remove();
 
           }
