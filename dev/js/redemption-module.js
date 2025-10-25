@@ -686,6 +686,7 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
       console.log("🧩 Global attachYesNoHandlers running...");
 
       const ws = document.getElementById("workspace");
+      console.log("🧭 attachYesNoHandlers found workspace:", !!ws, ws);
       if (!ws) return;
 
       // Prevent duplicate listeners
