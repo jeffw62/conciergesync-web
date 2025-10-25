@@ -689,10 +689,50 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
       console.log("✨ Shimmer complete — loading flight cards...");
 
       try {
+        // --- SAFE INJECTION: fetch markup, insert DOM nodes, execute scripts ---
         const res = await fetch("/dev/flight-cards.html");
         const html = await res.text();
         const workspace = document.getElementById("workspace");
-        if (workspace) workspace.innerHTML = html;
+        
+        if (workspace) {
+          // parse into a temp container
+          const temp = document.createElement("div");
+          temp.innerHTML = html;
+        
+          // move non-script nodes into workspace
+          const children = Array.from(temp.childNodes);
+          // remove any leading/trailing whitespace text nodes if you'd like:
+          // const filtered = children.filter(n => !(n.nodeType === 3 && !n.textContent.trim()));
+          workspace.replaceChildren(...children.filter(n => n.nodeType !== 1 || n.tagName.toLowerCase() !== 'script'));
+        
+          // execute and replace <script> tags (preserves src or inline text)
+          const scripts = Array.from(temp.querySelectorAll("script"));
+          scripts.forEach(oldScript => {
+            const newScript = document.createElement("script");
+        
+            // copy attributes (type, async, defer, etc.)
+            for (let i = 0; i < oldScript.attributes.length; i++) {
+              const attr = oldScript.attributes[i];
+              newScript.setAttribute(attr.name, attr.value);
+            }
+        
+            if (oldScript.src) {
+              // external script: set src to trigger load+execution
+              newScript.src = oldScript.src;
+              // preserve execution ordering (append to body)
+              document.body.appendChild(newScript);
+            } else {
+              // inline script: copy text and append to body so it runs
+              newScript.textContent = oldScript.textContent;
+              document.body.appendChild(newScript);
+            }
+        
+            // remove the inert script placeholder from workspace if present
+            const placeholder = workspace.querySelector("script");
+            if (placeholder) placeholder.remove();
+          });
+        }
+
       } catch (err) {
         console.error("Failed to load flight cards:", err);
       }
