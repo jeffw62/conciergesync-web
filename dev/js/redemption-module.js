@@ -870,40 +870,53 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
 
     // --- Yes/No click handler and binder (standalone) ---
     window.attachYesNoHandlers = function() {
-      console.log("🧩 attachYesNoHandlers() initialized...");
-    
-      const ws = document.getElementById("workspace");
-      if (!ws) {
-        console.warn("⚠️ No workspace found for yes/no handler binding.");
-        return;
+    console.log("🧩 attachYesNoHandlers() initialized...");
+  
+    const ws = document.getElementById("workspace");
+    if (!ws) {
+      console.warn("⚠️ No workspace found for yes/no handler binding.");
+      return;
+    }
+  
+    // Remove any previous handler to prevent duplication
+    if (window._globalYesNoHandler) {
+      ws.removeEventListener("click", window._globalYesNoHandler, false);
+    }
+  
+    // Define new delegated click handler
+    window._globalYesNoHandler = function(e) {
+      const btn = e.target.closest("[data-val]");
+      if (!btn) return;
+  
+      // Toggle button state within its toggle-group
+      const group = btn.closest(".toggle-group");
+      if (group) {
+        group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
       }
-    
-      // Remove any previous global handler to prevent duplicates
-      if (window._globalYesNoHandler) {
-        ws.removeEventListener("click", window._globalYesNoHandler);
+      btn.classList.add("active");
+  
+      console.log("🟢 Toggled:", btn.dataset.val, "within", group?.id || "(unknown group)");
+  
+      // Check if all three Step-2 groups have selections
+      const allGroups = ws.querySelectorAll(".toggle-group");
+      const allSelected = Array.from(allGroups).every(g =>
+        g.querySelector("button.active")
+      );
+  
+      // Enable/disable Search button accordingly
+      const searchBtn = ws.querySelector("#searchBtn");
+      const warning = ws.querySelector("#searchWarning");
+      if (searchBtn) {
+        searchBtn.disabled = !allSelected;
+        if (warning) warning.style.display = allSelected ? "none" : "block";
+        console.log("🔁 Search button disabled:", searchBtn.disabled);
       }
-    
-      // Define new delegated click handler
-      window._globalYesNoHandler = function(e) {
-        const btn = e.target.closest("[data-yesno]");
-        if (!btn) return;
-    
-        btn.classList.toggle("active");
-        console.log("🟢 Toggled:", btn.dataset.yesno);
-    
-        // Check all buttons to determine if Search should be enabled
-        const searchBtn = ws.querySelector("#searchBtn");
-        if (searchBtn) {
-          const anyActive = !!ws.querySelector("[data-yesno].active");
-          searchBtn.disabled = !anyActive;
-          console.log("🔁 Search button disabled:", searchBtn.disabled);
-        }
-      };
-    
-      // Attach it
-      ws.addEventListener("click", window._globalYesNoHandler, false);
-      console.log("✅ Yes/No handler attached to workspace");
     };
+  
+    ws.addEventListener("click", window._globalYesNoHandler, false);
+    console.log("✅ Yes/No handler attached to workspace (using data-val)");
+  };
+
 
     
   } catch (err) {
