@@ -1,3 +1,6 @@
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("🕓 DOM fully loaded — redemption-module.js starting...");
+
 // 🧱 Global Safety Flags — Prevent premature execution
 window._manualLaunch = false;
 window._setupLocked = true;
@@ -912,3 +915,4 @@ function setupAutocomplete(inputId, suggestionsId) {
   });
 }
   }
+}); // end DOMContentLoaded wrapper
