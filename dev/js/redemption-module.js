@@ -813,7 +813,7 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
           if (window.initRedemptionForm) window.initRedemptionForm();
           if (window.fetchIATA) window.fetchIATA();
           if (window.attachYesNoHandlers) window.attachYesNoHandlers();
-    
+         
           console.log("♻️ Post-injection rebind executed for form, IATA, and yes/no handlers.");
         }
 
@@ -868,6 +868,44 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
       }
     })(); // ✅ <— CLOSE THE IIFE PROPERLY HERE
 
+    // --- Yes/No click handler and binder (standalone) ---
+    window.attachYesNoHandlers = function() {
+      console.log("🧩 attachYesNoHandlers() initialized...");
+    
+      const ws = document.getElementById("workspace");
+      if (!ws) {
+        console.warn("⚠️ No workspace found for yes/no handler binding.");
+        return;
+      }
+    
+      // Remove any previous global handler to prevent duplicates
+      if (window._globalYesNoHandler) {
+        ws.removeEventListener("click", window._globalYesNoHandler);
+      }
+    
+      // Define new delegated click handler
+      window._globalYesNoHandler = function(e) {
+        const btn = e.target.closest("[data-yesno]");
+        if (!btn) return;
+    
+        btn.classList.toggle("active");
+        console.log("🟢 Toggled:", btn.dataset.yesno);
+    
+        // Check all buttons to determine if Search should be enabled
+        const searchBtn = ws.querySelector("#searchBtn");
+        if (searchBtn) {
+          const anyActive = !!ws.querySelector("[data-yesno].active");
+          searchBtn.disabled = !anyActive;
+          console.log("🔁 Search button disabled:", searchBtn.disabled);
+        }
+      };
+    
+      // Attach it
+      ws.addEventListener("click", window._globalYesNoHandler, false);
+      console.log("✅ Yes/No handler attached to workspace");
+    };
+
+    
   } catch (err) {
     console.error("❌ Redemption fetch error:", err);
     alert("Search failed – check console for details.");
