@@ -814,6 +814,26 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
           console.log("♻️ Post-injection rebind executed for form, IATA, and yes/no handlers.");
         }
 
+        // 🧩 Force rebind workspace reference after HTML replacement
+        const newWorkspace = document.getElementById("workspace");
+        if (newWorkspace) {
+          console.log("🪄 Rebinding attachYesNoHandlers to fresh workspace node...");
+          newWorkspace.addEventListener("click", (evt) => {
+            const btn = evt.target.closest("[data-yesno]");
+            if (!btn) return;
+        
+            btn.classList.toggle("active");
+            console.log("🟢 Toggled:", btn.dataset.yesno);
+        
+            const searchBtn = newWorkspace.querySelector("#searchBtn");
+            if (searchBtn) {
+              const anyActive = !!newWorkspace.querySelector("[data-yesno].active");
+              searchBtn.disabled = !anyActive;
+              console.log("🔁 Search button disabled:", searchBtn.disabled);
+            }
+          });
+        }
+
         console.log("♻️ Post-injection rebind executed for form, IATA, and yes/no handlers.");
 
         // 🧩 Force rebind workspace reference after HTML replacement
