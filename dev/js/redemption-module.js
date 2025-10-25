@@ -758,15 +758,16 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
             }
         
             if (oldScript.src) {
-              // external script: set src to trigger load+execution
-              newScript.src = oldScript.src;
-              // preserve execution ordering (append to body)
-              document.body.appendChild(newScript);
-            } else {
-              // inline script: copy text and append to body so it runs
-              newScript.textContent = oldScript.textContent;
-              document.body.appendChild(newScript);
-            }
+            // external script: force classic execution and bust cache to ensure runtime reload
+            newScript.src = oldScript.src + `?v=${Date.now()}`;
+            newScript.type = "text/javascript";
+            document.body.appendChild(newScript);
+          } else {
+            // inline script: execute as classic script
+            newScript.type = "text/javascript";
+            newScript.textContent = oldScript.textContent;
+            document.body.appendChild(newScript);
+          }
         
             // remove the inert script placeholder from workspace if present
             const placeholder = workspace.querySelector("script");
