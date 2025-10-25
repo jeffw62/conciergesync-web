@@ -724,85 +724,73 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
       spinnerBridge.style.opacity = "1";
       spinnerBridge.style.display = "flex";
       goldCard.classList.add("active");
-
+    
       // 🧱 Continue with shimmer delay, fetch, and safe injection logic
       await new Promise((resolve) => setTimeout(resolve, 3000));
       console.log("✨ Shimmer complete — loading flight cards...");
-
+    
       try {
         // --- SAFE INJECTION: fetch markup, insert DOM nodes, execute scripts ---
         const res = await fetch("/dev/flight-cards.html");
         const html = await res.text();
         const workspace = document.getElementById("workspace");
-
+        
         if (workspace) {
-          // parse into a temp container
           const temp = document.createElement("div");
           temp.innerHTML = html;
-
-          // move non-script nodes into workspace
+    
           const children = Array.from(temp.childNodes);
           workspace.replaceChildren(
-            ...children.filter((n) => n.nodeType !== 1 || n.tagName.toLowerCase() !== "script")
+            ...children.filter(
+              (n) => n.nodeType !== 1 || n.tagName.toLowerCase() !== "script"
+            )
           );
-
-          // execute and replace <script> tags (preserves src or inline text)
+    
           const scripts = Array.from(temp.querySelectorAll("script"));
-
-          // ✅ prevent double-loading or re-declaration of modules like 'airports'
           window._loadedScripts = window._loadedScripts || new Set();
-
+    
           scripts.forEach((oldScript) => {
             const newScript = document.createElement("script");
-
-            // copy attributes (type, async, defer, etc.)
             for (let i = 0; i < oldScript.attributes.length; i++) {
               const attr = oldScript.attributes[i];
               newScript.setAttribute(attr.name, attr.value);
             }
-
-            // --- avoid duplicates ---
+    
             if (oldScript.src) {
               if (window._loadedScripts.has(oldScript.src)) {
                 console.log("🧱 Skipping duplicate script:", oldScript.src);
                 return;
               }
               window._loadedScripts.add(oldScript.src);
-
-              // add timestamp cache-buster but keep MIME safe
               newScript.src = oldScript.src + `?v=${Date.now()}`;
               newScript.type = "text/javascript";
               document.body.appendChild(newScript);
             } else {
-              // inline script: only run if not already present verbatim
               const code = oldScript.textContent.trim();
               if ([...window._loadedScripts].includes(code)) {
                 console.log("🧱 Skipping duplicate inline script block");
                 return;
               }
               window._loadedScripts.add(code);
-
               newScript.type = "text/javascript";
               newScript.textContent = code;
               document.body.appendChild(newScript);
             }
           });
-
-          // remove the inert script placeholder from workspace if present
+    
           const placeholder = workspace.querySelector("script");
           if (placeholder) placeholder.remove();
-
-          // ✅ After scripts are injected and executed, re-initialize bindings
+    
           if (window.initRedemptionForm) window.initRedemptionForm();
           if (window.fetchIATA) window.fetchIATA();
           if (window.attachYesNoHandlers) window.attachYesNoHandlers();
-
+    
           console.log("♻️ Post-injection rebind executed for form, IATA, and yes/no handlers.");
         }
       } catch (err) {
         console.error("Failed to load flight cards:", err);
       }
-    })(); // ✅ close shimmer IIFE properly
+    })(); // ✅ <— CLOSE THE IIFE PROPERLY HERE
 
   } catch (err) {
     console.error("❌ Redemption fetch error:", err);
