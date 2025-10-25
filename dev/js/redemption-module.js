@@ -788,12 +788,9 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
             }
           });
 
-        
             // remove the inert script placeholder from workspace if present
             const placeholder = workspace.querySelector("script");
             if (placeholder) placeholder.remove();
-          });
-        }
 
         // ✅ After scripts are injected and executed, re-initialize bindings
         if (window.initRedemptionForm) window.initRedemptionForm();
