@@ -675,7 +675,39 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
     localStorage.setItem("latestRedemptionResults", JSON.stringify(data.results || []));
     console.log("Redirecting to results page...");
     window.location.href = "/dev/redemption-results.html";
-
+    
+    // --- Persistent delegated yes/no handler (lives outside injected HTML)
+    window.attachYesNoHandlers = function () {
+      console.log("🧩 Global attachYesNoHandlers running...");
+    
+      const ws = document.getElementById("workspace");
+      if (!ws) return;
+    
+      // Prevent duplicate listeners
+      if (window._globalYesNoHandler) {
+        ws.removeEventListener("click", window._globalYesNoHandler, false);
+      }
+    
+      window._globalYesNoHandler = function (evt) {
+        const btn = evt.target.closest("[data-yesno]");
+        if (!btn) return;
+    
+        btn.classList.toggle("active");
+        console.log("🟢 Toggled:", btn.dataset.yesno);
+    
+        const searchBtn = ws.querySelector("#searchBtn");
+        if (searchBtn) {
+          const anyActive = !!ws.querySelector("[data-yesno].active");
+          searchBtn.disabled = !anyActive;
+          console.log("🔁 Search button disabled:", searchBtn.disabled);
+        }
+      };
+    
+      // ✅ attach listener once defined
+      ws.addEventListener("click", window._globalYesNoHandler, false);
+      console.log("✅ Persistent yes/no handler attached to workspace");
+    };
+    
     // === Optional shimmer bridge ===
     (async () => {
       spinnerBridge.style.zIndex = "99999";
@@ -683,42 +715,11 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
       spinnerBridge.style.opacity = "1";
       spinnerBridge.style.display = "flex";
       goldCard.classList.add("active");
-
-      // --- Persistent delegated yes/no handler (lives outside injected HTML)
-      window.attachYesNoHandlers = function () {
-        console.log("🧩 Global attachYesNoHandlers running...");
-      
-        const ws = document.getElementById("workspace");
-        if (!ws) return;
-      
-        // Prevent duplicate listeners
-        if (window._globalYesNoHandler) {
-          ws.removeEventListener("click", window._globalYesNoHandler, false);
-        }
-      
-        window._globalYesNoHandler = function (evt) {
-          const btn = evt.target.closest("[data-yesno]");
-          if (!btn) return;
-      
-          btn.classList.toggle("active");
-          console.log("🟢 Toggled:", btn.dataset.yesno);
-      
-          const searchBtn = ws.querySelector("#searchBtn");
-          if (searchBtn) {
-            const anyActive = !!ws.querySelector("[data-yesno].active");
-            searchBtn.disabled = !anyActive;
-            console.log("🔁 Search button disabled:", searchBtn.disabled);
-          }
-        };
-      
-        ws.addEventListener("click", window._globalYesNoHandler, false);
-        console.log("✅ Persistent yes/no handler attached to workspace");
-      };
-      
+    
       // 🧱 Continue with shimmer delay, fetch, and safe injection logic
       await new Promise((resolve) => setTimeout(resolve, 3000));
       console.log("✨ Shimmer complete — loading flight cards...");
-      
+    
       try {
         // --- SAFE INJECTION: fetch markup, insert DOM nodes, execute scripts ---
         const res = await fetch("/dev/flight-cards.html");
