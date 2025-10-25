@@ -16,8 +16,8 @@ window.launchGoldCard = async () => {
   await setupRedemptionModule();
 };
   
-  // --- Airport Autocomplete (IATA/ICAO) ---
-  let airports = [];
+  // ensure airports exists globally and survive multiple loads
+  window.airports = window.airports || [];
   
   let spinnerBridge; // global reference for ConciergeSync™ spinner bridge
   let goldCard;      // global reference for ConciergeSync™ gold card
@@ -26,8 +26,10 @@ window.launchGoldCard = async () => {
     fetch("/dev/asset/iata-icao.json")
       .then(res => res.json())
       .then(data => {
-        airports = data;
-        console.log("🛫 Loaded airports:", airports.length);
+        // merge or replace safely:
+        window.airports.length = 0;            // clear existing array in place
+        Array.prototype.push.apply(window.airports, data);
+        console.log("✈️ Loaded airports:", window.airports.length);
       })
       .catch(err => console.error("❌ Failed to load airports:", err));
   }
@@ -750,10 +752,15 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
           // 🔒 Prevent reloading this same module (avoids "airports already declared")
           const scripts = Array.from(temp.querySelectorAll("script")).filter(s => {
             const src = s.getAttribute("src") || "";
-            // ✅ Skip any self-reference to redemption-module.js
-            return !src.includes("redemption-module.js");
+            // skip any self-reference or other module files that we don't want re-executed
+            const skipList = [
+              "redemption-module.js",
+              "redemption-bridge.js",
+              "some-other-module-you-might-have.js"
+            ];
+            return !skipList.some(name => src.includes(name));
           });
-
+          
           console.log("🧩 Scripts detected for injection:", scripts.map(s => s.src || "[inline]"));
           
           // ✅ prevent double-loading or re-declaration of modules like 'airports'
