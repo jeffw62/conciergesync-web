@@ -707,6 +707,9 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
       ws.addEventListener("click", window._globalYesNoHandler, false);
       console.log("✅ Persistent yes/no handler attached to workspace");
     };
+
+    // fire immediately on load so the handler is active
+    window.attachYesNoHandlers();
     
     // === Optional shimmer bridge ===
     (async () => {
