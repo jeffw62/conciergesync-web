@@ -791,24 +791,25 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
             // remove the inert script placeholder from workspace if present
             const placeholder = workspace.querySelector("script");
             if (placeholder) placeholder.remove();
+            
+            // ✅ After scripts are injected and executed, re-initialize bindings
+            if (window.initRedemptionForm) window.initRedemptionForm();
+            if (window.fetchIATA) window.fetchIATA();
+            if (window.attachYesNoHandlers) window.attachYesNoHandlers();
+            
+          console.log("♻️ Post-injection rebind executed for form, IATA, and yes/no handlers.");
+          
+          } catch (err) {
+            console.error("Failed to load flight cards:", err);
+          }
+          })();  // ✅ close async IIFE only once
+          
+          } catch (err) {
+            console.error("❌ Redemption fetch error:", err);
+            alert("Search failed – check console for details.");
+          }
+        }); // ✅ END of click handler
 
-        // ✅ After scripts are injected and executed, re-initialize bindings
-        if (window.initRedemptionForm) window.initRedemptionForm();
-        if (window.fetchIATA) window.fetchIATA();
-        if (window.attachYesNoHandlers) window.attachYesNoHandlers();
-        
-        console.log("♻️ Post-injection rebind executed for form, IATA, and yes/no handlers.");
-
-      } catch (err) {
-        console.error("Failed to load flight cards:", err);
-      }
-    })();
-  } catch (err) {
-    console.error("❌ Redemption fetch error:", err);
-    alert("Search failed – check console for details.");
-  }
-});   // <== END of click handler (ONLY ONE CLOSE HERE)
-  }
 
 // --- Autocomplete Setup Function ---
 function setupAutocomplete(inputId, suggestionsId) {
