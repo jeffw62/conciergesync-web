@@ -748,26 +748,46 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
         
           // execute and replace <script> tags (preserves src or inline text)
           const scripts = Array.from(temp.querySelectorAll("script"));
+          
+          // ✅ prevent double-loading or re-declaration of modules like 'airports'
+          window._loadedScripts = window._loadedScripts || new Set();
+          
           scripts.forEach(oldScript => {
             const newScript = document.createElement("script");
-        
+          
             // copy attributes (type, async, defer, etc.)
             for (let i = 0; i < oldScript.attributes.length; i++) {
               const attr = oldScript.attributes[i];
               newScript.setAttribute(attr.name, attr.value);
             }
-        
+          
+            // --- avoid duplicates ---
             if (oldScript.src) {
-            // external script: force classic execution and bust cache to ensure runtime reload
-            newScript.src = oldScript.src + `?v=${Date.now()}`;
-            newScript.type = "text/javascript";
-            document.body.appendChild(newScript);
-          } else {
-            // inline script: execute as classic script
-            newScript.type = "text/javascript";
-            newScript.textContent = oldScript.textContent;
-            document.body.appendChild(newScript);
-          }
+              if (window._loadedScripts.has(oldScript.src)) {
+                console.log("🧱 Skipping duplicate script:", oldScript.src);
+                return;
+              }
+              window._loadedScripts.add(oldScript.src);
+          
+              // add timestamp cache-buster but keep MIME safe
+              newScript.src = oldScript.src + `?v=${Date.now()}`;
+              newScript.type = "text/javascript";
+              document.body.appendChild(newScript);
+            } else {
+              // inline script: only run if not already present verbatim
+              const code = oldScript.textContent.trim();
+              if ([...window._loadedScripts].includes(code)) {
+                console.log("🧱 Skipping duplicate inline script block");
+                return;
+              }
+              window._loadedScripts.add(code);
+          
+              newScript.type = "text/javascript";
+              newScript.textContent = code;
+              document.body.appendChild(newScript);
+            }
+          });
+
         
             // remove the inert script placeholder from workspace if present
             const placeholder = workspace.querySelector("script");
