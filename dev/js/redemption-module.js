@@ -746,15 +746,22 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
             )
           );
     
-          const scripts = Array.from(temp.querySelectorAll("script"));
+          // execute and replace <script> tags (preserves src or inline text)
+          // 🔒 Prevent reloading this same module (avoids "airports already declared")
+          const scripts = Array.from(temp.querySelectorAll("script")).filter(
+            s => !s.src.includes("redemption-module.js")
+          );
+          
+          // ✅ prevent double-loading or re-declaration of modules like 'airports'
           window._loadedScripts = window._loadedScripts || new Set();
-    
+          
           scripts.forEach((oldScript) => {
             const newScript = document.createElement("script");
             for (let i = 0; i < oldScript.attributes.length; i++) {
               const attr = oldScript.attributes[i];
               newScript.setAttribute(attr.name, attr.value);
             }
+          });
     
             if (oldScript.src) {
               if (window._loadedScripts.has(oldScript.src)) {
