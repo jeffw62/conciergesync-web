@@ -710,6 +710,12 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
 
     // fire immediately on load so the handler is active
     window.attachYesNoHandlers();
+
+    // --- Diagnostic check ---
+    console.log("🧭 redemption-module.js loaded; global test start...");
+    window._globalHandlerTestFlag = true;
+    console.log("✅ attachYesNoHandlers in window?", typeof window.attachYesNoHandlers);
+    console.log("✅ current script type:", document.currentScript?.type || "classic");
     
     // === Optional shimmer bridge ===
     (async () => {
