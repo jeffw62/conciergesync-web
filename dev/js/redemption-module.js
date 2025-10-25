@@ -813,6 +813,33 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
     
           console.log("♻️ Post-injection rebind executed for form, IATA, and yes/no handlers.");
         }
+
+        // 🧩 Rebind search click after workspace injection
+        setTimeout(() => {
+          const newSearchBtn = document.getElementById("searchBtn");
+          if (!newSearchBtn) {
+            console.warn("⚠️ No searchBtn found after injection — skipping rebind.");
+            return;
+          }
+        
+          console.log("🔁 Rebinding click handler to newly injected Search button...");
+        
+          newSearchBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            if (newSearchBtn.disabled) {
+              console.log("🚫 Search clicked while disabled — waiting for yes/no activation.");
+              return;
+            }
+        
+            console.log("🚀 Search button clicked — launching redemption flow...");
+            if (typeof window.searchHandler === "function") {
+              window.searchHandler(e);
+            } else {
+              console.warn("⚠️ No global searchHandler found.");
+            }
+          });
+        }, 500);
+        
       } catch (err) {
         console.error("Failed to load flight cards:", err);
       }
