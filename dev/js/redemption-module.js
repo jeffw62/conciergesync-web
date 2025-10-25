@@ -748,9 +748,13 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
     
           // execute and replace <script> tags (preserves src or inline text)
           // 🔒 Prevent reloading this same module (avoids "airports already declared")
-          const scripts = Array.from(temp.querySelectorAll("script")).filter(
-            s => !s.src.includes("redemption-module.js")
-          );
+          const scripts = Array.from(temp.querySelectorAll("script")).filter(s => {
+            const src = s.getAttribute("src") || "";
+            // ✅ Skip any self-reference to redemption-module.js
+            return !src.includes("redemption-module.js");
+          });
+
+          console.log("🧩 Scripts detected for injection:", scripts.map(s => s.src || "[inline]"));
           
           // ✅ prevent double-loading or re-declaration of modules like 'airports'
           window._loadedScripts = window._loadedScripts || new Set();
