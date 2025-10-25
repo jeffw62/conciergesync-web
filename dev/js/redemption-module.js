@@ -733,6 +733,13 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
           });
         }
 
+        // ✅ After scripts are injected and executed, re-initialize bindings
+        if (window.initRedemptionForm) window.initRedemptionForm();
+        if (window.fetchIATA) window.fetchIATA();
+        if (window.attachYesNoHandlers) window.attachYesNoHandlers();
+        
+        console.log("♻️ Post-injection rebind executed for form, IATA, and yes/no handlers.");
+
       } catch (err) {
         console.error("Failed to load flight cards:", err);
       }
