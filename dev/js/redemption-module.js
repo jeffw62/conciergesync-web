@@ -606,13 +606,13 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
 
   window._setupLocked = false;
   console.log("🟡 Unlocking redemption setup manually on click...");
-  
+
   // run gold-card sequence on demand
   await window.launchGoldCard();
   if (typeof window.createSpinnerBridge === "function") {
-  window.createSpinnerBridge();
-}
-  
+    window.createSpinnerBridge();
+  }
+
   // === ConciergeSync™ Gold Card Animation ===
   const goldCard = document.getElementById("gold-card");
   const spinnerBridge = document.getElementById("spinner-bridge");
@@ -675,26 +675,26 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
     localStorage.setItem("latestRedemptionResults", JSON.stringify(data.results || []));
     console.log("Redirecting to results page...");
     window.location.href = "/dev/redemption-results.html";
-    
+
     // --- Persistent delegated yes/no handler (lives outside injected HTML)
     window.attachYesNoHandlers = function () {
       console.log("🧩 Global attachYesNoHandlers running...");
-    
+
       const ws = document.getElementById("workspace");
       if (!ws) return;
-    
+
       // Prevent duplicate listeners
       if (window._globalYesNoHandler) {
         ws.removeEventListener("click", window._globalYesNoHandler, false);
       }
-    
+
       window._globalYesNoHandler = function (evt) {
         const btn = evt.target.closest("[data-yesno]");
         if (!btn) return;
-    
+
         btn.classList.toggle("active");
         console.log("🟢 Toggled:", btn.dataset.yesno);
-    
+
         const searchBtn = ws.querySelector("#searchBtn");
         if (searchBtn) {
           const anyActive = !!ws.querySelector("[data-yesno].active");
@@ -702,7 +702,7 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
           console.log("🔁 Search button disabled:", searchBtn.disabled);
         }
       };
-    
+
       // ✅ attach listener once defined
       ws.addEventListener("click", window._globalYesNoHandler, false);
       console.log("✅ Persistent yes/no handler attached to workspace");
@@ -716,7 +716,7 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
     window._globalHandlerTestFlag = true;
     console.log("✅ attachYesNoHandlers in window?", typeof window.attachYesNoHandlers);
     console.log("✅ current script type:", document.currentScript?.type || "classic");
-    
+
     // === Optional shimmer bridge ===
     (async () => {
       spinnerBridge.style.zIndex = "99999";
@@ -724,43 +724,43 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
       spinnerBridge.style.opacity = "1";
       spinnerBridge.style.display = "flex";
       goldCard.classList.add("active");
-    
+
       // 🧱 Continue with shimmer delay, fetch, and safe injection logic
       await new Promise((resolve) => setTimeout(resolve, 3000));
       console.log("✨ Shimmer complete — loading flight cards...");
-    
+
       try {
         // --- SAFE INJECTION: fetch markup, insert DOM nodes, execute scripts ---
         const res = await fetch("/dev/flight-cards.html");
         const html = await res.text();
         const workspace = document.getElementById("workspace");
-        
+
         if (workspace) {
           // parse into a temp container
           const temp = document.createElement("div");
           temp.innerHTML = html;
-        
+
           // move non-script nodes into workspace
           const children = Array.from(temp.childNodes);
-          // remove any leading/trailing whitespace text nodes if you'd like:
-          // const filtered = children.filter(n => !(n.nodeType === 3 && !n.textContent.trim()));
-          workspace.replaceChildren(...children.filter(n => n.nodeType !== 1 || n.tagName.toLowerCase() !== 'script'));
-        
+          workspace.replaceChildren(
+            ...children.filter((n) => n.nodeType !== 1 || n.tagName.toLowerCase() !== "script")
+          );
+
           // execute and replace <script> tags (preserves src or inline text)
           const scripts = Array.from(temp.querySelectorAll("script"));
-          
+
           // ✅ prevent double-loading or re-declaration of modules like 'airports'
           window._loadedScripts = window._loadedScripts || new Set();
-          
-          scripts.forEach(oldScript => {
+
+          scripts.forEach((oldScript) => {
             const newScript = document.createElement("script");
-          
+
             // copy attributes (type, async, defer, etc.)
             for (let i = 0; i < oldScript.attributes.length; i++) {
               const attr = oldScript.attributes[i];
               newScript.setAttribute(attr.name, attr.value);
             }
-          
+
             // --- avoid duplicates ---
             if (oldScript.src) {
               if (window._loadedScripts.has(oldScript.src)) {
@@ -768,7 +768,7 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
                 return;
               }
               window._loadedScripts.add(oldScript.src);
-          
+
               // add timestamp cache-buster but keep MIME safe
               newScript.src = oldScript.src + `?v=${Date.now()}`;
               newScript.type = "text/javascript";
@@ -781,34 +781,34 @@ searchBtn.addEventListener("click", async (e) => {     // <== START of click han
                 return;
               }
               window._loadedScripts.add(code);
-          
+
               newScript.type = "text/javascript";
               newScript.textContent = code;
               document.body.appendChild(newScript);
             }
           });
 
-            // remove the inert script placeholder from workspace if present
-            const placeholder = workspace.querySelector("script");
-            if (placeholder) placeholder.remove();
-            
-            // ✅ After scripts are injected and executed, re-initialize bindings
-            if (window.initRedemptionForm) window.initRedemptionForm();
-            if (window.fetchIATA) window.fetchIATA();
-            if (window.attachYesNoHandlers) window.attachYesNoHandlers();
-            
+          // remove the inert script placeholder from workspace if present
+          const placeholder = workspace.querySelector("script");
+          if (placeholder) placeholder.remove();
+
+          // ✅ After scripts are injected and executed, re-initialize bindings
+          if (window.initRedemptionForm) window.initRedemptionForm();
+          if (window.fetchIATA) window.fetchIATA();
+          if (window.attachYesNoHandlers) window.attachYesNoHandlers();
+
           console.log("♻️ Post-injection rebind executed for form, IATA, and yes/no handlers.");
-          
-          } catch (err) {
-            console.error("Failed to load flight cards:", err);
-          }
-          })();  // ✅ close async IIFE only once
-          
-          } catch (err) {
-            console.error("❌ Redemption fetch error:", err);
-            alert("Search failed – check console for details.");
-          }
-        }); // ✅ END of click handler
+        }
+      } catch (err) {
+        console.error("Failed to load flight cards:", err);
+      }
+    })(); // ✅ close shimmer IIFE properly
+
+  } catch (err) {
+    console.error("❌ Redemption fetch error:", err);
+    alert("Search failed – check console for details.");
+  }
+}); // ✅ END of click handler
 
 
 // --- Autocomplete Setup Function ---
@@ -823,14 +823,15 @@ function setupAutocomplete(inputId, suggestionsId) {
     if (query.length < 2) return;
 
     const matches = airports
-      .filter(a =>
-        a.iata.toLowerCase().includes(query) ||
-        a.airport.toLowerCase().includes(query) ||
-        (a.region_name && a.region_name.toLowerCase().includes(query))
+      .filter(
+        (a) =>
+          a.iata.toLowerCase().includes(query) ||
+          a.airport.toLowerCase().includes(query) ||
+          (a.region_name && a.region_name.toLowerCase().includes(query))
       )
       .slice(0, 10);
 
-    matches.forEach(match => {
+    matches.forEach((match) => {
       const div = document.createElement("div");
       div.classList.add("suggestion-item");
       div.innerHTML = `<span class="iata">${match.iata}</span> – <span class="airport">${match.airport}</span>`;
@@ -843,7 +844,7 @@ function setupAutocomplete(inputId, suggestionsId) {
   });
 
   // Hide dropdown when clicking elsewhere
-  document.addEventListener("click", e => {
+  document.addEventListener("click", (e) => {
     if (!suggestions.contains(e.target) && e.target !== input) {
       suggestions.innerHTML = "";
     }
