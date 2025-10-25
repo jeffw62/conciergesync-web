@@ -850,3 +850,4 @@ function setupAutocomplete(inputId, suggestionsId) {
     }
   });
 }
+  }
