@@ -657,24 +657,6 @@
       console.log("✅ Yes/No handler attached to workspace (using data-val)");
     };
 
-    // ============================================================
-    // 💬 Processing Message + Shimmer Fade-Out
-    // ============================================================
-    const fadeOutBridge = () => {
-      const msg = document.getElementById("card-message");
-      if (msg) {
-        msg.style.transition = "opacity 0.8s ease";
-        msg.style.opacity = "0";
-      }
-
-      const spinnerBridge = document.getElementById("spinner-bridge");
-      if (spinnerBridge) {
-        spinnerBridge.style.transition = "opacity 0.8s ease-in-out";
-        spinnerBridge.style.opacity = "0";
-        setTimeout(() => spinnerBridge.remove(), 800);
-      }
-    };
-
     // Observe DOM for redemption-form visibility to restore UI
     const observer = new MutationObserver(() => {
       const form = document.querySelector("#redemption-form");
