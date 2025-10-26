@@ -654,14 +654,15 @@ document.querySelectorAll(".nav-link").forEach(link => {
   // No inline stub inserted here to avoid nested script syntax errors.
 
     
-      // --- Redemption Module Loader (idle only) ---
-      const redemptionScript = document.createElement("script");
-          redemptionScript.src = "/dev/js/redemption-module.js";
+      // --- Redemption Console Module Loader (replaces old redemption-module.js) ---
+          const redemptionScript = document.createElement("script");
+          redemptionScript.src = "/dev/js/redemption-console.js";
           redemptionScript.defer = true;
           redemptionScript.onload = () => {
-            console.log("🩵 Redemption script loaded — idle until Search is clicked.");
+            console.log("🩵 Redemption Console script loaded — workspace version active.");
           };
           document.body.appendChild(redemptionScript);
+
           } // closes if (page === "redemptions")
         } catch (err) {
           console.error("Error loading module:", err);
