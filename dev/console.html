@@ -650,15 +650,9 @@ document.querySelectorAll(".nav-link").forEach(link => {
         }
       });
     
-  <!-- runLoadedScriptsSafely removed: replaced by a safe stub -->
-<script>
-  // NOTE: The complex guarded injector was removed to prevent
-  // duplicated declarations, truncated eval errors, and unexpected execution.
-  // We now rely on dedicated modules (eg. redemption-console.js) to be loaded explicitly.
-  window.runLoadedScriptsSafely = async function () {
-    console.log("runLoadedScriptsSafely: removed — no auto-injection will occur. Use explicit script includes instead.");
-  };
-</script>
+  // runLoadedScriptsSafely() permanently removed — handled via explicit modules now
+  // No inline stub inserted here to avoid nested script syntax errors.
+
     
       // --- Redemption Module Loader (idle only) ---
       const redemptionScript = document.createElement("script");
