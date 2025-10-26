@@ -650,82 +650,15 @@ document.querySelectorAll(".nav-link").forEach(link => {
         }
       });
     
-  // --- SAFER: run inline/external scripts from loaded HTML without auto-calling helpers ---
-  console.log("🧩 Preparing to define runLoadedScriptsSafely...");
-  (async function runLoadedScriptsSafely() {
-    console.log("🚀 ENTERED runLoadedScriptsSafely()");
-    const scripts = [...workspace.querySelectorAll("script")];
-  
-    for (const oldScript of scripts) {
-      // external script -> append with defer to keep predictable load order
-      if (oldScript.src) {
-        await new Promise((resolve, reject) => {
-          const s = document.createElement("script");
-          s.src = oldScript.src;
-          s.defer = true;
-          s.onload = () => { console.log("Loaded external script:", oldScript.src); resolve(); };
-          s.onerror = (e) => { console.warn("Failed loading script:", oldScript.src, e); resolve(); };
-          document.body.appendChild(s);
-        });
-        oldScript.remove();
-        continue;
-      }
-  
-      // Inline script: parse text and prevent any immediate calls to guarded helpers.
-      // We'll create a wrapped function which defines the same code but returns it as a function to be called later.
-      const text = oldScript.textContent || "";
-  
-      // If the inline script *explicitly* calls one of these auto-run helpers, skip executing the call.
-      // Allowed helpers (will remain defined): setupRedemptionModule, launchGoldCard, createSpinnerBridge, showGoldCard
-      // We'll remove patterns like "setupRedemptionModule();" or "window.launchGoldCard();" to avoid auto-run.
-      const guarded = text
-        .replace(/(\bwindow\.)?setupRedemptionModule\s*\(\s*\)\s*;?/g, "/* blocked auto-call: setupRedemptionModule() */")
-        .replace(/(\bwindow\.)?launchGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: launchGoldCard() */")
-        .replace(/(\bwindow\.)?createSpinnerBridge\s*\(\s*\)\s*;?/g, "/* blocked auto-call: createSpinnerBridge() */")
-        .replace(/if\s*\([^)]*createSpinnerBridge[^)]*\)\s*\{[\s\S]*?\}\s*else\s*\{[\s\S]*?\}/g, "/* blocked auto-call: createSpinnerBridge() (if–else removed) */")
-        .replace(/if\s*\([^)]*createSpinnerBridge[^)]*\)\s*\{?/g, "/* blocked auto-call: createSpinnerBridge() (if-block removed) */")
-        .replace(/(\bwindow\.)?showGoldCard\s*\(\s*\)\s*;?/g, "/* blocked auto-call: showGoldCard() */")
-        + "\n// end guarded script safely\n";
-
-  
-      // Append as an inline script but wrapped: it defines any helper functions, variables, etc.,
-      // but prevents any explicit immediate call to guarded helpers.
-      console.log("Injecting guarded inline script full:", guarded);
-      
-      // --- DIAGNOSTIC: inspect guarded payload before injection ---
-      console.log("⏱ runLoadedScriptsSafely — injecting one script. oldScript id/src:", oldScript.id, oldScript.src);
-      console.log("guarded (length):", (guarded||"").length);
-      console.log("guarded start (0..120):", (guarded||"").slice(0,120));
-      console.log("guarded end (-120..end):", (guarded||"").slice(-120));
-      if (!window.wrapperScriptCreated) {
-        // ensure wrapperScript exists and is only created once per run
-        var wrapperScript = document.createElement("script");
-        wrapperScript.type = "text/javascript";
-        window.wrapperScriptCreated = true;
-      } else {
-        // create a fresh local wrapperScript for this script injection run
-        var wrapperScript = document.createElement("script");
-        wrapperScript.type = "text/javascript";
-      }
-
-      try {
-        wrapperScript.textContent = `
-          try {
-            (new Function(\`${guarded.replace(/[`$\\]/g, "\\$&")}\`))();
-          } catch (innerErr) {
-            console.error("💥 Inner eval failed:", innerErr);
-            console.error("⛔️ The guarded script may be truncated or malformed.");
-          }
-        `;
-        document.body.appendChild(wrapperScript);
-      } catch (outerErr) {
-        console.error("💥 Wrapper append failed:", outerErr);
-      }
-      oldScript.remove();
-
-          }
-  console.log("✅ Inline/external scripts from loaded HTML injected safely (auto-calls blocked).");
-  })();
+  <!-- runLoadedScriptsSafely removed: replaced by a safe stub -->
+<script>
+  // NOTE: The complex guarded injector was removed to prevent
+  // duplicated declarations, truncated eval errors, and unexpected execution.
+  // We now rely on dedicated modules (eg. redemption-console.js) to be loaded explicitly.
+  window.runLoadedScriptsSafely = async function () {
+    console.log("runLoadedScriptsSafely: removed — no auto-injection will occur. Use explicit script includes instead.");
+  };
+</script>
     
       // --- Redemption Module Loader (idle only) ---
       const redemptionScript = document.createElement("script");
