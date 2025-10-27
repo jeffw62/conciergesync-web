@@ -175,30 +175,50 @@
     console.log("📆 Flex Days logic initialized.");
   }
 
-  
   // --------------------------------------------------
-  // 🔁 Step 2 Toggle Logic
+  // 🔁 Step 2 Routing Toggles (Updated Interlock Rules)
   // --------------------------------------------------
   function setupRoutingToggles(root) {
-    const groups = ["direct", "multi", "positioning"];
-
-    groups.forEach((key) => {
-      const yes = root.querySelector(`#${key}Yes`);
-      const no = root.querySelector(`#${key}No`);
-      if (!yes || !no) return;
-
-      const activate = (active) => {
-        yes.classList.toggle("active", active);
-        no.classList.toggle("active", !active);
-        yes.dataset.value = active ? "yes" : "no";
-        no.dataset.value = active ? "yes" : "no";
-      };
-
-      yes.addEventListener("click", () => activate(true));
-      no.addEventListener("click", () => activate(false));
+    const directYes = root.querySelector("#directYes");
+    const directNo = root.querySelector("#directNo");
+    const multiYes = root.querySelector("#multiYes");
+    const multiNo = root.querySelector("#multiNo");
+    const posYes = root.querySelector("#positioningYes");
+    const posNo = root.querySelector("#positioningNo");
+  
+    if (!directYes || !multiYes || !posYes) {
+      console.warn("⚠️ Routing toggle buttons missing.");
+      return;
+    }
+  
+    // Helper to set active / inactive styles
+    const setActive = (yesBtn, noBtn, state) => {
+      yesBtn.classList.toggle("active", state);
+      noBtn.classList.toggle("active", !state);
+    };
+  
+    // Direct ↔ Multi-stop Interlock
+    directYes.addEventListener("click", () => {
+      setActive(directYes, directNo, true);
+      setActive(multiYes, multiNo, false);
+      console.log("✈️ Direct = YES → Multi-stop = NO");
     });
+    directNo.addEventListener("click", () => setActive(directYes, directNo, false));
+  
+    multiYes.addEventListener("click", () => {
+      setActive(multiYes, multiNo, true);
+      setActive(directYes, directNo, false);
+      console.log("✈️ Multi-stop = YES → Direct = NO");
+    });
+    multiNo.addEventListener("click", () => setActive(multiYes, multiNo, false));
+  
+    // Positioning Flights (independent)
+    posYes.addEventListener("click", () => setActive(posYes, posNo, true));
+    posNo.addEventListener("click", () => setActive(posYes, posNo, false));
+  
+    console.log("🔁 Routing toggles initialized with interlock behavior.");
+  }
 
-    console.log("🔁 Routing toggles initialized.");
   }
 })();
 
