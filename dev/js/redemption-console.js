@@ -218,7 +218,5 @@
   
     console.log("🔁 Routing toggles initialized with interlock behavior.");
   }
-
-  }
 })();
 
