@@ -114,7 +114,7 @@
           matches.forEach(a => {
             const div = document.createElement("div");
             div.className = "suggestion";
-            div.textContent = `${a.iata} — ${a.city}, ${a.country}`;
+            div.textContent = `${a.iata} — ${a.region_name}, ${a.country_code} • ${a.airport}`;
             div.addEventListener("click", () => {
               input.value = a.iata;
               suggBox.innerHTML = "";
