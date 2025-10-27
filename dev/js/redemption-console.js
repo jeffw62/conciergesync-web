@@ -132,7 +132,38 @@
       console.log("✈️ IATA autocomplete initialized.");
     }
 
-
+  // --------------------------------------------------
+  // 📆 Flex Days Toggle Logic
+  // --------------------------------------------------
+  function setupFlexDays(root) {
+    const flexBtn = root.querySelector("#flexDaysBtn");
+    const dropdown = root.querySelector("#flexDaysDropdown");
+    if (!flexBtn || !dropdown) {
+      console.warn("⚠️ Flex Days elements not found.");
+      return;
+    }
+  
+    // toggle dropdown visibility
+    flexBtn.addEventListener("click", () => {
+      const isVisible = dropdown.classList.toggle("visible");
+      dropdown.style.display = isVisible ? "block" : "none";
+      console.log(`📆 Flex Days dropdown ${isVisible ? "opened" : "closed"}.`);
+    });
+  
+    // click a value
+    dropdown.querySelectorAll("button, .option").forEach(opt => {
+      opt.addEventListener("click", () => {
+        const val = opt.dataset.value || opt.textContent.trim();
+        flexBtn.textContent = `±${val} days`;
+        dropdown.style.display = "none";
+        dropdown.classList.remove("visible");
+        console.log(`📆 Flex Days set to ±${val} days`);
+      });
+    });
+  
+    console.log("📆 Flex Days logic initialized.");
+  }
+  
   // --------------------------------------------------
   // 🔁 Step 2 Toggle Logic
   // --------------------------------------------------
