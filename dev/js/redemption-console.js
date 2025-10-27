@@ -69,24 +69,69 @@
     // -----------------------------------------------
     setupRoutingToggles(root);
   } // <-- this closes initializeHandlers
-  
 
-  // --------------------------------------------------
-  // ✈️ IATA Autocomplete stub
-  // --------------------------------------------------
-  function setupIataAutocomplete(root) {
-    const fields = ["origin", "destination"];
-    fields.forEach((id) => {
-      const input = root.querySelector(`#${id}`);
-      if (!input) return;
-
-      input.addEventListener("focus", () => {
-        console.log(`🛫 ${id.toUpperCase()} input focused — load IATA suggestions here.`);
-        const sugg = root.querySelector(`#${id}-suggestions`);
-        if (sugg) sugg.textContent = "(autocomplete results would appear here)";
+    // --------------------------------------------------
+    // ✈️ IATA Autocomplete — Live from local JSON
+    // --------------------------------------------------
+    async function setupIataAutocomplete(root) {
+      const fields = ["origin", "destination"];
+      let airportData = [];
+    
+      // Load local dataset once
+      try {
+        const res = await fetch("/dev/asset/iata-icao.json");
+        airportData = await res.json();
+        console.log(`🗺️ Loaded ${airportData.length} airport entries.`);
+      } catch (err) {
+        console.error("❌ Failed to load IATA dataset:", err);
+        return;
+      }
+    
+      // Utility: filter by query
+      function findMatches(query) {
+        const q = query.toUpperCase();
+        return airportData
+          .filter(a =>
+            a.iata?.startsWith(q) ||
+            a.city?.toUpperCase().includes(q) ||
+            a.name?.toUpperCase().includes(q)
+          )
+          .slice(0, 8);
+      }
+    
+      // Build interaction
+      fields.forEach(id => {
+        const input = root.querySelector(`#${id}`);
+        const suggBox = root.querySelector(`#${id}-suggestions`);
+        if (!input || !suggBox) return;
+    
+        input.addEventListener("input", e => {
+          const val = e.target.value.trim();
+          suggBox.innerHTML = "";
+          if (val.length < 2) return;
+    
+          const matches = findMatches(val);
+          matches.forEach(a => {
+            const div = document.createElement("div");
+            div.className = "suggestion";
+            div.textContent = `${a.iata} — ${a.city}, ${a.country}`;
+            div.addEventListener("click", () => {
+              input.value = a.iata;
+              suggBox.innerHTML = "";
+            });
+            suggBox.appendChild(div);
+          });
+        });
+    
+        // simple blur cleanup
+        input.addEventListener("blur", () => {
+          setTimeout(() => (suggBox.innerHTML = ""), 150);
+        });
       });
-    });
-  }
+    
+      console.log("✈️ IATA autocomplete initialized.");
+    }
+
 
   // --------------------------------------------------
   // 🔁 Step 2 Toggle Logic
