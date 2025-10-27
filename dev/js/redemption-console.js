@@ -133,36 +133,43 @@
     }
 
   // --------------------------------------------------
-  // 📆 Flex Days Toggle Logic
+  // 📆 Flex Days Toggle Logic — Matches redem-con.html
   // --------------------------------------------------
   function setupFlexDays(root) {
-    const flexBtn = root.querySelector("#flexDaysBtn");
-    const dropdown = root.querySelector("#flexDaysDropdown");
-    if (!flexBtn || !dropdown) {
-      console.warn("⚠️ Flex Days elements not found.");
+    const exactBtn = root.querySelector("#exactBtn");
+    const flexBtn = root.querySelector("#flexBtn");
+    const flexPicker = root.querySelector("#flexPicker");
+    const flexSelect = root.querySelector("#flexDays");
+  
+    if (!exactBtn || !flexBtn || !flexPicker || !flexSelect) {
+      console.warn("⚠️ Flex Days elements not found in workspace.");
       return;
     }
   
-    // toggle dropdown visibility
-    flexBtn.addEventListener("click", () => {
-      const isVisible = dropdown.classList.toggle("visible");
-      dropdown.style.display = isVisible ? "block" : "none";
-      console.log(`📆 Flex Days dropdown ${isVisible ? "opened" : "closed"}.`);
+    // Switch between Exact and Flexible modes
+    exactBtn.addEventListener("click", () => {
+      exactBtn.classList.add("active");
+      flexBtn.classList.remove("active");
+      flexPicker.style.display = "none";
+      console.log("📆 Exact Date mode selected.");
     });
   
-    // click a value
-    dropdown.querySelectorAll("button, .option").forEach(opt => {
-      opt.addEventListener("click", () => {
-        const val = opt.dataset.value || opt.textContent.trim();
-        flexBtn.textContent = `±${val} days`;
-        dropdown.style.display = "none";
-        dropdown.classList.remove("visible");
-        console.log(`📆 Flex Days set to ±${val} days`);
-      });
+    flexBtn.addEventListener("click", () => {
+      flexBtn.classList.add("active");
+      exactBtn.classList.remove("active");
+      flexPicker.style.display = "block";
+      console.log("📆 Flexible +/- Days mode selected.");
+    });
+  
+    // Handle change in the +/- days dropdown
+    flexSelect.addEventListener("change", (e) => {
+      const val = e.target.value;
+      console.log(`📆 Flex Days set to ±${val} days`);
     });
   
     console.log("📆 Flex Days logic initialized.");
   }
+
   
   // --------------------------------------------------
   // 🔁 Step 2 Toggle Logic
