@@ -176,47 +176,58 @@
   }
 
   // --------------------------------------------------
-  // 🔁 Step 2 Routing Toggles (Updated Interlock Rules)
+  // 🔁 Step 2 Routing Toggles — Matches redem-con.html
   // --------------------------------------------------
   function setupRoutingToggles(root) {
-    const directYes = root.querySelector("#directYes");
-    const directNo = root.querySelector("#directNo");
-    const multiYes = root.querySelector("#multiYes");
-    const multiNo = root.querySelector("#multiNo");
-    const posYes = root.querySelector("#positioningYes");
-    const posNo = root.querySelector("#positioningNo");
+    const groups = [
+      { id: "directStop", type: "direct" },
+      { id: "multiConn", type: "multi" },
+      { id: "posFlight", type: "positioning" }
+    ];
   
-    if (!directYes || !multiYes || !posYes) {
-      console.warn("⚠️ Routing toggle buttons missing.");
-      return;
-    }
-  
-    // Helper to set active / inactive styles
-    const setActive = (yesBtn, noBtn, state) => {
-      yesBtn.classList.toggle("active", state);
-      noBtn.classList.toggle("active", !state);
+    // utility: update active state
+    const setActive = (group, value) => {
+      const buttons = group.querySelectorAll("button");
+      buttons.forEach(btn => {
+        const isActive = btn.dataset.val === value;
+        btn.classList.toggle("active", isActive);
+      });
     };
   
-    // Direct ↔ Multi-stop Interlock
-    directYes.addEventListener("click", () => {
-      setActive(directYes, directNo, true);
-      setActive(multiYes, multiNo, false);
-      console.log("✈️ Direct = YES → Multi-stop = NO");
+    groups.forEach(({ id, type }) => {
+      const group = root.querySelector(`#${id}`);
+      if (!group) {
+        console.warn(`⚠️ Routing group #${id} not found in DOM.`);
+        return;
+      }
+  
+      const [yesBtn, noBtn] = group.querySelectorAll("button");
+  
+      if (yesBtn && noBtn) {
+        yesBtn.addEventListener("click", () => {
+          setActive(group, "yes");
+  
+          // interlock rule: direct ↔ multi exclusive
+          if (type === "direct") {
+            const multiGroup = root.querySelector("#multiConn");
+            if (multiGroup) setActive(multiGroup, "no");
+          }
+          if (type === "multi") {
+            const directGroup = root.querySelector("#directStop");
+            if (directGroup) setActive(directGroup, "no");
+          }
+  
+          console.log(`✈️ ${type} set to YES`);
+        });
+  
+        noBtn.addEventListener("click", () => {
+          setActive(group, "no");
+          console.log(`✈️ ${type} set to NO`);
+        });
+      }
     });
-    directNo.addEventListener("click", () => setActive(directYes, directNo, false));
   
-    multiYes.addEventListener("click", () => {
-      setActive(multiYes, multiNo, true);
-      setActive(directYes, directNo, false);
-      console.log("✈️ Multi-stop = YES → Direct = NO");
-    });
-    multiNo.addEventListener("click", () => setActive(multiYes, multiNo, false));
-  
-    // Positioning Flights (independent)
-    posYes.addEventListener("click", () => setActive(posYes, posNo, true));
-    posNo.addEventListener("click", () => setActive(posYes, posNo, false));
-  
-    console.log("🔁 Routing toggles initialized with interlock behavior.");
+    console.log("🔁 Routing toggles initialized and mapped to DOM groups.");
   }
 })();
 
