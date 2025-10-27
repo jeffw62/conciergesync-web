@@ -58,5 +58,59 @@
     });
 
     console.log("💡 Redemption console event listener active.");
+
+    // -----------------------------------------------
+    // ✈️  Field Initialization (Origin / Destination)
+    // -----------------------------------------------
+    setupIataAutocomplete(root);
+
+    // -----------------------------------------------
+    // 🔁 Step 2 Toggle Logic (Yes/No buttons)
+    // -----------------------------------------------
+    setupRoutingToggles(root);
+  } // <-- this closes initializeHandlers
+  
+
+  // --------------------------------------------------
+  // ✈️ IATA Autocomplete stub
+  // --------------------------------------------------
+  function setupIataAutocomplete(root) {
+    const fields = ["origin", "destination"];
+    fields.forEach((id) => {
+      const input = root.querySelector(`#${id}`);
+      if (!input) return;
+
+      input.addEventListener("focus", () => {
+        console.log(`🛫 ${id.toUpperCase()} input focused — load IATA suggestions here.`);
+        const sugg = root.querySelector(`#${id}-suggestions`);
+        if (sugg) sugg.textContent = "(autocomplete results would appear here)";
+      });
+    });
+  }
+
+  // --------------------------------------------------
+  // 🔁 Step 2 Toggle Logic
+  // --------------------------------------------------
+  function setupRoutingToggles(root) {
+    const groups = ["direct", "multi", "positioning"];
+
+    groups.forEach((key) => {
+      const yes = root.querySelector(`#${key}Yes`);
+      const no = root.querySelector(`#${key}No`);
+      if (!yes || !no) return;
+
+      const activate = (active) => {
+        yes.classList.toggle("active", active);
+        no.classList.toggle("active", !active);
+        yes.dataset.value = active ? "yes" : "no";
+        no.dataset.value = active ? "yes" : "no";
+      };
+
+      yes.addEventListener("click", () => activate(true));
+      no.addEventListener("click", () => activate(false));
+    });
+
+    console.log("🔁 Routing toggles initialized.");
   }
 })();
+
