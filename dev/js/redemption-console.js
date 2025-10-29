@@ -76,11 +76,11 @@
       const destOk = destinationInput?.value?.length === 3;
       const dateOk = !!departDate.value;
       const cabinOk = cabinSelect.value !== "";
-      const flexOk = root.querySelector("#exactBtn.active, #flexBtn.active") !== null;
-      const directOk = root.querySelector("#directStop .active") !== null;
-      const multiOk = root.querySelector("#multiConn .active") !== null;
-      const posOk = root.querySelector("#posFlight .active") !== null;
-      const routingOk = [...routingToggles].some(el => el.checked);
+      const flexOk = root.querySelector("#exactBtn.option-btn.active, #flexBtn.option-btn.active") !== null;
+      const directOk = root.querySelector("#directStop button.active") !== null;
+      const multiOk = root.querySelector("#multiConn button.active") !== null;
+      const posOk = root.querySelector("#posFlight button.active") !== null;
+      const routingOk = directOk && multiOk && posOk;
       return originOk && destOk && dateOk && cabinOk && flexOk && routingOk;
     }
     
