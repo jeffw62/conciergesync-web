@@ -96,13 +96,25 @@
       }
     }
     
-    // attach live validation listeners
+    // Attach live validation listeners for Step 1 & 2
     [
       originInput, destinationInput, departDate, returnDate, cabinSelect,
-      ...flexToggles, ...routingToggles
+      ...flexToggles
     ].forEach(el => el?.addEventListener("change", updateSearchState));
     
+    // Listen for clicks on Step 2 routing buttons (Yes/No)
+    const routingButtons = root.querySelectorAll(
+      "#directStop button, #multiConn button, #posFlight button"
+    );
+    routingButtons.forEach(btn =>
+      btn.addEventListener("click", () => {
+        // Give DOM a beat to toggle .active states, then recheck
+        setTimeout(updateSearchState, 50);
+      })
+    );
+    
     updateSearchState(); // initial check
+
   
     // -----------------------------------------------
     // ✈️  Field Initialization (Origin / Destination)
