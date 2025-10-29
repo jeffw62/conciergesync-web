@@ -101,9 +101,6 @@
     
     updateSearchState(); // initial check
   
-    console.log("🔁 Routing toggles initialized and mapped to DOM groups.");
-  }
-
     // -----------------------------------------------
     // ✈️  Field Initialization (Origin / Destination)
     // -----------------------------------------------
@@ -119,6 +116,9 @@
     // -----------------------------------------------
     setupRoutingToggles(root);
     // <-- this closes initializeHandlers
+
+    console.log("🔁 Routing toggles initialized and mapped to DOM groups.");
+    }
 
     // --------------------------------------------------
     // ✈️ IATA Autocomplete — Live from local JSON
