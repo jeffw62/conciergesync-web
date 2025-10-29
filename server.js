@@ -94,8 +94,12 @@ app.post("/api/redemption", async (req, res) => {
     }
 
     console.log("🧭 Raw body before destructure:", req.body);
-    const payload = req.body;
+    const payload = req.body || {};
     console.log("🧭 Received redemption payload:", payload);
+    
+    // Define safe fallbacks for both frontends
+    const origin = payload.origin || payload.from;
+    const destination = payload.destination || payload.to;
 
     // Validate required inputs
     if (!origin || !destination) {
