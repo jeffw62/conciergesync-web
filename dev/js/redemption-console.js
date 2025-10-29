@@ -39,6 +39,7 @@
   // -----------------------------------------------
   function initializeHandlers(root) {
     const searchBtn = root.querySelector("#searchBtn");
+    const searchWarning = root.querySelector("#searchWarning");
     if (!searchBtn) {
       console.warn("⚠️ Search button not found in injected panel.");
       return;
@@ -113,7 +114,6 @@
     // -----------------------------------------------
     // 🟡 STEP 3.3 — Search Activation Logic
     // -----------------------------------------------
-    const searchWarning = root.querySelector("#searchWarning");
     const originInput = root.querySelector("#origin");
     const destinationInput = root.querySelector("#destination");
     const departDate = root.querySelector("#departDate");
