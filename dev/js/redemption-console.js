@@ -85,16 +85,29 @@
     }
     
     function updateSearchState() {
-      if (isFormReady()) {
-        searchBtn.disabled = false;
-        if (searchWarning) searchWarning.style.display = "none";
-        searchBtn.classList.add("ready");
-      } else {
-        searchBtn.disabled = true;
-        if (searchWarning) searchWarning.style.display = "block";
-        searchBtn.classList.remove("ready");
-      }
+    const ready = isFormReady();
+    console.log("🔍 Validation check:", {
+      origin: originInput?.value,
+      destination: destinationInput?.value,
+      date: departDate.value,
+      cabin: cabinSelect.value,
+      flexActive: root.querySelector("#exactBtn.active, #flexBtn.active"),
+      directActive: root.querySelector("#directStop .active"),
+      multiActive: root.querySelector("#multiConn .active"),
+      posActive: root.querySelector("#posFlight .active"),
+      ready
+    });
+  
+    if (ready) {
+      searchBtn.disabled = false;
+      if (searchWarning) searchWarning.style.display = "none";
+      searchBtn.classList.add("ready");
+    } else {
+      searchBtn.disabled = true;
+      if (searchWarning) searchWarning.style.display = "block";
+      searchBtn.classList.remove("ready");
     }
+  }
     
     // Attach live validation listeners for Step 1 & 2
     [
