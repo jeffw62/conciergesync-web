@@ -82,6 +82,8 @@ function applySanityFilter(results) {
 app.post("/api/redemption", async (req, res) => {
   try {
     const payload = req.body;
+    console.log("🧭 Raw body before destructure:", req.body);
+
     console.log("🧭 Received redemption payload:", payload);
 
     const { origin, destination, searchDates = [], ...rest } = payload;
