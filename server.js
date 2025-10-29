@@ -361,15 +361,17 @@ app.post("/api/redemption", async (req, res) => {
 //     results: finalResults,
 //  });
 
-// } catch (err) {
-//    console.error("❌ Redemption API error:", err);
-//    res.status(500).json({
-//      error: "server_error",
-//      message: err.message,
-//      stack: err.stack,
-//    });
-//  }
-// });
+console.log("🧩 Debug checkpoint reached — preparing to respond to client...");
+
+ } catch (err) {
+    console.error("❌ Redemption API error:", err);
+    res.status(500).json({
+      error: "server_error",
+      message: err.message,
+      stack: err.stack,
+    });
+  }
+ });
 
 // ===============================================
 // Bulk Test Route (optional diagnostic)
