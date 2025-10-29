@@ -81,12 +81,17 @@ function applySanityFilter(results) {
 // ===============================================
 app.post("/api/redemption", async (req, res) => {
   try {
-    const payload = req.body;
+    if (!req.body) {
+      console.warn("⚠️ No body received at /api/redemption");
+      return res.status(400).json({
+        error: "no_body",
+        message: "No request body received.",
+      });
+    }
+
     console.log("🧭 Raw body before destructure:", req.body);
-
+    const payload = req.body;
     console.log("🧭 Received redemption payload:", payload);
-
-    const { origin, destination, searchDates = [], ...rest } = payload;
 
     // Validate required inputs
     if (!origin || !destination) {
