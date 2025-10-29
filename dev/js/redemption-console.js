@@ -118,7 +118,7 @@
     // 🔁 Step 2 Toggle Logic (Yes/No buttons)
     // -----------------------------------------------
     setupRoutingToggles(root);
-  } // <-- this closes initializeHandlers
+    // <-- this closes initializeHandlers
 
     // --------------------------------------------------
     // ✈️ IATA Autocomplete — Live from local JSON
