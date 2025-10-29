@@ -44,13 +44,13 @@
       return;
     }
   
-    searchBtn.addEventListener("click", (e) => {
+    searchBtn.addEventListener("click", async (e) => {
       e.preventDefault();
-  
+    
       const inputs = root.querySelectorAll("input, select");
       const payload = {};
       inputs.forEach((el) => (payload[el.id] = el.value));
-  
+    
       console.log("✅ Search click captured. Payload:", payload);
 
       // ----------------------------------------------------------
@@ -60,76 +60,55 @@
         console.warn("⚠️ Search already in progress. Ignoring duplicate click.");
         return;
       }
-      
+    
       // visually lock button
       searchBtn.disabled = true;
       searchBtn.classList.add("loading");
       searchBtn.innerHTML = `<span class="spinner"></span> Searching...`;
-      
-      // optional: hide any old warning
       if (searchWarning) searchWarning.style.display = "none";
-      
-      // placeholder: simulate async bridge call
-      setTimeout(() => {
-        searchBtn.classList.remove("loading");
-        searchBtn.disabled = false;
-        searchBtn.textContent = "Search";
-        console.log("🟢 Spinner cleared — ready for next phase.");
-      }, 2000);
-  
-      const warning = root.querySelector("#searchWarning");
-      if (warning) warning.textContent = "Search event captured successfully.";
-    });
-  
-    console.log("💡 Redemption console event listener active.");
 
     // ----------------------------------------------------------
     // 3.2 — Bridge Payload → Backend (BP→B)
     // ----------------------------------------------------------
     
-    // Define the API endpoint for InfiniteSync / Seats.aero bridge
-    const apiEndpoint = "/api/redemption"; // adjust if your route differs
+    const apiEndpoint = "/api/redemption";
     console.log("🌐 Sending payload to backend:", apiEndpoint);
-    
-    // Perform the async fetch call
-    fetch(apiEndpoint, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(payload),
-    })
-      .then(async (res) => {
-        if (!res.ok) throw new Error(`Server responded ${res.status}`);
-        const data = await res.json();
-    
-        // Persist canonical results to sessionStorage
-        sessionStorage.setItem(
-          "latestRedemptionResults",
-          JSON.stringify(data.results || [])
-        );
-    
-        console.log(
-          `💾 Redemption results stored — ${data.results?.length || 0} entries`
-        );
-    
-        // Redirect user to the results view
-        window.location.href = "/dev/redemption-results.html";
-      })
-      .catch((err) => {
-        console.error("❌ Redemption bridge failed:", err);
-    
-        if (searchWarning) {
-          searchWarning.textContent =
-            "Search failed — please try again in a moment.";
-          searchWarning.style.display = "block";
-        }
-      })
-      .finally(() => {
-        // Restore Search button state no matter what
-        searchBtn.classList.remove("loading");
-        searchBtn.disabled = false;
-        searchBtn.textContent = "Search";
-        console.log("🟢 Spinner cleared — ready for next search.");
+  
+    try {
+      const res = await fetch(apiEndpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
       });
+  
+      if (!res.ok) throw new Error(`Server responded ${res.status}`);
+      const data = await res.json();
+  
+      // Persist canonical results to sessionStorage
+      sessionStorage.setItem(
+        "latestRedemptionResults",
+        JSON.stringify(data.results || [])
+      );
+  
+      console.log(`💾 Redemption results stored — ${data.results?.length || 0} entries`);
+  
+      // Redirect user to the results view
+      window.location.href = "/dev/redemption-results.html";
+    } catch (err) {
+      console.error("❌ Redemption bridge failed:", err);
+  
+      if (searchWarning) {
+        searchWarning.textContent = "Search failed — please try again.";
+        searchWarning.style.display = "block";
+      }
+    } finally {
+      // Restore Search button state no matter what
+      searchBtn.classList.remove("loading");
+      searchBtn.disabled = false;
+      searchBtn.textContent = "Search";
+      console.log("🟢 Spinner cleared — ready for next search.");
+    }
+  });
   
     // -----------------------------------------------
     // 🟡 STEP 3.3 — Search Activation Logic
