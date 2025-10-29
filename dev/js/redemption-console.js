@@ -43,21 +43,66 @@
       console.warn("⚠️ Search button not found in injected panel.");
       return;
     }
-
+  
     searchBtn.addEventListener("click", (e) => {
       e.preventDefault();
-
+  
       const inputs = root.querySelectorAll("input, select");
       const payload = {};
       inputs.forEach((el) => (payload[el.id] = el.value));
-
+  
       console.log("✅ Search click captured. Payload:", payload);
-
+  
       const warning = root.querySelector("#searchWarning");
       if (warning) warning.textContent = "Search event captured successfully.";
     });
-
+  
     console.log("💡 Redemption console event listener active.");
+  
+    // -----------------------------------------------
+    // 🟡 STEP 3.1 — Search Activation Logic
+    // -----------------------------------------------
+    const searchWarning = root.querySelector("#searchWarning");
+    const originInput = root.querySelector("#origin");
+    const destinationInput = root.querySelector("#destination");
+    const departDate = root.querySelector("#departDate");
+    const returnDate = root.querySelector("#returnDate");
+    const cabinSelect = root.querySelector("#cabin");
+    const flexToggles = root.querySelectorAll('input[name="flexDays"]');
+    const routingToggles = root.querySelectorAll('.step.routing input[type="radio"]');
+    
+    function isFormReady() {
+      const originOk = originInput?.value?.length === 3;
+      const destOk = destinationInput?.value?.length === 3;
+      const dateOk = !!departDate.value;
+      const cabinOk = cabinSelect.value !== "";
+      const flexOk = [...flexToggles].some(el => el.checked);
+      const routingOk = [...routingToggles].some(el => el.checked);
+      return originOk && destOk && dateOk && cabinOk && flexOk && routingOk;
+    }
+    
+    function updateSearchState() {
+      if (isFormReady()) {
+        searchBtn.disabled = false;
+        if (searchWarning) searchWarning.style.display = "none";
+        searchBtn.classList.add("ready");
+      } else {
+        searchBtn.disabled = true;
+        if (searchWarning) searchWarning.style.display = "block";
+        searchBtn.classList.remove("ready");
+      }
+    }
+    
+    // attach live validation listeners
+    [
+      originInput, destinationInput, departDate, returnDate, cabinSelect,
+      ...flexToggles, ...routingToggles
+    ].forEach(el => el?.addEventListener("change", updateSearchState));
+    
+    updateSearchState(); // initial check
+  
+    console.log("🔁 Routing toggles initialized and mapped to DOM groups.");
+  }
 
     // -----------------------------------------------
     // ✈️  Field Initialization (Origin / Destination)
@@ -221,55 +266,14 @@
         });
   
         noBtn.addEventListener("click", () => {
-          setActive(group, "no");
-          console.log(`✈️ ${type} set to NO`);
-        });
-      }
-    });
-  
+        setActive(group, "no");
+            console.log(`✈️ ${type} set to NO`);
+          });
+        }
+      });
+    
     console.log("🔁 Routing toggles initialized and mapped to DOM groups.");
-  }
+  } // closes setupRoutingToggles(root)
+})(); // closes entire IIFE
 
-  // -----------------------------------------------
-  // 🟡 STEP 3.1 — Search Activation Logic
-  // -----------------------------------------------
-  const searchWarning = root.querySelector("#searchWarning");
-  const originInput = root.querySelector("#origin");
-  const destinationInput = root.querySelector("#destination");
-  const departDate = root.querySelector("#departDate");
-  const returnDate = root.querySelector("#returnDate");
-  const cabinSelect = root.querySelector("#cabin");
-  const flexToggles = root.querySelectorAll('input[name="flexDays"]');
-  const routingToggles = root.querySelectorAll('.step.routing input[type="radio"]');
-  
-  function isFormReady() {
-    const originOk = originInput?.value?.length === 3;
-    const destOk = destinationInput?.value?.length === 3;
-    const dateOk = !!departDate.value;
-    const cabinOk = cabinSelect.value !== "";
-    const flexOk = [...flexToggles].some(el => el.checked);
-    const routingOk = [...routingToggles].some(el => el.checked);
-    return originOk && destOk && dateOk && cabinOk && flexOk && routingOk;
-  }
-  
-  function updateSearchState() {
-    if (isFormReady()) {
-      searchBtn.disabled = false;
-      if (searchWarning) searchWarning.style.display = "none";
-      searchBtn.classList.add("ready");
-    } else {
-      searchBtn.disabled = true;
-      if (searchWarning) searchWarning.style.display = "block";
-      searchBtn.classList.remove("ready");
-    }
-  }
-  
-  // attach live validation listeners
-  [
-    originInput, destinationInput, departDate, returnDate, cabinSelect,
-    ...flexToggles, ...routingToggles
-  ].forEach(el => el?.addEventListener("change", updateSearchState));
-  
-  updateSearchState(); // initial check
-})();
 
