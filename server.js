@@ -76,6 +76,10 @@ function applySanityFilter(results) {
   });
 }
 
+app.get("/api/test", (req, res) => {
+  res.json({ ok: true, message: "✅ API test route working." });
+});
+
 // ===============================================
 // Live Redemption Search Endpoint (dynamic window)
 // ===============================================
