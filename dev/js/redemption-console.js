@@ -52,6 +52,30 @@
       inputs.forEach((el) => (payload[el.id] = el.value));
   
       console.log("✅ Search click captured. Payload:", payload);
+
+      // ----------------------------------------------------------
+      // 🌀 Step 3.2 — Click Debounce + Spinner Prep
+      // ----------------------------------------------------------
+      if (searchBtn.classList.contains("loading")) {
+        console.warn("⚠️ Search already in progress. Ignoring duplicate click.");
+        return;
+      }
+      
+      // visually lock button
+      searchBtn.disabled = true;
+      searchBtn.classList.add("loading");
+      searchBtn.innerHTML = `<span class="spinner"></span> Searching...`;
+      
+      // optional: hide any old warning
+      if (searchWarning) searchWarning.style.display = "none";
+      
+      // placeholder: simulate async bridge call
+      setTimeout(() => {
+        searchBtn.classList.remove("loading");
+        searchBtn.disabled = false;
+        searchBtn.textContent = "Search";
+        console.log("🟢 Spinner cleared — ready for next phase.");
+      }, 2000);
   
       const warning = root.querySelector("#searchWarning");
       if (warning) warning.textContent = "Search event captured successfully.";
