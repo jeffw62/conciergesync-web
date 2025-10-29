@@ -271,6 +271,5 @@
   ].forEach(el => el?.addEventListener("change", updateSearchState));
   
   updateSearchState(); // initial check
-}
 })();
 
