@@ -35,7 +35,7 @@
   }
 
   // -----------------------------------------------
-  // 🌿 2. Handler Initialization
+  // 🌿 3.0 Handler Initialization
   // -----------------------------------------------
   function initializeHandlers(root) {
     const searchBtn = root.querySelector("#searchBtn");
@@ -54,7 +54,7 @@
       console.log("✅ Search click captured. Payload:", payload);
 
       // ----------------------------------------------------------
-      // 🌀 Step 3.2 — Click Debounce + Spinner Prep
+      // 🌀 Step 3.1 — Click Debounce + Spinner Prep
       // ----------------------------------------------------------
       if (searchBtn.classList.contains("loading")) {
         console.warn("⚠️ Search already in progress. Ignoring duplicate click.");
@@ -82,9 +82,57 @@
     });
   
     console.log("💡 Redemption console event listener active.");
+
+    // ----------------------------------------------------------
+    // 3.2 — Bridge Payload → Backend (BP→B)
+    // ----------------------------------------------------------
+    
+    // Define the API endpoint for InfiniteSync / Seats.aero bridge
+    const apiEndpoint = "/api/redemption"; // adjust if your route differs
+    console.log("🌐 Sending payload to backend:", apiEndpoint);
+    
+    // Perform the async fetch call
+    fetch(apiEndpoint, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload),
+    })
+      .then(async (res) => {
+        if (!res.ok) throw new Error(`Server responded ${res.status}`);
+        const data = await res.json();
+    
+        // Persist canonical results to sessionStorage
+        sessionStorage.setItem(
+          "latestRedemptionResults",
+          JSON.stringify(data.results || [])
+        );
+    
+        console.log(
+          `💾 Redemption results stored — ${data.results?.length || 0} entries`
+        );
+    
+        // Redirect user to the results view
+        window.location.href = "/dev/redemption-results.html";
+      })
+      .catch((err) => {
+        console.error("❌ Redemption bridge failed:", err);
+    
+        if (searchWarning) {
+          searchWarning.textContent =
+            "Search failed — please try again in a moment.";
+          searchWarning.style.display = "block";
+        }
+      })
+      .finally(() => {
+        // Restore Search button state no matter what
+        searchBtn.classList.remove("loading");
+        searchBtn.disabled = false;
+        searchBtn.textContent = "Search";
+        console.log("🟢 Spinner cleared — ready for next search.");
+      });
   
     // -----------------------------------------------
-    // 🟡 STEP 3.1 — Search Activation Logic
+    // 🟡 STEP 3.3 — Search Activation Logic
     // -----------------------------------------------
     const searchWarning = root.querySelector("#searchWarning");
     const originInput = root.querySelector("#origin");
