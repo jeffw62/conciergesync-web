@@ -369,6 +369,7 @@ whee<style>
 <!-- Step 1: Exact / Flexible toggle -->
 <script>
   document.addEventListener("DOMContentLoaded", () => {
+    console.log("🧭 Mode toggle script attached — DOM fully loaded.");
     const searchBtn = document.getElementById("searchBtn");   // ✅ matches your HTML id
     const spinner   = document.getElementById("spinner-overlay");
   
@@ -384,54 +385,24 @@ whee<style>
   
         searchBtn.addEventListener("click", async (e) => {
           e.preventDefault();
-
-        // === Exact vs Flexible Mode Toggle ===
-        document.addEventListener("DOMContentLoaded", () => {
-          const modeInput = document.getElementById("mode");
-          const exactBtn = document.getElementById("exactBtn");
-          const flexBtn = document.getElementById("flexBtn");
-          const flexPicker = document.getElementById("flexPicker");
         
-          if (!modeInput || !exactBtn || !flexBtn) {
-            console.warn("⚠️ Mode toggle elements not found in DOM");
-            return;
-          }
-        
-          // Exact Date button
-          exactBtn.addEventListener("click", () => {
-            modeInput.value = "exact";
-            flexPicker.style.display = "none";
-            exactBtn.classList.add("active");
-            flexBtn.classList.remove("active");
-            console.log("🟢 Mode switched to EXACT, modeInput.value =", modeInput.value);
-          });
-        
-          // Flexible ± Days button
-          flexBtn.addEventListener("click", () => {
-            modeInput.value = "flexible";
-            flexPicker.style.display = "block";
-            flexBtn.classList.add("active");
-            exactBtn.classList.remove("active");
-            console.log("🟣 Mode switched to FLEXIBLE, modeInput.value =", modeInput.value);
-          });
-        });
-
-            
           // show overlay + fade effect
           spinner.classList.add("active");
   
           // gather form data for backend + IS
           const payload = {
-            origin:        document.getElementById("origin")?.value || "",
-            destination:   document.getElementById("destination")?.value || "",
-            passengers:    document.getElementById("passengers")?.value || "1",
-            cabin:         document.getElementById("cabin")?.value || "Economy",
-            departDate:    document.getElementById("departDate")?.value || "",
-            returnDate:    document.getElementById("returnDate")?.value || "",
-            flexDays:      document.getElementById("flexDays")?.value || "0",
-            includePartners: document.getElementById("partnerSpace")?.checked || false,
-            mode: flexMode,
+              origin: document.getElementById("origin")?.value || "",
+              destination: document.getElementById("destination")?.value || "",
+              passengers: document.getElementById("passengers")?.value || "1",
+              cabin: document.getElementById("cabin")?.value || "Economy",
+              departDate: document.getElementById("departDate")?.value || "",
+              returnDate: document.getElementById("returnDate")?.value || "",
+              flexDays: document.getElementById("flexDays")?.value || "0",
+              includePartners: document.getElementById("partnerSpace")?.checked || false,
+              mode: document.getElementById("mode")?.value || "exact"
           };
+        
+            console.log("🧭 Payload ready:", payload);
   
           try {
             const res = await fetch("/api/search", {
@@ -758,6 +729,37 @@ window.showGoldCard = showGoldCard;
         });
       }
     };
+
+    // === Exact vs Flexible Mode Toggle ===
+    (() => {
+      const modeInput = document.getElementById("mode");
+      const exactBtn = document.getElementById("exactBtn");
+      const flexBtn = document.getElementById("flexBtn");
+      const flexPicker = document.getElementById("flexPicker");
+    
+      if (!modeInput || !exactBtn || !flexBtn) {
+        console.warn("⚠️ Mode toggle elements not found in DOM");
+        return;
+      }
+    
+      // Exact Date
+      exactBtn.addEventListener("click", () => {
+        modeInput.value = "exact";
+        flexPicker.style.display = "none";
+        exactBtn.classList.add("active");
+        flexBtn.classList.remove("active");
+        console.log("🟢 Mode switched to EXACT, modeInput.value =", modeInput.value);
+      });
+    
+      // Flexible ± Days
+      flexBtn.addEventListener("click", () => {
+        modeInput.value = "flexible";
+        flexPicker.style.display = "block";
+        flexBtn.classList.add("active");
+        exactBtn.classList.remove("active");
+        console.log("🟣 Mode switched to FLEXIBLE, modeInput.value =", modeInput.value);
+      });
+    });
     
     // 🧱 Delegated IATA handler (bulletproof version)
     window.fetchIATA = function () {
