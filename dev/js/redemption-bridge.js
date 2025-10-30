@@ -30,7 +30,7 @@ document.addEventListener("DOMContentLoaded", () => {
       // show gold-card sequence while backend processes
       if (window.launchGoldCard) launchGoldCard();
 
-      const res = await fetch("/api/redemption", {
+      const res = await fetch("https://conciergesync-web.onrender.com/api/redemption", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
