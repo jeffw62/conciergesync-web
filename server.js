@@ -199,7 +199,7 @@ app.post("/api/redemption", async (req, res) => {
               message: err.message
             });
         }
-      }
+      });
 
         console.log("✅ Redemption route completed. Returning response...");
         // --- Prevent duplicate sends ---
@@ -413,8 +413,7 @@ app.post("/api/redemption", async (req, res) => {
     //    message: err.message,
     //    stack: err.stack,
     //    });
-      }
-  }
+    //  }
     //});
 
 // ===============================================
