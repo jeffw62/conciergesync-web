@@ -114,9 +114,11 @@ app.post("/api/redemption", async (req, res) => {
     const baseDate = new Date(payload.departDate || payload.date);
     let range = parseInt(payload.flexDays) || 0;
     
-    // 🧭 Force flexDays = 0 unless mode explicitly set to 'flex'
-    if (!payload.mode || payload.mode === "exact" || payload.mode === "") {
-      range = 0;
+    // 🧭 Determine flex behavior based on button selection
+    if (payload.flexMode === "flexible") {
+      range = parseInt(payload.flexDays) || 0; // allow dropdown value (1, 3, 5, etc.)
+    } else {
+      range = 0; // exact-date searches only
     }
         
     const dateList = [];
