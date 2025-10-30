@@ -276,19 +276,27 @@ app.post("/api/redemption", async (req, res) => {
         const finalResults = selectedProgram
           ? withCpm.filter(r => r.Source?.toLowerCase() === selectedProgram)
           : withCpm;
-      
+        
         allResults.push(...finalResults);
-      }
-
-      console.log(`✅ Aggregated ${allResults.length} total results across ${datesToSearch.length} days.`);
-      // Send the combined results back
-      return res.json({ success: true, results: allResults });
-
-      } catch (err) {
+        }
+        
+        // ✅ Respond back once all loops complete
+        console.log(`✅ Aggregated ${allResults.length} total results across ${datesToSearch.length} days.`);
+        
+        return res.json({
+          success: true,
+          results: allResults,
+        });
+        
+        } catch (err) {
           console.error("❌ Redemption search error:", err);
-          res.status(500).json({ error: "internal_error", message: err.message });
-      }
-    });
+          res.status(500).json({
+            error: "internal_error",
+            message: err.message,
+          });
+        }
+        }); // <-- closes app.post("/api/redemption")
+
 
     // ----------------------------------------------
     // Attach cashValue and compute CPM for each result
