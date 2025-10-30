@@ -153,9 +153,9 @@ app.post("/api/redemption", async (req, res) => {
         const outboundDateStr =
           typeof travelDate === "string"
             ? travelDate
-            : payload.departDate ||
+            : (payload.departDate ||
               payload.date ||
-              new Date().toISOString().split("T")[0];
+              new Date().toISOString().split("T")[0]);
         
         const serpPayload = {
           engine: "google_flights",
