@@ -198,7 +198,10 @@ app.post("/api/redemption", async (req, res) => {
               error: "server_error",
               message: err.message
             });
+          }
         }
+    }
+
 
         console.log("✅ Redemption route completed. Returning response...");
         // --- Prevent duplicate sends ---
@@ -214,12 +217,12 @@ app.post("/api/redemption", async (req, res) => {
         });
 
 
-        console.log("🚀 Final results payload:", JSON.stringify(allResults, null, 2));
+        //console.log("🚀 Final results payload:", JSON.stringify(allResults, null, 2));
         // Temporary placeholder response until full CPM enrichment is reactivated
-        return res.json({
-          success: true,
-          message: "Search complete (placeholder response)",
-        });
+        //return res.json({
+        //  success: true,
+        //  message: "Search complete (placeholder response)",
+        //});
 
         // determine search window based on mode (exact vs flexible)
         const flexDays = parseInt(payload.flexDays || 0, 10);
@@ -405,15 +408,14 @@ app.post("/api/redemption", async (req, res) => {
 
     console.log("🧩 Debug checkpoint reached — preparing to respond to client...");
 
-    // catch (err) {
-    //  console.error("❌ Redemption API error:", err);
-    //  res.status(500).json({
-    //    error: "server_error",
-    //    message: err.message,
-    //    stack: err.stack,
-    //    });
-    //  }
-    //});
+     } catch (err) {
+        console.error("❌ Redemption route error:", err);
+        res.status(500).json({
+      error: "server_error",
+      message: err.message
+    });
+  }
+});
 
 // ===============================================
 // Bulk Test Route (optional diagnostic)
