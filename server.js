@@ -139,7 +139,37 @@ app.post("/api/redemption", async (req, res) => {
     // === Simulate running redemption searches for each expanded date ===
     for (const travelDate of datesToSearch) {
       console.log(`🧠 Running redemption search for ${payload.origin} → ${payload.destination} on ${travelDate}`);
-      // Placeholder: future Seats.Aero / SerpApi call
+    
+      try {
+        const serpPayload = {
+          engine: "google_flights",
+          departure_id: payload.origin,
+          arrival_id: payload.destination,
+          outbound_date: travelDate,
+          travel_class: travelClass,
+          type: 1,
+          currency: "USD",
+          gl: "us",
+          hl: "en",
+          deep_search: true,
+          api_key: process.env.SERP_API_KEY,
+          context_token: `${payload.origin}-${payload.destination}-${travelDate}-${Math.random().toString(36).slice(2,8)}`
+        };
+    
+        console.log("🔗 SerpApi request:", JSON.stringify(serpPayload, null, 2));
+        cashValue = await fetchCashFare({
+          origin: payload.origin,
+          destination: payload.destination,
+          departDate: travelDate,
+          travelClass,
+        });
+    
+        serpCache.set(`${payload.origin}-${payload.destination}-${travelDate}`, cashValue);
+        console.log(`💵 Cached SerpApi value for ${travelDate}:`, cashValue);
+    
+      } catch (err) {
+        console.error("❌ SerpApi fetch error:", err);
+      }
     }
     
     // Temporary placeholder response
