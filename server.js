@@ -214,8 +214,7 @@ app.post("/api/redemption", async (req, res) => {
     //  searchDates: datesToSearch
     //});
 
-     let cashValue = null;
-      const travelClassMap = {
+     const travelClassMap = {
         economy: 1,
         premium: 2,
         business: 3,
@@ -226,27 +225,28 @@ app.post("/api/redemption", async (req, res) => {
       
       const cacheKey = serpKey(payload.origin, payload.destination, payload.date, travelClass);
       
+      let cashValue = null; // ✅ Define it once above everything
+
       if (serpCache.has(cacheKey)) {
         cashValue = serpCache.get(cacheKey);
         console.log(`♻️ Using cached SerpApi value for ${cacheKey}:`, cashValue);
       } else {
-        let cashValue = null;
-
         try {
-          // --- Build SerpApi payload (one-way until return_date logic added) ---
+          // --- Build SerpApi payload ---
           const serpPayload = {
             engine: "google_flights",
             departure_id: payload.origin,
             arrival_id: payload.destination,
-            outbound_date: payload.date || payload.departDate,
+            outbound_date: outboundDateStr,
+            return_date: payload.returnDate || null,
             travel_class: travelClass,
-            type: 1, // ✅ one-way only — SerpApi rejects type:2 without return_date
+            type: 1,
             currency: "USD",
             gl: "us",
             hl: "en",
             deep_search: true,
             api_key: process.env.SERP_API_KEY,
-            context_token: `${payload.origin}-${payload.destination}-${payload.date}-${Math.random().toString(36).slice(2,8)}`
+            context_token: `${payload.origin}-${payload.destination}-${outboundDateStr}-${Math.random().toString(36).slice(2, 8)}`,
           };
           console.log("🔗 SerpApi request:", JSON.stringify(serpPayload, null, 2));
 
