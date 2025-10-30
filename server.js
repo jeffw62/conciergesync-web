@@ -136,12 +136,18 @@ app.post("/api/redemption", async (req, res) => {
 
     let allResults = [];
 
-    // This loop replaces the single-day search
-    for (const date of datesToSearch) {
+    // === Simulate running redemption searches for each expanded date ===
+    for (const travelDate of datesToSearch) {
       console.log(`🧠 Running redemption search for ${payload.origin} → ${payload.destination} on ${travelDate}`);
-
-      // Create a shallow copy of payload for this date
-      const singleSearch = { ...rest, origin, destination, date };
+      // Placeholder: future Seats.Aero / SerpApi call
+    }
+    
+    // Temporary placeholder response
+    res.status(200).json({
+      ok: true,
+      message: "🧭 Redemption route completed successfully (placeholder response).",
+      searchDates: datesToSearch
+    });
 
      let cashValue = null;
       const travelClassMap = {
