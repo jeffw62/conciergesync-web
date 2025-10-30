@@ -195,11 +195,12 @@ app.post("/api/redemption", async (req, res) => {
         // ⚙️ Verify outboundDateStr before calling fetch
         console.log("🟢 outboundDateStr check before fetch:", outboundDateStr);
         
+        console.log("outboundDateStr before SerpApi payload:", outboundDateStr, "travelDate:", travelDate);
+        
         cashValue = await fetchCashFare({
           origin: payload.origin,
           destination: payload.destination,
           departDate: outboundDateStr,  // ✅ consistent naming for our own function
-          console.log("🧭 outboundDateStr before SerpApi payload:", outboundDateStr, "travelDate:", travelDate);
           outbound_date: outboundDateStr, // ✅ explicitly for SerpApi
           travelClass,
         });
