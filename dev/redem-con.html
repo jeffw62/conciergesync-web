@@ -385,9 +385,9 @@ whee<style>
         searchBtn.addEventListener("click", async (e) => {
           e.preventDefault();
 
-        // Track which search mode is selected (Exact vs Flexible)
+        // Track search mode (Exact vs Flexible)
         const modeInput = document.getElementById("mode");
-        let flexMode = modeInput?.value || "exact";
+        let flexMode = modeInput.value || "exact";
         
         // Exact Date button
         document.getElementById("exactBtn")?.addEventListener("click", () => {
@@ -398,7 +398,7 @@ whee<style>
           document.getElementById("flexBtn").classList.remove("active");
         });
         
-        // Flexible +/- Days button
+        // Flexible ± Days button
         document.getElementById("flexBtn")?.addEventListener("click", () => {
           flexMode = "flexible";
           if (modeInput) modeInput.value = "flexible";
