@@ -145,6 +145,10 @@ app.post("/api/redemption", async (req, res) => {
         // ✅ Always define outboundDateStr right before serpPayload
         const outboundDateStr = new Date(travelDate).toISOString().split("T")[0];
         
+        // Define travel class map before any usage
+        const travelClassMap = { economy: 1, premium: 2, business: 3, first: 4 };
+        const travelClass = travelClassMap[(payload.cabin || "economy").toLowerCase()] || 1;
+        
         const serpPayload = {
           engine: "google_flights",
           departure_id: payload.origin,
@@ -158,10 +162,9 @@ app.post("/api/redemption", async (req, res) => {
           hl: "en",
           deep_search: true,
           api_key: process.env.SERP_API_KEY,
-          context_token: `${payload.origin}-${payload.destination}-${outboundDateStr}-${Math.random()
-            .toString(36)
-            .slice(2, 8)}`
+          context_token: `${payload.origin}-${payload.destination}-${outboundDateStr}-${Math.random().toString(36).slice(2, 8)}`
         };
+
     
         console.log("🔗 SerpApi request:", JSON.stringify(serpPayload, null, 2));
 
