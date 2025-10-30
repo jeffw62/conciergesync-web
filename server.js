@@ -158,12 +158,18 @@ app.post("/api/redemption", async (req, res) => {
         };
     
         console.log("🔗 SerpApi request:", JSON.stringify(serpPayload, null, 2));
+
+        // 🧩 Verify outboundDateStr before calling fetch
+        console.log("🧩 outboundDateStr check before fetch:", outboundDateStr);
+        
         cashValue = await fetchCashFare({
           origin: payload.origin,
           destination: payload.destination,
-          departDate: travelDate,
+          departDate: outboundDateStr,    // ✅ consistent naming for our own function
+          outbound_date: outboundDateStr, // ✅ explicitly for SerpApi
           travelClass,
         });
+
     
         serpCache.set(`${payload.origin}-${payload.destination}-${travelDate}`, cashValue);
         console.log(`💵 Cached SerpApi value for ${travelDate}:`, cashValue);
