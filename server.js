@@ -138,6 +138,7 @@ app.post("/api/redemption", async (req, res) => {
 
     // === Simulate running redemption searches for each expanded date ===
     for (const travelDate of datesToSearch) {
+      let outboundDateStr = null; // ✅ define once per iteration, visible everywhere inside loop
       console.log(`🧠 Running redemption search for ${payload.origin} → ${payload.destination} on ${travelDate}`);
       
       console.log("📅 datesToSearch array:", datesToSearch);
@@ -162,7 +163,7 @@ app.post("/api/redemption", async (req, res) => {
         
         // Convert to safe YYYY-MM-DD format (defensive)
         if (outboundDateStr instanceof Date) {
-          outboundDateStr = outboundDateStr.toISOString().split("T")[0];
+          outboundDateStr = new Date(travelDate).toISOString().split("T")[0];
         }
 
         console.log("🧭 travelDate raw:", travelDate);
