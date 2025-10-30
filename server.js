@@ -115,7 +115,8 @@ app.post("/api/redemption", async (req, res) => {
     let range = parseInt(payload.flexDays) || 0;
     
     /// 🌍 Determine flex behavior based on button selection
-    if (payload.flexMode === "flexible") {
+    const mode = payload.flexMode || payload.mode; // support both keys
+      if (mode === "flexible") {
       range = parseInt(payload.flexDays) || 0; // allow dropdown value (1, 3, 5, etc.)
     } else {
       range = 0; // exact-date searches only
