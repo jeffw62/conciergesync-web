@@ -386,16 +386,25 @@ whee<style>
           e.preventDefault();
 
         // Track which search mode is selected (Exact vs Flexible)
-        let flexMode = "exact"; // default
+        const modeInput = document.getElementById("mode");
+        let flexMode = modeInput?.value || "exact";
         
-        // When the user clicks Exact Date button
+        // Exact Date button
         document.getElementById("exactBtn")?.addEventListener("click", () => {
           flexMode = "exact";
+          if (modeInput) modeInput.value = "exact";
+          document.getElementById("flexPicker").style.display = "none";
+          document.getElementById("exactBtn").classList.add("active");
+          document.getElementById("flexBtn").classList.remove("active");
         });
         
-        // When the user clicks Flexible +/- Days button
+        // Flexible +/- Days button
         document.getElementById("flexBtn")?.addEventListener("click", () => {
           flexMode = "flexible";
+          if (modeInput) modeInput.value = "flexible";
+          document.getElementById("flexPicker").style.display = "block";
+          document.getElementById("flexBtn").classList.add("active");
+          document.getElementById("exactBtn").classList.remove("active");
         });
             
           // show overlay + fade effect
