@@ -199,6 +199,7 @@ app.post("/api/redemption", async (req, res) => {
           origin: payload.origin,
           destination: payload.destination,
           departDate: outboundDateStr,  // ✅ consistent naming for our own function
+          console.log("🧭 outboundDateStr before SerpApi payload:", outboundDateStr, "travelDate:", travelDate);
           outbound_date: outboundDateStr, // ✅ explicitly for SerpApi
           travelClass,
         });
