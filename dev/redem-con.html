@@ -385,26 +385,25 @@ whee<style>
         searchBtn.addEventListener("click", async (e) => {
           e.preventDefault();
 
-        // Track search mode (Exact vs Flexible)
+        / === Exact vs Flexible Mode Toggle ===
         const modeInput = document.getElementById("mode");
-        let flexMode = modeInput.value || "exact";
         
         // Exact Date button
         document.getElementById("exactBtn")?.addEventListener("click", () => {
-          flexMode = "exact";
-          if (modeInput) modeInput.value = "exact";
+          modeInput.value = "exact";
           document.getElementById("flexPicker").style.display = "none";
           document.getElementById("exactBtn").classList.add("active");
           document.getElementById("flexBtn").classList.remove("active");
+          console.log("🟢 Mode switched to EXACT");
         });
         
         // Flexible ± Days button
         document.getElementById("flexBtn")?.addEventListener("click", () => {
-          flexMode = "flexible";
-          if (modeInput) modeInput.value = "flexible";
+          modeInput.value = "flexible";
           document.getElementById("flexPicker").style.display = "block";
           document.getElementById("flexBtn").classList.add("active");
           document.getElementById("exactBtn").classList.remove("active");
+          console.log("🟣 Mode switched to FLEXIBLE");
         });
             
           // show overlay + fade effect
