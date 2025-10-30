@@ -413,8 +413,8 @@ app.post("/api/redemption", async (req, res) => {
     //    message: err.message,
     //    stack: err.stack,
     //    });
-    //  }
-    //});
+      }
+    });
 
 // ===============================================
 // Bulk Test Route (optional diagnostic)
