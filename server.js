@@ -138,7 +138,7 @@ app.post("/api/redemption", async (req, res) => {
 
     // === Simulate running redemption searches for each expanded date ===
     for (const travelDate of datesToSearch) {
-      let outboundDateStr = null; // ✅ define once per iteration, visible everywhere inside loop
+      let outboundDateStr = null; // ✅ visible to entire loop
       console.log(`🧠 Running redemption search for ${payload.origin} → ${payload.destination} on ${travelDate}`);
       
       console.log("📅 datesToSearch array:", datesToSearch);
