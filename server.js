@@ -200,7 +200,6 @@ app.post("/api/redemption", async (req, res) => {
             });
         }
       }
-      });
 
         console.log("✅ Redemption route completed. Returning response...");
         // --- Prevent duplicate sends ---
