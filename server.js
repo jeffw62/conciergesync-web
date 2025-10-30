@@ -140,6 +140,9 @@ app.post("/api/redemption", async (req, res) => {
     for (const travelDate of datesToSearch) {
       console.log(`🧠 Running redemption search for ${payload.origin} → ${payload.destination} on ${travelDate}`);
       
+      console.log("📅 datesToSearch array:", datesToSearch);
+      console.log("🔁 Iterating travelDate:", travelDate, "type:", typeof travelDate);
+      
       try {
         // Define travel class map before any usage
         const travelClassMap = { economy: 1, premium: 2, business: 3, first: 4 };
