@@ -181,6 +181,8 @@ app.post("/api/redemption", async (req, res) => {
 
         console.log("✅ Redemption route completed. Returning response...");
 
+
+        console.log("🚀 Final results payload:", JSON.stringify(allResults, null, 2));
         // Temporary placeholder response until full CPM enrichment is reactivated
         return res.json({
           success: true,
