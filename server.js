@@ -143,11 +143,11 @@ app.post("/api/redemption", async (req, res) => {
     }
     
     // Temporary placeholder response
-    res.status(200).json({
-      ok: true,
-      message: "🧭 Redemption route completed successfully (placeholder response).",
-      searchDates: datesToSearch
-    });
+    //res.status(200).json({
+    //  ok: true,
+    //  message: "🧭 Redemption route completed successfully (placeholder response).",
+    //  searchDates: datesToSearch
+    //});
 
      let cashValue = null;
       const travelClassMap = {
@@ -166,6 +166,23 @@ app.post("/api/redemption", async (req, res) => {
         console.log(`♻️ Using cached SerpApi value for ${cacheKey}:`, cashValue);
       } else {
         try {
+          // --- Build SerpApi payload (one-way until return_date logic added) ---
+          const serpPayload = {
+            engine: "google_flights",
+            departure_id: payload.origin,
+            arrival_id: payload.destination,
+            outbound_date: payload.date || payload.departDate,
+            travel_class: travelClass,
+            type: 1, // ✅ one-way only — SerpApi rejects type:2 without return_date
+            currency: "USD",
+            gl: "us",
+            hl: "en",
+            deep_search: true,
+            api_key: process.env.SERP_API_KEY,
+            context_token: `${payload.origin}-${payload.destination}-${payload.date}-${Math.random().toString(36).slice(2,8)}`
+          };
+          console.log("🔗 SerpApi request:", JSON.stringify(serpPayload, null, 2));
+
           cashValue = await fetchCashFare({
             origin: payload.origin,
             destination: payload.destination,
@@ -175,11 +192,27 @@ app.post("/api/redemption", async (req, res) => {
           serpCache.set(cacheKey, cashValue);
           console.log(`💵 Cached new SerpApi value for ${cacheKey}:`, cashValue);
         } catch (err) {
-          console.warn("⚠️ SerpApi call failed:", err.message);
+          console.error("❌ Redemption search error:", err);
+          if (!res.headersSent) {
+            res.status(500).json({
+              error: "server_error",
+              message: err.message
+            });
         }
       }
 
         console.log("✅ Redemption route completed. Returning response...");
+        // --- Prevent duplicate sends ---
+        if (res.headersSent) {
+          console.warn("⚠️ Response already sent — skipping duplicate send.");
+          return;
+        }
+        
+        // --- Send results back to client ---
+        return res.json({
+          success: true,
+          results: allResults || [],
+        });
 
 
         console.log("🚀 Final results payload:", JSON.stringify(allResults, null, 2));
