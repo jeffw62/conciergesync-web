@@ -112,7 +112,13 @@ app.post("/api/redemption", async (req, res) => {
  
     // === Expand flexDays into individual search dates ===
     const baseDate = new Date(payload.departDate || payload.date);
-    const range = parseInt(payload.flexDays) || 0;
+    let range = parseInt(payload.flexDays) || 0;
+    
+    // 🔧 Force 0 when mode is exact or missing
+    if (!payload.mode || payload.mode === "exact") {
+      range = 0;
+    }
+    
     const dateList = [];
   
     for (let offset = -range; offset <= range; offset++) {
@@ -258,13 +264,18 @@ app.post("/api/redemption", async (req, res) => {
           };
           console.log("🔗 SerpApi request:", JSON.stringify(serpPayload, null, 2));
 
+          if (payload.date || outboundDateStr) {
           cashValue = await fetchCashFare({
             origin: payload.origin,
             destination: payload.destination,
-            departDate: payload.date,
-            outbound_date: outboundDateStr,
+            departDate: payload.date || outboundDateStr,
+            outbound_date: payload.date || outboundDateStr,
             travelClass,
           });
+        } else {
+          console.warn("⚠️ Skipping extra SerpApi call — no outbound_date available");
+        }
+
           serpCache.set(cacheKey, cashValue);
           console.log(`💵 Cached new SerpApi value for ${cacheKey}:`, cashValue);
         } catch (err) {
