@@ -93,8 +93,17 @@
   
       console.log(`💾 Redemption results stored — ${data.results?.length || 0} entries`);
   
-      // Redirect user to the results view
-      window.location.href = "/dev/redemption-results.html";
+      // 🚫 Redirect suppressed — inject results internally if workspace exists
+      const workspace = document.getElementById("workspace");
+      if (workspace) {
+        const resModule = await fetch("/dev/redemption-results-con.html");
+        const resHTML = await resModule.text();
+        workspace.innerHTML = resHTML;
+        console.log("✅ Results injected into console workspace (no redirect).");
+      } else {
+        console.warn("⚠️ No workspace element found — redirect skipped.");
+      }
+
     } catch (err) {
       console.error("❌ Redemption bridge failed:", err);
   
