@@ -272,8 +272,11 @@ whee<style>
           <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
         </div>
         <div id="flexPicker" class="flex-picker" style="display:none;">
-          
-          <label for="flexDays">Search Days +/- Date Selected:</label>
+
+        <!-- 🔒 Hidden field to track mode -->
+        <input type="hidden" id="mode" value="exact">
+        
+        <label for="flexDays">Search Days +/- Date Selected:</label>
           <select id="flexDays">
             <option value="1">1 day</option>
             <option value="3">3 days</option>
