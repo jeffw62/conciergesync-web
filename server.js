@@ -278,7 +278,6 @@ app.post("/api/redemption", async (req, res) => {
           : withCpm;
         
         allResults.push(...finalResults);
-        }
         
         // ✅ Respond back once all loops complete
         console.log(`✅ Aggregated ${allResults.length} total results across ${datesToSearch.length} days.`);
