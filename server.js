@@ -328,16 +328,6 @@ app.post("/api/redemption", async (req, res) => {
           results: allResults,
         });
         
-        } catch (err) {
-          console.error("❌ Redemption search error:", err);
-          res.status(500).json({
-            error: "internal_error",
-            message: err.message,
-          });
-        }
-        }); // <-- closes app.post("/api/redemption")
-
-
     // ----------------------------------------------
     // Attach cashValue and compute CPM for each result
     // ----------------------------------------------
