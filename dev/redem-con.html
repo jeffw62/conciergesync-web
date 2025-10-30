@@ -385,26 +385,37 @@ whee<style>
         searchBtn.addEventListener("click", async (e) => {
           e.preventDefault();
 
-        / === Exact vs Flexible Mode Toggle ===
-        const modeInput = document.getElementById("mode");
+        // === Exact vs Flexible Mode Toggle ===
+        document.addEventListener("DOMContentLoaded", () => {
+          const modeInput = document.getElementById("mode");
+          const exactBtn = document.getElementById("exactBtn");
+          const flexBtn = document.getElementById("flexBtn");
+          const flexPicker = document.getElementById("flexPicker");
         
-        // Exact Date button
-        document.getElementById("exactBtn")?.addEventListener("click", () => {
-          modeInput.value = "exact";
-          document.getElementById("flexPicker").style.display = "none";
-          document.getElementById("exactBtn").classList.add("active");
-          document.getElementById("flexBtn").classList.remove("active");
-          console.log("🟢 Mode switched to EXACT");
-        });
+          if (!modeInput || !exactBtn || !flexBtn) {
+            console.warn("⚠️ Mode toggle elements not found in DOM");
+            return;
+          }
         
-        // Flexible ± Days button
-        document.getElementById("flexBtn")?.addEventListener("click", () => {
-          modeInput.value = "flexible";
-          document.getElementById("flexPicker").style.display = "block";
-          document.getElementById("flexBtn").classList.add("active");
-          document.getElementById("exactBtn").classList.remove("active");
-          console.log("🟣 Mode switched to FLEXIBLE");
+          // Exact Date button
+          exactBtn.addEventListener("click", () => {
+            modeInput.value = "exact";
+            flexPicker.style.display = "none";
+            exactBtn.classList.add("active");
+            flexBtn.classList.remove("active");
+            console.log("🟢 Mode switched to EXACT, modeInput.value =", modeInput.value);
+          });
+        
+          // Flexible ± Days button
+          flexBtn.addEventListener("click", () => {
+            modeInput.value = "flexible";
+            flexPicker.style.display = "block";
+            flexBtn.classList.add("active");
+            exactBtn.classList.remove("active");
+            console.log("🟣 Mode switched to FLEXIBLE, modeInput.value =", modeInput.value);
+          });
         });
+
             
           // show overlay + fade effect
           spinner.classList.add("active");
