@@ -282,6 +282,12 @@ app.post("/api/redemption", async (req, res) => {
         // ✅ Respond back once all loops complete
         console.log(`✅ Aggregated ${allResults.length} total results across ${datesToSearch.length} days.`);
         
+        // prevent double-send
+        if (res.headersSent) {
+          console.warn("⚠️ Response already sent — skipping duplicate send.");
+          return;
+        }
+
         return res.json({
           success: true,
           results: allResults,
