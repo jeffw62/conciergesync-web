@@ -138,7 +138,7 @@ app.post("/api/redemption", async (req, res) => {
 
     // This loop replaces the single-day search
     for (const date of datesToSearch) {
-      console.log(`🔍 Running redemption search for ${origin} → ${destination} on ${date}`);
+      console.log(`🧠 Running redemption search for ${payload.origin} → ${payload.destination} on ${travelDate}`);
 
       // Create a shallow copy of payload for this date
       const singleSearch = { ...rest, origin, destination, date };
