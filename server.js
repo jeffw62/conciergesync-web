@@ -197,7 +197,8 @@ app.post("/api/redemption", async (req, res) => {
         console.log("🟢 outboundDateStr check before fetch:", outboundDateStr);
         
         console.log("outboundDateStr before SerpApi payload:", outboundDateStr, "travelDate:", travelDate);
-        
+        console.log("🧭 outboundDateStr just before fetchCashFare =", outboundDateStr);
+
         cashValue = await fetchCashFare({
           origin: payload.origin,
           destination: payload.destination,
