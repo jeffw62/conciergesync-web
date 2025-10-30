@@ -200,6 +200,7 @@ app.post("/api/redemption", async (req, res) => {
             });
         }
       }
+      });
 
         console.log("✅ Redemption route completed. Returning response...");
         // --- Prevent duplicate sends ---
@@ -414,7 +415,7 @@ app.post("/api/redemption", async (req, res) => {
     //    stack: err.stack,
     //    });
     //  }
-    // });
+    //});
 
 // ===============================================
 // Bulk Test Route (optional diagnostic)
@@ -527,5 +528,3 @@ app.use("/dev", express.static(path.join(__dirname, "dev")));
 app.listen(PORT, () => {
   console.log(`ConciergeSync Web running on port ${PORT}`);
 });
-
-
