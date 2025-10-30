@@ -139,12 +139,8 @@ app.post("/api/redemption", async (req, res) => {
     // === Simulate running redemption searches for each expanded date ===
     for (const travelDate of datesToSearch) {
       console.log(`🧠 Running redemption search for ${payload.origin} → ${payload.destination} on ${travelDate}`);
-      const outboundDateStr = new Date(travelDate).toISOString().split("T")[0];
       
       try {
-        // ✅ Always define outboundDateStr right before serpPayload
-        const outboundDateStr = new Date(travelDate).toISOString().split("T")[0];
-        
         // Define travel class map before any usage
         const travelClassMap = { economy: 1, premium: 2, business: 3, first: 4 };
         const travelClass = travelClassMap[(payload.cabin || "economy").toLowerCase()] || 1;
