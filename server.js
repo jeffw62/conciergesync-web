@@ -149,7 +149,8 @@ app.post("/api/redemption", async (req, res) => {
           engine: "google_flights",
           departure_id: payload.origin,
           arrival_id: payload.destination,
-          outbound_date: outboundDateStr,   // ✅ Correct field SerpApi requires
+          outbound_date: outboundDateStr || payload.departDate || payload.date || new Date().toISOString().split("T")[0],
+          return_date: payload.returnDate || null,
           travel_class: travelClass,
           type: 1,
           currency: "USD",
