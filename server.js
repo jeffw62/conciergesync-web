@@ -124,16 +124,15 @@ app.post("/api/redemption", async (req, res) => {
   
     // === Iterate over each date ===
     for (const travelDate of dateList) {
-      console.log(`🔍 Searching ${origin} → ${destination} on ${travelDate}`);
+      console.log(`🔍 Searching ${payload.origin} → ${payload.destination} on ${travelDate}`);
       // Seats.Aero / SerpApi logic will go here later
     }
-
-    const datesToSearch =
-      Array.isArray(searchDates) && searchDates.length > 0
-        ? searchDates
-        : [payload.date || new Date().toISOString().split("T")[0]];
-
+    
+    // Use our expanded dateList directly (no need for searchDates variable)
+    const datesToSearch = dateList.length > 0 ? dateList : [payload.departDate || payload.date];
+    
     console.log("📅 Dates to search:", datesToSearch);
+
 
     let allResults = [];
 
