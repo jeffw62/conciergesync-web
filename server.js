@@ -84,6 +84,7 @@ app.get("/api/test", (req, res) => {
 // Live Redemption Search Endpoint (dynamic window)
 // ===============================================
 app.post("/api/redemption", async (req, res) => {
+  let outboundDateStr = null;
   try {
     if (!req.body) {
       console.warn("⚠️ No body received at /api/redemption");
