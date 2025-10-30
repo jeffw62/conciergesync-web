@@ -110,7 +110,7 @@ app.post("/api/redemption", async (req, res) => {
     }
  
     // === Expand flexDays into individual search dates ===
-    const baseDate = new Date(payload.date);
+    const baseDate = new Date(payload.departDate || payload.date);
     const range = parseInt(payload.flexDays) || 0;
     const dateList = [];
   
