@@ -366,31 +366,62 @@ whee<style>
     }
 </script>
   
-<!-- Step 1: Exact / Flexible toggle -->
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    console.log("🧭 Mode toggle script attached — DOM fully loaded.");
-    const searchBtn = document.getElementById("searchBtn");   // ✅ matches your HTML id
-    const spinner   = document.getElementById("spinner-overlay");
-  
-    if (!searchBtn || !spinner) return;
-  
-    // ensure spinner hidden on load
-    spinner.classList.remove("active");
-  
-    // monitor button for when your existing logic enables it
-    const observer = new MutationObserver(() => {
-      if (!searchBtn.disabled) {
-        observer.disconnect();
-  
-        searchBtn.addEventListener("click", async (e) => {
-          e.preventDefault();
-        
-          // show overlay + fade effect
-          spinner.classList.add("active");
-  
-          // gather form data for backend + IS
-          const payload = {
+    window.addEventListener("load", () => {
+      console.log("🧭 Mode toggle logic loaded.");
+    
+      const modeInput = document.getElementById("mode");
+      const exactBtn = document.getElementById("exactBtn");
+      const flexBtn = document.getElementById("flexBtn");
+      const flexPicker = document.getElementById("flexPicker");
+    
+      if (!modeInput || !exactBtn || !flexBtn) {
+        console.warn("⚠️ Mode toggle elements not found in DOM.");
+        return;
+      }
+    
+      // --- Exact Date button ---
+      exactBtn.addEventListener("click", () => {
+        modeInput.value = "exact";
+        flexPicker.style.display = "none";
+        exactBtn.classList.add("active");
+        flexBtn.classList.remove("active");
+        console.log("🟢 Mode switched to EXACT — current value:", modeInput.value);
+      });
+    
+      // --- Flexible ± Days button ---
+      flexBtn.addEventListener("click", () => {
+        modeInput.value = "flexible";
+        flexPicker.style.display = "block";
+        flexBtn.classList.add("active");
+        exactBtn.classList.remove("active");
+        console.log("🟣 Mode switched to FLEXIBLE — current value:", modeInput.value);
+      });
+    });
+</script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("🧭 Search logic attached — DOM fully loaded.");
+      const searchBtn = document.getElementById("searchBtn");
+      const spinner   = document.getElementById("spinner-overlay");
+    
+      if (!searchBtn || !spinner) {
+        console.warn("⚠️ Search button or spinner not found.");
+        return;
+      }
+    
+      spinner.classList.remove("active");
+    
+      const observer = new MutationObserver(() => {
+        if (!searchBtn.disabled) {
+          observer.disconnect();
+    
+          searchBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            spinner.classList.add("active");
+    
+            const payload = {
               origin: document.getElementById("origin")?.value || "",
               destination: document.getElementById("destination")?.value || "",
               passengers: document.getElementById("passengers")?.value || "1",
@@ -400,48 +431,49 @@ whee<style>
               flexDays: document.getElementById("flexDays")?.value || "0",
               includePartners: document.getElementById("partnerSpace")?.checked || false,
               mode: document.getElementById("mode")?.value || "exact"
-          };
-        
+            };
+    
             console.log("🧭 Payload ready:", payload);
-  
-          try {
-            const res = await fetch("/api/search", {
-              method: "POST",
-              headers: { "Content-Type": "application/json" },
-              body: JSON.stringify(payload)
-            });
-            if (!res.ok) throw new Error("Search request failed");
-  
-            // 🔹 ensure session writes complete before redirect
-            await Promise.all([
-              sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data)),
-              sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(payload))
-            ]);
-            
-            // 🔹 give visual animation time to settle
-            await new Promise(r => setTimeout(r, 2600));
-            
-            // ✅ Load redemption results internally inside console workspace
-            const resModule = await fetch("/dev/redemption-results-con.html");
-            const resHTML = await resModule.text();
-            const workspace = document.getElementById("workspace");
-            if (workspace) {
-              workspace.innerHTML = resHTML;
-              console.log("Loaded redemption results into console workspace.");
-            } else {
-              console.warn("Workspace not found — fallback to full page load.");
-              window.location.assign("/dev/redemption-results.html");
-            }
-            
+    
+            try {
+              const res = await fetch("/api/search", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+              });
+    
+              if (!res.ok) throw new Error("Search request failed");
+    
+              const data = await res.json();
+              await Promise.all([
+                sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data)),
+                sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(payload))
+              ]);
+    
+              await new Promise(r => setTimeout(r, 2600));
+    
+              const resModule = await fetch("/dev/redemption-results-con.html");
+              const resHTML = await resModule.text();
+              const workspace = document.getElementById("workspace");
+    
+              if (workspace) {
+                workspace.innerHTML = resHTML;
+                console.log("✅ Redemption results loaded into console workspace.");
+              } else {
+                console.warn("⚠️ Workspace not found — fallback redirect.");
+                window.location.assign("/dev/redemption-results.html");
+              }
             } catch (err) {
-              console.error("Search error:", err);
+              console.error("❌ Search error:", err);
             }
           });
-      }
+        }
+      });
+    
+      observer.observe(searchBtn, { attributes: true, attributeFilter: ["disabled"] });
     });
-  
-    observer.observe(searchBtn, { attributes: true, attributeFilter: ["disabled"] });
 </script>
+
 
 <!-- ========== END SCRIPT SECTION ========== -->
 
@@ -626,174 +658,114 @@ window.showGoldCard = showGoldCard;
 
 </script> -->
 
+<!-- ✅ Spinner Bridge (keep and fix comment) -->
 <script>
-// window.createSpinnerBridge = () => { 
-  const old = document.getElementById('spinner-bridge');
-  if (old) old.remove();
-
-  const bridge = document.createElement('div');
-  bridge.id = 'spinner-bridge';
-  Object.assign(bridge.style, {
-    position: 'fixed',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    background: 'rgba(10,26,51,0.85)',
-    zIndex: 9998
-  });
-
-  const card = document.createElement('img');
-  card.id = 'gold-card';
-  card.src = '/dev/asset/CS_logo_vert_gold_card.png';
-  Object.assign(card.style, {
-    width: '400px',
-    opacity: 1,
-    visibility: 'visible',
-    zIndex: 9999
-  });
-  bridge.appendChild(card);
-
-  const shimmer = document.createElement('div');
-  shimmer.id = 'shimmer-overlay';
-  Object.assign(shimmer.style, {
-    position: 'absolute',
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    background: 'linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
-    backgroundSize: '200% 100%',
-    animation: 'shimmerMove 2s infinite'
-  });
-  bridge.appendChild(shimmer);
-
-  const style = document.createElement('style');
-  style.textContent = `
-    @keyframes shimmerMove {
-      0% { background-position: 200% 0; }
-      100% { background-position: -200% 0; }
-    }
-  `;
-  document.head.appendChild(style);
-
-  document.body.appendChild(bridge);
-  console.log('✅ Spinner bridge & gold card created manually');
-};
-
-  </script>
-
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const btn = document.getElementById("searchBtn");
-      if (!btn) {
-        console.warn("⚠️ searchBtn not found on DOMContentLoaded.");
-        return;
-      }
+    window.createSpinnerBridge = () => {
+      const old = document.getElementById('spinner-bridge');
+      if (old) old.remove();
     
-      btn.addEventListener("click", (e) => {
-        e.preventDefault();
-        console.log("🟢 Search click detected — calling createSpinnerBridge().");
-        // if (typeof window.createSpinnerBridge === "function") {
-        //  window.createSpinnerBridge();
-        } else {
-          console.warn("⚠️ createSpinnerBridge not defined.");
-        }
+      const bridge = document.createElement('div');
+      bridge.id = 'spinner-bridge';
+      Object.assign(bridge.style, {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(10,26,51,0.85)',
+        zIndex: 9998
       });
-    });
+    
+      const card = document.createElement('img');
+      card.id = 'gold-card';
+      card.src = '/dev/asset/CS_logo_vert_gold_card.png';
+      Object.assign(card.style, {
+        width: '400px',
+        opacity: 1,
+        visibility: 'visible',
+        zIndex: 9999
+      });
+      bridge.appendChild(card);
+    
+      const shimmer = document.createElement('div');
+      shimmer.id = 'shimmer-overlay';
+      Object.assign(shimmer.style, {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
+        backgroundSize: '200% 100%',
+        animation: 'shimmerMove 2s infinite'
+      });
+      bridge.appendChild(shimmer);
+    
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes shimmerMove {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `;
+      document.head.appendChild(style);
+    
+      document.body.appendChild(bridge);
+      console.log('✅ Spinner bridge & gold card created manually');
+    };
+</script>
 
-    // =======================================================
-    // ✅ Redemption Form Global Exports (called by console)
-    // =======================================================
-    // 🔹 Make sure these are global so the console can trigger them
+<!-- ✅ Global Exports Only (keep these, delete old mode & search duplications) -->
+<script>
     window.initRedemptionForm = function() {
       console.log("Redemption form initialized.");
       const ws = document.getElementById("workspace");
       if (!ws) return;
     
-      // example: bind IATA auto-suggest inside workspace
       const originInput = ws.querySelector("#origin");
       const destinationInput = ws.querySelector("#destination");
     
       if (originInput && destinationInput) {
         originInput.addEventListener("input", () => {
           console.log("Origin input changed:", originInput.value);
-          // your IATA fetch call here
         });
         destinationInput.addEventListener("input", () => {
           console.log("Destination input changed:", destinationInput.value);
-          // your IATA fetch call here
         });
       }
     };
-
-    // === Exact vs Flexible Mode Toggle ===
-    (() => {
-      const modeInput = document.getElementById("mode");
-      const exactBtn = document.getElementById("exactBtn");
-      const flexBtn = document.getElementById("flexBtn");
-      const flexPicker = document.getElementById("flexPicker");
     
-      if (!modeInput || !exactBtn || !flexBtn) {
-        console.warn("⚠️ Mode toggle elements not found in DOM");
-        return;
-      }
-    
-      // Exact Date
-      exactBtn.addEventListener("click", () => {
-        modeInput.value = "exact";
-        flexPicker.style.display = "none";
-        exactBtn.classList.add("active");
-        flexBtn.classList.remove("active");
-        console.log("🟢 Mode switched to EXACT, modeInput.value =", modeInput.value);
-      });
-    
-      // Flexible ± Days
-      flexBtn.addEventListener("click", () => {
-        modeInput.value = "flexible";
-        flexPicker.style.display = "block";
-        flexBtn.classList.add("active");
-        exactBtn.classList.remove("active");
-        console.log("🟣 Mode switched to FLEXIBLE, modeInput.value =", modeInput.value);
-      });
-    });
-    
-    // 🧱 Delegated IATA handler (bulletproof version)
-    window.fetchIATA = function () {
+    window.fetchIATA = function() {
       console.log("Fetching IATA data (delegated)...");
       const ws = document.getElementById("workspace");
       if (!ws) return;
     
-      // remove existing handlers safely
       if (window.__redem_iata_blur_handler) {
         ws.removeEventListener("blur", window.__redem_iata_blur_handler, true);
       }
     
       window.__redem_iata_blur_handler = function(evt) {
-          try {
-            if (!evt || typeof evt !== "object" || !evt.target) return;
-            const t = evt.target;
-            if (!(t instanceof HTMLInputElement)) return;
-            if (!t.matches || !t.matches("[data-iata]")) return;
-        
-            console.log("Fetch IATA for:", t.value);
-          } catch (err) {
-            console.error("IATA delegated handler error:", err);
-          }
-        };
+        try {
+          if (!evt || typeof evt !== "object" || !evt.target) return;
+          const t = evt.target;
+          if (!(t instanceof HTMLInputElement)) return;
+          if (!t.matches || !t.matches("[data-iata]")) return;
     
-      // blur doesn’t bubble → capture=true
+          console.log("Fetch IATA for:", t.value);
+        } catch (err) {
+          console.error("IATA delegated handler error:", err);
+        }
+      };
       ws.addEventListener("blur", window.__redem_iata_blur_handler, true);
     
-      // live input feedback (safe version)
       if (window.__redem_iata_input_handler) {
         ws.removeEventListener("input", window.__redem_iata_input_handler, false);
       }
     
-      window.__redem_iata_input_handler = function (evt) {
+      window.__redem_iata_input_handler = function(evt) {
         try {
           if (!evt || !evt.target) return;
           const t = evt.target;
@@ -804,18 +776,14 @@ window.showGoldCard = showGoldCard;
           console.error("IATA input delegated handler error:", err);
         }
       };
-    
       ws.addEventListener("input", window.__redem_iata_input_handler, false);
     };
-
     
-    // Delegated yes/no toggles (single handler)
     window.attachYesNoHandlers = function() {
       console.log("Attaching delegated yes/no handlers...");
       const ws = document.getElementById("workspace");
       if (!ws) return;
     
-      // remove previous if present
       if (window.__redem_yesno_click_handler) {
         ws.removeEventListener("click", window.__redem_yesno_click_handler, false);
       }
@@ -837,12 +805,10 @@ window.showGoldCard = showGoldCard;
           console.error("Yes/No delegated handler error:", err);
         }
       };
-    
       ws.addEventListener("click", window.__redem_yesno_click_handler, false);
     };
-
-
 </script>
+
 
 <!-- === Dynamic Workspace Injection Target === -->
 <div id="workspace" class="workspace">
