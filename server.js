@@ -148,6 +148,14 @@ app.post("/api/redemption", async (req, res) => {
         // Define travel class map before any usage
         const travelClassMap = { economy: 1, premium: 2, business: 3, first: 4 };
         const travelClass = travelClassMap[(payload.cabin || "economy").toLowerCase()] || 1;
+
+        // --- Ensure outboundDateStr is defined properly ---
+        const outboundDateStr =
+          typeof travelDate === "string"
+            ? travelDate
+            : payload.departDate ||
+              payload.date ||
+              new Date().toISOString().split("T")[0];
         
         const serpPayload = {
           engine: "google_flights",
