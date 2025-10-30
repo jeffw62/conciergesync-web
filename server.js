@@ -230,6 +230,8 @@ app.post("/api/redemption", async (req, res) => {
         cashValue = serpCache.get(cacheKey);
         console.log(`♻️ Using cached SerpApi value for ${cacheKey}:`, cashValue);
       } else {
+        let cashValue = null;
+
         try {
           // --- Build SerpApi payload (one-way until return_date logic added) ---
           const serpPayload = {
