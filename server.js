@@ -114,7 +114,7 @@ app.post("/api/redemption", async (req, res) => {
     const baseDate = new Date(payload.departDate || payload.date);
     let range = parseInt(payload.flexDays) || 0;
     
-    // 🧭 Determine flex behavior based on button selection
+    /// 🌍 Determine flex behavior based on button selection
     if (payload.flexMode === "flexible") {
       range = parseInt(payload.flexDays) || 0; // allow dropdown value (1, 3, 5, etc.)
     } else {
