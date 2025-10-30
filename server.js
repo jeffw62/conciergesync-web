@@ -171,7 +171,7 @@ app.post("/api/redemption", async (req, res) => {
             engine: "google_flights",
             departure_id: payload.origin,
             arrival_id: payload.destination,
-            outbound_date: date || payload.departDate,
+            outbound_date: travelDate || payload.departDate,
             travel_class: travelClass,
             type: 1, // ✅ one-way only — SerpApi rejects type:2 without return_date
             currency: "USD",
