@@ -151,15 +151,16 @@ app.post("/api/redemption", async (req, res) => {
         const travelClass = travelClassMap[(payload.cabin || "economy").toLowerCase()] || 1;
 
         // --- Ensure outboundDateStr is defined properly ---
-        let outboundDateStr = travelDate;
         
         if (!outboundDateStr || typeof outboundDateStr !== "string") {
           outboundDateStr =
-            payload.departDate ||
-            payload.date ||
-            (Array.isArray(datesToSearch) && datesToSearch.length > 0
-              ? datesToSearch[0]
-              : new Date().toISOString().split("T")[0]);
+            typeof travelDate === "string"
+              ? travelDate
+              : payload.departDate ||
+                payload.date ||
+                (Array.isArray(datesToSearch) && datesToSearch.length > 0
+                  ? datesToSearch[0]
+                  : new Date().toISOString().split("T")[0]);
         }
         
         // Convert to safe YYYY-MM-DD format (defensive)
@@ -260,6 +261,7 @@ app.post("/api/redemption", async (req, res) => {
             origin: payload.origin,
             destination: payload.destination,
             departDate: payload.date,
+            outbound_date: outboundDateStr,
             travelClass,
           });
           serpCache.set(cacheKey, cashValue);
@@ -531,9 +533,16 @@ app.get("/api/test-serp", async (req, res) => {
     const destination = (req.query.destination || "LHR").toUpperCase();
     const departDate = req.query.date || "2025-12-01";
 
-    console.log(`🔍 Test SerpApi lookup: ${origin} → ${destination} (${departDate})`);
+    console.log(`🧭 Test SerpApi lookup: ${origin} → ${destination} (${departDate})`);
 
-    const result = await fetchCashFare({ origin, destination, departDate });
+    const outboundDateStr = departDate || new Date().toISOString().split("T")[0];
+    
+    const result = await fetchCashFare({
+      origin,
+      destination,
+      departDate: outboundDateStr,   // ✅ for our own function
+      outbound_date: outboundDateStr, // ✅ for SerpApi compatibility
+    });
 
     res.json({ origin, destination, departDate, cashValue: result });
   } catch (err) {
@@ -557,7 +566,13 @@ app.get("/api/test-fusion", async (req, res) => {
     const travelClass = travelClassMap[cabin] || 1;
 
     // get cash baseline
-    const cashValue = await fetchCashFare({ origin, destination, departDate, travelClass });
+    const cashValue = await fetchCashFare({
+      origin,
+      destination,
+      departDate: outboundDateStr,
+      outbound_date: outboundDateStr,
+      travelClass
+    });
 
     // mock example Seats.Aero award data
     const award = {
