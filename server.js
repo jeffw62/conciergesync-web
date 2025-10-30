@@ -146,12 +146,21 @@ app.post("/api/redemption", async (req, res) => {
         const travelClass = travelClassMap[(payload.cabin || "economy").toLowerCase()] || 1;
 
         // --- Ensure outboundDateStr is defined properly ---
-        const outboundDateStr =
-          typeof travelDate === "string"
-            ? travelDate
-            : (payload.departDate ||
-              payload.date ||
-              new Date().toISOString().split("T")[0]);
+        let outboundDateStr = travelDate;
+        
+        if (!outboundDateStr || typeof outboundDateStr !== "string") {
+          outboundDateStr =
+            payload.departDate ||
+            payload.date ||
+            (Array.isArray(datesToSearch) && datesToSearch.length > 0
+              ? datesToSearch[0]
+              : new Date().toISOString().split("T")[0]);
+        }
+        
+        // Convert to safe YYYY-MM-DD format (defensive)
+        if (outboundDateStr instanceof Date) {
+          outboundDateStr = outboundDateStr.toISOString().split("T")[0];
+        }
 
         console.log("🧭 travelDate raw:", travelDate);
         console.log("🧭 outboundDateStr computed:", outboundDateStr);
