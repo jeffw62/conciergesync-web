@@ -114,11 +114,11 @@ app.post("/api/redemption", async (req, res) => {
     const baseDate = new Date(payload.departDate || payload.date);
     let range = parseInt(payload.flexDays) || 0;
     
-    // 🔧 Force 0 when mode is exact or missing
-    if (!payload.mode || payload.mode === "exact") {
+    // 🧭 Force flexDays = 0 unless mode explicitly set to 'flex'
+    if (!payload.mode || payload.mode === "exact" || payload.mode === "") {
       range = 0;
     }
-    
+        
     const dateList = [];
   
     for (let offset = -range; offset <= range; offset++) {
