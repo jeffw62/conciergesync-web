@@ -125,7 +125,7 @@ app.post("/api/redemption", async (req, res) => {
   
     for (let offset = -range; offset <= range; offset++) {
       const d = new Date(baseDate);
-      d.setDate(d.getDate() + offset);
+      d.setDate(baseDate.getDate() + offset);
       dateList.push(d.toISOString().split("T")[0]);
     }
   
