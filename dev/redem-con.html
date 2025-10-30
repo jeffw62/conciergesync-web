@@ -460,9 +460,13 @@ whee<style>
                 workspace.innerHTML = resHTML;
                 console.log("✅ Redemption results loaded into console workspace.");
               } else {
-                console.warn("⚠️ Workspace not found — fallback redirect.");
-                window.location.assign("/dev/redemption-results.html");
-              }
+                  console.warn("⚠️ Workspace not found – redirect suppressed for debugging.");
+                  // window.location.assign("/dev/redemption-results.html");
+                  const msg = document.createElement("div");
+                  msg.textContent = "⚠️ Workspace element not found — results cannot be injected.";
+                  msg.style.cssText = "color: gold; text-align:center; margin-top:2rem;";
+                  document.body.appendChild(msg);
+                }
             } catch (err) {
               console.error("❌ Search error:", err);
             }
