@@ -3,81 +3,251 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ConciergeSync™ – Wallet Console</title>
-  <link rel="stylesheet" href="/dev/style.css">
-  <!--<style>
-    .wallet-section {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      padding: 0 20px 60px;   /* keep your desired bottom space */
-      margin-top: 0;
-      height: auto;           /* allow section to shrink-wrap its content */
-      min-height: 0;          /* cancel any previous min-height */
-    }
-  
-    .wallet-card {
-      max-width: 700px;
-      margin: 40px auto 0;           /* same top offset as .search-wrapper */
-      background: #fff;
-      border-radius: 10px;
-      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-      padding: 28px 32px 32px;
-      text-align: center;
-      color: #0a1a33;
-    }
-  
-    .wallet-card h1 {
-      color: rgba(191,161,74,0.9);
-      font-size: 2.1rem;
-      margin-bottom: 1.2rem;
-    }
-  
-    .wallet-card p {
-      font-size: 1rem;
-      line-height: 1.6;
-      color: rgba(0,0,0,0.7);
-      margin-bottom: 2rem;
-    }
-  
-    .wallet-card .cta {
-      background: #0a1a33;
+  <title>ConciergeSync™ Wallet Console</title>
+  <link rel="stylesheet" href="/dev/style.css" />
+
+  <style>
+    /* ===============================
+       WALLET CONSOLE (LOCAL MODULE)
+       =============================== */
+    .wallet-container {
+      max-width: 900px;
+      margin: 60px auto 100px;
+      padding: 20px;
       color: #fff;
-      border: none;
-      border-radius: 6px;
-      padding: 14px 36px;
+      text-align: center;
+      position: relative;
+      z-index: 1;
+    }
+
+    .wallet-header {
+      color: #bfa14a;
+      margin-bottom: 16px;
+      font-size: 2rem;
       font-weight: 600;
+    }
+
+    .wallet-sub {
+      color: rgba(255, 255, 255, 0.85);
+      margin-bottom: 40px;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+
+    /* --- Summary Bar --- */
+    .wallet-summary {
+      display: flex;
+      justify-content: space-around;
+      background: rgba(191,161,74,0.12);
+      border: 1px solid rgba(191,161,74,0.25);
+      border-radius: 12px;
+      padding: 18px 0;
+      margin-bottom: 50px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+    }
+
+    .wallet-summary div { flex: 1; }
+
+    .wallet-summary h3 {
+      color: #bfa14a;
+      font-weight: 600;
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: 0.3px;
+    }
+
+    .wallet-summary p {
+      margin: 6px 0 0;
+      font-size: 1.25rem;
+      font-weight: 700;
+      color: #fff;
+    }
+
+    /* --- Card Deck --- */
+    .card-deck {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 24px;
+    }
+
+    .wallet-card {
+      width: 260px;
+      height: 165px;
+      border-radius: 16px;
+      color: #fff;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 20px 24px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+      transform: translateY(25px);
+      opacity: 0;
+      animation: fadeUp 0.6s forwards;
+    }
+
+    .wallet-card h2 {
+      margin: 0 0 8px;
+      font-size: 1.2rem;
+      font-weight: 600;
+    }
+
+    .wallet-card p {
+      margin: 2px 0;
+      font-size: 0.95rem;
+      font-weight: 500;
+    }
+
+    .wallet-card small {
+      font-size: 0.8rem;
+      color: rgba(255,255,255,0.85);
+    }
+
+    /* === Brand Color Schemes === */
+    .venturex { background: linear-gradient(145deg, #111, #444); }
+    .amex { background: linear-gradient(145deg, #d6d6d6, #a8a8a8); color:#0a1a33; }
+    .sapphire { background: linear-gradient(145deg, #0d47a1, #1976d2); }
+    .ink { background: linear-gradient(145deg, #08172e, #000); color: #bfa14a; }
+
+    .wallet-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 8px 20px rgba(191,161,74,0.3);
       transition: all 0.3s ease;
     }
-  
-    .wallet-card .cta:hover {
-      background: rgba(10,26,51,0.85);
-      transform: translateY(-2px);
-    }
-  
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-  </style>-->
 
+    /* --- Animations --- */
+    @keyframes fadeUp {
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* --- GOLD BRIDGE OVERLAY --- */
+    #goldBridge {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      background: radial-gradient(circle at center, rgba(191,161,74,0.85), rgba(10,26,51,0.95));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #fff;
+      font-size: 1.4rem;
+      font-weight: 600;
+      letter-spacing: 0.5px;
+      z-index: 999;
+      opacity: 1;
+      transition: opacity 1.2s ease-out, visibility 1.2s ease-out;
+    }
+
+    #goldBridge.hidden {
+      opacity: 0;
+      visibility: hidden;
+    }
+
+    /* --- Responsive --- */
+    @media (max-width: 700px) {
+      .wallet-summary { flex-direction: column; gap: 16px; }
+      .wallet-card { width: 90%; }
+    }
+  </style>
 </head>
+
 <body>
-  <!-- header, ticker, etc. stay as-is -->
-  <main class="wallet-section">
-    <div class="wallet-card">
-      <h1>ConciergeSync™ Wallet</h1>
-      <p>
-        Where clarity replaces confusion — every balance, every point, every mile, unified inside your
-        <strong>ConciergeSync™ Console</strong>.<br><br>
-        Powered by <strong>InfiniteSync™</strong>, our proprietary Award Intelligence Engine.<br>
-        Connect your cards and loyalty programs to securely track your complete travel-finance
-        portfolio in one view.
-      </p>
-  
-      <button class="cta" onclick="connectWallet()">Connect My Wallet Securely →</button>
+  <!-- GOLD FADE BRIDGE -->
+  <div id="goldBridge">Connecting InfiniteSync™ Secure Session...</div>
+
+  <main class="wallet-container">
+    <h1 class="wallet-header">ConciergeSync™ Wallet</h1>
+    <p class="wallet-sub">
+      Unified visibility for every balance, every point, and every dollar — powered by <strong>InfiniteSync™</strong>.
+    </p>
+
+    <!-- Portfolio Summary -->
+    <div class="wallet-summary">
+      <div>
+        <h3>Total Points Value</h3>
+        <p id="totalPoints">$0</p>
+      </div>
+      <div>
+        <h3>Total Points</h3>
+        <p id="totalMiles">0</p>
+      </div>
+      <div>
+        <h3>Available Credit</h3>
+        <p id="totalCredit">$0</p>
+      </div>
+    </div>
+
+    <!-- Card Deck -->
+    <div class="card-deck">
+      <div class="wallet-card venturex">
+        <h2>Venture X</h2>
+        <p><strong>130,913</strong> Miles</p>
+        <p>Value: <strong>$1,963</strong></p>
+        <small>Balance: $4,471.14 / $20,000</small>
+      </div>
+
+      <div class="wallet-card amex">
+        <h2>AmEx Biz Plat &amp; Gold</h2>
+        <p><strong>321,124</strong> MR Points</p>
+        <p>Value: <strong>$6,422</strong></p>
+        <small>Balance: $197.85 / N/A</small>
+      </div>
+
+      <div class="wallet-card sapphire">
+        <h2>Chase Sapphire Preferred</h2>
+        <p><strong>107,897</strong> UR Points</p>
+        <p>Value: <strong>$1,834</strong></p>
+        <small>Balance: $462.99 / $15,537.01</small>
+      </div>
+
+      <div class="wallet-card ink">
+        <h2>Chase Ink Preferred</h2>
+        <p><strong>116,263</strong> UR Points</p>
+        <p>Value: <strong>$1,977</strong></p>
+        <small>Balance: $1,215.51 / $5,000</small>
+      </div>
     </div>
   </main>
-  <!-- footer stays full width -->
+
+  <script>
+    // ==========================================
+    // Sequential fade-in & animated counters
+    // ==========================================
+    document.addEventListener("DOMContentLoaded", () => {
+      // Gold Bridge fade sequence
+      const bridge = document.getElementById("goldBridge");
+      setTimeout(() => bridge.classList.add("hidden"), 1200);
+
+      // Animate cards sequentially
+      const cards = document.querySelectorAll(".wallet-card");
+      cards.forEach((card, i) => {
+        card.style.animationDelay = `${i * 0.15 + 1.3}s`; // after bridge fade
+      });
+
+      // Count-up helper
+      const animateValue = (id, start, end, duration, prefix = "", suffix = "") => {
+        const range = end - start;
+        const stepTime = Math.abs(Math.floor(duration / range));
+        let startTime = null;
+
+        const el = document.getElementById(id);
+        const step = (timestamp) => {
+          if (!startTime) startTime = timestamp;
+          const progress = Math.min((timestamp - startTime) / duration, 1);
+          const value = Math.floor(progress * range + start);
+          el.textContent = prefix + value.toLocaleString() + suffix;
+          if (progress < 1) requestAnimationFrame(step);
+        };
+        requestAnimationFrame(step);
+      };
+
+      // Animate totals (slightly delayed)
+      setTimeout(() => {
+        animateValue("totalPoints", 0, 12400, 800, "$");
+        animateValue("totalMiles", 0, 676197, 900, "", "");
+        animateValue("totalCredit", 0, 40537, 900, "$");
+      }, 1400);
+    });
+  </script>
 </body>
 </html>
