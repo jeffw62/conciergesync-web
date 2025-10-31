@@ -115,6 +115,35 @@
       transition: all 0.3s ease;
     }
 
+    /* === Improved Wallet Card Text Contrast === */
+    .wallet-card {
+      color: #fff; /* default to white for best visibility */
+    }
+    
+    /* Subtle desaturated text for minor details */
+    .wallet-card p {
+      color: rgba(255, 255, 255, 0.85);
+    }
+    
+    /* Strong contrast on light cards */
+    .wallet-card.light,
+    .wallet-card[class*="amex"],
+    .wallet-card[class*="platinum"],
+    .wallet-card[class*="gold"] {
+      color: #111; /* dark text for light AmEx cards */
+    }
+    
+    .wallet-card.light p {
+      color: rgba(0, 0, 0, 0.75);
+    }
+    
+    /* Optional text shadow for better readability on brand colors */
+    .wallet-card h3,
+    .wallet-card strong {
+      text-shadow: 0 1px 3px rgba(0, 0, 0, 0.35);
+    }
+
+
     /* --- Animations --- */
     @keyframes fadeUp {
       to { opacity: 1; transform: translateY(0); }
