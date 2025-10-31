@@ -617,7 +617,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
   link.addEventListener("click", async (e) => {
     e.preventDefault();
 
-    const page = e.target.textContent.trim().toLowerCase();
+   const page = e.currentTarget.textContent.trim().toLowerCase();
 
     // 🔹 Highlight active nav item
     document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
@@ -630,7 +630,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
     try {
       let html = "";
 
-      if (page === "redemptions") {
+      if (page.includes("redemption")) {
         const res = await fetch("/dev/redem-con.html");
         html = await res.text();
         workspace.innerHTML = html;
@@ -656,7 +656,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
         });
       }
 
-      if (page === "wallet") {
+      if (page.includes("wallet")) {
         const res = await fetch("/dev/wallet-con.html");
         html = await res.text();
         workspace.innerHTML = html;
