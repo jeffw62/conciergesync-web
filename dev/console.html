@@ -632,33 +632,44 @@ document.addEventListener("DOMContentLoaded", () => {
         let html = "";
 
         // --- Redemptions ---
-        if (page.includes("redemption")) {
-          const res = await fetch("/dev/redem-con.html");
-          html = await res.text();
-          workspace.innerHTML = html;
-          console.log("🎯 Redemptions module injected");
+        // --- Redemptions Module (Full Rollback Stable) ---
+if (page.includes("redemption")) {
+  const res = await fetch("/dev/redem-con.html");
+  html = await res.text();
+  workspace.innerHTML = html;
+  console.log("🎯 Redemptions module injected (rollback mode)");
 
-          // Force scripts to execute after injection
-          workspace.querySelectorAll("script").forEach(scr => {
-            const s = document.createElement("script");
-            if (scr.src) s.src = scr.src;
-            else s.textContent = scr.textContent;
-            document.body.appendChild(s);
-            scr.remove();
-          });
+  // ✅ Force scripts inside redem-con.html to execute
+  const scripts = workspace.querySelectorAll("script");
+  scripts.forEach(oldScript => {
+    const newScript = document.createElement("script");
+    if (oldScript.src) newScript.src = oldScript.src;
+    else newScript.textContent = oldScript.textContent;
+    document.body.appendChild(newScript);
+    oldScript.remove();
+  });
 
-          // Re-run form setup
-          requestAnimationFrame(() => {
-            try {
-              window.initRedemptionForm?.();
-              window.fetchIATA?.();
-              window.attachYesNoHandlers?.();
-              console.log("🟢 Redemptions re-initialized");
-            } catch (err) {
-              console.warn("⚠️ Redemptions init failed:", err);
-            }
-          });
-        }
+  // ✅ Delay briefly to allow DOM to settle, then fire handlers
+  setTimeout(() => {
+    try {
+      if (typeof window.initRedemptionForm === "function") {
+        console.log("🟢 initRedemptionForm() triggered");
+        window.initRedemptionForm();
+      }
+      if (typeof window.fetchIATA === "function") {
+        console.log("🟢 fetchIATA() triggered");
+        window.fetchIATA();
+      }
+      if (typeof window.attachYesNoHandlers === "function") {
+        console.log("🟢 attachYesNoHandlers() triggered");
+        window.attachYesNoHandlers();
+      }
+    } catch (err) {
+      console.error("❌ Redemptions reinit failed:", err);
+    }
+  }, 400);
+}
+
 
         // --- Wallet ---
         if (page.includes("wallet")) {
