@@ -666,6 +666,18 @@
             html = await res.text();
             workspace.innerHTML = html;
             console.log("💳 Wallet module loaded into workspace");
+          
+            // 🧩 Manually execute any embedded scripts inside wallet-con.html
+            workspace.querySelectorAll("script").forEach(oldScript => {
+              const newScript = document.createElement("script");
+              if (oldScript.src) {
+                newScript.src = oldScript.src;
+              } else {
+                newScript.textContent = oldScript.textContent;
+              }
+              document.body.appendChild(newScript);
+              oldScript.remove();
+            });
           }
   
           // 🔸 Fade-in after injection
