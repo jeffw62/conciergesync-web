@@ -294,15 +294,24 @@
     }
   </style>
   
-  <script>
-    // 🕒 Simulate secure InfiniteSync connection delay
-    setTimeout(() => {
-      const overlay = document.querySelector(".wallet-overlay");
-      if (overlay) {
-        overlay.style.opacity = "0";
-        setTimeout(() => overlay.remove(), 800);
-      }
-    }, 1800);
+    <script>
+    // 🕒 Simulate secure InfiniteSync connection delay — fixed timing
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const overlay = document.querySelector(".wallet-overlay");
+        if (overlay) {
+          overlay.style.transition = "opacity 0.8s ease";
+          overlay.style.opacity = "0";
+          console.log("✅ Fading out InfiniteSync overlay...");
+          setTimeout(() => {
+            overlay.remove();
+            console.log("✅ Overlay removed — wallet visible.");
+          }, 800);
+        } else {
+          console.warn("⚠️ No overlay element found!");
+        }
+      }, 1800);
+    });
   </script>
 </body>
 </html>
