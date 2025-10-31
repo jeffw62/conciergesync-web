@@ -611,9 +611,10 @@
   </script>
   <!-- Console module loader -->
 <script>
-const workspace = document.getElementById("workspace");
+document.addEventListener("DOMContentLoaded", () => {
+  const workspace = document.getElementById("workspace");
 
-document.querySelectorAll(".nav-link").forEach(link => {
+  document.querySelectorAll(".nav-link").forEach(link => {
   link.addEventListener("click", async (e) => {
     console.log("🟡 NAV CLICKED:", e.currentTarget.textContent.trim());
     e.preventDefault();
