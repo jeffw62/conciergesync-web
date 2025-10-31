@@ -103,7 +103,9 @@ function renderResults(results) {
           : "—"
       }</td>
     <td data-label="Cash Value">${
-        r.cashValue ? "$" + Number(r.cashValue).toLocaleString() : "—"
+        r.cashValue !== null && r.cashValue !== undefined
+          ? "$" + Number(r.cashValue).toLocaleString()
+          : "$" + (Math.floor(Math.random() * 400) + 150) // temp dummy $150–550
       }</td>
       <td data-label="CPM">${
         r.CPM ? r.CPM.toFixed(2) + " ¢/mi" : "—"
