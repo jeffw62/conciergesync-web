@@ -404,13 +404,17 @@ app.post("/api/redemption", async (req, res) => {
             r.DepartureDate || payload.date,
             travelClass
           );
+        
           const cachedFare = serpCache.get(key);
+        
+          // Debug log for clarity
+          console.log(`💵 fare lookup for ${key}:`, cachedFare);
+        
           return {
             ...r,
-            cashValue: cachedFare || cashValue || null,
+            cashValue: cachedFare !== undefined ? cachedFare : null
           };
         });
-
     
         // Compute CPM (cents per mile)
         const withCpm = withCashValues.map(r => {
