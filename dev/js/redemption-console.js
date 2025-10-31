@@ -96,7 +96,7 @@
       // 🚫 Redirect suppressed — inject results internally if workspace exists
       const workspace = document.getElementById("workspace");
       if (workspace) {
-        const resModule = await fetch("/dev/redemption-results-con.html");
+        const resModule = await fetch("/dev/redemption-results.html");
         const resHTML = await resModule.text();
         workspace.innerHTML = resHTML;
         console.log("✅ Results injected into console workspace (no redirect).");
