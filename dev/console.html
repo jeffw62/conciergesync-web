@@ -615,6 +615,7 @@ const workspace = document.getElementById("workspace");
 
 document.querySelectorAll(".nav-link").forEach(link => {
   link.addEventListener("click", async (e) => {
+    console.log("🟡 NAV CLICKED:", e.currentTarget.textContent.trim());
     e.preventDefault();
 
    const page = e.currentTarget.textContent.trim().toLowerCase();
