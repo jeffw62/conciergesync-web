@@ -304,7 +304,7 @@ app.post("/api/redemption", async (req, res) => {
         const mode = payload.mode || "exact";
         const windowDays = mode === "flex" ? flexDays : 0;
     
-        const base = new Date(payload.date + "T00:00:00");
+        const base = new Date((payload.departDate || payload.date) + "T00:00:00");
         const start = new Date(base);
         start.setDate(start.getDate() - windowDays);
         const end = new Date(base);
