@@ -208,13 +208,26 @@ app.post("/api/redemption", async (req, res) => {
         console.log("outboundDateStr before SerpApi payload:", outboundDateStr, "travelDate:", travelDate);
         console.log("🧭 outboundDateStr just before fetchCashFare =", outboundDateStr);
 
-        /* cashValue = await fetchCashFare({
-          origin: payload.origin,
-          destination: payload.destination,
-          departDate: outboundDateStr,  // ✅ consistent naming for our own function
-          outbound_date: outboundDateStr, // ✅ explicitly for SerpApi
-          travelClass,
-        });*/
+        // 🟢 Reactivated live SerpApi call for cash fare lookup
+        try {
+          cashValue = await fetchCashFare({
+            origin: payload.origin,
+            destination: payload.destination,
+            departDate: outboundDateStr,
+            outbound_date: outboundDateStr,
+            travelClass,
+          });
+        
+          if (cashValue?.error) {
+            console.warn("⚠️ SerpApi returned error:", cashValue.error);
+            cashValue = null;
+          } else {
+            console.log("💰 Live SerpApi fare fetched:", cashValue);
+          }
+        } catch (err) {
+          console.error("❌ fetchCashFare() failed:", err);
+          cashValue = null;
+        }
 
         serpCache.set(`${payload.origin}-${payload.destination}-${travelDate}`, cashValue);
         console.log(`💵 Cached SerpApi value for ${travelDate}:`, cashValue);
