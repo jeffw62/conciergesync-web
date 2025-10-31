@@ -705,6 +705,13 @@ if (page.includes("redemption")) {
                 overlay.style.display = "none";
                 overlay.remove();
                 console.log("✅ Wallet overlay fully cleared (observer)");
+                
+                // Force GPU repaint to clear residual blur/tint
+                document.body.style.transform = "translateZ(0)";
+                void document.body.offsetHeight; // force reflow
+                document.body.style.transform = "";
+                console.log("🧽 GPU layer flushed (repaint forced)");
+
               }, 700);
           
               overlayObserver.disconnect(); // stop watching once handled
