@@ -687,14 +687,19 @@ if (page.includes("redemption")) {
             scr.remove();
           });
 
-          // Failsafe: remove overlay if still spinning
+          // Failsafe: force-remove overlay if still visible after 2s
           setTimeout(() => {
             const overlay = document.querySelector(".wallet-overlay");
             if (overlay) {
-              overlay.style.transition = "opacity 0.5s ease";
+              overlay.style.transition = "opacity 0.6s ease";
               overlay.style.opacity = "0";
-              setTimeout(() => overlay.remove(), 600);
-              console.log("🟢 Wallet overlay removed (failsafe)");
+              overlay.style.pointerEvents = "none";
+          
+              setTimeout(() => {
+                overlay.style.display = "none";
+                overlay.remove();
+                console.log("✅ Wallet overlay fully cleared (failsafe)");
+              }, 700);
             }
           }, 2000);
         }
