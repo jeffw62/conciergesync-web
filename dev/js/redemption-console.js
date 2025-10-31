@@ -147,8 +147,8 @@
     function updateSearchState() {
     const ready = isFormReady();
     console.log("🔍 Validation check:", {
-      origin: originInput?.value,
-      destination: destinationInput?.value,
+      origin: originInput.value.trim().toUpperCase(),
+      destination: destinationInput.value.trim().toUpperCase(),
       date: departDate.value,
       cabin: cabinSelect.value,
       flexActive: root.querySelector("#exactBtn.active, #flexBtn.active"),
