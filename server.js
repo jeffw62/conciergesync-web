@@ -398,23 +398,31 @@ app.post("/api/redemption", async (req, res) => {
     
         // Attach indicative cash value from serpCache for each record individually
         const withCashValues = cabinAdjusted.map(r => {
-          const key = serpKey(
-            r.OriginAirportCode || payload.origin,
-            r.DestinationAirportCode || payload.destination,
-            r.DepartureDate || payload.date,
-            travelClass
-          );
+        // Ensure proper date propagation for lookup
+        const resolvedDate =
+          r.DepartureDate ||
+          r.Date ||
+          payload.departDate ||
+          payload.date ||
+          new Date().toISOString().split("T")[0];
+      
+        const key = serpKey(
+          r.OriginAirportCode || payload.origin,
+          r.DestinationAirportCode || payload.destination,
+          resolvedDate,
+          travelClass
+        );
+      
+        const cachedFare = serpCache.get(key);
+      
+        console.log(`💵 fare lookup for ${key}:`, cachedFare);
+      
+        return {
+          ...r,
+          cashValue: cachedFare ?? null
+        };
+      });
         
-          const cachedFare = serpCache.get(key);
-        
-          // Debug log for clarity
-          console.log(`💵 fare lookup for ${key}:`, cachedFare);
-        
-          return {
-            ...r,
-            cashValue: cachedFare !== undefined ? cachedFare : null
-          };
-        });
     
         // Compute CPM (cents per mile)
         const withCpm = withCashValues.map(r => {
