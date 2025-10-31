@@ -616,39 +616,64 @@ const workspace = document.getElementById("workspace");
 document.querySelectorAll(".nav-link").forEach(link => {
   link.addEventListener("click", async (e) => {
     e.preventDefault();
+
     const page = e.target.textContent.trim().toLowerCase();
 
-    // highlight the current nav item
+    // 🔹 Highlight active nav item
     document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
     e.target.classList.add("active");
+
+    // 🔸 Smooth fade-out before loading new module
+    workspace.classList.add("fade-out");
+    await new Promise(r => setTimeout(r, 250));
 
     try {
       let html = "";
 
       if (page === "redemptions") {
-      const res = await fetch("/dev/redem-con.html");
-      html = await res.text();
-      workspace.innerHTML = html;
-      
-      // ✅ Manually trigger embedded redemption form setup functions after injection
-      requestAnimationFrame(() => {
-        try {
-          if (window.initRedemptionForm) {
-            console.log("🟢 initRedemptionForm triggered manually");
-            window.initRedemptionForm();
+        const res = await fetch("/dev/redem-con.html");
+        html = await res.text();
+        workspace.innerHTML = html;
+
+        // 🧩 Reinitialize redemption form functions
+        requestAnimationFrame(() => {
+          try {
+            if (window.initRedemptionForm) {
+              console.log("🟢 initRedemptionForm triggered manually");
+              window.initRedemptionForm();
+            }
+            if (window.fetchIATA) {
+              console.log("🟢 fetchIATA triggered manually");
+              window.fetchIATA();
+            }
+            if (window.attachYesNoHandlers) {
+              console.log("🟢 attachYesNoHandlers triggered manually");
+              window.attachYesNoHandlers();
+            }
+          } catch (err) {
+            console.warn("⚠️ Form initialization functions missing or failed:", err);
           }
-          if (window.fetchIATA) {
-            console.log("🟢 fetchIATA triggered manually");
-            window.fetchIATA();
-          }
-          if (window.attachYesNoHandlers) {
-            console.log("🟢 attachYesNoHandlers triggered manually");
-            window.attachYesNoHandlers();
-          }
-        } catch (err) {
-          console.warn("⚠️ Form initialization functions missing or failed:", err);
-        }
-      });
+        });
+      }
+
+      if (page === "wallet") {
+        const res = await fetch("/dev/wallet-con.html");
+        html = await res.text();
+        workspace.innerHTML = html;
+        console.log("💳 Wallet module loaded into workspace");
+      }
+
+      // 🔸 Fade-in after injection
+      workspace.classList.remove("fade-out");
+      workspace.classList.add("fade-in");
+      setTimeout(() => workspace.classList.remove("fade-in"), 400);
+
+    } catch (err) {
+      console.error("⚠️ Workspace load failed:", err);
+    }
+  });
+});
+
     
   // runLoadedScriptsSafely() permanently removed — handled via explicit modules now
   // No inline stub inserted here to avoid nested script syntax errors.
