@@ -613,124 +613,7 @@
 <script>
 document.addEventListener("DOMContentLoaded", () => {
   const workspace = document.getElementById("workspace");
-  console.log("✅ DOM loaded — workspace:", workspace);
 
-  // Helper: execute <script> tags that were injected in workspace.
-  // Waits for external scripts to load (awaitable) and runs inline scripts immediately.
-  async function executeWorkspaceScripts(container) {
-    const scripts = Array.from(container.querySelectorAll("script"));
-    for (const oldScript of scripts) {
-      try {
-        if (oldScript.src) {
-          // External script: create element and await load
-          await new Promise((resolve) => {
-            const s = document.createElement("script");
-            s.src = oldScript.src;
-            s.async = false; // preserve execution order
-            s.onload = () => {
-              console.log(`📥 External script loaded: ${oldScript.src}`);
-              resolve();
-            };
-            s.onerror = (e) => {
-              console.warn(`⚠️ External script failed to load: ${oldScript.src}`, e);
-              // resolve anyway to avoid blocking the module
-              resolve();
-            };
-            document.body.appendChild(s);
-          });
-        } else {
-          // Inline script: inject and execute immediately
-          const s = document.createElement("script");
-          s.textContent = oldScript.textContent;
-          document.body.appendChild(s);
-        }
-      } catch (err) {
-        console.warn("⚠️ Error executing workspace script:", err);
-      } finally {
-        // remove original script tag from the injected HTML to avoid duplicates
-        oldScript.remove();
-      }
-    }
-  }
-
-  // Helper: fetch + inject + execute scripts
-  async function loadModuleIntoWorkspace(pageName, url) {
-    console.log(`⏳ Loading ${pageName} from ${url}`);
-    const res = await fetch(url);
-    if (!res.ok) throw new Error(`Failed to fetch ${url}: ${res.status}`);
-    const html = await res.text();
-    workspace.innerHTML = html;
-    console.log(`📦 ${pageName} HTML injected`);
-
-    // Execute scripts that were part of the injected module (await external scripts)
-    await executeWorkspaceScripts(workspace);
-    console.log(`🧩 ${pageName} scripts executed`);
-  }
-
-  // Cleanup / fallback for wallet overlay in case the module's own script doesn't remove it
-  function removeWalletOverlayFallback() {
-    // look inside workspace first, then global
-    const overlay = workspace.querySelector(".wallet-overlay") || document.querySelector(".wallet-overlay");
-    if (!overlay) return;
-    try {
-      overlay.style.transition = "opacity 0.6s ease";
-      overlay.style.opacity = "0";
-      setTimeout(() => {
-        if (overlay.parentNode) overlay.remove();
-        console.log("🟢 Wallet overlay removed (fallback)");
-      }, 700);
-    } catch (e) {
-      console.warn("⚠️ Wallet overlay fallback failed:", e);
-    }
-  }
-
-  // Post-init handlers (called after module + its scripts have been injected & executed)
-  function postInitForRedemptions() {
-    try {
-      if (typeof window.initRedemptionForm === "function") {
-        window.initRedemptionForm();
-        console.log("🟢 initRedemptionForm()");
-      }
-      if (typeof window.fetchIATA === "function") {
-        window.fetchIATA();
-        console.log("🟢 fetchIATA()");
-      }
-      if (typeof window.attachYesNoHandlers === "function") {
-        window.attachYesNoHandlers();
-        console.log("🟢 attachYesNoHandlers()");
-      }
-    } catch (err) {
-      console.warn("⚠️ postInitForRedemptions error:", err);
-    }
-  }
-
-  function postInitForWallet() {
-    try {
-      // if the module provided a named init, call it
-      if (typeof window.initWalletModule === "function") {
-        window.initWalletModule();
-        console.log("🟢 initWalletModule()");
-      }
-    } catch (err) {
-      console.warn("⚠️ postInitForWallet error:", err);
-    }
-
-    // run fallback removal of overlay (if overlay still exists)
-    removeWalletOverlayFallback();
-
-    // small reveal animation for wallet cards if present
-    try {
-      const cards = workspace.querySelectorAll(".wallet-card");
-      cards.forEach((card, i) => {
-        card.style.animation = "walletCardPop .55s ease forwards";
-        card.style.animationDelay = `${i * 0.12 + 0.1}s`;
-      });
-    } catch (e) {
-      // not critical
-    }
-  }
-
-  // Attach nav handlers
   document.querySelectorAll(".nav-link").forEach(link => {
     link.addEventListener("click", async (e) => {
       e.preventDefault();
@@ -741,57 +624,84 @@ document.addEventListener("DOMContentLoaded", () => {
       document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
       e.currentTarget.classList.add("active");
 
-      // fade out workspace
+      // fade-out
       workspace.classList.add("fade-out");
-      await new Promise(r => setTimeout(r, 220));
+      await new Promise(r => setTimeout(r, 250));
 
       try {
+        let html = "";
+
+        // --- Redemptions ---
         if (page.includes("redemption")) {
-          await loadModuleIntoWorkspace("Redemptions", "/dev/redem-con.html");
-          // post-init specifically for redemptions
-          postInitForRedemptions();
-        } else if (page.includes("wallet")) {
-          await loadModuleIntoWorkspace("Wallet", "/dev/wallet-con.html");
-          // post-init specifically for wallet
-          postInitForWallet();
-        } else {
-          // default / other pages: attempt a generic fetch by name
-          const slug = page.replace(/\s+/g, "-");
-          const url = `/dev/${slug}-con.html`;
-          try {
-            await loadModuleIntoWorkspace(page, url);
-            console.log(`📦 Generic module loaded: ${url}`);
-          } catch (err) {
-            console.warn("⚠️ Generic module load failed:", err);
-            workspace.innerHTML = `<p>Section not available: ${page}</p>`;
-          }
+          const res = await fetch("/dev/redem-con.html");
+          html = await res.text();
+          workspace.innerHTML = html;
+          console.log("🎯 Redemptions module injected");
+
+          // Force scripts to execute after injection
+          workspace.querySelectorAll("script").forEach(scr => {
+            const s = document.createElement("script");
+            if (scr.src) s.src = scr.src;
+            else s.textContent = scr.textContent;
+            document.body.appendChild(s);
+            scr.remove();
+          });
+
+          // Re-run form setup
+          requestAnimationFrame(() => {
+            try {
+              window.initRedemptionForm?.();
+              window.fetchIATA?.();
+              window.attachYesNoHandlers?.();
+              console.log("🟢 Redemptions re-initialized");
+            } catch (err) {
+              console.warn("⚠️ Redemptions init failed:", err);
+            }
+          });
         }
-      } catch (err) {
-        console.error("❌ Module load error:", err);
-        workspace.innerHTML = "<p>Failed to load this section.</p>";
-      } finally {
-        // reveal workspace
+
+        // --- Wallet ---
+        if (page.includes("wallet")) {
+          const res = await fetch("/dev/wallet-con.html");
+          html = await res.text();
+          workspace.innerHTML = html;
+          console.log("💳 Wallet module injected");
+
+          // Execute scripts inside wallet HTML
+          workspace.querySelectorAll("script").forEach(scr => {
+            const s = document.createElement("script");
+            if (scr.src) s.src = scr.src;
+            else s.textContent = scr.textContent;
+            document.body.appendChild(s);
+            scr.remove();
+          });
+
+          // Failsafe: remove overlay if still spinning
+          setTimeout(() => {
+            const overlay = document.querySelector(".wallet-overlay");
+            if (overlay) {
+              overlay.style.transition = "opacity 0.5s ease";
+              overlay.style.opacity = "0";
+              setTimeout(() => overlay.remove(), 600);
+              console.log("🟢 Wallet overlay removed (failsafe)");
+            }
+          }, 2000);
+        }
+
+        // fade-in
         workspace.classList.remove("fade-out");
         workspace.classList.add("fade-in");
-        setTimeout(() => workspace.classList.remove("fade-in"), 380);
+        setTimeout(() => workspace.classList.remove("fade-in"), 400);
+
+      } catch (err) {
+        console.error("❌ Workspace load error:", err);
+        workspace.innerHTML = "<p>Failed to load this section.</p>";
       }
     });
   });
-
-  // delegated click for #searchBtn (keeps previous behavior)
-  document.body.addEventListener("click", (ev) => {
-    const btn = ev.target.closest("#searchBtn");
-    if (!btn) return;
-    console.log("🟣 Delegated: searchBtn clicked (console loader).");
-    if (typeof window.launchGoldCard === "function") {
-      try { window.launchGoldCard(); } catch (e) { console.warn(e); }
-    }
-    if (typeof window.createSpinnerBridge === "function") {
-      try { window.createSpinnerBridge(); } catch (e) { console.warn(e); }
-    }
-  });
 });
 </script>
+
 
 <style>
 /* tiny wallet-card pop animation (scoped here so it exists when module is injected) */
