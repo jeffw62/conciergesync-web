@@ -92,7 +92,22 @@
       );
   
       console.log(`💾 Redemption results stored — ${data.results?.length || 0} entries`);
-  
+
+      
+      // ✅ Redirect to results page after storing session data
+      try {
+        if (data && data.results && data.results.length > 0) {
+          console.log("🧭 Results saved — redirecting to results page...");
+          window.location.href = "/dev/redemption-results.html";
+        } else {
+          console.warn("⚠️ No results to redirect — empty data set.");
+          alert("No results returned. Please try a different route or date.");
+        }
+      } catch (err) {
+        console.error("❌ Redirect error:", err);
+      }
+
+      
       // 🚫 Redirect suppressed — inject results internally if workspace exists
       const workspace = document.getElementById("workspace");
       if (workspace) {
