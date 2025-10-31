@@ -388,12 +388,23 @@ app.post("/api/redemption", async (req, res) => {
           const miles = r[cabinField] || r.YMileageCost || 0;
           return { ...r, MilesNeeded: miles };
         });
+
     
-        // Attach indicative cash value to each record
-        const withCashValues = cabinAdjusted.map(r => ({
-          ...r,
-          cashValue: cashValue,
-        }));
+        // Attach indicative cash value from serpCache for each record individually
+        const withCashValues = cabinAdjusted.map(r => {
+          const key = serpKey(
+            r.OriginAirportCode || payload.origin,
+            r.DestinationAirportCode || payload.destination,
+            r.DepartureDate || payload.date,
+            travelClass
+          );
+          const cachedFare = serpCache.get(key);
+          return {
+            ...r,
+            cashValue: cachedFare || cashValue || null,
+          };
+        });
+
     
         // Compute CPM (cents per mile)
         const withCpm = withCashValues.map(r => {
