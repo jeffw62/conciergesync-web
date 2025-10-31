@@ -637,6 +637,12 @@ if (page.includes("redemption")) {
   const res = await fetch("/dev/redem-con.html");
   html = await res.text();
   workspace.innerHTML = html;
+  // Move wallet overlay to body if present
+  const tempOverlay = workspace.querySelector(".wallet-overlay");
+  if (tempOverlay) {
+    document.body.appendChild(tempOverlay);
+    console.log("🧩 Wallet overlay relocated to body scope");
+  }
   console.log("🎯 Redemptions module injected (rollback mode)");
 
   // ✅ Force scripts inside redem-con.html to execute
@@ -669,23 +675,22 @@ if (page.includes("redemption")) {
     }
   }, 400);
 }
-
-
         // --- Wallet ---
         if (page.includes("wallet")) {
           const res = await fetch("/dev/wallet-con.html");
           html = await res.text();
           workspace.innerHTML = html;
+        
+          // Move wallet overlay to body if present
+          const tempOverlay = workspace.querySelector(".wallet-overlay");
+          if (tempOverlay) {
+            document.body.appendChild(tempOverlay);
+            console.log("🧩 Wallet overlay relocated to body scope");
+          }
+        
           console.log("💳 Wallet module injected");
+        }
 
-          // Execute scripts inside wallet HTML
-          workspace.querySelectorAll("script").forEach(scr => {
-            const s = document.createElement("script");
-            if (scr.src) s.src = scr.src;
-            else s.textContent = scr.textContent;
-            document.body.appendChild(s);
-            scr.remove();
-          });
 
           // Failsafe: force-remove overlay if still visible after 2s
           setTimeout(() => {
