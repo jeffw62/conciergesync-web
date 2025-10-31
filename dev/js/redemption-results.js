@@ -4,7 +4,9 @@
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🔎 Loading redemption results…");
 
-  const stored = localStorage.getItem("latestRedemptionResults");
+  const stored = sessionStorage.getItem("latestRedemptionResults");
+  console.log("🧭 redemption-results.js loaded");
+  console.log("🧠 sessionStorage.latestRedemptionResults:", stored ? stored.slice(0, 300) + "..." : "❌ nothing stored");
 
   if (stored) {
     console.log("✅ Found stored results in localStorage");
