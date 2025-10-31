@@ -208,13 +208,13 @@ app.post("/api/redemption", async (req, res) => {
         console.log("outboundDateStr before SerpApi payload:", outboundDateStr, "travelDate:", travelDate);
         console.log("🧭 outboundDateStr just before fetchCashFare =", outboundDateStr);
 
-        cashValue = await fetchCashFare({
+        /* cashValue = await fetchCashFare({
           origin: payload.origin,
           destination: payload.destination,
           departDate: outboundDateStr,  // ✅ consistent naming for our own function
           outbound_date: outboundDateStr, // ✅ explicitly for SerpApi
           travelClass,
-        });
+        });*/
 
         serpCache.set(`${payload.origin}-${payload.destination}-${travelDate}`, cashValue);
         console.log(`💵 Cached SerpApi value for ${travelDate}:`, cashValue);
@@ -257,13 +257,15 @@ app.post("/api/redemption", async (req, res) => {
             outbound_date: outboundDateStr,
             return_date: payload.returnDate || null,
             travel_class: travelClass,
-            type: 1,
+            type: 1, // ✅ keep only type 1
             currency: "USD",
             gl: "us",
             hl: "en",
-            deep_search: true,
+            deep_search: false, // ✅ or remove this line entirely
             api_key: process.env.SERP_API_KEY,
-            context_token: `${payload.origin}-${payload.destination}-${outboundDateStr}-${Math.random().toString(36).slice(2, 8)}`,
+            context_token: `${payload.origin}-${payload.destination}-${outboundDateStr}-${Math.random()
+              .toString(36)
+              .slice(2, 8)}`,
           };
           console.log("🔗 SerpApi request:", JSON.stringify(serpPayload, null, 2));
 
@@ -271,10 +273,16 @@ app.post("/api/redemption", async (req, res) => {
           cashValue = await fetchCashFare({
             origin: payload.origin,
             destination: payload.destination,
-            departDate: payload.date || outboundDateStr,
-            outbound_date: payload.date || outboundDateStr,
+            departDate: outboundDateStr,
+            outbound_date: outboundDateStr,
             travelClass,
           });
+        
+          // 🧩 Optional safety check
+          if (cashValue?.error) {
+            console.warn("⚠️ SerpApi returned:", cashValue.error);
+            cashValue = null;
+          }
         } else {
           console.warn("⚠️ Skipping extra SerpApi call — no outbound_date available");
         }
