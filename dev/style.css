@@ -257,6 +257,22 @@ footer * {
   pointer-events: none !important;
 }
 
+/* ===============================
+   GLOBAL FADE TRANSITION HELPERS
+   =============================== */
+.fade-out {
+  opacity: 0;
+  transform: scale(0.98);
+  transition: opacity 0.25s ease, transform 0.25s ease;
+  pointer-events: none; /* prevent interaction during transition */
+}
+
+.fade-in {
+  opacity: 1;
+  transform: scale(1);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
 @media (max-width: 760px) {
   .search-panel {
     grid-template-columns: 1fr;
