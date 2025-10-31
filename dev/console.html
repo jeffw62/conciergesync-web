@@ -692,10 +692,11 @@ if (page.includes("redemption")) {
         }
 
 
-          // Failsafe: force-remove overlay if still visible after 2s
-          setTimeout(() => {
+          // Failsafe: monitor for wallet overlay and remove it once visible
+          const overlayObserver = new MutationObserver(() => {
             const overlay = document.querySelector(".wallet-overlay");
             if (overlay) {
+              console.log("👁️ Detected wallet overlay — initiating fade-out sequence");
               overlay.style.transition = "opacity 0.6s ease";
               overlay.style.opacity = "0";
               overlay.style.pointerEvents = "none";
@@ -703,10 +704,16 @@ if (page.includes("redemption")) {
               setTimeout(() => {
                 overlay.style.display = "none";
                 overlay.remove();
-                console.log("✅ Wallet overlay fully cleared (failsafe)");
+                console.log("✅ Wallet overlay fully cleared (observer)");
               }, 700);
+          
+              overlayObserver.disconnect(); // stop watching once handled
             }
-          }, 2000);
+          });
+          
+          // Start observing the document body for added nodes
+          overlayObserver.observe(document.body, { childList: true, subtree: true });
+
 
         // fade-in
         workspace.classList.remove("fade-out");
