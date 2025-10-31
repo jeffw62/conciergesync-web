@@ -229,8 +229,14 @@ app.post("/api/redemption", async (req, res) => {
           cashValue = null;
         }
 
-        serpCache.set(`${payload.origin}-${payload.destination}-${travelDate}`, cashValue);
-        console.log(`💵 Cached SerpApi value for ${travelDate}:`, cashValue);
+        serpCache.set(
+          serpKey(payload.origin, payload.destination, travelDate, travelClass),
+          cashValue
+        );
+        console.log(
+          `💵 Cached SerpApi value for ${payload.origin}-${payload.destination}-${travelDate}-${travelClass}:`,
+          cashValue
+        );
     
       } catch (err) {
         console.error("❌ SerpApi fetch error:", err);
