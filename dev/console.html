@@ -679,6 +679,22 @@ async function loadPage(page) {
       workspace.innerHTML = "";
       workspace.insertAdjacentHTML("beforeend", bodyContent);
       console.log("💳 Wallet body injected into workspace");
+
+      // 🧠 Execute inline scripts manually (since innerHTML doesn't auto-run them)
+      const scripts = workspace.querySelectorAll("script");
+      scripts.forEach((oldScript) => {
+        const newScript = document.createElement("script");
+        if (oldScript.src) {
+          // External script (with src)
+          newScript.src = oldScript.src;
+        } else {
+          // Inline script content
+          newScript.textContent = oldScript.textContent;
+        }
+        document.body.appendChild(newScript);
+        oldScript.remove();
+      });
+      console.log("⚡ Wallet inline scripts executed manually");
       
       // 🧩 Prevent duplicate loader re-spawn from wallet-con internal script
       const oldLoader = workspace.querySelector(".wallet-loader-overlay");
