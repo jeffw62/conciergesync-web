@@ -710,19 +710,28 @@ async function loadPage(page) {
         console.log("🧹 Stripped embedded wallet overlay (prevented duplicate spin)");
       }
       
-      if (overlayEl) {
-        overlayEl.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
-        overlayEl.style.opacity = "0";
-        overlayEl.style.backdropFilter = "blur(0px)";
-        overlayEl.style.pointerEvents = "none";
-      
-        // remove after fade
+     if (overlayEl) {
+      console.log("🕓 Wallet overlay found — prepping fade sequence");
+    
+      // Give the wallet DOM a guaranteed paint cycle before fading
+      requestAnimationFrame(() => {
         setTimeout(() => {
-          overlayEl.remove();
-          console.log("✅ Wallet loader overlay removed");
-        }, 450);
-      }
-      
+          // Trigger the visual fade
+          overlayEl.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
+          overlayEl.style.opacity = "0";
+          overlayEl.style.backdropFilter = "blur(0px)";
+          overlayEl.style.pointerEvents = "none";
+          console.log("🎞️ Fade-out started");
+    
+          // Remove it slightly later to allow render completion
+          setTimeout(() => {
+            overlayEl.remove();
+            console.log("✅ Wallet overlay fully removed (paint-safe)");
+          }, 700); // ⬅ slightly longer for first-load
+        }, 150); // ⬅ ensure wallet DOM fully painted before fade
+      });
+    }
+
       // 🧭 Ensure workspace becomes visible *before* wallet logic runs
       workspace.classList.remove("fade-out", "hidden", "invisible");
       workspace.style.opacity = "1";
