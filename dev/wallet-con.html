@@ -193,14 +193,23 @@
     }
   }
 
-  /* --- Fix vertical scrolling on smaller screens / laptops --- */
-  body, html {
-    overflow-y: auto !important;
+   /* --- Refine scrolling to workspace only --- */
+  html, body {
+    height: 100%;
+    overflow: hidden; /* prevent whole-page scroll */
   }
   
-  .console-container,
+  #workspace {
+    flex: 1;
+    overflow-y: auto;
+    overflow-x: hidden;
+    height: calc(100vh - 120px); /* adjust if nav/ticker heights differ */
+    padding-bottom: 40px; /* ensure breathing room near footer */
+    scroll-behavior: smooth;
+  }
+  
   .wallet-container {
-    min-height: auto;
+    min-height: 100%;
     height: auto;
     overflow: visible;
   }
