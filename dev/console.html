@@ -680,6 +680,13 @@ if (page.includes("redemption")) {
           const res = await fetch("/dev/wallet-con.html");
           html = await res.text();
           workspace.innerHTML = html;
+          
+            // 🧹 Remove goldBridge overlay if injected with wallet HTML
+            const goldBridge = workspace.querySelector("#goldBridge");
+            if (goldBridge) {
+              console.warn("🧹 Removing injected #goldBridge overlay from workspace scope");
+              goldBridge.remove();
+            }
         
           // Move wallet overlay to body if present
           const tempOverlay = workspace.querySelector(".wallet-overlay");
