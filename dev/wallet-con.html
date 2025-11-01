@@ -214,6 +214,35 @@
     overflow: visible;
   }
 
+  /* --- Wallet Local Layout (scoped) --- */
+  #walletRoot {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding-top: 60px;
+    min-height: 100vh;
+    background: #0a1a33;
+    color: #fff;
+  }
+  
+  #walletRoot h1,
+  #walletRoot h2,
+  #walletRoot h3 {
+    color: #fff;
+    text-align: center;
+  }
+  
+  #walletRoot .wallet-card {
+    background: #fff;
+    color: #111;
+    border-radius: 16px;
+    box-shadow: 0 4px 18px rgba(0,0,0,0.25);
+    padding: 28px 36px;
+    max-width: 640px;
+    width: 90%;
+    margin-top: 36px;
+  }
+    
   </style>
 </head>
 
