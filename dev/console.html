@@ -654,77 +654,49 @@ document.addEventListener("DOMContentLoaded", () => {
 // --- Wallet ---
 async function loadPage(page) {
   if (page.includes("wallet")) {
+    console.log("💳 Loading wallet module (fade-only mode)...");
+
     try {
-      console.log("💳 Loading wallet module...");
+      // Fade out existing workspace content
+      workspace.style.transition = "opacity 0.4s ease";
+      workspace.style.opacity = "0";
 
-      // 🔄 Create a lightweight loading overlay
-      const spinner = document.createElement("div");
-      spinner.id = "walletLoader";
-      spinner.innerHTML = `
-        <div class="wallet-loader-overlay">
-          <div class="wallet-loader-spinner"></div>
-          <p>Connecting InfiniteSync™ Secure Session...</p>
-        </div>`;
-      document.body.appendChild(spinner);
+      // Fetch wallet HTML
+      const res = await fetch("/dev/wallet-con.html");
+      if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
+      const html = await res.text();
 
-      // --- Fetch and render wallet HTML (simple fade transition, no spinner/overlay) ---
-      try {
-        console.log("💳 Loading wallet module (fade-only mode)...");
-      
-        // fade out existing workspace content
-        workspace.style.transition = "opacity 0.4s ease";
-        workspace.style.opacity = "0";
-      
-        const res = await fetch("/dev/wallet-con.html");
-        if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
-        const html = await res.text();
-      
-        // parse and inject
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const bodyContent = doc.body ? doc.body.innerHTML : html;
-      
-        // wait a bit for the fade-out to complete, then swap
-        setTimeout(() => {
-          workspace.innerHTML = bodyContent;
-      
-          // execute any inline scripts inside the wallet
-          workspace.querySelectorAll("script").forEach(s => {
-            const newS = document.createElement("script");
-            if (s.src) newS.src = s.src;
-            else newS.textContent = s.textContent;
-            document.body.appendChild(newS);
-            s.remove();
-          });
-      
-          // fade back in
-          requestAnimationFrame(() => {
-            workspace.style.opacity = "1";
-          });
-      
-          console.log("✅ Wallet module loaded (fade only, no spinner/overlay).");
-        }, 400);
-      } catch (err) {
-        console.error("❌ Wallet load error:", err);
-        workspace.innerHTML = `<p style="color:red;">Wallet failed to load.</p>`;
-      }
-      
-        try {
-          // Run inside isolated async sandbox
-          setTimeout(() => {
-            try {
-              new Function(code)();
-              console.log(`⚡ wallet script[${i}] executed safely`);
-            } catch (err) {
-              console.error(`⚠️ wallet script[${i}] runtime error:`, err);
-            }
-          }, 0);
-        } catch (parseErr) {
-          console.error(`💥 wallet script[${i}] parse error:`, parseErr, "\nCode snippet:", code.slice(0, 200));
-        }
-      
-        oldScript.remove();
-      });
+      // Parse and inject
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const bodyContent = doc.body ? doc.body.innerHTML : html;
+
+      // Wait for fade-out, then swap content
+      setTimeout(() => {
+        workspace.innerHTML = bodyContent;
+
+        // Execute inline and external scripts inside the wallet HTML
+        workspace.querySelectorAll("script").forEach(s => {
+          const newS = document.createElement("script");
+          if (s.src) newS.src = s.src;
+          else newS.textContent = s.textContent;
+          document.body.appendChild(newS);
+          s.remove();
+        });
+
+        // Fade back in
+        requestAnimationFrame(() => {
+          workspace.style.opacity = "1";
+        });
+
+        console.log("✅ Wallet module loaded successfully (fade only).");
+      }, 400);
+    } catch (err) {
+      console.error("❌ Wallet load error:", err);
+      workspace.innerHTML = `<p style="color:red;">Wallet failed to load.</p>`;
+    }
+  }
+}
 
 
       // --- Ensure wallet overlay clears when workspace is visible ---
