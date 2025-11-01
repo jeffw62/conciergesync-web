@@ -655,15 +655,20 @@ if (page.includes("redemption")) {
   setTimeout(() => workspace.classList.remove("fade-in"), 400);
 
   // --- Wallet ---
-if (page.includes("wallet")) {
-  try {
-    console.log("💳 Loading wallet module...");
-    const res = await fetch("/dev/wallet-con.html");
-    if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
-    const html = await res.text();
-    workspace.innerHTML = html;
-    console.log("💳 Wallet HTML injected");
-
+async function loadPage(page) {
+  if (page.includes("wallet")) {
+    try {
+      console.log("💳 Loading wallet module...");
+      const res = await fetch("/dev/wallet-con.html");
+      if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
+      const html = await res.text();
+      workspace.innerHTML = html;
+      console.log("💳 Wallet HTML injected");
+    } catch (err) {
+      console.error("❌ Wallet module failed:", err);
+    }
+  }
+}
     // Clean any old overlay
     const goldBridge = workspace.querySelector("#goldBridge");
     if (goldBridge) goldBridge.remove();
