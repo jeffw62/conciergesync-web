@@ -637,6 +637,18 @@ if (page.includes("redemption")) {
   const res = await fetch("/dev/redem-con.html");
   html = await res.text();
   workspace.innerHTML = html;
+
+  // Force script functions to reference fresh DOM
+  if (typeof window.initRedemptionForm === "function") {
+    window.initRedemptionForm = window.initRedemptionForm.bind(window);
+  }
+  if (typeof window.fetchIATA === "function") {
+    window.fetchIATA = window.fetchIATA.bind(window);
+  }
+  if (typeof window.attachYesNoHandlers === "function") {
+    window.attachYesNoHandlers = window.attachYesNoHandlers.bind(window);
+  }
+  
   // Move wallet overlay to body if present
   const tempOverlay = workspace.querySelector(".wallet-overlay");
   if (tempOverlay) {
