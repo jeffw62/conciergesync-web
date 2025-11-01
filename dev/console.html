@@ -636,221 +636,112 @@ document.addEventListener("DOMContentLoaded", () => {
 if (page.includes("redemption")) {
   const res = await fetch("/dev/redem-con.html");
   html = await res.text();
+  // Inject redemption console HTML
   workspace.innerHTML = html;
-
-  // Force script functions to reference fresh DOM
-  if (typeof window.initRedemptionForm === "function") {
-    window.initRedemptionForm = window.initRedemptionForm.bind(window);
-  }
-  if (typeof window.fetchIATA === "function") {
-    window.fetchIATA = window.fetchIATA.bind(window);
-  }
-  if (typeof window.attachYesNoHandlers === "function") {
-    window.attachYesNoHandlers = window.attachYesNoHandlers.bind(window);
-  }
   
-  // Move wallet overlay to body if present
-  const tempOverlay = workspace.querySelector(".wallet-overlay");
-  if (tempOverlay) {
-    document.body.appendChild(tempOverlay);
-    console.log("🧩 Wallet overlay relocated to body scope");
-  }
-  console.log("🎯 Redemptions module injected (rollback mode)");
+  // ✅ Load and execute redemption-console.js natively (no observers, no polling)
+  const script = document.createElement("script");
+  script.src = "/dev/redemption-console.js";
+  script.defer = true;
+  script.onload = () => console.log("🟢 Redemption script loaded and executed");
+  document.body.appendChild(script);
+  
+  console.log("🎯 Redemption module injected (clean rollback mode)");
+  
+  // Fade in transition (keeps UI continuity)
+  workspace.classList.remove("fade-out");
+  workspace.classList.add("fade-in");
+  setTimeout(() => workspace.classList.remove("fade-in"), 400);
 
-  // ✅ Force redemption scripts & handlers to rebind after injection
+  // --- Wallet ---
+  if (page.includes("wallet")) {
+    const res = await fetch("/dev/wallet-con.html");
+    html = await res.text();
+    workspace.innerHTML = html;
+    
+      // 🧹 Remove goldBridge overlay if injected with wallet HTML
+      const goldBridge = workspace.querySelector("#goldBridge");
+      if (goldBridge) {
+        console.warn("🧹 Removing injected #goldBridge overlay from workspace scope");
+        goldBridge.remove();
+      }
+  
+    // Move wallet overlay to body if present
+    const tempOverlay = workspace.querySelector(".wallet-overlay");
+    if (tempOverlay) {
+      document.body.appendChild(tempOverlay);
+      console.log("🧩 Wallet overlay relocated to body scope");
+    }
+  
+    console.log("💳 Wallet module injected");
+  }
+
+  // ✅ Reattach form handlers if wallet-con includes interactive elements
   setTimeout(() => {
     try {
       const hasIATA = workspace.querySelector("input[name='origin'], input[name='destination']");
       const hasToggles = workspace.querySelector(".yesno-toggle, .toggle-group");
   
       if (hasIATA && typeof window.fetchIATA === "function") {
-        console.log("🟢 fetchIATA() triggered (redemptions)");
+        console.log("🟢 fetchIATA() triggered (wallet – fields detected)");
         window.fetchIATA();
       }
   
       if (hasToggles && typeof window.attachYesNoHandlers === "function") {
-        console.log("🟢 attachYesNoHandlers() triggered (redemptions)");
+        console.log("🟢 attachYesNoHandlers() triggered (wallet – toggles detected)");
         window.attachYesNoHandlers();
       }
   
-      if (typeof window.initRedemptionForm === "function") {
-        console.log("🟢 initRedemptionForm() triggered (redemptions)");
-        window.initRedemptionForm();
+      if (!hasIATA && !hasToggles) {
+        console.log("ℹ️ No dynamic inputs in wallet-con — handler skip safe.");
       }
     } catch (err) {
-      console.error("❌ Redemption form reinit failed:", err);
+      console.error("❌ Wallet handler reinit failed:", err);
     }
-  }, 600);
+  }, 400);
 
 
-  // ✅ Force scripts inside redem-con.html to execute
-  const scripts = workspace.querySelectorAll("script");
-  scripts.forEach(oldScript => {
-    const newScript = document.createElement("script");
-    if (oldScript.src) newScript.src = oldScript.src;
-    else newScript.textContent = oldScript.textContent;
-    document.body.appendChild(newScript);
-    oldScript.remove();
-  });
+    // Failsafe: monitor for wallet overlay and remove it once visible
+    const overlayObserver = new MutationObserver(() => {
+      const overlay = document.querySelector(".wallet-overlay");
+      if (overlay) {
+        console.log("👁️ Detected wallet overlay — initiating fade-out sequence");
+        overlay.style.transition = "opacity 0.6s ease";
+        overlay.style.opacity = "0";
+        overlay.style.pointerEvents = "none";
+    
+        setTimeout(() => {
+          overlay.style.display = "none";
+          overlay.remove();
+          console.log("✅ Wallet overlay fully cleared (observer)");
+          
+          // Force GPU repaint to clear residual blur/tint
+          document.body.style.transform = "translateZ(0)";
+          void document.body.offsetHeight; // force reflow
+          document.body.style.transform = "";
+          console.log("🧽 GPU layer flushed (repaint forced)");
 
-  // ✅ Delay briefly to allow DOM to settle, then fire handlers
-    setTimeout(() => {
-      try {
-        if (typeof window.initRedemptionForm === "function") {
-          console.log("🟢 initRedemptionForm() triggered");
-          window.initRedemptionForm();
-        }
-        if (typeof window.fetchIATA === "function") {
-          console.log("🟢 fetchIATA() triggered");
-          window.fetchIATA();
-        }
-        if (typeof window.attachYesNoHandlers === "function") {
-          console.log("🟢 attachYesNoHandlers() triggered");
-          window.attachYesNoHandlers();
-        }
-      } catch (err) {
-        console.error("❌ Redemptions reinit failed:", err);
-      }
-    }, 400);// ✅ Smart Reinitialization (waits until form fields actually exist)
-
-    // 🛡️ Failsafe: delegated listeners for IATA + toggles
-    document.body.addEventListener("input", (e) => {
-      if (e.target.matches("input[name='origin'], input[name='destination']")) {
-        console.log("✈️ Delegated IATA listener fired:", e.target.name, e.target.value);
-        if (typeof window.fetchIATA === "function") window.fetchIATA();
+        }, 700);
+    
+        overlayObserver.disconnect(); // stop watching once handled
       }
     });
     
-    document.body.addEventListener("click", (e) => {
-      if (e.target.closest(".yesno-toggle, .toggle-group")) {
-        console.log("🟢 Delegated toggle listener fired");
-        if (typeof window.attachYesNoHandlers === "function") window.attachYesNoHandlers();
-      }
-    });
-  
-  const waitForRedemptionReady = setInterval(() => {
-    const origin = workspace.querySelector("input[name='origin']");
-    const dest = workspace.querySelector("input[name='destination']");
-    const toggles = workspace.querySelectorAll(".yesno-toggle, .toggle-group");
-  
-    // Proceed only when DOM nodes are present
-    if (origin && dest && toggles.length > 0) {
-      clearInterval(waitForRedemptionReady);
-  
-      try {
-        console.log("🧠 Redemption DOM ready — binding handlers...");
-  
-        if (typeof window.fetchIATA === "function") {
-          console.log("🟢 fetchIATA() triggered (redemptions)");
-          window.fetchIATA();
-        }
-  
-        if (typeof window.attachYesNoHandlers === "function") {
-          console.log("🟢 attachYesNoHandlers() triggered (redemptions)");
-          window.attachYesNoHandlers();
-        }
-  
-        if (typeof window.initRedemptionForm === "function") {
-          console.log("🟢 initRedemptionForm() triggered (redemptions)");
-          window.initRedemptionForm();
-        }
-  
-      } catch (err) {
-        console.error("❌ Redemption form reinit failed:", err);
-      }
-    }
-  }, 150); // checks every 150ms until ready
+    // Start observing the document body for added nodes
+    overlayObserver.observe(document.body, { childList: true, subtree: true });
 
+
+  // fade-in
+  workspace.classList.remove("fade-out");
+  workspace.classList.add("fade-in");
+  setTimeout(() => workspace.classList.remove("fade-in"), 400);
+
+} catch (err) {
+  console.error("❌ Workspace load error:", err);
+  workspace.innerHTML = "<p>Failed to load this section.</p>";
 }
-        // --- Wallet ---
-        if (page.includes("wallet")) {
-          const res = await fetch("/dev/wallet-con.html");
-          html = await res.text();
-          workspace.innerHTML = html;
-          
-            // 🧹 Remove goldBridge overlay if injected with wallet HTML
-            const goldBridge = workspace.querySelector("#goldBridge");
-            if (goldBridge) {
-              console.warn("🧹 Removing injected #goldBridge overlay from workspace scope");
-              goldBridge.remove();
-            }
-        
-          // Move wallet overlay to body if present
-          const tempOverlay = workspace.querySelector(".wallet-overlay");
-          if (tempOverlay) {
-            document.body.appendChild(tempOverlay);
-            console.log("🧩 Wallet overlay relocated to body scope");
-          }
-        
-          console.log("💳 Wallet module injected");
-        }
-
-        // ✅ Reattach form handlers if wallet-con includes interactive elements
-        setTimeout(() => {
-          try {
-            const hasIATA = workspace.querySelector("input[name='origin'], input[name='destination']");
-            const hasToggles = workspace.querySelector(".yesno-toggle, .toggle-group");
-        
-            if (hasIATA && typeof window.fetchIATA === "function") {
-              console.log("🟢 fetchIATA() triggered (wallet – fields detected)");
-              window.fetchIATA();
-            }
-        
-            if (hasToggles && typeof window.attachYesNoHandlers === "function") {
-              console.log("🟢 attachYesNoHandlers() triggered (wallet – toggles detected)");
-              window.attachYesNoHandlers();
-            }
-        
-            if (!hasIATA && !hasToggles) {
-              console.log("ℹ️ No dynamic inputs in wallet-con — handler skip safe.");
-            }
-          } catch (err) {
-            console.error("❌ Wallet handler reinit failed:", err);
-          }
-        }, 400);
-
-
-          // Failsafe: monitor for wallet overlay and remove it once visible
-          const overlayObserver = new MutationObserver(() => {
-            const overlay = document.querySelector(".wallet-overlay");
-            if (overlay) {
-              console.log("👁️ Detected wallet overlay — initiating fade-out sequence");
-              overlay.style.transition = "opacity 0.6s ease";
-              overlay.style.opacity = "0";
-              overlay.style.pointerEvents = "none";
-          
-              setTimeout(() => {
-                overlay.style.display = "none";
-                overlay.remove();
-                console.log("✅ Wallet overlay fully cleared (observer)");
-                
-                // Force GPU repaint to clear residual blur/tint
-                document.body.style.transform = "translateZ(0)";
-                void document.body.offsetHeight; // force reflow
-                document.body.style.transform = "";
-                console.log("🧽 GPU layer flushed (repaint forced)");
-
-              }, 700);
-          
-              overlayObserver.disconnect(); // stop watching once handled
-            }
-          });
-          
-          // Start observing the document body for added nodes
-          overlayObserver.observe(document.body, { childList: true, subtree: true });
-
-
-        // fade-in
-        workspace.classList.remove("fade-out");
-        workspace.classList.add("fade-in");
-        setTimeout(() => workspace.classList.remove("fade-in"), 400);
-
-      } catch (err) {
-        console.error("❌ Workspace load error:", err);
-        workspace.innerHTML = "<p>Failed to load this section.</p>";
-      }
-    });
-  });
+});
+});
 });
 </script>
 
