@@ -619,6 +619,7 @@ document.addEventListener("DOMContentLoaded", () => {
       e.preventDefault();
       const page = e.currentTarget.textContent.trim().toLowerCase();
       console.log("🟡 NAV CLICKED:", page);
+      await loadPage(page);
 
       // highlight
       document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
@@ -653,7 +654,6 @@ if (page.includes("redemption")) {
   workspace.classList.add("fade-in");
   setTimeout(() => workspace.classList.remove("fade-in"), 400);
 
-  // --- Wallet ---
   // --- Wallet ---
 if (page.includes("wallet")) {
   try {
