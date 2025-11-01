@@ -689,29 +689,32 @@ async function loadPage(page) {
       const overlayEl = document.querySelector(".wallet-loader-overlay");
       
       if (overlayEl) {
-        overlayEl.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
-        overlayEl.style.opacity = "0";
-        overlayEl.style.backdropFilter = "blur(0px)";
-        overlayEl.style.pointerEvents = "none";
+        // Wait until next paint frame to ensure wallet DOM is rendered
+        requestAnimationFrame(() => {
+          overlayEl.style.transition = "opacity 0.5s ease, backdrop-filter 0.5s ease";
+          overlayEl.style.opacity = "0";
+          overlayEl.style.backdropFilter = "blur(0px)";
+          overlayEl.style.pointerEvents = "none";
       
-        setTimeout(() => {
-          overlayEl.style.display = "none";
-          overlayEl.remove();
-          console.log("✅ Wallet loader overlay fully removed");
+          setTimeout(() => {
+            overlayEl.style.display = "none";
+            overlayEl.remove();
+            console.log("✅ Wallet loader overlay fully removed (paint-synced)");
       
-          // 🔧 Force GPU layer flush (stops ghost blur)
-          document.body.style.willChange = "transform";
-          void document.body.offsetHeight;
-          document.body.style.willChange = "";
+            // 🔧 Force GPU layer flush (stops ghost blur)
+            document.body.style.willChange = "transform";
+            void document.body.offsetHeight;
+            document.body.style.willChange = "";
       
-          // 🩵 NEW: Guarantee workspace visible after first load
-          workspace.classList.remove("fade-out", "hidden", "invisible");
-          workspace.style.opacity = "1";
-          workspace.style.display = "block";
-          console.log("🟢 Workspace visibility restored (wallet-first fix)");
-        }, 600);
+            // 🩵 Ensure workspace fully visible and painted
+            workspace.classList.remove("fade-out", "hidden", "invisible");
+            workspace.style.opacity = "1";
+            workspace.style.display = "block";
+            console.log("🟢 Workspace visibility restored (synced to paint)");
+          }, 700); // matches transition + paint buffer
+        });
       }
-      
+
       // --- Fade-in reveal ---
       workspace.classList.add("fade-in");
       setTimeout(() => workspace.classList.remove("fade-in"), 400);
