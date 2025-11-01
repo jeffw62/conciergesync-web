@@ -193,6 +193,18 @@
     }
   }
 
+  /* --- Fix vertical scrolling on smaller screens / laptops --- */
+  body, html {
+    overflow-y: auto !important;
+  }
+  
+  .console-container,
+  .wallet-container {
+    min-height: auto;
+    height: auto;
+    overflow: visible;
+  }
+
   </style>
 </head>
 
