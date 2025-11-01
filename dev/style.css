@@ -273,6 +273,44 @@ footer * {
   transition: opacity 0.4s ease, transform 0.4s ease;
 }
 
+/* --- Restore Console Structure --- */
+body, html {
+  overflow: hidden; /* keep scroll local to workspace again */
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.console-container {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  min-height: 100vh;
+  overflow: hidden; /* prevent body scroll bleed */
+}
+
+#workspace {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  flex: 1;
+  overflow-y: auto; /* internal scroll only */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  scroll-behavior: smooth;
+}
+
+header {
+  position: sticky;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+}
+
 @media (max-width: 760px) {
   .search-panel {
     grid-template-columns: 1fr;
