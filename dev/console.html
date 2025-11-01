@@ -704,7 +704,7 @@ async function loadPage(page) {
       }
       
       // --- existing part ends here ---
-      const oldLoader = workspace.querySelector(".wallet-loader-overlay");
+      let overlayEl = document.querySelector(".wallet-loader-overlay");
       if (oldLoader) {
         oldLoader.remove();
         console.log("🧹 Stripped embedded wallet overlay (prevented duplicate spin)");
