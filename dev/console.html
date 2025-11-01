@@ -664,33 +664,30 @@ async function loadPage(page) {
       const html = await res.text();
       workspace.innerHTML = html;
       console.log("💳 Wallet HTML injected");
+
+      // Clean any old overlay
+      const goldBridge = workspace.querySelector("#goldBridge");
+      if (goldBridge) goldBridge.remove();
+
+      // Move any wallet overlay
+      const tempOverlay = workspace.querySelector(".wallet-overlay");
+      if (tempOverlay) document.body.appendChild(tempOverlay);
+
+      // Force scripts inside wallet-con.html to execute
+      const scripts = workspace.querySelectorAll("script");
+      scripts.forEach(old => {
+        const s = document.createElement("script");
+        if (old.src) s.src = old.src;
+        else s.textContent = old.textContent;
+        document.body.appendChild(s);
+        old.remove();
+      });
+
+      console.log("💳 Wallet module fully injected");
     } catch (err) {
       console.error("❌ Wallet module failed:", err);
+      workspace.innerHTML = `<p style="color:red;">Failed to load Wallet.</p>`;
     }
-  }
-  
-    // Clean any old overlay
-    const goldBridge = workspace.querySelector("#goldBridge");
-    if (goldBridge) goldBridge.remove();
-
-    // Move any wallet overlay
-    const tempOverlay = workspace.querySelector(".wallet-overlay");
-    if (tempOverlay) document.body.appendChild(tempOverlay);
-
-    // Force scripts inside wallet-con.html to execute
-    const scripts = workspace.querySelectorAll("script");
-    scripts.forEach(old => {
-      const s = document.createElement("script");
-      if (old.src) s.src = old.src;
-      else s.textContent = old.textContent;
-      document.body.appendChild(s);
-      old.remove();
-    });
-
-    console.log("💳 Wallet module fully injected");
-  } catch (err) {
-    console.error("❌ Wallet load error:", err);
-    workspace.innerHTML = `<p style="color:red;">Failed to load Wallet.</p>`;
   }
 }
 
