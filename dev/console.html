@@ -675,6 +675,18 @@ async function loadPage(page) {
       setTimeout(() => {
         workspace.innerHTML = bodyContent;
 
+        // 🧭 Give DOM one extra frame to paint before wallet checks
+        requestAnimationFrame(() => {
+          setTimeout(() => {
+            const walletRoot = document.querySelector("#walletRoot");
+            if (!walletRoot) {
+              console.warn("Wallet root not yet visible — retrying later...");
+            } else {
+              console.log("💳 Wallet root detected successfully");
+            }
+          }, 100);
+        });
+        
         // Execute inline and external scripts inside the wallet HTML
         workspace.querySelectorAll("script").forEach(s => {
           const newS = document.createElement("script");
