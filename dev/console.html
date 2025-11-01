@@ -680,6 +680,10 @@ async function loadPage(page) {
       workspace.insertAdjacentHTML("beforeend", bodyContent);
       console.log("💳 Wallet body injected into workspace");
 
+      const walletScripts = workspace.querySelectorAll("script");
+      console.log("🔍 Found wallet scripts:", walletScripts.length);
+      walletScripts.forEach((s, i) => console.log(`   script[${i}] src=`, s.src || "(inline)"));
+
       // 🧠 Execute inline scripts manually (since innerHTML doesn't auto-run them)
       const scripts = workspace.querySelectorAll("script");
       scripts.forEach((oldScript) => {
