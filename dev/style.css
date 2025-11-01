@@ -311,6 +311,43 @@ header {
   z-index: 100;
 }
 
+/* --- Console Alignment Reset --- */
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.console-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  height: 100vh;
+  overflow: hidden;
+  background: #0a1a33; /* match console navy */
+}
+
+#workspace {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  max-width: 1200px;
+  overflow-y: auto;
+  padding-bottom: 60px;
+}
+
+header {
+  width: 100%;
+  z-index: 100;
+  position: sticky;
+  top: 0;
+}
+
 @media (max-width: 760px) {
   .search-panel {
     grid-template-columns: 1fr;
