@@ -680,6 +680,13 @@ async function loadPage(page) {
       workspace.insertAdjacentHTML("beforeend", bodyContent);
       console.log("💳 Wallet body injected into workspace");
       
+      // 🧩 Prevent duplicate loader re-spawn from wallet-con internal script
+      const oldLoader = workspace.querySelector(".wallet-loader-overlay");
+      if (oldLoader) {
+        oldLoader.remove();
+        console.log("🧹 Stripped embedded wallet overlay (prevented duplicate spin)");
+      }
+      
       // ✅ ensure workspace visible after wallet injection
       workspace.classList.remove("fade-out", "hidden", "invisible");
       workspace.style.opacity = "1";
