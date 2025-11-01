@@ -682,24 +682,57 @@ if (page.includes("redemption")) {
   });
 
   // ✅ Delay briefly to allow DOM to settle, then fire handlers
-  setTimeout(() => {
-    try {
-      if (typeof window.initRedemptionForm === "function") {
-        console.log("🟢 initRedemptionForm() triggered");
-        window.initRedemptionForm();
+    setTimeout(() => {
+      try {
+        if (typeof window.initRedemptionForm === "function") {
+          console.log("🟢 initRedemptionForm() triggered");
+          window.initRedemptionForm();
+        }
+        if (typeof window.fetchIATA === "function") {
+          console.log("🟢 fetchIATA() triggered");
+          window.fetchIATA();
+        }
+        if (typeof window.attachYesNoHandlers === "function") {
+          console.log("🟢 attachYesNoHandlers() triggered");
+          window.attachYesNoHandlers();
+        }
+      } catch (err) {
+        console.error("❌ Redemptions reinit failed:", err);
       }
-      if (typeof window.fetchIATA === "function") {
-        console.log("🟢 fetchIATA() triggered");
-        window.fetchIATA();
+    }, 400);// ✅ Smart Reinitialization (waits until form fields actually exist)
+  const waitForRedemptionReady = setInterval(() => {
+    const origin = workspace.querySelector("input[name='origin']");
+    const dest = workspace.querySelector("input[name='destination']");
+    const toggles = workspace.querySelectorAll(".yesno-toggle, .toggle-group");
+  
+    // Proceed only when DOM nodes are present
+    if (origin && dest && toggles.length > 0) {
+      clearInterval(waitForRedemptionReady);
+  
+      try {
+        console.log("🧠 Redemption DOM ready — binding handlers...");
+  
+        if (typeof window.fetchIATA === "function") {
+          console.log("🟢 fetchIATA() triggered (redemptions)");
+          window.fetchIATA();
+        }
+  
+        if (typeof window.attachYesNoHandlers === "function") {
+          console.log("🟢 attachYesNoHandlers() triggered (redemptions)");
+          window.attachYesNoHandlers();
+        }
+  
+        if (typeof window.initRedemptionForm === "function") {
+          console.log("🟢 initRedemptionForm() triggered (redemptions)");
+          window.initRedemptionForm();
+        }
+  
+      } catch (err) {
+        console.error("❌ Redemption form reinit failed:", err);
       }
-      if (typeof window.attachYesNoHandlers === "function") {
-        console.log("🟢 attachYesNoHandlers() triggered");
-        window.attachYesNoHandlers();
-      }
-    } catch (err) {
-      console.error("❌ Redemptions reinit failed:", err);
     }
-  }, 400);
+  }, 150); // checks every 150ms until ready
+
 }
         // --- Wallet ---
         if (page.includes("wallet")) {
