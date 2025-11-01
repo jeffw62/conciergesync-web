@@ -621,45 +621,28 @@ async function loadPage(page) {
       console.log("💳 Loading wallet module...");
       const res = await fetch("/dev/wallet-con.html");
       if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
-      const html = await res.text();
 
-        // Extract only body content if a full HTML document was fetched
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const bodyContent = doc.body ? doc.body.innerHTML : html;
-      
+      // Parse the HTML properly and extract just <body> contents
+      const html = await res.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const bodyContent = doc.body ? doc.body.innerHTML : html;
+
+      // Inject the extracted body into the workspace
       workspace.innerHTML = bodyContent;
       console.log("💳 Wallet HTML injected");
 
-        // --- remove lingering wallet overlay if present ---
-        const overlay = document.querySelector(".wallet-overlay");
-        if (overlay) {
-          overlay.style.transition = "opacity 0.5s ease";
-          overlay.style.opacity = "0";
-          overlay.style.pointerEvents = "none";
-          setTimeout(() => {
-            overlay.remove();
-            console.log("🧽 Wallet overlay cleared manually");
-          }, 600);
-        }
-
-      // Clean any old overlay
-      const goldBridge = workspace.querySelector("#goldBridge");
-      if (goldBridge) goldBridge.remove();
-
-      // Move any wallet overlay
-      const tempOverlay = workspace.querySelector(".wallet-overlay");
-      if (tempOverlay) document.body.appendChild(tempOverlay);
-
-      // Force scripts inside wallet-con.html to execute
-      const scripts = workspace.querySelectorAll("script");
-      scripts.forEach(old => {
-        const s = document.createElement("script");
-        if (old.src) s.src = old.src;
-        else s.textContent = old.textContent;
-        document.body.appendChild(s);
-        old.remove();
-      });
+      // --- remove lingering wallet overlay if present ---
+      const overlay = document.querySelector(".wallet-overlay");
+      if (overlay) {
+        overlay.style.transition = "opacity 0.5s ease";
+        overlay.style.opacity = "0";
+        overlay.style.pointerEvents = "none";
+        setTimeout(() => {
+          overlay.remove();
+          console.log("🧽 Wallet overlay cleared manually");
+        }, 600);
+      }
 
       console.log("💳 Wallet module fully injected");
     } catch (err) {
@@ -668,6 +651,7 @@ async function loadPage(page) {
     }
   }
 }
+
   
 document.querySelectorAll(".nav-link").forEach(link => {
   link.addEventListener("click", async (e) => {
