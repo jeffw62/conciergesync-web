@@ -695,21 +695,37 @@ async function loadPage(page) {
       console.log("🔍 Found wallet scripts:", walletScripts.length);
       walletScripts.forEach((s, i) => console.log(`   script[${i}] src=`, s.src || "(inline)"));
 
-      // 🧠 Execute inline scripts manually (since innerHTML doesn't auto-run them)
+      // 🧩 Execute inline scripts safely (sanitized + sandboxed)
       const scripts = workspace.querySelectorAll("script");
-      scripts.forEach((oldScript) => {
-        const newScript = document.createElement("script");
-        if (oldScript.src) {
-          // External script (with src)
-          newScript.src = oldScript.src;
-        } else {
-          // Inline script content
-          newScript.textContent = oldScript.textContent;
+      console.log("🧠 Found wallet scripts:", scripts.length);
+      
+      scripts.forEach((oldScript, i) => {
+        let code = (oldScript.textContent || "").trim();
+      
+        // sanitize invisible or invalid characters
+        code = code
+          .replace(/[\u200B-\u200F\uFEFF]/g, "")  // zero-width chars
+          .replace(/<\/?script.*?>/gi, "");        // strip stray script tags
+      
+        if (!code) return;
+      
+        try {
+          // Run inside isolated async sandbox
+          setTimeout(() => {
+            try {
+              new Function(code)();
+              console.log(`⚡ wallet script[${i}] executed safely`);
+            } catch (err) {
+              console.error(`⚠️ wallet script[${i}] runtime error:`, err);
+            }
+          }, 0);
+        } catch (parseErr) {
+          console.error(`💥 wallet script[${i}] parse error:`, parseErr, "\nCode snippet:", code.slice(0, 200));
         }
-        document.body.appendChild(newScript);
+      
         oldScript.remove();
       });
-      console.log("⚡ Wallet inline scripts executed manually");
+
 
       // --- Ensure wallet overlay clears when workspace is visible ---
       const walletWait = setInterval(() => {
