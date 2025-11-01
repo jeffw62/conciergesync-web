@@ -656,10 +656,38 @@ async function loadPage(page) {
   if (page.includes("wallet")) {
     console.log("💳 Loading wallet module (fade-only mode)...");
 
-    try {
-      // Fade out existing workspace content
-      workspace.style.transition = "opacity 0.4s ease";
-      workspace.style.opacity = "0";
+    (async () => {
+        try {
+          // Fade out existing workspace content
+          workspace.style.transition = "opacity 0.4s ease";
+          workspace.style.opacity = "0";
+      
+          // Fetch wallet HTML
+          const res = await fetch("/dev/wallet-con.html");
+          if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
+          const html = await res.text();
+      
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          const bodyContent = doc.body ? doc.body.innerHTML : html;
+      
+          setTimeout(() => {
+            workspace.innerHTML = bodyContent;
+            workspace.querySelectorAll("script").forEach(s => {
+              const newS = document.createElement("script");
+              if (s.src) newS.src = s.src;
+              else newS.textContent = s.textContent;
+              document.body.appendChild(newS);
+              s.remove();
+            });
+            requestAnimationFrame(() => (workspace.style.opacity = "1"));
+            console.log("✅ Wallet module loaded successfully (fade only).");
+          }, 400);
+        } catch (err) {
+          console.error("❌ Wallet load error:", err);
+          workspace.innerHTML = `<p style="color:red;">Wallet failed to load.</p>`;
+        }
+      })();
 
       // Fetch wallet HTML
       const res = await fetch("/dev/wallet-con.html");
