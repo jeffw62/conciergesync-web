@@ -699,6 +699,22 @@ async function loadPage(page) {
         oldScript.remove();
       });
       console.log("⚡ Wallet inline scripts executed manually");
+
+      // --- Ensure wallet overlay clears when workspace is visible ---
+      const walletWait = setInterval(() => {
+        const ready = workspace.offsetHeight > 0 && getComputedStyle(workspace).display !== "none";
+        const innerOverlay = document.querySelector(".wallet-loader-overlay");
+        if (ready && innerOverlay) {
+          innerOverlay.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
+          innerOverlay.style.opacity = "0";
+          innerOverlay.style.backdropFilter = "blur(0px)";
+          setTimeout(() => {
+            innerOverlay.remove();
+            console.log("✅ Forced wallet overlay removal after ready detection");
+          }, 500);
+          clearInterval(walletWait);
+        }
+      }, 200);
       
       // 🧩 Prevent duplicate loader re-spawn from wallet-con internal script
       const oldLoader = workspace.querySelector(".wallet-loader-overlay");
