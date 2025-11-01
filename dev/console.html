@@ -622,7 +622,14 @@ async function loadPage(page) {
       const res = await fetch("/dev/wallet-con.html");
       if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
       const html = await res.text();
-      workspace.innerHTML = html;
+
+        // Extract only body content if a full HTML document was fetched
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const bodyContent = doc.body ? doc.body.innerHTML : html;
+      
+      workspace.innerHTML = bodyContent;
+      console.log("💳 Wallet HTML injected");
 
         // --- remove lingering wallet overlay if present ---
         const overlay = document.querySelector(".wallet-overlay");
@@ -635,8 +642,6 @@ async function loadPage(page) {
             console.log("🧽 Wallet overlay cleared manually");
           }, 600);
         }
-
-      console.log("💳 Wallet HTML injected");
 
       // Clean any old overlay
       const goldBridge = workspace.querySelector("#goldBridge");
