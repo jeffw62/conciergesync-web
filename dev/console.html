@@ -680,6 +680,17 @@ async function loadPage(page) {
       workspace.insertAdjacentHTML("beforeend", bodyContent);
       console.log("💳 Wallet body injected into workspace");
 
+      // --- Force wallet root visible before its scripts run ---
+      const walletRoot = workspace.querySelector(".wallet-container, .wallet-main, .wallet-root");
+      if (walletRoot) {
+        walletRoot.style.opacity = "1";
+        walletRoot.style.display = "block";
+        walletRoot.style.visibility = "visible";
+        console.log("💡 Wallet root forced visible pre-init");
+      } else {
+        console.warn("⚠️ No wallet root found to force visible");
+      }
+      
       const walletScripts = workspace.querySelectorAll("script");
       console.log("🔍 Found wallet scripts:", walletScripts.length);
       walletScripts.forEach((s, i) => console.log(`   script[${i}] src=`, s.src || "(inline)"));
