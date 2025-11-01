@@ -804,15 +804,11 @@ async function loadPage(page) {
       // --- Fade-in reveal ---
       workspace.classList.add("fade-in");
       setTimeout(() => workspace.classList.remove("fade-in"), 400);
-
+      
       console.log("💳 Wallet module fully injected");
-    } catch (err) {
-      console.error("❌ Wallet module failed:", err);
-      workspace.innerHTML = `<p style="color:red;">Failed to load Wallet.</p>`;
     }
   }
-}
-  
+        
 document.querySelectorAll(".nav-link").forEach(link => {
   link.addEventListener("click", async (e) => {
     e.preventDefault();
