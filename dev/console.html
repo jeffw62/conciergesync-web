@@ -776,17 +776,19 @@ async function loadPage(page) {
       });
     }
 
-      // 🧭 Ensure workspace becomes visible *before* wallet logic runs
-      workspace.classList.remove("fade-out", "hidden", "invisible");
-      workspace.style.opacity = "1";
-      workspace.style.display = "block";
-      
-      // 🕒 NEW: delay wallet init by one animation frame until visible
-      await new Promise((resolve) => {
-        requestAnimationFrame(() => {
-          setTimeout(resolve, 120);
-        });
+  (async () => {
+    // 🧭 Ensure workspace becomes visible *before* wallet logic runs
+    workspace.classList.remove("fade-out", "hidden", "invisible");
+    workspace.style.opacity = "1";
+    workspace.style.display = "block";
+  
+    // 🕒 NEW: delay wallet init by one animation frame until visible
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => {
+        setTimeout(resolve, 120);
       });
+    });
+  })();
       console.log("🟢 Workspace visible — safe to init wallet");
       
       // ✅ Now fire the wallet initialization if it exposes one
