@@ -703,31 +703,50 @@ async function loadPage(page) {
         console.log("🧹 Stripped embedded wallet overlay (prevented duplicate spin)");
       }
       
-      // ✅ ensure workspace visible after wallet injection
+      // --- existing part ends here ---
+      const oldLoader = workspace.querySelector(".wallet-loader-overlay");
+      if (oldLoader) {
+        oldLoader.remove();
+        console.log("🧹 Stripped embedded wallet overlay (prevented duplicate spin)");
+      }
+      
+      // --- Final overlay cleanup and reveal synchronization ---
+      const overlayEl = document.querySelector(".wallet-loader-overlay");
+      
+      if (overlayEl) {
+        overlayEl.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
+        overlayEl.style.opacity = "0";
+        overlayEl.style.backdropFilter = "blur(0px)";
+        overlayEl.style.pointerEvents = "none";
+      
+        // remove after fade
+        setTimeout(() => {
+          overlayEl.remove();
+          console.log("✅ Wallet loader overlay removed");
+        }, 450);
+      }
+      
+      // 🧭 Ensure workspace becomes visible *before* wallet logic runs
       workspace.classList.remove("fade-out", "hidden", "invisible");
       workspace.style.opacity = "1";
       workspace.style.display = "block";
       
-      // --- Clean up spinner (final guaranteed removal) ---
-      const overlayEl = document.querySelector(".wallet-loader-overlay");
-      
-      if (overlayEl) {
-        // Wait one frame so CSS is applied before fading
+      // 🕒 NEW: delay wallet init by one animation frame until visible
+      await new Promise((resolve) => {
         requestAnimationFrame(() => {
-          // Small delay gives browser a paint cycle to register styles
-          setTimeout(() => {
-            overlayEl.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
-            overlayEl.style.opacity = "0";
-            overlayEl.style.backdropFilter = "blur(0px)";
-            overlayEl.style.pointerEvents = "none";
-      
-            // Remove after fade completes
-            setTimeout(() => {
-              overlayEl.remove();
-              console.log("✅ Wallet loader overlay fully removed (delayed paint-safe)");
-            }, 450);
-          }, 50); // <-- critical paint buffer
+          setTimeout(resolve, 120);
         });
+      });
+      console.log("🟢 Workspace visible — safe to init wallet");
+      
+      // ✅ Now fire the wallet initialization if it exposes one
+      if (typeof window.initWallet === "function") {
+        try {
+          window.initWallet();
+          console.log("⚡ initWallet() executed");
+        } catch (err) {
+          console.warn("Wallet init error:", err);
+        }
       }
 
       // --- Fade-in reveal ---
