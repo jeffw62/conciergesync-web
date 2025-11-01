@@ -518,4 +518,35 @@ main.wallet-container .wallet-card.light p {
   }
 }
 
+/* =======================================================
+   WALLET POLISH: ALIGNMENT, SCROLL, AND VISUAL CLEANUP
+   ======================================================= */
+
+/* --- 1. Adjust Wallet Vertical Position --- */
+main.wallet-container {
+  margin-top: 25px !important; /* reduced gap below ticker */
+  padding-top: 0 !important;
+}
+
+/* --- 2. Enable Proper Scroll Behavior --- */
+html, body {
+  overflow: auto !important; /* restore natural scrolling */
+  height: 100%;
+}
+
+#workspace {
+  overflow-y: auto !important;
+  scrollbar-gutter: stable; /* avoids layout shift from scrollbar */
+}
+
+/* --- 3. Optional Scrollbar Hide (Chrome/Edge) --- */
+#workspace::-webkit-scrollbar {
+  width: 0px;
+  background: transparent; /* hides scrollbar track */
+}
+#workspace {
+  -ms-overflow-style: none;  /* hides scrollbar in IE/Edge */
+  scrollbar-width: none;     /* hides scrollbar in Firefox */
+}
+
 
