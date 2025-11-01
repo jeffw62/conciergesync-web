@@ -675,9 +675,9 @@ async function loadPage(page) {
       // --- Execute inline and external scripts from wallet-con.html ---
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = html;
-      const scripts = tempDiv.querySelectorAll("script");
-      
-      scripts.forEach(oldScript => {
+      const walletScripts = tempDiv.querySelectorAll("script");
+
+      walletScripts.forEach(oldScript => {
         const newScript = document.createElement("script");
         if (oldScript.src) {
           newScript.src = oldScript.src;
