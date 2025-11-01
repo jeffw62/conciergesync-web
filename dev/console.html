@@ -656,11 +656,24 @@ document.querySelectorAll(".nav-link").forEach(link => {
     e.preventDefault();
     const page = e.currentTarget.textContent.trim().toLowerCase();
     console.log("🟡 NAV CLICKED:", page);
-    await loadPage(page);
 
-    // highlight
-    document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-    e.currentTarget.classList.add("active");
+    // capture the link before async work
+    const currentLink = e.currentTarget;
+
+    try {
+      await loadPage(page);
+    } catch (err) {
+      console.error("❌ loadPage failed:", err);
+      return;
+    }
+
+    // highlight only if element still exists in DOM
+    if (document.body.contains(currentLink)) {
+      document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+      currentLink.classList.add("active");
+    } else {
+      console.warn("⚠️ Skipped highlight — nav link no longer in DOM.");
+    }
 
     // fade-out
     workspace.classList.add("fade-out");
