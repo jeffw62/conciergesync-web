@@ -359,3 +359,163 @@ header {
   }
 }
 
+/* =======================================================
+   WALLET CONSOLE — LOCAL OVERRIDES (FINAL STABLE BUILD)
+   ======================================================= */
+
+main.wallet-container {
+  width: 100%;
+  max-width: 900px;
+  margin: 60px auto 100px;
+  padding: 20px;
+  color: #fff;
+  text-align: center;
+  position: relative;
+  z-index: 1;
+}
+
+/* --- Header + Subhead --- */
+main.wallet-container h1.wallet-header {
+  color: #bfa14a;
+  margin-bottom: 16px;
+  font-size: 2rem;
+  font-weight: 600;
+}
+
+main.wallet-container p.wallet-sub {
+  color: rgba(255, 255, 255, 0.85);
+  margin-bottom: 40px;
+  font-size: 1rem;
+  line-height: 1.5;
+}
+
+/* --- Summary Bar --- */
+main.wallet-container .wallet-summary {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 60px;
+  background: rgba(191,161,74,0.12);
+  border: 1px solid rgba(191,161,74,0.25);
+  border-radius: 12px;
+  padding: 18px 40px;
+  margin: 0 auto 50px;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  width: fit-content;
+}
+
+main.wallet-container .wallet-summary div {
+  text-align: center;
+}
+
+main.wallet-container .wallet-summary h3 {
+  color: #bfa14a;
+  font-weight: 600;
+  margin: 0;
+  font-size: 1.05rem;
+  letter-spacing: 0.3px;
+}
+
+main.wallet-container .wallet-summary p {
+  margin: 6px 0 0;
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: #fff;
+}
+
+/* --- Card Deck --- */
+main.wallet-container .card-deck {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 24px;
+}
+
+main.wallet-container .wallet-card {
+  width: 260px;
+  height: 165px;
+  border-radius: 16px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 20px 24px;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4);
+  color: #fff;
+  transform: translateY(25px);
+  opacity: 0;
+  animation: fadeUp 0.6s forwards;
+}
+
+main.wallet-container .wallet-card h2 {
+  margin: 0 0 8px;
+  font-size: 1.2rem;
+  font-weight: 600;
+}
+
+main.wallet-container .wallet-card p {
+  margin: 2px 0;
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.85);
+}
+
+main.wallet-container .wallet-card small {
+  font-size: 0.8rem;
+  color: rgba(255,255,255,0.85);
+}
+
+/* --- Card Colors --- */
+main.wallet-container .venturex {
+  background: linear-gradient(145deg, #111, #444);
+}
+main.wallet-container .amex {
+  background: linear-gradient(145deg, #d6d6d6, #a8a8a8);
+  color: #0a1a33;
+}
+main.wallet-container .sapphire {
+  background: linear-gradient(145deg, #0d47a1, #1976d2);
+}
+main.wallet-container .ink {
+  background: linear-gradient(145deg, #08172e, #000);
+  color: #bfa14a;
+}
+
+/* --- Hover Effect --- */
+main.wallet-container .wallet-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 20px rgba(191,161,74,0.3);
+  transition: all 0.3s ease;
+}
+
+/* --- Text Contrast --- */
+main.wallet-container .wallet-card.light,
+main.wallet-container .wallet-card[class*="amex"],
+main.wallet-container .wallet-card[class*="platinum"],
+main.wallet-container .wallet-card[class*="gold"] {
+  color: #111;
+}
+main.wallet-container .wallet-card.light p {
+  color: rgba(0, 0, 0, 0.75);
+}
+
+/* --- Animations --- */
+@keyframes fadeUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* --- Responsive --- */
+@media (max-width: 700px) {
+  main.wallet-container .wallet-summary {
+    flex-direction: column;
+    gap: 16px;
+    width: 90%;
+  }
+  main.wallet-container .wallet-card {
+    width: 90%;
+  }
+}
+
+
