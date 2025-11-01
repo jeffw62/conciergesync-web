@@ -728,19 +728,29 @@ async function loadPage(page) {
       }, 200);
 
       // --- Final recovery: ensure wallet visible even if initial paint stalls ---
-      requestAnimationFrame(() => {
+      let walletVisibleRetry = 0;
+      const ensureWalletVisible = () => {
         const ws = document.getElementById("workspace");
-        ws.classList.remove("fade-out", "hidden", "invisible");
-        ws.style.opacity = "1";
-        ws.style.display = "block";
-        ws.style.visibility = "visible";
-        ws.style.backdropFilter = "none";
-        // Force browser repaint in case GPU layer got stuck
-        ws.style.willChange = "transform";
-        void ws.offsetHeight;
-        ws.style.willChange = "";
-        console.log("🎨 Final wallet visibility restoration executed");
-      });
+        const walletRoot = ws.querySelector(".wallet-container, .wallet-main, .wallet-root");
+      
+        if (walletRoot) {
+          ws.classList.remove("fade-out", "hidden", "invisible");
+          ws.style.opacity = "1";
+          ws.style.display = "block";
+          ws.style.visibility = "visible";
+          ws.style.backdropFilter = "none";
+          walletRoot.style.opacity = "1";
+          walletRoot.style.display = "block";
+          walletRoot.style.visibility = "visible";
+          console.log("🎨 Wallet visibility restoration confirmed on retry", walletVisibleRetry);
+        } else if (walletVisibleRetry < 10) {
+          walletVisibleRetry++;
+          requestAnimationFrame(ensureWalletVisible);
+        } else {
+          console.warn("⚠️ Wallet root never appeared after 10 frames");
+        }
+      };
+      requestAnimationFrame(ensureWalletVisible);
 
       // 🧩 Prevent duplicate loader re-spawn from wallet-con internal script
       const oldLoader = workspace.querySelector(".wallet-loader-overlay");
