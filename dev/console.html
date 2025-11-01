@@ -685,9 +685,16 @@ async function loadPage(page) {
       workspace.style.opacity = "1";
       workspace.style.display = "block";
       
-      // --- Clean up spinner ---
-      spinner.querySelector(".wallet-loader-overlay").style.opacity = "0";
-      setTimeout(() => spinner.remove(), 400);
+      // --- Clean up spinner (guaranteed removal) ---
+      const overlayEl = spinner.querySelector(".wallet-loader-overlay");
+      overlayEl.style.transition = "opacity 0.4s ease";
+      overlayEl.style.opacity = "0";
+      overlayEl.style.pointerEvents = "none";
+      
+      setTimeout(() => {
+        spinner.remove();
+        console.log("🧽 Wallet loader fully cleared");
+      }, 500);
       
       // --- Fade-in reveal ---
       workspace.classList.add("fade-in");
