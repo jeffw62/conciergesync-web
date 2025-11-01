@@ -614,47 +614,7 @@
 document.addEventListener("DOMContentLoaded", () => {
   const workspace = document.getElementById("workspace");
 
-  document.querySelectorAll(".nav-link").forEach(link => {
-    link.addEventListener("click", async (e) => {
-      e.preventDefault();
-      const page = e.currentTarget.textContent.trim().toLowerCase();
-      console.log("🟡 NAV CLICKED:", page);
-      await loadPage(page);
-
-      // highlight
-      document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-      e.currentTarget.classList.add("active");
-
-      // fade-out
-      workspace.classList.add("fade-out");
-      await new Promise(r => setTimeout(r, 250));
-
-      try {
-        let html = "";
-
-        // --- Redemptions ---
-        // --- Redemptions Module (Full Rollback Stable) ---
-if (page.includes("redemption")) {
-  const res = await fetch("/dev/redem-con.html");
-  html = await res.text();
-  // Inject redemption console HTML
-  workspace.innerHTML = html;
-  
-  // ✅ Load and execute redemption-console.js natively (no observers, no polling)
-  const script = document.createElement("script");
-  script.src = "/dev/js/redemption-console.js";
-  script.defer = true;
-  script.onload = () => console.log("🟢 Redemption script loaded and executed");
-  document.body.appendChild(script);
-  
-  console.log("🎯 Redemption module injected (clean rollback mode)");
-  
-  // Fade in transition (keeps UI continuity)
-  workspace.classList.remove("fade-out");
-  workspace.classList.add("fade-in");
-  setTimeout(() => workspace.classList.remove("fade-in"), 400);
-
-  // --- Wallet ---
+// --- Wallet ---
 async function loadPage(page) {
   if (page.includes("wallet")) {
     try {
@@ -690,7 +650,45 @@ async function loadPage(page) {
     }
   }
 }
+  
+document.querySelectorAll(".nav-link").forEach(link => {
+  link.addEventListener("click", async (e) => {
+    e.preventDefault();
+    const page = e.currentTarget.textContent.trim().toLowerCase();
+    console.log("🟡 NAV CLICKED:", page);
+    await loadPage(page);
 
+    // highlight
+    document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
+    e.currentTarget.classList.add("active");
+
+    // fade-out
+    workspace.classList.add("fade-out");
+    await new Promise(r => setTimeout(r, 250));
+
+    try {
+      let html = "";
+
+// --- Redemptions Module (Full Rollback Stable) ---
+if (page.includes("redemption")) {
+  const res = await fetch("/dev/redem-con.html");
+  html = await res.text();
+  // Inject redemption console HTML
+  workspace.innerHTML = html;
+  
+  // ✅ Load and execute redemption-console.js natively (no observers, no polling)
+  const script = document.createElement("script");
+  script.src = "/dev/js/redemption-console.js";
+  script.defer = true;
+  script.onload = () => console.log("🟢 Redemption script loaded and executed");
+  document.body.appendChild(script);
+  
+  console.log("🎯 Redemption module injected (clean rollback mode)");
+  
+  // Fade in transition (keeps UI continuity)
+  workspace.classList.remove("fade-out");
+  workspace.classList.add("fade-in");
+  setTimeout(() => workspace.classList.remove("fade-in"), 400);
 
   // ✅ Reattach form handlers if wallet-con includes interactive elements
   setTimeout(() => {
@@ -756,7 +754,6 @@ async function loadPage(page) {
   console.error("❌ Workspace load error:", err);
   workspace.innerHTML = "<p>Failed to load this section.</p>";
 }
-});
 });
 });
 </script>
