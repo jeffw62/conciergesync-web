@@ -696,29 +696,21 @@ async function loadPage(page) {
       const overlayEl = document.querySelector(".wallet-loader-overlay");
       
       if (overlayEl) {
-        // Wait until next paint frame to ensure wallet DOM is rendered
+        // Wait one frame so CSS is applied before fading
         requestAnimationFrame(() => {
-          overlayEl.style.transition = "opacity 0.5s ease, backdrop-filter 0.5s ease";
-          overlayEl.style.opacity = "0";
-          overlayEl.style.backdropFilter = "blur(0px)";
-          overlayEl.style.pointerEvents = "none";
-      
+          // Small delay gives browser a paint cycle to register styles
           setTimeout(() => {
-            overlayEl.style.display = "none";
-            overlayEl.remove();
-            console.log("✅ Wallet loader overlay fully removed (paint-synced)");
+            overlayEl.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
+            overlayEl.style.opacity = "0";
+            overlayEl.style.backdropFilter = "blur(0px)";
+            overlayEl.style.pointerEvents = "none";
       
-            // 🔧 Force GPU layer flush (stops ghost blur)
-            document.body.style.willChange = "transform";
-            void document.body.offsetHeight;
-            document.body.style.willChange = "";
-      
-            // 🩵 Ensure workspace fully visible and painted
-            workspace.classList.remove("fade-out", "hidden", "invisible");
-            workspace.style.opacity = "1";
-            workspace.style.display = "block";
-            console.log("🟢 Workspace visibility restored (synced to paint)");
-          }, 700); // matches transition + paint buffer
+            // Remove after fade completes
+            setTimeout(() => {
+              overlayEl.remove();
+              console.log("✅ Wallet loader overlay fully removed (delayed paint-safe)");
+            }, 450);
+          }, 50); // <-- critical paint buffer
         });
       }
 
