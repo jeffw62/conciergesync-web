@@ -672,6 +672,22 @@ async function loadPage(page) {
       if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
       const html = await res.text();
 
+      // --- Execute inline and external scripts from wallet-con.html ---
+      const tempDiv = document.createElement("div");
+      tempDiv.innerHTML = html;
+      const scripts = tempDiv.querySelectorAll("script");
+      
+      scripts.forEach(oldScript => {
+        const newScript = document.createElement("script");
+        if (oldScript.src) {
+          newScript.src = oldScript.src;
+        } else {
+          newScript.textContent = oldScript.textContent;
+        }
+        document.body.appendChild(newScript);
+      });
+      console.log("⚙️ Wallet scripts executed immediately after fetch");
+
       /// Parse and inject body only
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, "text/html");
