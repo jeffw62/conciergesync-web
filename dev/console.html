@@ -667,66 +667,47 @@ async function loadPage(page) {
         </div>`;
       document.body.appendChild(spinner);
 
-      // --- Fetch wallet HTML ---
-      const res = await fetch("/dev/wallet-con.html");
-      if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
-      const html = await res.text();
-
-      // --- Execute inline and external scripts from wallet-con.html ---
-      const tempDiv = document.createElement("div");
-      tempDiv.innerHTML = html;
-      // --- Execute inline and external scripts from wallet-con.html ---
-      tempDiv.querySelectorAll("script").forEach(oldScript => {
-        const newScript = document.createElement("script");
+      // --- Fetch and render wallet HTML (simple fade transition, no spinner/overlay) ---
+      try {
+        console.log("💳 Loading wallet module (fade-only mode)...");
       
-        if (oldScript.src) {
-          newScript.src = oldScript.src;
-        } else {
-          newScript.textContent = oldScript.textContent;
-        }
+        // fade out existing workspace content
+        workspace.style.transition = "opacity 0.4s ease";
+        workspace.style.opacity = "0";
       
-        document.body.appendChild(newScript);
-        oldScript.remove();
-      });
+        const res = await fetch("/dev/wallet-con.html");
+        if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
+        const html = await res.text();
       
-      console.log("⚙️ Wallet scripts executed immediately after fetch");
-
-      /// Parse and inject body only
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const bodyContent = doc.body ? doc.body.innerHTML : html;
-      workspace.innerHTML = "";
-      workspace.insertAdjacentHTML("beforeend", bodyContent);
-      console.log("💳 Wallet body injected into workspace");
-
-      // --- Force wallet root visible before its scripts run ---
-      const walletRoot = workspace.querySelector(".wallet-container, .wallet-main, .wallet-root");
-      if (walletRoot) {
-        walletRoot.style.opacity = "1";
-        walletRoot.style.display = "block";
-        walletRoot.style.visibility = "visible";
-        console.log("💡 Wallet root forced visible pre-init");
-      } else {
-        console.warn("⚠️ No wallet root found to force visible");
+        // parse and inject
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const bodyContent = doc.body ? doc.body.innerHTML : html;
+      
+        // wait a bit for the fade-out to complete, then swap
+        setTimeout(() => {
+          workspace.innerHTML = bodyContent;
+      
+          // execute any inline scripts inside the wallet
+          workspace.querySelectorAll("script").forEach(s => {
+            const newS = document.createElement("script");
+            if (s.src) newS.src = s.src;
+            else newS.textContent = s.textContent;
+            document.body.appendChild(newS);
+            s.remove();
+          });
+      
+          // fade back in
+          requestAnimationFrame(() => {
+            workspace.style.opacity = "1";
+          });
+      
+          console.log("✅ Wallet module loaded (fade only, no spinner/overlay).");
+        }, 400);
+      } catch (err) {
+        console.error("❌ Wallet load error:", err);
+        workspace.innerHTML = `<p style="color:red;">Wallet failed to load.</p>`;
       }
-      
-      const walletScripts = workspace.querySelectorAll("script");
-      console.log("🔍 Found wallet scripts:", walletScripts.length);
-      walletScripts.forEach((s, i) => console.log(`   script[${i}] src=`, s.src || "(inline)"));
-
-      // 🧩 Execute inline scripts safely (sanitized + sandboxed)
-      const scripts = workspace.querySelectorAll("script");
-      console.log("🧠 Found wallet scripts:", scripts.length);
-      
-      scripts.forEach((oldScript, i) => {
-        let code = (oldScript.textContent || "").trim();
-      
-        // sanitize invisible or invalid characters
-        code = code
-          .replace(/[\u200B-\u200F\uFEFF]/g, "")  // zero-width chars
-          .replace(/<\/?script.*?>/gi, "");        // strip stray script tags
-      
-        if (!code) return;
       
         try {
           // Run inside isolated async sandbox
