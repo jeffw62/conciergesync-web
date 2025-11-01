@@ -736,7 +736,7 @@ if (page.includes("redemption")) {
   workspace.classList.add("fade-in");
   setTimeout(() => workspace.classList.remove("fade-in"), 400);
 
-} catch (err) {
+catch (err) {
   console.error("❌ Workspace load error:", err);
   workspace.innerHTML = "<p>Failed to load this section.</p>";
 }
