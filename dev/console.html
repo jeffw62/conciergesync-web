@@ -672,20 +672,24 @@ async function loadPage(page) {
       if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
       const html = await res.text();
 
-      // Parse and inject body only
+      /// Parse and inject body only
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, "text/html");
       const bodyContent = doc.body ? doc.body.innerHTML : html;
       workspace.innerHTML = "";
       workspace.insertAdjacentHTML("beforeend", bodyContent);
       console.log("💳 Wallet body injected into workspace");
-
+      
+      // ✅ ensure workspace visible after wallet injection
+      workspace.classList.remove("fade-out", "hidden", "invisible");
+      workspace.style.opacity = "1";
+      workspace.style.display = "block";
+      
       // --- Clean up spinner ---
       spinner.querySelector(".wallet-loader-overlay").style.opacity = "0";
       setTimeout(() => spinner.remove(), 400);
-
+      
       // --- Fade-in reveal ---
-      workspace.classList.remove("fade-out");
       workspace.classList.add("fade-in");
       setTimeout(() => workspace.classList.remove("fade-in"), 400);
 
