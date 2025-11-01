@@ -712,6 +712,22 @@ if (page.includes("redemption")) {
         console.error("❌ Redemptions reinit failed:", err);
       }
     }, 400);// ✅ Smart Reinitialization (waits until form fields actually exist)
+
+    // 🛡️ Failsafe: delegated listeners for IATA + toggles
+    document.body.addEventListener("input", (e) => {
+      if (e.target.matches("input[name='origin'], input[name='destination']")) {
+        console.log("✈️ Delegated IATA listener fired:", e.target.name, e.target.value);
+        if (typeof window.fetchIATA === "function") window.fetchIATA();
+      }
+    });
+    
+    document.body.addEventListener("click", (e) => {
+      if (e.target.closest(".yesno-toggle, .toggle-group")) {
+        console.log("🟢 Delegated toggle listener fired");
+        if (typeof window.attachYesNoHandlers === "function") window.attachYesNoHandlers();
+      }
+    });
+  
   const waitForRedemptionReady = setInterval(() => {
     const origin = workspace.querySelector("input[name='origin']");
     const dest = workspace.querySelector("input[name='destination']");
