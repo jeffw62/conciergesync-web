@@ -698,6 +698,30 @@ if (page.includes("redemption")) {
           console.log("💳 Wallet module injected");
         }
 
+        // ✅ Reattach form handlers if wallet-con includes interactive elements
+        setTimeout(() => {
+          try {
+            const hasIATA = workspace.querySelector("input[name='origin'], input[name='destination']");
+            const hasToggles = workspace.querySelector(".yesno-toggle, .toggle-group");
+        
+            if (hasIATA && typeof window.fetchIATA === "function") {
+              console.log("🟢 fetchIATA() triggered (wallet – fields detected)");
+              window.fetchIATA();
+            }
+        
+            if (hasToggles && typeof window.attachYesNoHandlers === "function") {
+              console.log("🟢 attachYesNoHandlers() triggered (wallet – toggles detected)");
+              window.attachYesNoHandlers();
+            }
+        
+            if (!hasIATA && !hasToggles) {
+              console.log("ℹ️ No dynamic inputs in wallet-con — handler skip safe.");
+            }
+          } catch (err) {
+            console.error("❌ Wallet handler reinit failed:", err);
+          }
+        }, 400);
+
 
           // Failsafe: monitor for wallet overlay and remove it once visible
           const overlayObserver = new MutationObserver(() => {
