@@ -726,7 +726,22 @@ async function loadPage(page) {
           clearInterval(walletWait);
         }
       }, 200);
-      
+
+      // --- Final recovery: ensure wallet visible even if initial paint stalls ---
+      requestAnimationFrame(() => {
+        const ws = document.getElementById("workspace");
+        ws.classList.remove("fade-out", "hidden", "invisible");
+        ws.style.opacity = "1";
+        ws.style.display = "block";
+        ws.style.visibility = "visible";
+        ws.style.backdropFilter = "none";
+        // Force browser repaint in case GPU layer got stuck
+        ws.style.willChange = "transform";
+        void ws.offsetHeight;
+        ws.style.willChange = "";
+        console.log("🎨 Final wallet visibility restoration executed");
+      });
+
       // 🧩 Prevent duplicate loader re-spawn from wallet-con internal script
       const oldLoader = workspace.querySelector(".wallet-loader-overlay");
       if (oldLoader) {
