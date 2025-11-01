@@ -163,6 +163,50 @@
   .wallet-summary { flex-direction: column; gap: 16px; }
   .wallet-card { width: 90%; }
 }
+
+/* --- Priority Wallet Overrides --- */
+main.wallet-container .wallet-summary {
+  display: flex !important;
+  flex-direction: row !important;
+  justify-content: center !important;
+  gap: 60px !important;
+  background: rgba(191,161,74,0.12) !important;
+  border: 1px solid rgba(191,161,74,0.25) !important;
+  border-radius: 12px !important;
+  padding: 18px 0 !important;
+  margin: 0 auto 50px !important;
+  box-shadow: 0 3px 10px rgba(0,0,0,0.15) !important;
+  width: fit-content !important;
+}
+
+main.wallet-container .wallet-summary div {
+  text-align: center !important;
+}
+
+main.wallet-container .card-deck {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  justify-content: center !important;
+  gap: 24px !important;
+}
+
+main.wallet-container .wallet-card {
+  width: 260px !important;
+  height: 165px !important;
+  border-radius: 16px !important;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.4) !important;
+  padding: 20px 24px !important;
+  color: #fff !important;
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+}
+
+main.wallet-container .venturex { background: linear-gradient(145deg,#111,#444) !important; }
+main.wallet-container .amex { background: linear-gradient(145deg,#d6d6d6,#a8a8a8) !important; color:#0a1a33 !important; }
+main.wallet-container .sapphire { background: linear-gradient(145deg,#0d47a1,#1976d2) !important; }
+main.wallet-container .ink { background: linear-gradient(145deg,#08172e,#000) !important; color:#bfa14a !important; }
+    
 </style>
 
 </head>
