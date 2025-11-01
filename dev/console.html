@@ -623,6 +623,19 @@ async function loadPage(page) {
       if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
       const html = await res.text();
       workspace.innerHTML = html;
+
+        // --- remove lingering wallet overlay if present ---
+        const overlay = document.querySelector(".wallet-overlay");
+        if (overlay) {
+          overlay.style.transition = "opacity 0.5s ease";
+          overlay.style.opacity = "0";
+          overlay.style.pointerEvents = "none";
+          setTimeout(() => {
+            overlay.remove();
+            console.log("🧽 Wallet overlay cleared manually");
+          }, 600);
+        }
+
       console.log("💳 Wallet HTML injected");
 
       // Clean any old overlay
