@@ -641,7 +641,7 @@ if (page.includes("redemption")) {
   
   // ✅ Load and execute redemption-console.js natively (no observers, no polling)
   const script = document.createElement("script");
-  script.src = "/dev/redemption-console.js";
+  script.src = "/dev/js/redemption-console.js";
   script.defer = true;
   script.onload = () => console.log("🟢 Redemption script loaded and executed");
   document.body.appendChild(script);
