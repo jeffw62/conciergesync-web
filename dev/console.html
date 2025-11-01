@@ -685,17 +685,15 @@ async function loadPage(page) {
       workspace.style.opacity = "1";
       workspace.style.display = "block";
       
-      /// --- Clean up spinner (final guaranteed removal) ---
+      // --- Clean up spinner (final guaranteed removal) ---
       const overlayEl = document.querySelector(".wallet-loader-overlay");
       
       if (overlayEl) {
-        // Begin fade-out and blur dissolve
         overlayEl.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
         overlayEl.style.opacity = "0";
         overlayEl.style.backdropFilter = "blur(0px)";
         overlayEl.style.pointerEvents = "none";
       
-        // After fade completes, detach overlay
         setTimeout(() => {
           overlayEl.style.display = "none";
           overlayEl.remove();
@@ -703,8 +701,14 @@ async function loadPage(page) {
       
           // 🔧 Force GPU layer flush (stops ghost blur)
           document.body.style.willChange = "transform";
-          void document.body.offsetHeight; // force reflow
+          void document.body.offsetHeight;
           document.body.style.willChange = "";
+      
+          // 🩵 NEW: Guarantee workspace visible after first load
+          workspace.classList.remove("fade-out", "hidden", "invisible");
+          workspace.style.opacity = "1";
+          workspace.style.display = "block";
+          console.log("🟢 Workspace visibility restored (wallet-first fix)");
         }, 600);
       }
       
