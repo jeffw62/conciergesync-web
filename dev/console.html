@@ -621,18 +621,23 @@ async function loadPage(page) {
       console.log("💳 Loading wallet module...");
       const res = await fetch("/dev/wallet-con.html");
       if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
-
-      // Parse the HTML properly and extract just <body> contents
       const html = await res.text();
+
+      // Parse HTML and extract body content only
       const parser = new DOMParser();
       const doc = parser.parseFromString(html, "text/html");
       const bodyContent = doc.body ? doc.body.innerHTML : html;
 
-      // Inject the extracted body into the workspace
-      workspace.innerHTML = bodyContent;
-      console.log("💳 Wallet HTML injected");
+      // Cleanly inject into workspace
+      workspace.innerHTML = "";
+      workspace.insertAdjacentHTML("beforeend", bodyContent);
+      console.log("💳 Wallet body injected into workspace");
 
-      // --- remove lingering wallet overlay if present ---
+      // Remove any lingering fade states from previous transitions
+      workspace.classList.remove("fade-out");
+      workspace.style.opacity = "1";
+
+      // --- Remove lingering wallet overlay if present ---
       const overlay = document.querySelector(".wallet-overlay");
       if (overlay) {
         overlay.style.transition = "opacity 0.5s ease";
@@ -644,6 +649,10 @@ async function loadPage(page) {
         }, 600);
       }
 
+      // Smooth fade-in transition (keeps UI consistent)
+      workspace.classList.add("fade-in");
+      setTimeout(() => workspace.classList.remove("fade-in"), 400);
+
       console.log("💳 Wallet module fully injected");
     } catch (err) {
       console.error("❌ Wallet module failed:", err);
@@ -651,7 +660,6 @@ async function loadPage(page) {
     }
   }
 }
-
   
 document.querySelectorAll(".nav-link").forEach(link => {
   link.addEventListener("click", async (e) => {
