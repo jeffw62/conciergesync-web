@@ -348,6 +348,11 @@ header {
   top: 0;
 }
 
+.console-container {
+  background: transparent !important;
+  backdrop-filter: none !important;
+}
+
 @media (max-width: 760px) {
   .search-panel {
     grid-template-columns: 1fr;
