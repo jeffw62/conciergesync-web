@@ -510,7 +510,7 @@
       border: 4px solid rgba(255, 255, 255, 0.2);
       border-top-color: #bfa14a;
       border-radius: 50%;
-      animation: spin 0.9s linear infinite;
+      animation: spin 3.0s linear infinite;
       margin-bottom: 16px;
     }
     
@@ -685,16 +685,28 @@ async function loadPage(page) {
       workspace.style.opacity = "1";
       workspace.style.display = "block";
       
-      // --- Clean up spinner (guaranteed removal) ---
-      const overlayEl = spinner.querySelector(".wallet-loader-overlay");
-      overlayEl.style.transition = "opacity 0.4s ease";
-      overlayEl.style.opacity = "0";
-      overlayEl.style.pointerEvents = "none";
+      /// --- Clean up spinner (final guaranteed removal) ---
+      const overlayEl = document.querySelector(".wallet-loader-overlay");
       
-      setTimeout(() => {
-        spinner.remove();
-        console.log("🧽 Wallet loader fully cleared");
-      }, 500);
+      if (overlayEl) {
+        // Begin fade-out and blur dissolve
+        overlayEl.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
+        overlayEl.style.opacity = "0";
+        overlayEl.style.backdropFilter = "blur(0px)";
+        overlayEl.style.pointerEvents = "none";
+      
+        // After fade completes, detach overlay
+        setTimeout(() => {
+          overlayEl.style.display = "none";
+          overlayEl.remove();
+          console.log("✅ Wallet loader overlay fully removed");
+      
+          // 🔧 Force GPU layer flush (stops ghost blur)
+          document.body.style.willChange = "transform";
+          void document.body.offsetHeight; // force reflow
+          document.body.style.willChange = "";
+        }, 600);
+      }
       
       // --- Fade-in reveal ---
       workspace.classList.add("fade-in");
