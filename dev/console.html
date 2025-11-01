@@ -529,7 +529,7 @@
   </style>
 </head>
 <body>
-  <div id="walletRoot"></div>
+  <div id="walletRoot">
   <!-- Header -->
   <header>
     <div class="logo">
@@ -654,140 +654,105 @@ document.addEventListener("DOMContentLoaded", () => {
 
 // --- Wallet ---
 async function loadPage(page) {
-  if (page.includes("wallet")) {
-    console.log("💳 Loading wallet module (fade-only mode)...");
+  if (!page || !page.includes("wallet")) return;
 
-    try {
-      // Fade out existing workspace content
-      workspace.style.transition = "opacity 0.4s ease";
-      workspace.style.opacity = "0";
+  console.log("💳 Loading wallet module (fade-only mode)...");
 
-      // Fetch wallet HTML
-      const res = await fetch("/dev/wallet-con.html");
-      if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
-      const html = await res.text();
+  try {
+    // ensure workspace exists
+    if (typeof workspace === "undefined" || !workspace) {
+      throw new Error("workspace element not found");
+    }
 
-      // Parse and inject
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const bodyContent = doc.body ? doc.body.innerHTML : html;
+    // Fade out existing workspace content (fade-only, no overlay)
+    workspace.style.transition = "opacity 0.4s cubic-bezier(0.25,0.8,0.25,1)";
+    workspace.style.opacity = "0";
 
-      // Wait for fade-out, then swap content
-      setTimeout(() => {
-        workspace.innerHTML = bodyContent;
+    // Wait for the fade to start and a paint cycle
+    await new Promise((resolve) => {
+      requestAnimationFrame(() => setTimeout(resolve, 120));
+    });
 
-        // 🧭 Give DOM one extra frame to paint before wallet checks
-        requestAnimationFrame(() => {
-          setTimeout(() => {
-            const walletRoot = document.querySelector("#walletRoot");
-            if (!walletRoot) {
-              console.warn("Wallet root not yet visible — retrying later...");
-            } else {
-              console.log("💳 Wallet root detected successfully");
-            }
-          }, 100);
-        });
-        
-        // Execute inline and external scripts inside the wallet HTML
-        workspace.querySelectorAll("script").forEach(s => {
-          const newS = document.createElement("script");
-          if (s.src) newS.src = s.src;
-          else newS.textContent = s.textContent;
-          document.body.appendChild(newS);
-          s.remove();
-        });
+    // Fetch wallet HTML
+    const res = await fetch("/dev/wallet-con.html");
+    if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
+    const html = await res.text();
 
-        // Fade back in
-        requestAnimationFrame(() => {
-          workspace.style.opacity = "1";
-        });
+    // Parse and inject (safely)
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const bodyContent = doc.body ? doc.body.innerHTML : html;
 
-        console.log("✅ Wallet module loaded successfully (fade only).");
-      }, 400);
+    // inject HTML
+    workspace.innerHTML = bodyContent;
 
-    } catch (err) {
-      console.error("❌ Wallet load error:", err);
-      workspace.innerHTML = `<p style="color:red;">Wallet failed to load.</p>`;
+    // Give the browser one extra frame to paint the injected DOM
+    await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 60)));
+
+    // Execute inline and external scripts inside the injected wallet HTML
+    // Find scripts inside the workspace (not the original doc) and re-append them to the document
+    Array.from(workspace.querySelectorAll("script")).forEach((s) => {
+      try {
+        const newS = document.createElement("script");
+        if (s.src) {
+          // preserve external script src
+          newS.src = s.src;
+          // preserve async/defer attributes if present
+          if (s.async) newS.async = true;
+          if (s.defer) newS.defer = true;
+        } else {
+          newS.textContent = s.textContent;
+        }
+        document.body.appendChild(newS);
+        s.remove();
+      } catch (ex) {
+        console.warn("Script re-attach failed for one <script>:", ex);
+      }
+    });
+
+    // Extra small delay to allow the wallet's own JS (if any) to initialize DOM nodes
+    await new Promise((resolve) => setTimeout(resolve, 120));
+
+    // Fade back in
+    requestAnimationFrame(() => {
+      workspace.style.opacity = "1";
+    });
+
+    console.log("💳 Wallet module fully injected");
+
+    // Ensure walletRoot exists (the wallet HTML should include <div id="walletRoot">...)
+    const walletRoot = document.querySelector("#walletRoot");
+    if (!walletRoot) {
+      // If not found: warn (but widget may still work). This avoids spurious race warnings.
+      console.warn("⚠ Wallet root not found — ensure wallet-con.html contains <div id=\"walletRoot\">.");
+    } else {
+      console.log("✅ Wallet root detected successfully");
+    }
+
+    // If wallet exposes an initializer, call it safely
+    if (typeof window.initWallet === "function") {
+      try {
+        window.initWallet();
+        console.log("⚡ initWallet() executed");
+      } catch (err) {
+        console.warn("Wallet init error:", err);
+      }
+    }
+
+  } catch (err) {
+    console.error("❌ Wallet load error:", err);
+    // show a minimal, clear error to the user
+    if (typeof workspace !== "undefined" && workspace) {
+      workspace.innerHTML = `<div style="padding:24px;color:#ffdddd;background:#2b2b2b;border-radius:6px;">
+        <strong>Wallet failed to load.</strong><div style="margin-top:8px;">${(err && err.message) ? err.message : "Unknown error"}
+        </div>
+      </div>`;
+      // fade it in so user sees the message
+      requestAnimationFrame(() => (workspace.style.opacity = "1"));
     }
   }
 }
 
-      // --- Ensure wallet overlay clears when workspace is visible ---
-      const walletWait = setInterval(() => {
-        const ready = workspace.offsetHeight > 0 && getComputedStyle(workspace).display !== "none";
-        const innerOverlay = document.querySelector(".wallet-loader-overlay");
-        if (ready && innerOverlay) {
-          innerOverlay.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
-          innerOverlay.style.opacity = "0";
-          innerOverlay.style.backdropFilter = "blur(0px)";
-          setTimeout(() => {
-            innerOverlay.remove();
-            console.log("✅ Forced wallet overlay removal after ready detection");
-          }, 500);
-          clearInterval(walletWait);
-        }
-      }, 200);
-
-      // --- Final recovery: ensure wallet visible even if initial paint stalls ---
-      let walletVisibleRetry = 0;
-      const ensureWalletVisible = () => {
-        const ws = document.getElementById("workspace");
-        const walletRoot = ws.querySelector(".wallet-container, .wallet-main, .wallet-root");
-      
-        if (walletRoot) {
-          ws.classList.remove("fade-out", "hidden", "invisible");
-          ws.style.opacity = "1";
-          ws.style.display = "block";
-          ws.style.visibility = "visible";
-          ws.style.backdropFilter = "none";
-          walletRoot.style.opacity = "1";
-          walletRoot.style.display = "block";
-          walletRoot.style.visibility = "visible";
-          console.log("🎨 Wallet visibility restoration confirmed on retry", walletVisibleRetry);
-        } else if (walletVisibleRetry < 10) {
-          walletVisibleRetry++;
-          requestAnimationFrame(ensureWalletVisible);
-        } else {
-          console.warn("⚠️ Wallet root never appeared after 10 frames");
-        }
-      };
-      requestAnimationFrame(ensureWalletVisible);
-
-      // 🧩 Prevent duplicate loader re-spawn from wallet-con internal script
-      const oldLoader = workspace.querySelector(".wallet-loader-overlay");
-      if (oldLoader) {
-        oldLoader.remove();
-        console.log("🧹 Stripped embedded wallet overlay (prevented duplicate spin)");
-      }
-      
-      // --- existing part ends here ---
-      let overlayEl = document.querySelector(".wallet-loader-overlay");
-      if (oldLoader) {
-        oldLoader.remove();
-        console.log("🧹 Stripped embedded wallet overlay (prevented duplicate spin)");
-      }
-      
-     if (overlayEl) {
-      console.log("🕓 Wallet overlay found — prepping fade sequence");
-    
-      // Give the wallet DOM a guaranteed paint cycle before fading
-      requestAnimationFrame(() => {
-        setTimeout(() => {
-          // Trigger the visual fade
-          overlayEl.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
-          overlayEl.style.opacity = "0";
-          overlayEl.style.backdropFilter = "blur(0px)";
-          overlayEl.style.pointerEvents = "none";
-          console.log("🎞️ Fade-out started");
-    
-          // Remove it slightly later to allow render completion
-          setTimeout(() => {
-            overlayEl.remove();
-            console.log("✅ Wallet overlay fully removed (paint-safe)");
-          }, 700); // ⬅ slightly longer for first-load
-        }, 150); // ⬅ ensure wallet DOM fully painted before fade
-      });
-    }
 
   (async () => {
     // 🧭 Ensure workspace becomes visible *before* wallet logic runs
@@ -951,6 +916,6 @@ if (page.includes("redemption")) {
 }
 </style>
 
-
+  </div>
 </body>
 </html>
