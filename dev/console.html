@@ -710,9 +710,6 @@ async function loadPage(page) {
         console.log("🧹 Stripped embedded wallet overlay (prevented duplicate spin)");
       }
       
-      // --- Final overlay cleanup and reveal synchronization ---
-      const overlayEl = document.querySelector(".wallet-loader-overlay");
-      
       if (overlayEl) {
         overlayEl.style.transition = "opacity 0.4s ease, backdrop-filter 0.4s ease";
         overlayEl.style.opacity = "0";
