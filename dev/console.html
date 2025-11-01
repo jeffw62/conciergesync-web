@@ -645,6 +645,32 @@ if (page.includes("redemption")) {
   }
   console.log("🎯 Redemptions module injected (rollback mode)");
 
+  // ✅ Force redemption scripts & handlers to rebind after injection
+  setTimeout(() => {
+    try {
+      const hasIATA = workspace.querySelector("input[name='origin'], input[name='destination']");
+      const hasToggles = workspace.querySelector(".yesno-toggle, .toggle-group");
+  
+      if (hasIATA && typeof window.fetchIATA === "function") {
+        console.log("🟢 fetchIATA() triggered (redemptions)");
+        window.fetchIATA();
+      }
+  
+      if (hasToggles && typeof window.attachYesNoHandlers === "function") {
+        console.log("🟢 attachYesNoHandlers() triggered (redemptions)");
+        window.attachYesNoHandlers();
+      }
+  
+      if (typeof window.initRedemptionForm === "function") {
+        console.log("🟢 initRedemptionForm() triggered (redemptions)");
+        window.initRedemptionForm();
+      }
+    } catch (err) {
+      console.error("❌ Redemption form reinit failed:", err);
+    }
+  }, 600);
+
+
   // ✅ Force scripts inside redem-con.html to execute
   const scripts = workspace.querySelectorAll("script");
   scripts.forEach(oldScript => {
