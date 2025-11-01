@@ -675,17 +675,20 @@ async function loadPage(page) {
       // --- Execute inline and external scripts from wallet-con.html ---
       const tempDiv = document.createElement("div");
       tempDiv.innerHTML = html;
-      const walletScripts = tempDiv.querySelectorAll("script");
-
-      walletScripts.forEach(oldScript => {
+      // --- Execute inline and external scripts from wallet-con.html ---
+      tempDiv.querySelectorAll("script").forEach(oldScript => {
         const newScript = document.createElement("script");
+      
         if (oldScript.src) {
           newScript.src = oldScript.src;
         } else {
           newScript.textContent = oldScript.textContent;
         }
+      
         document.body.appendChild(newScript);
+        oldScript.remove();
       });
+      
       console.log("⚙️ Wallet scripts executed immediately after fetch");
 
       /// Parse and inject body only
