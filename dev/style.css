@@ -585,4 +585,16 @@ header {
   gap: 16px;
   padding-right: 12px;
 }
+/* Phase 3 Prep — Hamburger Toggle Visual */
+.nav-toggle {
+  font-size: 1.3rem;
+  color: #fff;
+  cursor: pointer;
+  margin-left: 8px;
+  transition: opacity 0.2s ease;
+}
+
+.nav-toggle:hover {
+  opacity: 0.8;
+}
 
