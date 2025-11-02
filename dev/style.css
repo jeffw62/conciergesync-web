@@ -549,4 +549,40 @@ html, body {
   scrollbar-width: none;     /* hides scrollbar in Firefox */
 }
 
+/* === Phase 2: Header-Integrated Ticker === */
+.header-ticker {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-left: auto;
+  margin-right: 14px;
+  color: #bfa14a;
+  font-weight: 600;
+  font-size: 0.95rem;
+}
+
+.header-ticker .label {
+  opacity: 0.85;
+}
+
+.header-ticker #tickerValue {
+  color: #fff;
+  font-weight: 700;
+}
+
+.header-ticker #tickerTrend.up {
+  color: #00ff9d;
+}
+.header-ticker #tickerTrend.down {
+  color: #ff4e4e;
+}
+
+/* Keep header content neatly aligned */
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding-right: 12px;
+}
 
