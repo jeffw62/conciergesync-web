@@ -560,16 +560,52 @@
   
   <!-- Main workspace container -->
   <main id="workspace" class="console-container">
-    <!-- Default welcome view -->
-    <section id="welcome-section" class="welcome-section">
-      <h1 id="welcome-message">Good morning, Jeff.</h1>
+    
+  <!-- ✅ Dashboard Drop-In -->
+  <div class="dashboard-container">
+
+    <!-- 🟡 Greeting -->
+    <section class="dashboard-greeting fade-in">
+      <h1>Good evening, Jeff.</h1>
       <p>Welcome to your ConciergeSync™ Console — your travel finances, unified in one glance.</p>
-      <div class="creed-box">
-        <h3 class="creed-heading">ConciergeSync™ Creed…</h3>
-        <p class="creed-body">Clarity eliminates confusion. Cleanliness eliminates clutter. <strong>Trust is our foundation.</strong></p>
+    </section>
+
+    <!-- 💼 Portfolio Summary -->
+    <section class="dashboard-summary">
+      <div class="summary-card">
+        <div>
+          <h3>Total Portfolio Value</h3>
+          <p>$23,914</p>
+        </div>
+        <div>
+          <h3>Total Points & Miles</h3>
+          <p>1.82 M</p>
+        </div>
+        <div>
+          <h3>Average CPM</h3>
+          <p>2.07¢ <span class="trend down">▼</span></p>
+        </div>
       </div>
     </section>
-  </main>
+
+    <!-- ✨ Concierge Recommendation -->
+    <section class="dashboard-recommendation">
+      <h2>Concierge Recommendation</h2>
+      <p>You could redeem <strong>150,000 UR</strong> for <strong>Singapore Airlines Business Class</strong> 
+         at <strong>2.8¢ per mile</strong> — an outstanding value worth <strong>$4,200</strong>.
+      </p>
+    </section>
+
+    <!-- 🧭 Creed -->
+    <section class="dashboard-creed">
+      <h3>ConciergeSync™ Creed…</h3>
+      <p>Clarity eliminates confusion. Cleanliness eliminates clutter.
+        <strong>Trust is our foundation.</strong>
+      </p>
+    </section>
+  </div>
+</main>
+
 
 
   <!-- Footer Injection -->
