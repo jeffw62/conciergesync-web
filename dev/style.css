@@ -598,3 +598,67 @@ header {
   opacity: 0.8;
 }
 
+/* === Phase 3 – Slide-in Nav Drawer === */
+.side-nav {
+  position: fixed;
+  top: 0;
+  right: -320px;               /* hidden off-screen */
+  width: 300px;
+  height: 100%;
+  background: rgba(10, 26, 51, 0.98);
+  color: #fff;
+  box-shadow: -2px 0 10px rgba(0,0,0,0.4);
+  z-index: 9999;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: stretch;
+  transition: right 0.35s ease;
+}
+
+.side-nav.open {
+  right: 0;                    /* slides into view */
+}
+
+.side-nav .nav-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 18px 20px;
+  border-bottom: 1px solid rgba(191,161,74,0.3);
+}
+
+.side-nav .nav-header h2 {
+  font-size: 1.2rem;
+  color: #bfa14a;
+  margin: 0;
+}
+
+.side-nav #closeNav {
+  background: none;
+  border: none;
+  font-size: 1.8rem;
+  color: #fff;
+  cursor: pointer;
+}
+
+.side-nav ul {
+  list-style: none;
+  padding: 20px;
+  margin: 0;
+}
+
+.side-nav li {
+  margin: 12px 0;
+}
+
+.side-nav a {
+  color: rgba(255,255,255,0.9);
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
+}
+
+.side-nav a:hover {
+  color: #bfa14a;
+}
