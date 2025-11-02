@@ -562,6 +562,25 @@
         <i class="fas fa-bars"></i>
       </div>
   </header>
+    
+    <!-- 🧭 Slide-in Navigation Drawer -->
+    <nav id="sideNav" class="side-nav">
+      <div class="nav-header">
+        <h2>Navigation</h2>
+        <button id="closeNav" aria-label="Close Menu">&times;</button>
+      </div>
+      <ul>
+        <li><a href="#" data-page="dashboard">Dashboard</a></li>
+        <li><a href="#" data-page="wallet">My Cards / Wallet</a></li>
+        <li><a href="#" data-page="redemption">Flight Redemptions</a></li>
+        <li><a href="#" data-page="programs">My Programs</a></li>
+        <li><a href="#" data-page="bonuses">Bonuses</a></li>
+        <li><a href="#" data-page="hints">Helpful Hints</a></li>
+        <li><a href="#">Future 1</a></li>
+        <li><a href="#">Future 2</a></li>
+      </ul>
+    </nav>
+
 
   <!--
     Avg Cost Per Mile Ticker
@@ -958,5 +977,34 @@ if (page.includes("redemption")) {
 </style>
 
   </div>
+  
+<script>
+  // === Phase 3 – Hamburger Drawer Logic ===
+  document.addEventListener("DOMContentLoaded", () => {
+    const navToggle = document.getElementById("navToggle");
+    const sideNav = document.getElementById("sideNav");
+    const closeNav = document.getElementById("closeNav");
+
+    // open drawer
+    navToggle?.addEventListener("click", () => {
+      sideNav.classList.add("open");
+    });
+
+    // close drawer (X button)
+    closeNav?.addEventListener("click", () => {
+      sideNav.classList.remove("open");
+    });
+
+    // close if clicking outside drawer
+    document.addEventListener("click", (e) => {
+      if (sideNav.classList.contains("open") &&
+          !sideNav.contains(e.target) &&
+          !navToggle.contains(e.target)) {
+        sideNav.classList.remove("open");
+      }
+    });
+  });
+</script>
+
 </body>
 </html>
