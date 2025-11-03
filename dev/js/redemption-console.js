@@ -406,27 +406,27 @@
     }
   }
 
-  // Attach link listeners for hamburger nav
-  document.querySelectorAll('#sideNav a[data-page]').forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      const page = link.dataset.page;
-      console.log(`📂 Navigating to: ${page}`);
-      loadPage(page);
-      document.getElementById('sideNav').classList.remove('open');
+  // 🧭 Safe sideNav listener attachment after DOM ready
+  window.addEventListener("DOMContentLoaded", () => {
+    const links = document.querySelectorAll("#sideNav a[data-page]");
+    if (!links.length) {
+      console.warn("⚠️ No #sideNav links found to attach listeners.");
+      return;
+    }
+  
+    links.forEach(link => {
+      link.addEventListener("click", e => {
+        e.preventDefault();
+        const page = link.dataset.page;
+        console.log(`📂 Navigating to: ${page}`);
+        loadPage(page);
+        document.getElementById("sideNav").classList.remove("open");
+      });
     });
+  
+    console.log("✅ SideNav navigation listeners attached successfully.");
   });
   
-  // Attach link listeners for hamburger nav
-  document.querySelectorAll('#sideNav a[data-page]').forEach(link => {
-    link.addEventListener('click', e => {
-      e.preventDefault();
-      const page = link.dataset.page;
-      console.log(`📂 Navigating to: ${page}`);
-      loadPage(page);
-      document.getElementById('sideNav').classList.remove('open');
-    });
-  });
 })(); // closes entire IIFE
 
 
