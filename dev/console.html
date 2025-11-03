@@ -815,7 +815,7 @@ window.loadPage = async function (page) {
       }, 400); // wait 400 ms to ensure redemption-console.js is parsed
 
 
-  } catch (err) {
+  catch (err) {
     console.error(`❌ Failed to load ${page}:`, err);
     workspace.innerHTML = `<div class="error-box">
       <strong>Failed to load module:</strong> ${page}<br>${err.message}
