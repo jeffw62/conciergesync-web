@@ -406,6 +406,9 @@
     }
   }
 
+  // 🌍 Expose loader globally for nav triggers
+  window.loadPage = loadPage;
+
   // 🧭 Safe sideNav listener attachment after DOM ready
   window.addEventListener("DOMContentLoaded", () => {
     const links = document.querySelectorAll("#sideNav a[data-page]");
@@ -413,7 +416,7 @@
       console.warn("⚠️ No #sideNav links found to attach listeners.");
       return;
     }
-  
+
     links.forEach(link => {
       link.addEventListener("click", e => {
         e.preventDefault();
@@ -423,7 +426,7 @@
         document.getElementById("sideNav").classList.remove("open");
       });
     });
-  
+
     console.log("✅ SideNav navigation listeners attached successfully.");
   });
   
