@@ -779,8 +779,12 @@
           const doc = parser.parseFromString(html, "text/html");
           const newContent = doc.querySelector("#workspace")?.innerHTML || html;
           workspace.innerHTML = newContent;
+            // --- Force immediate visibility (bypass fade timing issues) ---
+            workspace.style.opacity = "1";
+            workspace.style.display = "block";
+            workspace.classList.remove("fade-out", "hidden", "invisible");
           requestAnimationFrame(() => (workspace.style.opacity = "1"));
-          console.log("✅ Console landing page reloaded cleanly.");
+          console.log(`✅ ${page} module fully injected and displayed`);
         } catch (err) {
           console.error("❌ Console reload failed:", err);
           workspace.innerHTML = "<p>Failed to reload console landing page.</p>";
