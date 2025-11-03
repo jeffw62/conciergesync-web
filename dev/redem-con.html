@@ -1,390 +1,823 @@
-<!-- ================================
-     ConciergeSync™ Redemption Console
-     Gold UX (SS1) — Functional Build
-================================== -->
+whee<style>
 
-<style>
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background-color: #0a1a33;
-    color: #111;
-  }
-
-  .search-wrapper {
-    max-width: 720px;
-    margin: 40px auto;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.15);
-    padding: 28px 32px 32px;
-  }
-
-  .search-panel {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    align-items: start;
-  }
-
-  h3 {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: #bfa14a;
-    margin-top: 0;
-    margin-bottom: 12px;
-  }
-
-  label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-
-  input[type="text"],
-  input[type="number"],
-  input[type="date"],
-  select {
-    width: 100%;
-    padding: 7px 9px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    color: #111;
-    background: #fff;
-    box-sizing: border-box;
-  }
-
-  .inline-fields {
-    display: flex;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 10px;
-  }
-
-  .inline-fields .field {
-    flex: 1 1 48%;
-  }
-
-  .card-options {
-    display: flex;
-    justify-content: space-between;
-    gap: 14px;
-    margin-top: 6px;
-    margin-bottom: 10px;
-  }
-
-  .option-btn {
-    flex: 1 1 48%;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 10px;
-    background: #f7f7f7;
-    font-size: 0.95rem;
-    cursor: pointer;
-    transition: all 0.25s ease;
-  }
-
-  .option-btn.active {
-    background: #bfa14a;
-    border-color: #bfa14a;
-    color: #fff;
-  }
-
-  .option-btn:hover {
-    background: #d6b658;
-    color: #fff;
-    border-color: #d6b658;
-  }
-
-  .checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-top: 4px;
-    margin-bottom: 8px;
-  }
-
-  .checkbox-row input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: #bfa14a;
-    cursor: pointer;
-  }
-
-  small.hint {
-    display: block;
-    font-size: 0.85rem;
-    color: #333;
-    margin-top: 4px;
-  }
-
-  .toggle-group {
-    display: inline-flex;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-
-  .toggle-group button {
-    padding: 6px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #f7f7f7;
-    cursor: pointer;
-    transition: 0.25s ease;
-  }
-
-  .toggle-group button.active,
-  .toggle-group button:hover {
-    background: #bfa14a;
-    color: #fff;
-    border-color: #bfa14a;
-  }
-
-  .search-btn {
-    width: 100%;
-    background: #e0cf9f;
-    color: #fff;
-    border: none;
-    border-radius: 6px;
-    padding: 12px;
-    font-size: 1rem;
-    cursor: not-allowed;
-    opacity: 0.7;
-    transition: all 0.25s ease;
-  }
-
-  .search-btn:enabled {
-    cursor: pointer;
-    background: #bfa14a;
-    box-shadow: 0 0 8px rgba(191, 161, 74, 0.4);
-    opacity: 1;
-  }
-
-  .search-btn:enabled:hover {
-    background: #d6b658;
-  }
-
-  #searchWarning {
-    font-size: 0.85rem;
-    color: #a00;
-    margin-top: 6px;
-  }
-
-  @media (max-width: 760px) {
-    .search-panel {
-      grid-template-columns: 1fr;
+    /* ========================
+       CORE BASELINE STYLES
+    ========================= */
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background-color: #0a1a33;
+      color: #111;
     }
-  }
+
+    .search-wrapper {
+      max-width: 700px;
+      margin: 40px auto;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+      padding: 28px 32px 32px;
+    }
+
+    .search-panel {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 600;
+      color: #bfa14a;
+      margin-top: 0;
+      margin-bottom: 12px;
+    }
+
+    label {
+      display: block;
+      font-weight: 500;
+      margin-bottom: 4px;
+    }
+
+    input[type="text"],
+    input[type="number"],
+    input[type="date"],
+    select {
+      width: 100%;
+      padding: 7px 9px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 0.95rem;
+      color: #111;
+      background: #fff;
+      box-sizing: border-box;
+    }
+
+    /* Two-field row pairs */
+    .inline-fields {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-bottom: 10px;
+    }
+
+    .inline-fields .field {
+      flex: 1 1 48%;
+    }
+
+    /* Exact / Flexible buttons */
+    .card-options {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      margin-top: 6px;
+      margin-bottom: 10px;
+    }
+
+    .option-btn {
+      flex: 1 1 48%;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+      padding: 10px;
+      background: #f7f7f7;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .option-btn.active {
+      background: #bfa14a;
+      border-color: #bfa14a;
+      color: #fff;
+    }
+
+    .option-btn:hover {
+      background: #d6b658;
+      color: #fff;
+      border-color: #d6b658;
+    }
+
+    /* Checkbox row */
+    .checkbox-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-top: 4px;
+      margin-bottom: 8px;
+    }
+
+    .checkbox-row input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      accent-color: #bfa14a;
+      cursor: pointer;
+    }
+
+    .checkbox-row label {
+      font-size: 0.9rem;
+      color: #111;
+      margin: 0;
+      cursor: pointer;
+    }
+
+    small.hint {
+      display: block;
+      font-size: 0.85rem;
+      color: #333;
+      margin-top: 4px;
+    }
+
+    /* Step 2 + Step 3 */
+    .toggle-group {
+      display: inline-flex;
+      gap: 6px;
+      margin-bottom: 10px;
+    }
+
+    .toggle-group button {
+      padding: 6px 10px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      background: #f7f7f7;
+      cursor: pointer;
+      transition: 0.25s ease;
+    }
+
+    .toggle-group button.active,
+    .toggle-group button:hover {
+      background: #bfa14a;
+      color: #fff;
+      border-color: #bfa14a;
+    }
+
+    /* dim default (disabled) */
+    .search-btn {
+      width: 100%;
+      background: #e0cf9f;       /* pale gold */
+      color: #fff;
+      border: none;
+      border-radius: 6px;
+      padding: 12px;
+      font-size: 1rem;
+      cursor: not-allowed;
+      opacity: 0.7;
+      transition: all 0.25s ease;
+    }
+    
+    /* bold active (enabled) */
+    .search-btn:enabled {
+      cursor: pointer;
+      background: #bfa14a;       /* strong gold */
+      box-shadow: 0 0 8px rgba(191,161,74,0.4);
+      opacity: 1;
+      transition: background-color 0.25s ease, opacity 0.25s ease;
+    }
+    
+    /* optional hover pop */
+    .search-btn:enabled:hover {
+      background: #d6b658;       /* slightly brighter on hover */
+    }
+
+    #searchWarning {
+      font-size: 0.85rem;
+      color: #a00;
+      margin-top: 6px;
+    }
+
+    /* Responsive collapse */
+    @media (max-width: 760px) {
+      .search-panel {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .suggestions {
+      position: absolute;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      max-height: 140px;
+      overflow-y: auto;
+      font-size: 0.9rem;
+      margin-top: 2px;
+      z-index: 100;
+    }
+    .suggestions div {
+      padding: 6px 8px;
+      cursor: pointer;
+    }
+    .suggestions div:hover {
+      background: #f5f5f5;
+    }
 </style>
 
-<div class="search-wrapper">
-  <div class="search-panel">
+  <div class="search-wrapper">
+    <div class="search-panel" id="searchPanel">
+        
+      <!-- STEP 1 -->
+      <div class="step">
+        <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
 
-    <!-- STEP 1 -->
-    <div class="step">
-      <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
-      <div class="inline-fields">
-        <div class="field">
-          <label for="origin">Origin</label>
-          <input type="text" id="origin" placeholder="e.g. DFW" />
+        <!-- Origin / Destination -->
+        <div class="inline-fields">
+          <div class="field">
+            <label for="origin">Origin</label>
+            <input type="text" id="origin" placeholder="e.g. DFW" />
+            <!-- this div gives JS a place to inject dropdown options -->
+            <div id="origin-suggestions" class="suggestions"></div>
+          </div>
+          <div class="field">
+            <label for="destination">Destination</label>
+            <input type="text" id="destination" placeholder="e.g. LHR" />
+            <div id="destination-suggestions" class="suggestions"></div>
+            <!-- this div gives JS a place to inject dropdown options -->
+            <div id="origin-suggestions" class="suggestions"></div>
+          </div>
         </div>
-        <div class="field">
-          <label for="destination">Destination</label>
-          <input type="text" id="destination" placeholder="e.g. LHR" />
-        </div>
-      </div>
 
-      <div class="inline-fields">
-        <div class="field">
-          <label for="passengers">Passengers</label>
-          <input type="number" id="passengers" min="1" value="1" />
+        <!-- Passengers / Service Class -->
+        <div class="inline-fields">
+          <div class="field">
+            <label for="passengers">Passengers</label>
+            <input type="number" id="passengers" min="1" value="1" />
+          </div>
+          <div class="field">
+            <label for="cabin">Service Class</label>
+            <select id="cabin">
+              <option value="Economy">Economy</option>
+              <option value="Premium Economy">Premium Economy</option>
+              <option value="Business">Business</option>
+              <option value="First">First</option>
+            </select>
+          </div>
         </div>
-        <div class="field">
-          <label for="cabin">Service Class</label>
-          <select id="cabin">
-            <option value="">Select...</option>
-            <option value="Economy">Economy</option>
-            <option value="Premium Economy">Premium Economy</option>
-            <option value="Business">Business</option>
-            <option value="First">First</option>
+
+        <!-- Departure / Return Date -->
+        <div class="inline-fields">
+          <div class="field">
+            <label for="departDate">Departure Date</label>
+            <input type="date" id="departDate" />
+          </div>
+          <div class="field">
+            <label for="returnDate">Return Date</label>
+            <input type="date" id="returnDate" />
+          </div>
+        </div>
+
+        <!-- Exact / Flexible -->
+        <div class="card-options">
+          <button class="option-btn active" id="exactBtn">Exact Date</button>
+          <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
+        </div>
+        <div id="flexPicker" class="flex-picker" style="display:none;">
+
+        <!-- 🔒 Hidden field to track mode -->
+        <input type="hidden" id="mode" value="exact">
+        
+        <label for="flexDays">Search Days +/- Date Selected:</label>
+          <select id="flexDays">
+            <option value="1">1 day</option>
+            <option value="3">3 days</option>
+            <option value="5">5 days</option>
+            <option value="7">7 days</option>
+            <option value="14">14 days</option>
           </select>
         </div>
-      </div>
+        
+        <small class="hint">
+          Select “Exact Date” to search only that day, or “Flexible” to include a +/- 14-day window.
+        </small>
 
-      <div class="inline-fields">
-        <div class="field">
-          <label for="departDate">Departure Date</label>
-          <input type="date" id="departDate" />
+        <!-- Checkbox -->
+        <div class="checkbox-row">
+          <input type="checkbox" id="partnerSpace" />
+          <label for="partnerSpace">Include partner award space</label>
         </div>
-        <div class="field">
-          <label for="returnDate">Return Date</label>
-          <input type="date" id="returnDate" />
+      </div>
+
+      <!-- STEP 2 -->
+      <div class="step routing">
+        <h3>Step 2:&nbsp;Routing Preferences</h3>
+
+        <label>Direct Non-stop</label>
+        <div class="toggle-group" id="directStop">
+          <button data-val="yes">Yes</button>
+          <button data-val="no">No</button>
         </div>
+
+        <label>Multiple Connections</label>
+        <div class="toggle-group" id="multiConn">
+          <button data-val="yes">Yes</button>
+          <button data-val="no">No</button>
+        </div>
+
+        <label>Positioning Flight Allowed</label>
+        <div class="toggle-group" id="posFlight">
+          <button data-val="yes">Yes</button>
+          <button data-val="no">No</button>
+        </div>
+
+        <label for="program">Airline Program:</label>
+        <select id="program">
+          <option value="">All Programs</option>
+          <option value="american">American Airlines</option>
+          <option value="alaska">Alaska Airlines</option>
+          <option value="united">United Airlines</option>
+          <option value="delta">Delta Air Lines</option>
+          <option value="jetblue">JetBlue</option>
+          <option value="southwest">Southwest Airlines</option>
+          <option value="aeroplan">Air Canada Aeroplan</option>
+          <option value="avios">British Airways Avios</option>
+          <option value="flyingblue">Air France / KLM Flying Blue</option>
+          <option value="virginatlantic">Virgin Atlantic</option>
+          <option value="qantas">Qantas</option>
+          <option value="qatar">Qatar Airways Privilege Club</option>
+          <option value="ana">ANA Mileage Club</option>
+          <option value="emirates">Emirates Skywards</option>
+          <option value="etihad">Etihad Guest</option>
+          <option value="singapore">Singapore KrisFlyer</option>
+          <option value="turkish">Turkish Miles & Smiles</option>
+        </select>
+
+        <!-- STEP 3 -->
+        <h3 style="margin-top: 20px;">Step 3:&nbsp;Search</h3>
+        <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
+        <p id="searchWarning" style="display: block;">Complete Step 2 to continue.</p>
       </div>
-
-      <div class="card-options">
-        <button class="option-btn active" id="exactBtn">Exact Date</button>
-        <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
-      </div>
-
-      <input type="hidden" id="mode" value="exact" />
-      <label for="flexDays" style="display:none" id="flexLabel">Search Days +/- Date Selected:</label>
-      <select id="flexDays" style="display:none">
-        <option value="1">1 day</option>
-        <option value="3">3 days</option>
-        <option value="5">5 days</option>
-        <option value="7">7 days</option>
-        <option value="14">14 days</option>
-      </select>
-
-      <small class="hint">
-        Select “Exact Date” to search only that day, or “Flexible” to include a +/- 14-day window.
-      </small>
-
-      <div class="checkbox-row">
-        <input type="checkbox" id="partnerSpace" />
-        <label for="partnerSpace">Include partner award space</label>
-      </div>
-    </div>
-
-    <!-- STEP 2 -->
-    <div class="step routing">
-      <h3>Step 2:&nbsp;Routing Preferences</h3>
-
-      <label>Direct Non-stop</label>
-      <div class="toggle-group" id="directStop">
-        <button data-val="yes">Yes</button>
-        <button data-val="no">No</button>
-      </div>
-
-      <label>Multiple Connections</label>
-      <div class="toggle-group" id="multiConn">
-        <button data-val="yes">Yes</button>
-        <button data-val="no">No</button>
-      </div>
-
-      <label>Positioning Flight Allowed</label>
-      <div class="toggle-group" id="posFlight">
-        <button data-val="yes">Yes</button>
-        <button data-val="no">No</button>
-      </div>
-
-      <label for="program">Airline Program:</label>
-      <select id="program">
-        <option value="">All Programs</option>
-        <option value="american">American Airlines</option>
-        <option value="alaska">Alaska Airlines</option>
-        <option value="united">United Airlines</option>
-        <option value="delta">Delta Air Lines</option>
-        <option value="jetblue">JetBlue</option>
-        <option value="southwest">Southwest Airlines</option>
-        <option value="aeroplan">Air Canada Aeroplan</option>
-        <option value="avios">British Airways Avios</option>
-        <option value="flyingblue">Air France / KLM Flying Blue</option>
-        <option value="virginatlantic">Virgin Atlantic</option>
-        <option value="qantas">Qantas</option>
-        <option value="qatar">Qatar Airways Privilege Club</option>
-        <option value="ana">ANA Mileage Club</option>
-        <option value="emirates">Emirates Skywards</option>
-        <option value="etihad">Etihad Guest</option>
-        <option value="singapore">Singapore KrisFlyer</option>
-        <option value="turkish">Turkish Miles & Smiles</option>
-      </select>
-
-      <h3 style="margin-top:20px;">Step 3:&nbsp;Search</h3>
-      <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
-      <p id="searchWarning" style="display:block;">Complete Step 2 to continue.</p>
     </div>
   </div>
-</div>
 
+  <!-- ConciergeSync™ Spinner Bridge -->
+  <div id="spinner-overlay" class="spinner-overlay">
+    <div class="gold-card">
+      <p>Your personalized ConciergeSync™ results...</p>
+    </div>
+  </div>
+
+<!-- Optional guard -->
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    console.log("🧭 Redemption form loaded.");
-
-    const exactBtn = document.getElementById("exactBtn");
-    const flexBtn = document.getElementById("flexBtn");
-    const modeInput = document.getElementById("mode");
-    const flexDays = document.getElementById("flexDays");
-    const flexLabel = document.getElementById("flexLabel");
-    const searchBtn = document.getElementById("searchBtn");
-    const searchWarning = document.getElementById("searchWarning");
-
-    // Toggle exact/flex
-    exactBtn.onclick = () => {
-      modeInput.value = "exact";
-      exactBtn.classList.add("active");
-      flexBtn.classList.remove("active");
-      flexDays.style.display = "none";
-      flexLabel.style.display = "none";
-    };
-    flexBtn.onclick = () => {
-      modeInput.value = "flexible";
-      flexBtn.classList.add("active");
-      exactBtn.classList.remove("active");
-      flexDays.style.display = "block";
-      flexLabel.style.display = "block";
-    };
-
-    // Toggle logic for routing buttons
-    document.querySelectorAll(".toggle-group").forEach(group => {
-      const buttons = group.querySelectorAll("button");
-      buttons.forEach(btn => {
-        btn.addEventListener("click", () => {
-          buttons.forEach(b => b.classList.remove("active"));
-          btn.classList.add("active");
-          validateForm();
-        });
+    if (!window.redemptionModuleInitialized) {
+      window.redemptionModuleInitialized = true;
+      (function() {
+        console.log("Redemption module initialized standalone.");
+      })();
+    }
+</script>
+  
+<script>
+    window.addEventListener("load", () => {
+      console.log("🧭 Mode toggle logic loaded.");
+    
+      const modeInput = document.getElementById("mode");
+      const exactBtn = document.getElementById("exactBtn");
+      const flexBtn = document.getElementById("flexBtn");
+      const flexPicker = document.getElementById("flexPicker");
+    
+      if (!modeInput || !exactBtn || !flexBtn) {
+        console.warn("⚠️ Mode toggle elements not found in DOM.");
+        return;
+      }
+    
+      // --- Exact Date button ---
+      exactBtn.addEventListener("click", () => {
+        modeInput.value = "exact";
+        flexPicker.style.display = "none";
+        exactBtn.classList.add("active");
+        flexBtn.classList.remove("active");
+        console.log("🟢 Mode switched to EXACT — current value:", modeInput.value);
+      });
+    
+      // --- Flexible ± Days button ---
+      flexBtn.addEventListener("click", () => {
+        modeInput.value = "flexible";
+        flexPicker.style.display = "block";
+        flexBtn.classList.add("active");
+        exactBtn.classList.remove("active");
+        console.log("🟣 Mode switched to FLEXIBLE — current value:", modeInput.value);
       });
     });
-
-    // Validation
-    const requiredFields = ["origin","destination","cabin","departDate"];
-    requiredFields.forEach(id => {
-      document.getElementById(id).addEventListener("input", validateForm);
-    });
-
-    function validateForm() {
-      const allFilled = requiredFields.every(id => document.getElementById(id).value.trim() !== "");
-      const oneRouteSet = Array.from(document.querySelectorAll(".toggle-group button.active")).length > 0;
-      const ready = allFilled && oneRouteSet;
-      searchBtn.disabled = !ready;
-      searchWarning.style.display = ready ? "none" : "block";
-    }
-
-    // Submit
-    searchBtn.addEventListener("click", async () => {
-      const payload = {
-        origin: origin.value.trim(),
-        destination: destination.value.trim(),
-        passengers: passengers.value || "1",
-        cabin: cabin.value || "Economy",
-        departDate: departDate.value,
-        returnDate: returnDate.value,
-        flexDays: flexDays.value || "0",
-        includePartners: partnerSpace.checked,
-        mode: modeInput.value
-      };
-      console.log("🚀 Payload:", payload);
-
-      try {
-        const res = await fetch("/api/search", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload)
-        });
-        if (!res.ok) throw new Error("Search request failed");
-        const data = await res.json();
-        sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data));
-        sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(payload));
-        console.log("✅ Search success — redirecting...");
-        window.location.assign("/dev/redemption-results.html");
-      } catch (err) {
-        console.error("❌ Search error:", err);
-        alert("Search failed — check console for details.");
-      }
-    });
-  });
 </script>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+      console.log("🧭 Search logic attached — DOM fully loaded.");
+      const searchBtn = document.getElementById("searchBtn");
+      const spinner   = document.getElementById("spinner-overlay");
+    
+      if (!searchBtn || !spinner) {
+        console.warn("⚠️ Search button or spinner not found.");
+        return;
+      }
+    
+      spinner.classList.remove("active");
+    
+      const observer = new MutationObserver(() => {
+        if (!searchBtn.disabled) {
+          observer.disconnect();
+    
+          searchBtn.addEventListener("click", async (e) => {
+            e.preventDefault();
+            spinner.classList.add("active");
+    
+            const payload = {
+              origin: document.getElementById("origin")?.value || "",
+              destination: document.getElementById("destination")?.value || "",
+              passengers: document.getElementById("passengers")?.value || "1",
+              cabin: document.getElementById("cabin")?.value || "Economy",
+              departDate: document.getElementById("departDate")?.value || "",
+              returnDate: document.getElementById("returnDate")?.value || "",
+              flexDays: document.getElementById("flexDays")?.value || "0",
+              includePartners: document.getElementById("partnerSpace")?.checked || false,
+              mode: document.getElementById("mode")?.value || "exact"
+            };
+    
+            console.log("🧭 Payload ready:", payload);
+    
+            try {
+              const res = await fetch("/api/search", {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(payload)
+              });
+    
+              if (!res.ok) throw new Error("Search request failed");
+    
+              const data = await res.json();
+              await Promise.all([
+                sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data)),
+                sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(payload))
+              ]);
+    
+              await new Promise(r => setTimeout(r, 2600));
+    
+              const resModule = await fetch("/dev/redemption-results.html");
+              const resHTML = await resModule.text();
+              const workspace = document.getElementById("workspace");
+    
+              if (workspace) {
+                workspace.innerHTML = resHTML;
+                console.log("✅ Redemption results loaded into console workspace.");
+              } else {
+                  console.warn("⚠️ Workspace not found – redirect suppressed for debugging.");
+                  // window.location.assign("/dev/redemption-results.html");
+                  const msg = document.createElement("div");
+                  msg.textContent = "⚠️ Workspace element not found — results cannot be injected.";
+                  msg.style.cssText = "color: gold; text-align:center; margin-top:2rem;";
+                  document.body.appendChild(msg);
+                }
+            } catch (err) {
+              console.error("❌ Search error:", err);
+            }
+          });
+        }
+      });
+    
+      observer.observe(searchBtn, { attributes: true, attributeFilter: ["disabled"] });
+    });
+</script>
+
+
+<!-- ========== END SCRIPT SECTION ========== -->
+
+<!-- ConciergeSync™ Spinner Overlay : Gold-Border Luxury Card -->
+<style>
+/* ---------- Self-Hosted ConciergeSync™ Fonts ---------- */
+  @font-face {
+    font-family: "Cormorant Garamond";
+    src: url("/dev/fonts/CormorantGaramond-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Cormorant Garamond";
+    src: url("/dev/fonts/CormorantGaramond-Medium.ttf") format("truetype");
+    font-weight: 500;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Libre Baskerville";
+    src: url("/dev/fonts/LibreBaskerville-Regular.ttf") format("truetype");
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Libre Baskerville";
+    src: url("/dev/fonts/LibreBaskerville-Bold.ttf") format("truetype");
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  
+  /* ---------- Spinner Overlay ---------- */
+  .spinner-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(10, 26, 51, 0.55); /* was 0.75 → lightens the scene */
+    display: none;
+    justify-content: center;
+    align-items: center;
+    z-index: 9990;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  
+  .spinner-overlay.active {
+    display: flex;             /* 🔹 becomes visible only when .active is added */
+    opacity: 1;
+    visibility: visible;
+  }
+
+  /* === Spinner Bridge Alignment Layer === */
+  #spinner-bridge {
+    position: fixed !important;
+    top: 0;
+    left: 0;
+    width: 100vw;              /* full viewport width */
+    height: 100vh;             /* full viewport height */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(10, 26, 51, 0.85);
+    z-index: 9998;
+    overflow: hidden;
+  }
+
+  /* ---------- Gold Card ---------- */
+  /* === ConciergeSync™ Gold Card — Visibility Lock === */
+  #gold-card {
+    visibility: visible !important;
+    opacity: 1 !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    position: absolute !important;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -45%); /* proportional, device-responsive bias */
+    width: 260px;
+    z-index: 9999 !important;
+    pointer-events: none;
+  }
+
+    .gold-card::after {
+    content: "";
+    position: relative;
+    inset: 0;
+    border-radius: 16px;
+    z-index: 1;                        /* ensures shimmer is on top */
+    background: linear-gradient(
+      100deg,
+      rgba(255,255,255,0) 0%,
+      rgba(255,255,255,0.25) 48%,
+      rgba(255,255,255,0) 52%
+    );
+    background-size: 400% 100%;
+    background-position: -200% 0;
+    animation: shimmer 4s linear infinite;
+    opacity: 0.6;
+    mix-blend-mode: screen;
+    pointer-events: none;
+  }
+
+
+  /* ---------- Gold Card Text ---------- */
+  .gold-card p {
+    font-family: "Cormorant Garamond", "Libre Baskerville", serif;
+    font-weight: 500;
+    font-size: 1rem;
+    letter-spacing: 1.3px;
+    color: #0a1a33;
+    text-align: center;
+    text-shadow:
+      0 0.8px 0 rgba(255,255,255,0.25),
+      0 -0.8px 0 rgba(0,0,0,0.2);
+  }
+
+  .spinner-overlay {
+    background: rgba(10, 26, 51, 0.35); /* was 0.55 or higher */
+  }
+
+  /* ----------- Gold card shimmer animation ----------- */
+    @keyframes shimmer {
+    0%   { background-position: -300% 0; }
+    100% { background-position: 300% 0; }
+  } 
+
+.search-btn.loading {
+  opacity: 0.8;
+  cursor: wait;
+  transition: all 0.3s ease;
+  }
+
+.spinner {
+  display: inline-block;
+  width: 14px;
+  height: 14px;
+  margin-right: 8px;
+  border: 2px solid rgba(255,255,255,0.6);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin 0.8s linear infinite;
+  vertical-align: middle;
+}
+
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+
+</style>
+
+<!-- <script>
+  function showGoldCard() {
+  const spinner = document.getElementById("spinner-overlay");
+  const wrapper = document.querySelector(".search-wrapper");
+
+  if (!spinner || !wrapper) return;
+
+  // fade form out
+  wrapper.style.transition = "opacity 1.2s ease";   // slower fade
+  wrapper.style.opacity = "0";
+
+  // show overlay with a slight delay for smoother handoff
+  setTimeout(() => {
+    spinner.classList.add("active");
+  }, 300);
+
+  // keep overlay visible a bit longer, then fade it out
+  setTimeout(() => {
+    spinner.classList.remove("active");
+    wrapper.style.opacity = "1"; // fade form back in
+  }, 3200);
+}
+
+window.showGoldCard = showGoldCard;
+
+</script> -->
+
+<!-- ✅ Spinner Bridge (keep and fix comment) -->
+<script>
+    window.createSpinnerBridge = () => {
+      const old = document.getElementById('spinner-bridge');
+      if (old) old.remove();
+    
+      const bridge = document.createElement('div');
+      bridge.id = 'spinner-bridge';
+      Object.assign(bridge.style, {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(10,26,51,0.85)',
+        zIndex: 9998
+      });
+    
+      const card = document.createElement('img');
+      card.id = 'gold-card';
+      card.src = '/dev/asset/CS_logo_vert_gold_card.png';
+      Object.assign(card.style, {
+        width: '400px',
+        opacity: 1,
+        visibility: 'visible',
+        zIndex: 9999
+      });
+      bridge.appendChild(card);
+    
+      const shimmer = document.createElement('div');
+      shimmer.id = 'shimmer-overlay';
+      Object.assign(shimmer.style, {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
+        backgroundSize: '200% 100%',
+        animation: 'shimmerMove 2s infinite'
+      });
+      bridge.appendChild(shimmer);
+    
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes shimmerMove {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `;
+      document.head.appendChild(style);
+    
+      document.body.appendChild(bridge);
+      console.log('✅ Spinner bridge & gold card created manually');
+    };
+</script>
+
+<!-- ✅ Global Exports Only (keep these, delete old mode & search duplications) -->
+<script>
+    window.initRedemptionForm = function() {
+      console.log("Redemption form initialized.");
+      const ws = document.getElementById("workspace");
+      if (!ws) return;
+    
+      const originInput = ws.querySelector("#origin");
+      const destinationInput = ws.querySelector("#destination");
+    
+      if (originInput && destinationInput) {
+        originInput.addEventListener("input", () => {
+          console.log("Origin input changed:", originInput.value);
+        });
+        destinationInput.addEventListener("input", () => {
+          console.log("Destination input changed:", destinationInput.value);
+        });
+      }
+    };
+    
+    window.fetchIATA = function() {
+      console.log("Fetching IATA data (delegated)...");
+      const ws = document.getElementById("workspace");
+      if (!ws) return;
+    
+      if (window.__redem_iata_blur_handler) {
+        ws.removeEventListener("blur", window.__redem_iata_blur_handler, true);
+      }
+    
+      window.__redem_iata_blur_handler = function(evt) {
+        try {
+          if (!evt || typeof evt !== "object" || !evt.target) return;
+          const t = evt.target;
+          if (!(t instanceof HTMLInputElement)) return;
+          if (!t.matches || !t.matches("[data-iata]")) return;
+    
+          console.log("Fetch IATA for:", t.value);
+        } catch (err) {
+          console.error("IATA delegated handler error:", err);
+        }
+      };
+      ws.addEventListener("blur", window.__redem_iata_blur_handler, true);
+    
+      if (window.__redem_iata_input_handler) {
+        ws.removeEventListener("input", window.__redem_iata_input_handler, false);
+      }
+    
+      window.__redem_iata_input_handler = function(evt) {
+        try {
+          if (!evt || !evt.target) return;
+          const t = evt.target;
+          if (!(t instanceof HTMLInputElement)) return;
+          if (!t.matches("[data-iata]")) return;
+          console.log("IATA input change:", t.value);
+        } catch (err) {
+          console.error("IATA input delegated handler error:", err);
+        }
+      };
+      ws.addEventListener("input", window.__redem_iata_input_handler, false);
+    };
+    
+    window.attachYesNoHandlers = function() {
+      console.log("Attaching delegated yes/no handlers...");
+      const ws = document.getElementById("workspace");
+      if (!ws) return;
+    
+      if (window.__redem_yesno_click_handler) {
+        ws.removeEventListener("click", window.__redem_yesno_click_handler, false);
+      }
+    
+      window.__redem_yesno_click_handler = function(evt) {
+        try {
+          const btn = evt.target.closest("[data-yesno]");
+          if (!btn) return;
+          btn.classList.toggle("active");
+          console.log("Toggled:", btn.dataset.yesno);
+    
+          const searchBtn = ws.querySelector("#searchBtn");
+          if (searchBtn) {
+            const anyActive = !!ws.querySelector("[data-yesno].active");
+            searchBtn.disabled = !anyActive;
+            console.log("Search button disabled:", searchBtn.disabled);
+          }
+        } catch (err) {
+          console.error("Yes/No delegated handler error:", err);
+        }
+      };
+      ws.addEventListener("click", window.__redem_yesno_click_handler, false);
+    };
+</script>
+
+
+<!-- === Dynamic Workspace Injection Target === -->
+<div id="workspace" class="workspace">
+  <!-- Injected flight-cards.html content will appear here -->
+</div>
+
+<!-- Keep this commented out for now -->
+<!-- <script src="/dev/js/redemption-module.js"></script> -->
