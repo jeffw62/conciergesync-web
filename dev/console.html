@@ -797,21 +797,23 @@ window.loadPage = async function (page) {
       if (page.includes("redem-con")) {
         const root = document.getElementById("workspace") || document.body;
       
-        // Trigger IATA and toggle setup if available
+    // 🧭 Safe deferred IATA + toggle initialization
+      setTimeout(() => {
         if (typeof window.setupIataAutocomplete === "function") {
-          console.log("✈️ Re-initializing IATA autocomplete (redem-con)");
+          console.log("✈️ Deferred: initializing IATA autocomplete (redem-con)");
           window.setupIataAutocomplete(root);
         } else {
-          console.warn("⚠️ setupIataAutocomplete not found at runtime.");
+          console.warn("⚠️ setupIataAutocomplete still not found after defer.");
         }
       
         if (typeof window.setupRoutingToggles === "function") {
-          console.log("🧭 Re-initializing routing toggles (redem-con)");
+          console.log("🔁 Deferred: initializing routing toggles (redem-con)");
           window.setupRoutingToggles(root);
         } else {
-          console.warn("⚠️ setupRoutingToggles not found at runtime.");
+          console.warn("⚠️ setupRoutingToggles still not found after defer.");
         }
-      }
+      }, 400); // wait 400 ms to ensure redemption-console.js is parsed
+
 
   } catch (err) {
     console.error(`❌ Failed to load ${page}:`, err);
