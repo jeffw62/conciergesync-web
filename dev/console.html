@@ -729,59 +729,59 @@ window.loadPage = async function (page) {
     "prog-con": "/dev/prog-con.html",
     "bonus-con": "/dev/bonus-con.html",
     "hints-con": "/dev/hints-con.html",
-    // "console": "/dev/console.html",  // ⬅ disabled to prevent self-reload
+    "console": "/dev/console.html",
   };
-
+  
   // 🏠 Reload console landing page
-    if (page === "console") {
-      console.log("🏠 Returning to console landing page...");
-    
-      try {
-        // Fade out current content
-        workspace.style.transition = "opacity 0.4s ease";
-        workspace.style.opacity = "0";
-    
-        // Wait a beat for smooth transition
-        await new Promise((resolve) => setTimeout(resolve, 250));
-    
-        // Fetch and inject the main console content
-        const res = await fetch("/dev/console.html");
-        if (!res.ok) throw new Error(`Console fetch failed: ${res.status}`);
-        const html = await res.text();
-    
-        // Extract only the workspace contents (avoid header duplication)
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-        const newContent = doc.querySelector("#workspace")?.innerHTML || html;
-    
-        workspace.innerHTML = newContent;
-    
-        // Fade back in
-        requestAnimationFrame(() => {
-          workspace.style.opacity = "1";
-        });
-    
-        console.log("✅ Console landing page reloaded cleanly.");
-      } catch (err) {
-        console.error("❌ Console reload failed:", err);
-        workspace.innerHTML = "<p>Failed to reload console landing page.</p>";
-        workspace.style.opacity = "1";
-      }
-    
-      return;
+  if (page === "console") {
+    console.log("🏠 Returning to console landing page...");
+  
+    try {
+      workspace.style.transition = "opacity 0.4s ease";
+      workspace.style.opacity = "0";
+  
+      await new Promise((resolve) => setTimeout(resolve, 250));
+  
+      const res = await fetch("/dev/console.html");
+      if (!res.ok) throw new Error(`Console fetch failed: ${res.status}`);
+      const html = await res.text();
+  
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const newContent = doc.querySelector("#workspace")?.innerHTML || html;
+  
+      workspace.innerHTML = newContent;
+  
+      requestAnimationFrame(() => (workspace.style.opacity = "1"));
+  
+      console.log("✅ Console landing page reloaded cleanly.");
+    } catch (err) {
+      console.error("❌ Console reload failed:", err);
+      workspace.innerHTML = "<p>Failed to reload console landing page.</p>";
+      workspace.style.opacity = "1";
     }
-
+  
+    return; // stop here, do not continue to route loading
+  }
+  
+  // --- normal module routes ---
+  const path = routes[page];
+  if (!path) {
+    console.warn(`⚠️ Unknown page "${page}".`);
+    workspace.style.opacity = "1";
+    return;
+  }
+  
   try {
     const res = await fetch(path);
     if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
     const html = await res.text();
-
+  
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
     const content = doc.body ? doc.body.innerHTML : html;
     workspace.innerHTML = content;
-
-    // Re-execute inline scripts (e.g., redemption-console.js)
+  
     Array.from(workspace.querySelectorAll("script")).forEach((s) => {
       const newS = document.createElement("script");
       if (s.src) newS.src = s.src;
@@ -789,7 +789,7 @@ window.loadPage = async function (page) {
       document.body.appendChild(newS);
       s.remove();
     });
-
+  
     requestAnimationFrame(() => (workspace.style.opacity = "1"));
     console.log(`✅ ${page} module fully injected`);
   } catch (err) {
@@ -799,10 +799,7 @@ window.loadPage = async function (page) {
     </div>`;
     workspace.style.opacity = "1";
   }
-};
-
-  
-
+  };
 
   (async () => {
     // 🧭 Ensure workspace becomes visible *before* wallet logic runs
