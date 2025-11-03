@@ -729,15 +729,22 @@ window.loadPage = async function (page) {
     "prog-con": "/dev/prog-con.html",
     "bonus-con": "/dev/bonus-con.html",
     "hints-con": "/dev/hints-con.html",
-    "console": "/dev/console.html",
+    // "console": "/dev/console.html",  // ⬅ disabled to prevent self-reload
   };
 
-  const path = routes[page];
-  if (!path) {
-    console.warn(`⚠️ Unknown page "${page}".`);
-    workspace.style.opacity = "1";
-    return;
-  }
+  // 🏠 Prevent reloading the console into itself
+    if (page === "console") {
+      console.log("🏠 Already on console — skipping self-reload.");
+      workspace.style.opacity = "1";
+      return;
+    }
+    
+    const path = routes[page];
+    if (!path) {
+      console.warn(`⚠️ Unknown page "${page}".`);
+      workspace.style.opacity = "1";
+      return;
+    }
 
   try {
     const res = await fetch(path);
