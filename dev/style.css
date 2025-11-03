@@ -676,3 +676,12 @@ header {
   margin-left: auto;
 }
 
+/* 🔧 Normalize all injected module roots */
+#workspace > * {
+  max-width: 100%;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0 auto;
+  padding-right: 24px;  /* matches header breathing room */
+  overflow-x: hidden;
+}
