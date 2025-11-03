@@ -31,10 +31,7 @@
 
     observer.observe(workspace, { childList: true, subtree: true });
   } else {
-    // defer initialization slightly to ensure full parse of setup functions
-      setTimeout(() => {
-        initializeHandlers(panel);
-    }, 150);
+    initializeHandlers(panel);
   }
 
   // --------------------------------------------------
