@@ -34,6 +34,161 @@
     initializeHandlers(panel);
   }
 
+  // --------------------------------------------------
+  // ✈️ IATA Autocomplete — Live from local JSON
+  // --------------------------------------------------
+  async function setupIataAutocomplete(root) {
+    const fields = ["origin", "destination"];
+    let airportData = [];
+  
+    // Load local dataset once
+    try {
+      const res = await fetch("/dev/asset/iata-icao.json");
+      airportData = await res.json();
+      console.log(`🗺️ Loaded ${airportData.length} airport entries.`);
+    } catch (err) {
+      console.error("❌ Failed to load IATA dataset:", err);
+      return;
+    }
+  
+    // Utility: filter by query
+    function findMatches(query) {
+      const q = query.toUpperCase();
+      return airportData
+        .filter(a =>
+          a.iata?.startsWith(q) ||
+          a.city?.toUpperCase().includes(q) ||
+          a.name?.toUpperCase().includes(q)
+        )
+        .slice(0, 8);
+    }
+  
+    // Build interaction
+    fields.forEach(id => {
+      const input = root.querySelector(`#${id}`);
+      const suggBox = root.querySelector(`#${id}-suggestions`);
+      if (!input || !suggBox) return;
+  
+      input.addEventListener("input", e => {
+        const val = e.target.value.trim();
+        suggBox.innerHTML = "";
+        if (val.length < 2) return;
+  
+        const matches = findMatches(val);
+        matches.forEach(a => {
+          const div = document.createElement("div");
+          div.className = "suggestion";
+          div.textContent = `${a.iata?.toUpperCase()} — ${a.region_name}, ${a.country_code} • ${a.airport}`;
+          div.addEventListener("click", () => {
+            input.value = a.iata;
+            suggBox.innerHTML = "";
+          });
+          suggBox.appendChild(div);
+        });
+      });
+  
+      // simple blur cleanup
+      input.addEventListener("blur", () => {
+        setTimeout(() => (suggBox.innerHTML = ""), 150);
+      });
+    });
+  
+    console.log("✈️ IATA autocomplete initialized.");
+  }
+
+// --------------------------------------------------
+// 📆 Flex Days Toggle Logic — Matches redem-con.html
+// --------------------------------------------------
+function setupFlexDays(root) {
+  const exactBtn = root.querySelector("#exactBtn");
+  const flexBtn = root.querySelector("#flexBtn");
+  const flexPicker = root.querySelector("#flexPicker");
+  const flexSelect = root.querySelector("#flexDays");
+
+  if (!exactBtn || !flexBtn || !flexPicker || !flexSelect) {
+    console.warn("⚠️ Flex Days elements not found in workspace.");
+    return;
+  }
+
+  // Switch between Exact and Flexible modes
+  exactBtn.addEventListener("click", () => {
+    exactBtn.classList.add("active");
+    flexBtn.classList.remove("active");
+    flexPicker.style.display = "none";
+    console.log("📆 Exact Date mode selected.");
+  });
+
+  flexBtn.addEventListener("click", () => {
+    flexBtn.classList.add("active");
+    exactBtn.classList.remove("active");
+    flexPicker.style.display = "block";
+    console.log("📆 Flexible +/- Days mode selected.");
+  });
+
+  // Handle change in the +/- days dropdown
+  flexSelect.addEventListener("change", (e) => {
+    const val = e.target.value;
+    console.log(`📆 Flex Days set to ±${val} days`);
+  });
+
+  console.log("📆 Flex Days logic initialized.");
+}
+
+// --------------------------------------------------
+// 🔁 Step 2 Routing Toggles — Matches redem-con.html
+// --------------------------------------------------
+function setupRoutingToggles(root) {
+  const groups = [
+    { id: "directStop", type: "direct" },
+    { id: "multiConn", type: "multi" },
+    { id: "posFlight", type: "positioning" }
+  ];
+
+  // utility: update active state
+  const setActive = (group, value) => {
+    const buttons = group.querySelectorAll("button");
+    buttons.forEach(btn => {
+      const isActive = btn.dataset.val === value;
+      btn.classList.toggle("active", isActive);
+    });
+  };
+
+  groups.forEach(({ id, type }) => {
+    const group = root.querySelector(`#${id}`);
+    if (!group) {
+      console.warn(`⚠️ Routing group #${id} not found in DOM.`);
+      return;
+    }
+
+    const [yesBtn, noBtn] = group.querySelectorAll("button");
+
+    if (yesBtn && noBtn) {
+      yesBtn.addEventListener("click", () => {
+        setActive(group, "yes");
+
+        // interlock rule: direct ↔ multi exclusive
+        if (type === "direct") {
+          const multiGroup = root.querySelector("#multiConn");
+          if (multiGroup) setActive(multiGroup, "no");
+        }
+        if (type === "multi") {
+          const directGroup = root.querySelector("#directStop");
+          if (directGroup) setActive(directGroup, "no");
+        }
+
+        console.log(`✈️ ${type} set to YES`);
+      });
+
+      noBtn.addEventListener("click", () => {
+      setActive(group, "no");
+          console.log(`✈️ ${type} set to NO`);
+        });
+      }
+    });
+  
+  console.log("🔁 Routing toggles initialized and mapped to DOM groups.");
+} // closes setupRoutingToggles(root)
+  
   // -----------------------------------------------
   // 🌿 3.0 Handler Initialization
   // -----------------------------------------------
@@ -233,161 +388,6 @@
 
     console.log("🔁 Routing toggles initialized and mapped to DOM groups.");
     }
-
-    // --------------------------------------------------
-    // ✈️ IATA Autocomplete — Live from local JSON
-    // --------------------------------------------------
-    async function setupIataAutocomplete(root) {
-      const fields = ["origin", "destination"];
-      let airportData = [];
-    
-      // Load local dataset once
-      try {
-        const res = await fetch("/dev/asset/iata-icao.json");
-        airportData = await res.json();
-        console.log(`🗺️ Loaded ${airportData.length} airport entries.`);
-      } catch (err) {
-        console.error("❌ Failed to load IATA dataset:", err);
-        return;
-      }
-    
-      // Utility: filter by query
-      function findMatches(query) {
-        const q = query.toUpperCase();
-        return airportData
-          .filter(a =>
-            a.iata?.startsWith(q) ||
-            a.city?.toUpperCase().includes(q) ||
-            a.name?.toUpperCase().includes(q)
-          )
-          .slice(0, 8);
-      }
-    
-      // Build interaction
-      fields.forEach(id => {
-        const input = root.querySelector(`#${id}`);
-        const suggBox = root.querySelector(`#${id}-suggestions`);
-        if (!input || !suggBox) return;
-    
-        input.addEventListener("input", e => {
-          const val = e.target.value.trim();
-          suggBox.innerHTML = "";
-          if (val.length < 2) return;
-    
-          const matches = findMatches(val);
-          matches.forEach(a => {
-            const div = document.createElement("div");
-            div.className = "suggestion";
-            div.textContent = `${a.iata?.toUpperCase()} — ${a.region_name}, ${a.country_code} • ${a.airport}`;
-            div.addEventListener("click", () => {
-              input.value = a.iata;
-              suggBox.innerHTML = "";
-            });
-            suggBox.appendChild(div);
-          });
-        });
-    
-        // simple blur cleanup
-        input.addEventListener("blur", () => {
-          setTimeout(() => (suggBox.innerHTML = ""), 150);
-        });
-      });
-    
-      console.log("✈️ IATA autocomplete initialized.");
-    }
-
-  // --------------------------------------------------
-  // 📆 Flex Days Toggle Logic — Matches redem-con.html
-  // --------------------------------------------------
-  function setupFlexDays(root) {
-    const exactBtn = root.querySelector("#exactBtn");
-    const flexBtn = root.querySelector("#flexBtn");
-    const flexPicker = root.querySelector("#flexPicker");
-    const flexSelect = root.querySelector("#flexDays");
-  
-    if (!exactBtn || !flexBtn || !flexPicker || !flexSelect) {
-      console.warn("⚠️ Flex Days elements not found in workspace.");
-      return;
-    }
-  
-    // Switch between Exact and Flexible modes
-    exactBtn.addEventListener("click", () => {
-      exactBtn.classList.add("active");
-      flexBtn.classList.remove("active");
-      flexPicker.style.display = "none";
-      console.log("📆 Exact Date mode selected.");
-    });
-  
-    flexBtn.addEventListener("click", () => {
-      flexBtn.classList.add("active");
-      exactBtn.classList.remove("active");
-      flexPicker.style.display = "block";
-      console.log("📆 Flexible +/- Days mode selected.");
-    });
-  
-    // Handle change in the +/- days dropdown
-    flexSelect.addEventListener("change", (e) => {
-      const val = e.target.value;
-      console.log(`📆 Flex Days set to ±${val} days`);
-    });
-  
-    console.log("📆 Flex Days logic initialized.");
-  }
-
-  // --------------------------------------------------
-  // 🔁 Step 2 Routing Toggles — Matches redem-con.html
-  // --------------------------------------------------
-  function setupRoutingToggles(root) {
-    const groups = [
-      { id: "directStop", type: "direct" },
-      { id: "multiConn", type: "multi" },
-      { id: "posFlight", type: "positioning" }
-    ];
-  
-    // utility: update active state
-    const setActive = (group, value) => {
-      const buttons = group.querySelectorAll("button");
-      buttons.forEach(btn => {
-        const isActive = btn.dataset.val === value;
-        btn.classList.toggle("active", isActive);
-      });
-    };
-  
-    groups.forEach(({ id, type }) => {
-      const group = root.querySelector(`#${id}`);
-      if (!group) {
-        console.warn(`⚠️ Routing group #${id} not found in DOM.`);
-        return;
-      }
-  
-      const [yesBtn, noBtn] = group.querySelectorAll("button");
-  
-      if (yesBtn && noBtn) {
-        yesBtn.addEventListener("click", () => {
-          setActive(group, "yes");
-  
-          // interlock rule: direct ↔ multi exclusive
-          if (type === "direct") {
-            const multiGroup = root.querySelector("#multiConn");
-            if (multiGroup) setActive(multiGroup, "no");
-          }
-          if (type === "multi") {
-            const directGroup = root.querySelector("#directStop");
-            if (directGroup) setActive(directGroup, "no");
-          }
-  
-          console.log(`✈️ ${type} set to YES`);
-        });
-  
-        noBtn.addEventListener("click", () => {
-        setActive(group, "no");
-            console.log(`✈️ ${type} set to NO`);
-          });
-        }
-      });
-    
-    console.log("🔁 Routing toggles initialized and mapped to DOM groups.");
-  } // closes setupRoutingToggles(root)
 
   // --------------------------------------------------
   // 🌐 Dynamic Workspace Loader for Hamburger Navigation
