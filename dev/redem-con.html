@@ -357,6 +357,71 @@ whee<style>
   </div>
 
 <script>
+  // 🧭 Routing Toggle Logic with Auto-Exclusion + Search Activation
+  (function() {
+    const groups = document.querySelectorAll(".toggle-group");
+    const searchBtn = document.getElementById("searchBtn");
+
+    if (!groups.length) {
+      console.warn("⚠️ No routing toggle groups found — skipping setup.");
+      return;
+    }
+
+    function updateSearchState() {
+      const allSelected = Array.from(groups).every(g => g.dataset.selected);
+      if (allSelected) {
+        searchBtn.removeAttribute("disabled");
+        searchBtn.classList.add("active");
+        console.log("✅ All routing toggles selected — Search enabled");
+      } else {
+        searchBtn.setAttribute("disabled", "true");
+        searchBtn.classList.remove("active");
+      }
+    }
+
+    function handleToggleClick(group, btn) {
+      group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      group.dataset.selected = btn.dataset.val;
+      console.log(`🔘 ${group.id} set to "${btn.dataset.val}"`);
+
+      if (group.id === "directStop" && btn.dataset.val === "yes") {
+        const multi = document.getElementById("multiConn");
+        if (multi) {
+          multi.querySelectorAll("button").forEach(b => {
+            b.classList.remove("active");
+            if (b.dataset.val === "no") b.classList.add("active");
+          });
+          multi.dataset.selected = "no";
+          console.log("🔁 Auto-set multiConn → no (directStop = yes)");
+        }
+      } else if (group.id === "multiConn" && btn.dataset.val === "yes") {
+        const direct = document.getElementById("directStop");
+        if (direct) {
+          direct.querySelectorAll("button").forEach(b => {
+            b.classList.remove("active");
+            if (b.dataset.val === "no") b.classList.add("active");
+          });
+          direct.dataset.selected = "no";
+          console.log("🔁 Auto-set directStop → no (multiConn = yes)");
+        }
+      }
+
+      updateSearchState();
+    }
+
+    groups.forEach(group => {
+      const buttons = group.querySelectorAll("button[data-val]");
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => handleToggleClick(group, btn));
+      });
+    });
+
+    console.log("✅ Routing toggles with auto-logic initialized.");
+  })();
+</script>
+
+<script>
   // --------------------------------------------------
   // ✈️ IATA Autocomplete — Local Dataset Loader
   // --------------------------------------------------
