@@ -699,106 +699,77 @@
 document.addEventListener("DOMContentLoaded", () => {
   const workspace = document.getElementById("workspace");
 
-// --- Wallet ---
-async function loadPage(page) {
-  if (!page || !page.includes("wallet")) return;
+// --- Universal Console Module Loader ---
+window.loadPage = async function (page) {
+  if (!page) {
+    console.warn("⚠️ loadPage called without target page");
+    return;
+  }
 
-  console.log("💳 Loading wallet module (fade-only mode)...");
+  const workspace = document.getElementById("workspace");
+  if (!workspace) {
+    console.error("❌ No workspace element found.");
+    return;
+  }
+
+  console.log(`🧭 Loading module: ${page}`);
+
+  // Fade out current content
+  workspace.style.transition = "opacity 0.4s ease";
+  workspace.style.opacity = "0";
+
+  await new Promise((resolve) => {
+    requestAnimationFrame(() => setTimeout(resolve, 120));
+  });
+
+  // Page map
+  const routes = {
+    "wallet-con": "/dev/wallet-con.html",
+    "redem-con": "/dev/redem-con.html",
+    "prog-con": "/dev/prog-con.html",
+    "bonus-con": "/dev/bonus-con.html",
+    "hints-con": "/dev/hints-con.html",
+    "console": "/dev/console.html",
+  };
+
+  const path = routes[page];
+  if (!path) {
+    console.warn(`⚠️ Unknown page "${page}".`);
+    workspace.style.opacity = "1";
+    return;
+  }
 
   try {
-    // ensure workspace exists
-    if (typeof workspace === "undefined" || !workspace) {
-      throw new Error("workspace element not found");
-    }
-
-    // Fade out existing workspace content (fade-only, no overlay)
-    workspace.style.transition = "opacity 0.4s cubic-bezier(0.25,0.8,0.25,1)";
-    workspace.style.opacity = "0";
-
-    // Wait for the fade to start and a paint cycle
-    await new Promise((resolve) => {
-      requestAnimationFrame(() => setTimeout(resolve, 120));
-    });
-
-    // Fetch wallet HTML
-    const res = await fetch("/dev/wallet-con.html");
-    if (!res.ok) throw new Error(`Wallet fetch failed: ${res.status}`);
+    const res = await fetch(path);
+    if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
     const html = await res.text();
 
-    // Parse and inject (safely)
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
-    const bodyContent = doc.body ? doc.body.innerHTML : html;
+    const content = doc.body ? doc.body.innerHTML : html;
+    workspace.innerHTML = content;
 
-    // inject HTML
-    workspace.innerHTML = bodyContent;
-
-    // Give the browser one extra frame to paint the injected DOM
-    await new Promise((resolve) => requestAnimationFrame(() => setTimeout(resolve, 60)));
-
-    // Execute inline and external scripts inside the injected wallet HTML
-    // Find scripts inside the workspace (not the original doc) and re-append them to the document
+    // Re-execute inline scripts (e.g., redemption-console.js)
     Array.from(workspace.querySelectorAll("script")).forEach((s) => {
-      try {
-        const newS = document.createElement("script");
-        if (s.src) {
-          // preserve external script src
-          newS.src = s.src;
-          // preserve async/defer attributes if present
-          if (s.async) newS.async = true;
-          if (s.defer) newS.defer = true;
-        } else {
-          newS.textContent = s.textContent;
-        }
-        document.body.appendChild(newS);
-        s.remove();
-      } catch (ex) {
-        console.warn("Script re-attach failed for one <script>:", ex);
-      }
+      const newS = document.createElement("script");
+      if (s.src) newS.src = s.src;
+      else newS.textContent = s.textContent;
+      document.body.appendChild(newS);
+      s.remove();
     });
 
-    // Extra small delay to allow the wallet's own JS (if any) to initialize DOM nodes
-    await new Promise((resolve) => setTimeout(resolve, 120));
-
-    // Fade back in
-    requestAnimationFrame(() => {
-      workspace.style.opacity = "1";
-    });
-
-    console.log("💳 Wallet module fully injected");
-
-    // Ensure walletRoot exists (the wallet HTML should include <div id="walletRoot">...)
-    const walletRoot = document.querySelector("#walletRoot");
-    if (!walletRoot) {
-      // If not found: warn (but widget may still work). This avoids spurious race warnings.
-      console.warn("⚠ Wallet root not found — ensure wallet-con.html contains <div id=\"walletRoot\">.");
-    } else {
-      console.log("✅ Wallet root detected successfully");
-    }
-
-    // If wallet exposes an initializer, call it safely
-    if (typeof window.initWallet === "function") {
-      try {
-        window.initWallet();
-        console.log("⚡ initWallet() executed");
-      } catch (err) {
-        console.warn("Wallet init error:", err);
-      }
-    }
-
+    requestAnimationFrame(() => (workspace.style.opacity = "1"));
+    console.log(`✅ ${page} module fully injected`);
   } catch (err) {
-    console.error("❌ Wallet load error:", err);
-    // show a minimal, clear error to the user
-    if (typeof workspace !== "undefined" && workspace) {
-      workspace.innerHTML = `<div style="padding:24px;color:#ffdddd;background:#2b2b2b;border-radius:6px;">
-        <strong>Wallet failed to load.</strong><div style="margin-top:8px;">${(err && err.message) ? err.message : "Unknown error"}
-        </div>
-      </div>`;
-      // fade it in so user sees the message
-      requestAnimationFrame(() => (workspace.style.opacity = "1"));
-    }
+    console.error(`❌ Failed to load ${page}:`, err);
+    workspace.innerHTML = `<div class="error-box">
+      <strong>Failed to load module:</strong> ${page}<br>${err.message}
+    </div>`;
+    workspace.style.opacity = "1";
   }
-}
+};
+
+  
 
 
   (async () => {
