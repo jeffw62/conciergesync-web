@@ -160,32 +160,27 @@
     }
     
     function updateSearchState() {
-      const originInput = document.getElementById("origin");
-      const destinationInput = document.getElementById("destination");
-      const departDate = document.getElementById("departDate");
-      const cabinSelect = document.getElementById("cabin");
-      const searchWarning = document.getElementById("searchWarning");
+      // Use unified validation via isFormReady()
+      if (typeof isFormReady === "function") {
+        const ready = isFormReady();
+        const searchBtn = document.getElementById("searchBtn");
+        const searchWarning = document.getElementById("searchWarning");
     
-      const allSelected = Array.from(groups).every(g => g.dataset.selected);
-      const originOk = originInput?.value?.length === 3;
-      const destOk = destinationInput?.value?.length === 3;
-      const dateOk = !!departDate?.value;
-      const cabinOk = !!cabinSelect?.value;
-    
-      const ready = allSelected && originOk && destOk && dateOk && cabinOk;
-    
-      if (ready) {
-        searchBtn.removeAttribute("disabled");
-        searchBtn.classList.add("active");
-        if (searchWarning) searchWarning.style.display = "none";
-        console.log("✅ All fields validated — Search enabled");
+        if (ready) {
+          searchBtn.removeAttribute("disabled");
+          searchBtn.classList.add("active");
+          if (searchWarning) searchWarning.style.display = "none";
+          console.log("✅ All fields validated — Search enabled");
+        } else {
+          searchBtn.setAttribute("disabled", "true");
+          searchBtn.classList.remove("active");
+          if (searchWarning) searchWarning.style.display = "block";
+          console.warn("⚠️ Form incomplete — Search disabled");
+        }
       } else {
-        searchBtn.setAttribute("disabled", "true");
-        searchBtn.classList.remove("active");
-        if (searchWarning) searchWarning.style.display = "block";
+        console.warn("⚠️ isFormReady() not found — skipping validation link.");
       }
     }
-
     
     // Attach live validation listeners for Step 1 & 2
     [
