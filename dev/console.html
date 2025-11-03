@@ -731,48 +731,96 @@
 </script>
 
 <!-- ✅ Clean global console module loader -->
+<!-- Console module loader -->
 <script>
-  async function loadPage(page) {
-    const workspace = document.getElementById("workspace");
-    if (!workspace) return console.error("❌ No workspace element found.");
-  
-    if (!page) return console.warn("⚠️ loadPage called with no target");
-  
-    console.log(`🧭 Fetching: ${page}`);
-    try {
-      const res = await fetch(`/dev/${page}.html`);
-      if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-      const html = await res.text();
-      console.log(`📦 Loaded ${page}.html (${html.length} chars)`);
-  
-      workspace.innerHTML = html;
-      console.log(`✅ Injected ${page} into workspace`);
-  
-      // re-run scripts inside injected HTML
-      workspace.querySelectorAll("script").forEach(s => {
-        const clone = document.createElement("script");
-        if (s.src) clone.src = s.src;
-        else clone.textContent = s.textContent;
-        document.body.appendChild(clone);
-      });
-    } catch (err) {
-      console.error(`❌ Loader error for ${page}:`, err);
-      workspace.innerHTML = `<p style="color:red;">Module load failed (${page})</p>`;
-    }
-  }
-  
-  // 🔗 Global nav click handler
   document.addEventListener("DOMContentLoaded", () => {
-    document.querySelectorAll(".nav-link").forEach(link => {
-      link.addEventListener("click", e => {
+    const workspace = document.getElementById("workspace");
+    if (!workspace) {
+      console.error("❌ No workspace element found on page load.");
+      return;
+    }
+  
+    // --- Unified Page Loader ---
+    window.loadPage = async function (page) {
+      if (!page) {
+        console.warn("⚠️ loadPage called without target page");
+        return;
+      }
+  
+      console.group(`🧭 Loading module: ${page}`);
+      workspace.style.transition = "opacity 0.4s ease";
+      workspace.style.opacity = "0";
+  
+      // Short fade delay
+      await new Promise(resolve => setTimeout(resolve, 150));
+  
+      // Route map
+      const routes = {
+        "cons-con": "/dev/cons-con.html",
+        "wallet-con": "/dev/wallet-con.html",
+        "redem-con": "/dev/redem-con.html",
+        "prog-con": "/dev/prog-con.html",
+        "bonus-con": "/dev/bonus-con.html",
+        "hints-con": "/dev/hints-con.html"
+      };
+  
+      const path = routes[page];
+      if (!path) {
+        console.warn(`⚠️ Unknown route: ${page}`);
+        workspace.innerHTML = `<p>Unknown section: ${page}</p>`;
+        workspace.style.opacity = "1";
+        console.groupEnd();
+        return;
+      }
+  
+      try {
+        const res = await fetch(path);
+        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+        const html = await res.text();
+  
+        // Inject cleanly
+        workspace.innerHTML = html;
+  
+        // Re-run any inline scripts in injected file
+        workspace.querySelectorAll("script").forEach((s) => {
+          const newScript = document.createElement("script");
+          if (s.src) newScript.src = s.src;
+          else newScript.textContent = s.textContent;
+          document.body.appendChild(newScript);
+          s.remove();
+        });
+  
+        // Fade-in reveal
+        requestAnimationFrame(() => {
+          workspace.style.opacity = "1";
+          workspace.classList.add("fade-in");
+          setTimeout(() => workspace.classList.remove("fade-in"), 400);
+        });
+  
+        console.log(`✅ Module loaded: ${page}`);
+      } catch (err) {
+        console.error(`❌ Failed to load ${page}:`, err);
+        workspace.innerHTML = `<p>Failed to load ${page}</p>`;
+        workspace.style.opacity = "1";
+      }
+  
+      console.groupEnd();
+    };
+  
+    // --- Navigation Click Handling ---
+    document.querySelectorAll(".nav-link, #sideNav a[data-page]").forEach(link => {
+      link.addEventListener("click", async (e) => {
         e.preventDefault();
-        const page = link.textContent.trim().toLowerCase();
-        console.log("🟡 NAV:", page);
-        loadPage(page);
+        const page = link.dataset.page;
+        if (!page) return;
+        console.log(`🪄 Nav → ${page}`);
+        await loadPage(page);
+        document.getElementById("sideNav")?.classList.remove("open");
       });
     });
   });
 </script>
+
 
 
 <style>
