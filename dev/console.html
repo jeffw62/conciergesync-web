@@ -1006,9 +1006,9 @@ if (page.includes("redemption")) {
 }  catch (err) {
   console.error("❌ Workspace load error:", err);
   workspace.innerHTML = "<p>Failed to load this section.</p>";
-}
+    }
   });
-    });
+});
 </script>
 
 
@@ -1080,9 +1080,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
       // Close the side navigation after click
       document.getElementById("sideNav").classList.remove("open");
+      });
     });
-  });
-});
 </script>
 
 
