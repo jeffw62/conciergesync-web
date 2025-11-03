@@ -143,30 +143,29 @@
     const departDate = root.querySelector("#departDate");
     const returnDate = root.querySelector("#returnDate");
     const cabinSelect = root.querySelector("#cabin");
-    const flexToggles = root.querySelectorAll('input[name="flexDays"]');
+    const flexToggles = root.querySelectorAll("#flexDays");
     const routingToggles = root.querySelectorAll('.step.routing input[type="radio"]');
     
     function isFormReady() {
       const originOk = originInput?.value?.length === 3;
       const destOk = destinationInput?.value?.length === 3;
-      const dateOk = !!departDate.value;
+      const dateOk = !!departDate?.value && departDate.value.trim() !== "";
       const cabinOk = cabinSelect.value !== "";
-      const flexOk = root.querySelector("#exactBtn.option-btn.active, #flexBtn.option-btn.active") !== null;
+      const flexOk = !!root.querySelector("#exactBtn.active, #flexBtn.active");
       const directOk = root.querySelector("#directStop button.active") !== null;
       const multiOk = root.querySelector("#multiConn button.active") !== null;
       const posOk = root.querySelector("#posFlight button.active") !== null;
-      const routingOk = directOk && multiOk && posOk;
-        console.log("🧠 VALIDATION STATE", {
-          origin: originInput?.value,
-          destination: destinationInput?.value,
-          departDate: departDate?.value,
-          returnDate: returnDate?.value,
-          cabin: cabinSelect?.value,
-          flexChecked: flexToggles ? Array.from(flexToggles).some(f => f.checked) : null,
-          directStopActive: document.querySelector("#directStop button.active")?.dataset.val,
-          multiConnActive: document.querySelector("#multiConn button.active")?.dataset.val,
-          posFlightActive: document.querySelector("#posFlight button.active")?.dataset.val
-        });
+      const routingOk =
+          root.querySelector("#directStop button.active") &&
+          root.querySelector("#multiConn button.active") &&
+          root.querySelector("#posFlight button.active");
+        const ready = originOk && destOk && dateOk && cabinOk && flexOk && routingOk;
+        return ready;
+          console.log("🧠 VALIDATION STATE", {
+            departDate: departDate?.value,
+            flexDays: flexSelect?.value,
+            flexActive: root.querySelector("#exactBtn.active, #flexBtn.active")?.id || "none",
+          });
       return originOk && destOk && dateOk && cabinOk && flexOk && routingOk;
     }
     
