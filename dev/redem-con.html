@@ -415,26 +415,38 @@ whee<style>
     console.log("✈️ IATA autocomplete initialized.");
   }
 
-  // --------------------------------------------------
-  // 🧭 Routing Toggle Setup — Yes/No + Direct/Connect Logic
-  // --------------------------------------------------
-  function setupRoutingToggles(root) {
-    const toggles = root.querySelectorAll(".yesno-toggle");
-    if (!toggles.length) {
-      console.log("ℹ️ No toggles detected in current module.");
-      return;
-    }
-
-    toggles.forEach(toggle => {
-      toggle.addEventListener("click", () => {
-        toggles.forEach(t => t.classList.remove("active"));
-        toggle.classList.add("active");
-        console.log(`🧭 Routing toggle set: ${toggle.textContent.trim()}`);
+    // --------------------------------------------------
+    // 🧭 Routing Toggle Setup — Works with .toggle-group buttons
+    // --------------------------------------------------
+    function setupRoutingToggles(root) {
+      const groups = root.querySelectorAll(".toggle-group");
+      if (!groups.length) {
+        console.log("ℹ️ No .toggle-group elements detected in current module.");
+        return;
+      }
+    
+      console.log(`🧭 Found ${groups.length} toggle groups — initializing handlers...`);
+    
+      groups.forEach(group => {
+        const buttons = group.querySelectorAll("button[data-val]");
+        buttons.forEach(btn => {
+          btn.addEventListener("click", () => {
+            // clear any existing active button
+            buttons.forEach(b => b.classList.remove("active"));
+    
+            // set active on clicked button
+            btn.classList.add("active");
+    
+            // store the selection value
+            const value = btn.getAttribute("data-val");
+            group.dataset.selected = value;
+            console.log(`🔘 ${group.id} set to "${value}"`);
+          });
+        });
       });
-    });
-
-    console.log("🧭 Routing toggles initialized.");
-  }
+    
+      console.log("✅ Routing toggles initialized successfully.");
+    }
 </script>
 
     <!-- Optional guard -->
