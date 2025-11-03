@@ -799,14 +799,18 @@
       });
   
       console.log("🟢 Workspace visible — safe to init wallet");
-  
-      // Initialize wallet if available
-      if (typeof window.initWallet === "function") {
-        try {
-          window.initWallet();
-          console.log("⚡ initWallet() executed");
-        } catch (err) {
-          console.warn("Wallet init error:", err);
+
+        if (page.includes("wallet")) {
+          // ✅ Only initialize wallet when wallet-con is the target
+          if (typeof window.initWallet === "function") {
+            try {
+              window.initWallet();
+              console.log("⚡ initWallet() executed");
+            } catch (err) {
+              console.warn("Wallet init error:", err);
+            }
+          }
+          console.log("💳 Wallet module fully injected");
         }
       }
   
