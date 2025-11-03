@@ -628,44 +628,80 @@
   <!-- Footer Injection -->
   <div id="footer"></div>
 
-  <script>
-    // Footer loader
-    fetch("/dev/footer.html")
-      .then(r => r.text())
-      .then(h => (document.getElementById("footer").innerHTML = h))
-      .catch(e => console.error("Footer failed to load:", e));
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    // --- Footer loader ---
+    const footerEl = document.getElementById("footer");
+    if (footerEl) {
+      fetch("/dev/footer.html")
+        .then(res => {
+          if (!res.ok) throw new Error(`HTTP ${res.status}`);
+          return res.text();
+        })
+        .then(html => {
+          footerEl.innerHTML = html;
+          console.log("✅ Footer loaded successfully.");
+        })
+        .catch(err => console.error("❌ Footer failed to load:", err));
+    } else {
+      console.warn("⚠️ #footer element not found in DOM.");
+    }
+  
+    // --- Hamburger toggle ---
+    const toggle = document.querySelector(".menu-toggle");
+    const nav = document.querySelector("header nav");
+    if (toggle && nav) {
+      toggle.addEventListener("click", () => {
+        nav.classList.toggle("active");
+        console.log(`🍔 Nav menu toggled → ${nav.classList.contains("active") ? "open" : "closed"}`);
+      });
+    } else {
+      console.warn("⚠️ Hamburger or nav not found in DOM.");
+    }
+  });
+</script>
 
-    // Hamburger toggle
-    document.addEventListener("DOMContentLoaded", () => {
-      const toggle = document.querySelector(".menu-toggle");
-      const nav = document.querySelector("header nav");
-      if (toggle && nav)
-        toggle.addEventListener("click", () => nav.classList.toggle("active"));
-    });
-  </script>
-
-  <script>
-    const tickerValue = document.getElementById('tickerValue');
-    const tickerTrend = document.getElementById('tickerTrend');
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const tickerValue = document.getElementById("tickerValue");
+    const tickerTrend = document.getElementById("tickerTrend");
+  
+    if (!tickerValue || !tickerTrend) {
+      console.warn("⚠️ Ticker elements not found in DOM.");
+      return;
+    }
+  
     let current = 2.13;
   
     setInterval(() => {
-    const delta = (Math.random() - 0.5) * 0.1;
-    current = Math.max(1.5, Math.min(3.5, current + delta));
+      // random delta between -0.05 and +0.05
+      const delta = (Math.random() - 0.5) * 0.1;
+      current = Math.max(1.5, Math.min(3.5, current + delta));
   
-    const goingDown = delta < 0;
-    tickerValue.textContent = current.toFixed(2) + "¢";
-    tickerTrend.textContent = goingDown ? "▼" : "▲";
-    tickerTrend.className = goingDown ? "good" : "bad";
-  }, 3000);
-  </script>
-  <script>
-    // --- Time-based greeting logic ---
+      const goingDown = delta < 0;
+  
+      tickerValue.textContent = current.toFixed(2) + "¢";
+      tickerTrend.textContent = goingDown ? "▼" : "▲";
+  
+      // 🔁 Optional: flip logic if up is "good"
+      tickerTrend.className = goingDown ? "bad" : "good";
+    }, 3000);
+  });
+</script>
+    
+<script>
+  // --- Time-based greeting logic ---
+  document.addEventListener("DOMContentLoaded", () => {
     const welcomeMsg = document.getElementById("welcome-message");
+    if (!welcomeMsg) {
+      console.warn("⚠️ No element found with id='welcome-message'");
+      return;
+    }
+  
     const now = new Date();
     const hour = now.getHours();
     let greeting;
-    
+  
     if (hour < 12) {
       greeting = "Good morning";
     } else if (hour < 18) {
@@ -673,187 +709,98 @@
     } else {
       greeting = "Good evening";
     }
-    
-    window.welcomeMsg = window.welcomeMsg || document.getElementById("welcomeMsg");
-    if (window.welcomeMsg) window.welcomeMsg.textContent = `${greeting}, Jeff.`;
-
-
-  </script>
-
-  <script>
-    const accountBtn = document.getElementById('accountBtn');
-    const accountMenu = accountBtn.parentElement;
   
-    accountBtn.addEventListener('click', () => {
-      accountMenu.classList.toggle('active');
-    });
-  
-    document.addEventListener('click', (e) => {
-      if (!accountMenu.contains(e.target)) {
-        accountMenu.classList.remove('active');
-      }
-    });
-  </script>
-  <!-- Console module loader -->
+    welcomeMsg.textContent = `${greeting}, Jeff.`;
+  });
+</script>
+
+  <!-- account dropdown behavior -->
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const workspace = document.getElementById("workspace");
+  const accountBtn = document.getElementById('accountBtn');
+  const accountMenu = accountBtn.parentElement;
 
-// --- Universal Console Module Loader ---
-window.loadPage = async function (page) {
-  if (!page) {
-    console.warn("⚠️ loadPage called without target page");
-    return;
-  }
-
-  const workspace = document.getElementById("workspace");
-  if (!workspace) {
-    console.error("❌ No workspace element found.");
-    return;
-  }
-
-  console.log(`🧭 Loading module: ${page}`);
-
-  // Fade out current content
-  workspace.style.transition = "opacity 0.4s ease";
-  workspace.style.opacity = "0";
-
-  await new Promise((resolve) => {
-    requestAnimationFrame(() => setTimeout(resolve, 120));
+  accountBtn.addEventListener('click', () => {
+    accountMenu.classList.toggle('active');
   });
 
-  // Page map
-  const routes = {
-    "wallet-con": "/dev/wallet-con.html",
-    "redem-con": "/dev/redem-con.html",
-    "prog-con": "/dev/prog-con.html",
-    "bonus-con": "/dev/bonus-con.html",
-    "hints-con": "/dev/hints-con.html",
-    "console": "/dev/console.html",
-  };
-  
-  // 🏠 Reload console landing page
-  if (page === "console") {
-    console.log("🏠 Returning to console landing page...");
-  
-    try {
-      workspace.style.transition = "opacity 0.4s ease";
-      workspace.style.opacity = "0";
-  
-      await new Promise((resolve) => setTimeout(resolve, 250));
-  
-      const res = await fetch("/dev/console.html");
-      if (!res.ok) throw new Error(`Console fetch failed: ${res.status}`);
-      const html = await res.text();
-  
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const newContent = doc.querySelector("#workspace")?.innerHTML || html;
-  
-      workspace.innerHTML = newContent;
-  
-      requestAnimationFrame(() => (workspace.style.opacity = "1"));
-  
-      console.log("✅ Console landing page reloaded cleanly.");
-    } catch (err) {
-      console.error("❌ Console reload failed:", err);
-      workspace.innerHTML = "<p>Failed to reload console landing page.</p>";
-      workspace.style.opacity = "1";
+  document.addEventListener('click', (e) => {
+    if (!accountMenu.contains(e.target)) {
+      accountMenu.classList.remove('active');
     }
-  
-    return; // stop here, do not continue to route loading
-  }
-  
-  // --------------------------------------------------
-  // 🌐 Dynamic Workspace Loader for Hamburger Navigation
-  // --------------------------------------------------
-  async function loadPage(page) {
+  });
+</script>
+
+<!-- Console module loader -->
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
     const workspace = document.getElementById("workspace");
     if (!workspace) {
-      console.warn("⚠️ No workspace found for dynamic load.");
+      console.error("❌ No workspace element found on page load.");
       return;
     }
   
-    try {
-      console.log(`🔄 Loading ${page}...`);
+    // --- Universal Console Module Loader ---
+    window.loadPage = async function (page) {
+      if (!page) {
+        console.warn("⚠️ loadPage called without target page");
+        return;
+      }
+  
+      console.log(`🧭 Loading module: ${page}`);
+  
+      // Fade out current content
       workspace.style.transition = "opacity 0.4s ease";
       workspace.style.opacity = "0";
   
-      const path = `/dev/${page}.html`;
-      const res = await fetch(path);
-      if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-  
-      const html = await res.text();
-      const parser = new DOMParser();
-      const doc = parser.parseFromString(html, "text/html");
-      const content = doc.body ? doc.body.innerHTML : html;
-      workspace.innerHTML = content;
-  
-      // re-attach any inline scripts
-      Array.from(workspace.querySelectorAll("script")).forEach((s) => {
-        const newS = document.createElement("script");
-        if (s.src) newS.src = s.src;
-        else newS.textContent = s.textContent;
-        document.body.appendChild(newS);
-        s.remove();
+      await new Promise((resolve) => {
+        requestAnimationFrame(() => setTimeout(resolve, 120));
       });
   
-      requestAnimationFrame(() => (workspace.style.opacity = "1"));
-      console.log(`✅ ${page} module fully injected`);
+      // --- Route Map ---
+      const routes = {
+        "wallet-con": "/dev/wallet-con.html",
+        "redem-con": "/dev/redem-con.html",
+        "prog-con": "/dev/prog-con.html",
+        "bonus-con": "/dev/bonus-con.html",
+        "hints-con": "/dev/hints-con.html",
+        "console": "/dev/console.html",
+      };
   
-      // ✅ Initialize dynamic elements for redemption console
-      if (page.includes("redem-con")) {
-        const root = document.getElementById("workspace") || document.body;
-  
-        // 🧭 Safe deferred IATA + toggle initialization
-        setTimeout(() => {
-          try {
-            if (typeof window.setupIataAutocomplete === "function") {
-              console.log("✈️ Deferred: initializing IATA autocomplete (redem-con)");
-              window.setupIataAutocomplete(root);
-            } else {
-              console.warn("⚠️ setupIataAutocomplete still not found after defer.");
-            }
-  
-            if (typeof window.setupRoutingToggles === "function") {
-              console.log("🔁 Deferred: initializing routing toggles (redem-con)");
-              window.setupRoutingToggles(root);
-            } else {
-              console.warn("⚠️ setupRoutingToggles still not found after defer.");
-            }
-          } catch (err) {
-            console.error("❌ Deferred init error:", err);
-          }
-        }, 400);
+      // 🏠 Reload console landing page
+      if (page === "console") {
+        console.log("🏠 Returning to console landing page...");
+        try {
+          workspace.style.opacity = "0";
+          await new Promise((resolve) => setTimeout(resolve, 250));
+          const res = await fetch("/dev/console.html");
+          if (!res.ok) throw new Error(`Console fetch failed: ${res.status}`);
+          const html = await res.text();
+          const parser = new DOMParser();
+          const doc = parser.parseFromString(html, "text/html");
+          const newContent = doc.querySelector("#workspace")?.innerHTML || html;
+          workspace.innerHTML = newContent;
+          requestAnimationFrame(() => (workspace.style.opacity = "1"));
+          console.log("✅ Console landing page reloaded cleanly.");
+        } catch (err) {
+          console.error("❌ Console reload failed:", err);
+          workspace.innerHTML = "<p>Failed to reload console landing page.</p>";
+          workspace.style.opacity = "1";
+        }
+        return;
       }
   
-    } catch (err) {
-      console.error(`❌ Failed to load ${page}:`, err);
-      workspace.innerHTML = `
-        <div class="error-box">
-          <strong>Failed to load module:</strong> ${page}<br>${err.message}
-        </div>`;
+      // Make workspace visible before module init
+      workspace.classList.remove("fade-out", "hidden", "invisible");
       workspace.style.opacity = "1";
-    }
-  }
-
-
-  (async () => {
-    // 🧭 Ensure workspace becomes visible *before* wallet logic runs
-    workspace.classList.remove("fade-out", "hidden", "invisible");
-    workspace.style.opacity = "1";
-    workspace.style.display = "block";
+      workspace.style.display = "block";
   
-    // 🕒 NEW: delay wallet init by one animation frame until visible
-    await new Promise((resolve) => {
-      requestAnimationFrame(() => {
-        setTimeout(resolve, 120);
+      await new Promise((resolve) => {
+        requestAnimationFrame(() => setTimeout(resolve, 120));
       });
-    });
-  })();
+  
       console.log("🟢 Workspace visible — safe to init wallet");
-      
-      // ✅ Now fire the wallet initialization if it exposes one
+  
+      // Initialize wallet if available
       if (typeof window.initWallet === "function") {
         try {
           window.initWallet();
@@ -862,163 +809,118 @@ window.loadPage = async function (page) {
           console.warn("Wallet init error:", err);
         }
       }
-
-      // --- Fade-in reveal ---
+  
+      // Fade-in reveal
       workspace.classList.add("fade-in");
       setTimeout(() => workspace.classList.remove("fade-in"), 400);
-      
       console.log("💳 Wallet module fully injected");
-        
-document.querySelectorAll(".nav-link").forEach(link => {
-  link.addEventListener("click", async (e) => {
-    e.preventDefault();
-    const page = e.currentTarget.textContent.trim().toLowerCase();
-    console.log("🟡 NAV CLICKED:", page);
-
-    // capture the link before async work
-    const currentLink = e.currentTarget;
-
-    try {
-      await loadPage(page);
-    } catch (err) {
-      console.error("❌ loadPage failed:", err);
-      return;
-    }
-
-    // highlight only if element still exists in DOM
-    if (document.body.contains(currentLink)) {
-      document.querySelectorAll(".nav-link").forEach(l => l.classList.remove("active"));
-      currentLink.classList.add("active");
-    } else {
-      console.warn("⚠️ Skipped highlight — nav link no longer in DOM.");
-    }
-
-    // fade-out
-    workspace.classList.add("fade-out");
-    await new Promise(r => setTimeout(r, 250));
-
-    try {
-      let html = "";
-
-// --- Redemptions Module (Full Rollback Stable) ---
-if (page.includes("redemption")) {
-  console.log("🧩 ENTERED redemption injection block");
-  const res = await fetch("/dev/redem-con.html");
-  html = await res.text();
-  // Inject redemption console HTML
-  workspace.innerHTML = html;
+    };
   
-  // ✅ Load and execute redemption-console.js natively
-  const script = document.createElement("script");
-  script.src = "/dev/js/redemption-console.js";
-  script.async = false;
-  document.body.appendChild(script);
+    // --- Navigation Handler ---
+    document.querySelectorAll(".nav-link").forEach((link) => {
+      link.addEventListener("click", async (e) => {
+        e.preventDefault();
+        const page = e.currentTarget.textContent.trim().toLowerCase();
+        console.log("🟡 NAV CLICKED:", page);
   
-  script.onload = () => {
-    console.log("🟢 Redemption script loaded and executed");
+        const currentLink = e.currentTarget;
+        try {
+          await loadPage(page);
+        } catch (err) {
+          console.error("❌ loadPage failed:", err);
+          return;
+        }
   
-    // 💡 Safe delayed re-init after script load
-    setTimeout(() => {
-      console.log("🔁 Reinitializing IATA + toggle handlers...");
-      if (typeof window.fetchIATA === "function") {
-        window.fetchIATA();
-        console.log("🟢 fetchIATA() executed successfully");
-      } else {
-        console.warn("⚠️ fetchIATA() not defined yet");
-      }
+        // Highlight active nav link
+        if (document.body.contains(currentLink)) {
+          document
+            .querySelectorAll(".nav-link")
+            .forEach((l) => l.classList.remove("active"));
+          currentLink.classList.add("active");
+        }
   
-      if (typeof window.attachYesNoHandlers === "function") {
-        window.attachYesNoHandlers();
-        console.log("🟢 attachYesNoHandlers() executed successfully");
-      } else {
-        console.warn("⚠️ attachYesNoHandlers() not defined yet");
-      }
-    }, 300); // wait 300 ms to ensure DOM + functions are ready
-  };
+        // Fade-out before new module injection
+        workspace.classList.add("fade-out");
+        await new Promise((r) => setTimeout(r, 250));
   
-  console.log("🎯 Redemption module injected (clean rollback mode)");
+        try {
+          let html = "";
   
-  // Fade in transition (keeps UI continuity)
-  workspace.classList.remove("fade-out");
-  workspace.classList.add("fade-in");
-  setTimeout(() => workspace.classList.remove("fade-in"), 400);
-
-  // ✅ Reattach form handlers if wallet-con includes interactive elements
-  setTimeout(() => {
-    try {
-      const hasIATA = workspace.querySelector("input[name='origin'], input[name='destination']");
-      const hasToggles = workspace.querySelector(".yesno-toggle, .toggle-group");
+          // --- Redemptions Module ---
+          if (page.includes("redemption")) {
+            console.log("🧩 ENTERED redemption injection block");
   
-      if (hasIATA && typeof window.fetchIATA === "function") {
-        console.log("🟢 fetchIATA() triggered (wallet – fields detected)");
-        window.fetchIATA();
-      }
+            const res = await fetch("/dev/redem-con.html");
+            html = await res.text();
+            workspace.innerHTML = html;
   
-      if (hasToggles && typeof window.attachYesNoHandlers === "function") {
-        console.log("🟢 attachYesNoHandlers() triggered (wallet – toggles detected)");
-        window.attachYesNoHandlers();
-      }
+            // Inject redemption-console.js
+            const script = document.createElement("script");
+            script.src = "/dev/js/redemption-console.js";
+            script.async = false;
+            document.body.appendChild(script);
   
-      if (!hasIATA && !hasToggles) {
-        console.log("ℹ️ No dynamic inputs in wallet-con — handler skip safe.");
-      }
-    } catch (err) {
-      console.error("❌ Wallet handler reinit failed:", err);
-    }
-  }, 400);
-
-
-    // Failsafe: monitor for wallet overlay and remove it once visible
-    const overlayObserver = new MutationObserver(() => {
-      const overlay = document.querySelector(".wallet-overlay");
-      if (overlay) {
-        console.log("👁️ Detected wallet overlay — initiating fade-out sequence");
-        overlay.style.transition = "opacity 0.6s ease";
-        overlay.style.opacity = "0";
-        overlay.style.pointerEvents = "none";
-    
-        setTimeout(() => {
-          overlay.style.display = "none";
-          overlay.remove();
-          console.log("✅ Wallet overlay fully cleared (observer)");
-          
-          // Force GPU repaint to clear residual blur/tint
-          document.body.style.transform = "translateZ(0)";
-          void document.body.offsetHeight; // force reflow
-          document.body.style.transform = "";
-          console.log("🧽 GPU layer flushed (repaint forced)");
-
-        }, 700);
-    
-        overlayObserver.disconnect(); // stop watching once handled
-      }
-    });
-    
-    // Start observing the document body for added nodes
-    overlayObserver.observe(document.body, { childList: true, subtree: true });
-
-
-  // fade-in
-  workspace.classList.remove("fade-out");
-  workspace.classList.add("fade-in");
-  setTimeout(() => workspace.classList.remove("fade-in"), 400);
-}
-}  catch (err) {
-  console.error("❌ Workspace load error:", err);
-  workspace.innerHTML = "<p>Failed to load this section.</p>";
+            script.onload = () => {
+              console.log("🟢 Redemption script loaded and executed");
+  
+              // Safe delayed re-init
+              setTimeout(() => {
+                console.log("🔁 Reinitializing IATA + toggle handlers...");
+                if (typeof window.fetchIATA === "function") window.fetchIATA();
+                if (typeof window.attachYesNoHandlers === "function")
+                  window.attachYesNoHandlers();
+              }, 300);
+            };
+  
+            console.log("🎯 Redemption module injected (clean rollback mode)");
+  
+            // Fade-in
+            workspace.classList.remove("fade-out");
+            workspace.classList.add("fade-in");
+            setTimeout(() => workspace.classList.remove("fade-in"), 400);
+  
+            // Observer to clean wallet overlay if visible
+            const overlayObserver = new MutationObserver(() => {
+              const overlay = document.querySelector(".wallet-overlay");
+              if (overlay) {
+                console.log("👁️ Detected wallet overlay — fading out");
+                overlay.style.transition = "opacity 0.6s ease";
+                overlay.style.opacity = "0";
+                overlay.style.pointerEvents = "none";
+  
+                setTimeout(() => {
+                  overlay.remove();
+                  console.log("✅ Wallet overlay fully cleared");
+                  document.body.style.transform = "translateZ(0)";
+                  void document.body.offsetHeight;
+                  document.body.style.transform = "";
+                }, 700);
+  
+                overlayObserver.disconnect();
+              }
+            });
+  
+            overlayObserver.observe(document.body, {
+              childList: true,
+              subtree: true,
+            });
+          }
+        } catch (err) {
+          console.error("❌ Workspace load error:", err);
+          workspace.innerHTML = "<p>Failed to load this section.</p>";
+        }
+      });
     });
   });
-});
 </script>
 
-
 <style>
-/* tiny wallet-card pop animation (scoped here so it exists when module is injected) */
-@keyframes walletCardPop {
-  0% { transform: translateY(12px) scale(0.98); opacity: 0; }
-  60% { transform: translateY(-6px) scale(1.02); opacity: 1; }
-  100% { transform: translateY(0) scale(1); opacity: 1; }
-}
+  /* tiny wallet-card pop animation (scoped here so it exists when module is injected) */
+  @keyframes walletCardPop {
+    0% { transform: translateY(12px) scale(0.98); opacity: 0; }
+    60% { transform: translateY(-6px) scale(1.02); opacity: 1; }
+    100% { transform: translateY(0) scale(1); opacity: 1; }
+  }
 </style>
 
   </div>
@@ -1052,39 +954,38 @@ if (page.includes("redemption")) {
 </script>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
-  const navLinks = document.querySelectorAll("#sideNav a[data-page]");
-  const workspace = document.getElementById("workspace");
-
-  if (!workspace) {
-    console.warn("⚠️ No workspace element found for navigation injection.");
-    return;
-  }
-
-  // Wire up clicks for each nav link
-  navLinks.forEach(link => {
-    link.addEventListener("click", async (e) => {
-      e.preventDefault();
-
-      const page = link.dataset.page;
-      if (!page) return;
-
-      console.log(`🧭 Nav click: ${page}`);
-
-      // Call the same loader used by console modules
-      if (typeof loadPage === "function") {
-        await loadPage(page);
-      } else {
-        console.warn("⚠️ loadPage() function not available yet.");
-      }
-
-      // Close the side navigation after click
-      document.getElementById("sideNav").classList.remove("open");
+  document.addEventListener("DOMContentLoaded", () => {
+    const navLinks = document.querySelectorAll("#sideNav a[data-page]");
+    const workspace = document.getElementById("workspace");
+  
+    if (!workspace) {
+      console.warn("⚠️ No workspace element found for navigation injection.");
+      return;
+    }
+  
+    // Wire up clicks for each nav link
+    navLinks.forEach(link => {
+      link.addEventListener("click", async (e) => {
+        e.preventDefault();
+  
+        const page = link.dataset.page;
+        if (!page) return;
+  
+        console.log(`🧭 Nav click: ${page}`);
+  
+        // ✅ Call the correct global loader
+        if (typeof loadPage === "function") {
+          await loadPage(page);
+        } else {
+          console.warn("⚠️ loadPage() function not available yet.");
+        }
+  
+        // Close the side navigation after click
+        document.getElementById("sideNav").classList.remove("open");
       });
-     });
-   });
+    });
+  });
 </script>
-
 
 </body>
 </html>
