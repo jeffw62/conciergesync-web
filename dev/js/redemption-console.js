@@ -377,6 +377,46 @@
     
     console.log("🔁 Routing toggles initialized and mapped to DOM groups.");
   } // closes setupRoutingToggles(root)
+
+  // --------------------------------------------------
+  // 🌐 Dynamic Workspace Loader for Hamburger Navigation
+  // --------------------------------------------------
+  async function loadPage(page) {
+    const workspace = document.getElementById("workspace");
+    if (!workspace) return console.warn("No workspace found for dynamic load.");
+
+    try {
+      console.log(`🔄 Loading ${page}...`);
+
+      // Smooth fade transition
+      workspace.style.transition = "opacity 0.4s ease";
+      workspace.style.opacity = "0";
+
+      // Fetch and inject content
+      const res = await fetch(`/dev/${page}.html`);
+      const html = await res.text();
+
+      setTimeout(() => {
+        workspace.innerHTML = html;
+        workspace.style.opacity = "1";
+        console.log(`✅ ${page} loaded successfully.`);
+      }, 400);
+    } catch (err) {
+      console.error(`❌ Failed to load ${page}:`, err);
+    }
+  }
+
+  // Attach link listeners for hamburger nav
+  document.querySelectorAll('#sideNav a[data-page]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const page = link.dataset.page;
+      console.log(`📂 Navigating to: ${page}`);
+      loadPage(page);
+      document.getElementById('sideNav').classList.remove('open');
+    });
+  });
+  
 })(); // closes entire IIFE
 
 
