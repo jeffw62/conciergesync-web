@@ -730,207 +730,50 @@
   });
 </script>
 
-<!-- Console module loader -->
+<!-- ✅ Clean global console module loader -->
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  async function loadPage(page) {
     const workspace = document.getElementById("workspace");
-    if (!workspace) {
-      console.error("❌ No workspace element found on page load.");
-      return;
+    if (!workspace) return console.error("❌ No workspace element found.");
+  
+    if (!page) return console.warn("⚠️ loadPage called with no target");
+  
+    console.log(`🧭 Fetching: ${page}`);
+    try {
+      const res = await fetch(`/dev/${page}.html`);
+      if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+      const html = await res.text();
+      console.log(`📦 Loaded ${page}.html (${html.length} chars)`);
+  
+      workspace.innerHTML = html;
+      console.log(`✅ Injected ${page} into workspace`);
+  
+      // re-run scripts inside injected HTML
+      workspace.querySelectorAll("script").forEach(s => {
+        const clone = document.createElement("script");
+        if (s.src) clone.src = s.src;
+        else clone.textContent = s.textContent;
+        document.body.appendChild(clone);
+      });
+    } catch (err) {
+      console.error(`❌ Loader error for ${page}:`, err);
+      workspace.innerHTML = `<p style="color:red;">Module load failed (${page})</p>`;
     }
+  }
   
-    // --- Universal Console Module Loader ---
-    window.loadPage = async function (page) {
-      if (!page) {
-        console.warn("⚠️ loadPage called without target page");
-        return;
-      }
-  
-      console.log(`🧭 Loading module: ${page}`);
-  
-      // Fade out current content
-      workspace.style.transition = "opacity 0.4s ease";
-      workspace.style.opacity = "0";
-  
-      await new Promise((resolve) => {
-        requestAnimationFrame(() => setTimeout(resolve, 120));
-      });
-  
-      // --- Route Map ---
-      const routes = {
-        "wallet-con": "/dev/wallet-con.html",
-        "redem-con": "/dev/redem-con.html",
-        "prog-con": "/dev/prog-con.html",
-        "bonus-con": "/dev/bonus-con.html",
-        "hints-con": "/dev/hints-con.html",
-        "console": "/dev/console.html",
-      };
-  
-      // 🏠 Reload console landing page
-      if (page === "console") {
-        console.log("🏠 Returning to console landing page...");
-        try {
-          workspace.style.opacity = "0";
-          await new Promise((resolve) => setTimeout(resolve, 250));
-          const res = await fetch("/dev/console.html");
-          if (!res.ok) throw new Error(`Console fetch failed: ${res.status}`);
-          const html = await res.text();
-          const parser = new DOMParser();
-          const doc = parser.parseFromString(html, "text/html");
-          const newContent = doc.querySelector("#workspace")?.innerHTML || html;
-          workspace.innerHTML = newContent;
-          // --- DIAGNOSTIC: Verify what was injected ---
-            console.groupCollapsed(`🔎 Workspace injection check: ${page}`);
-            console.log("🧩 workspace exists:", !!workspace);
-            console.log("📄 Injected content length:", newContent?.length);
-            console.log("🪞 Workspace current innerHTML length:", workspace.innerHTML.length);
-            
-            // Log the first 300 characters of what got injected
-            console.log("🧾 Preview:", workspace.innerHTML.slice(0, 300));
-            
-            // Inspect the first-level children
-            console.log("🧱 Child elements now in workspace:", [...workspace.children].map(el => el.tagName));
-            
-            console.groupEnd();
-            // --- Force immediate visibility (bypass fade timing issues) ---
-            workspace.style.opacity = "1";
-            workspace.style.display = "block";
-            workspace.classList.remove("fade-out", "hidden", "invisible");
-          requestAnimationFrame(() => (workspace.style.opacity = "1"));
-          console.log(`✅ ${page} module fully injected and displayed`);
-
-          // --- DIAGNOSTIC: Log computed styles after visibility fix ---
-          console.log("🎨 Workspace final computed styles:", getComputedStyle(workspace));
-        } catch (err) {
-          console.error("❌ Console reload failed:", err);
-          workspace.innerHTML = "<p>Failed to reload console landing page.</p>";
-          workspace.style.opacity = "1";
-        }
-        return;
-      }
-  
-      // Make workspace visible before module init
-      workspace.classList.remove("fade-out", "hidden", "invisible");
-      workspace.style.opacity = "1";
-      workspace.style.display = "block";
-  
-      await new Promise((resolve) => {
-        requestAnimationFrame(() => setTimeout(resolve, 120));
-      });
-  
-      console.log("🟢 Workspace visible — safe to init wallet");
-
-        if (page.includes("wallet")) {
-          // ✅ Only initialize wallet when wallet-con is the target
-          if (typeof window.initWallet === "function") {
-            try {
-              window.initWallet();
-              console.log("⚡ initWallet() executed");
-            } catch (err) {
-              console.warn("Wallet init error:", err);
-            }
-          }
-          console.log("💳 Wallet module fully injected");
-        }
-  
-    // --- Navigation Handler ---
-    document.querySelectorAll(".nav-link").forEach((link) => {
-      link.addEventListener("click", async (e) => {
+  // 🔗 Global nav click handler
+  document.addEventListener("DOMContentLoaded", () => {
+    document.querySelectorAll(".nav-link").forEach(link => {
+      link.addEventListener("click", e => {
         e.preventDefault();
-        const page = e.currentTarget.textContent.trim().toLowerCase();
-        console.log("🟡 NAV CLICKED:", page);
-  
-        const currentLink = e.currentTarget;
-        try {
-          await loadPage(page);
-        } catch (err) {
-          console.error("❌ loadPage failed:", err);
-          return;
-        }
-  
-        // Highlight active nav link
-        if (document.body.contains(currentLink)) {
-          document
-            .querySelectorAll(".nav-link")
-            .forEach((l) => l.classList.remove("active"));
-          currentLink.classList.add("active");
-        }
-  
-        // Fade-out before new module injection
-        workspace.classList.add("fade-out");
-        await new Promise((r) => setTimeout(r, 250));
-  
-        try {
-          let html = "";
-  
-          // --- Redemptions Module ---
-          if (page.includes("redemption")) {
-            console.log("🧩 ENTERED redemption injection block");
-  
-            const res = await fetch("/dev/redem-con.html");
-            html = await res.text();
-            workspace.innerHTML = html;
-  
-            // Inject redemption-console.js
-            const script = document.createElement("script");
-            script.src = "/dev/js/redemption-console.js";
-            script.async = false;
-            document.body.appendChild(script);
-  
-            script.onload = () => {
-              console.log("🟢 Redemption script loaded and executed");
-  
-              // Safe delayed re-init
-              setTimeout(() => {
-                console.log("🔁 Reinitializing IATA + toggle handlers...");
-                if (typeof window.fetchIATA === "function") window.fetchIATA();
-                if (typeof window.attachYesNoHandlers === "function")
-                  window.attachYesNoHandlers();
-              }, 300);
-            };
-  
-            console.log("🎯 Redemption module injected (clean rollback mode)");
-  
-            // Fade-in
-            workspace.classList.remove("fade-out");
-            workspace.classList.add("fade-in");
-            setTimeout(() => workspace.classList.remove("fade-in"), 400);
-  
-            // Observer to clean wallet overlay if visible
-            const overlayObserver = new MutationObserver(() => {
-              const overlay = document.querySelector(".wallet-overlay");
-              if (overlay) {
-                console.log("👁️ Detected wallet overlay — fading out");
-                overlay.style.transition = "opacity 0.6s ease";
-                overlay.style.opacity = "0";
-                overlay.style.pointerEvents = "none";
-  
-                setTimeout(() => {
-                  overlay.remove();
-                  console.log("✅ Wallet overlay fully cleared");
-                  document.body.style.transform = "translateZ(0)";
-                  void document.body.offsetHeight;
-                  document.body.style.transform = "";
-                }, 700);
-  
-                overlayObserver.disconnect();
-              }
-            });
-  
-            overlayObserver.observe(document.body, {
-              childList: true,
-              subtree: true,
-            });
-          }
-        } catch (err) {
-          console.error("❌ Workspace load error:", err);
-          workspace.innerHTML = "<p>Failed to load this section.</p>";
-        }
+        const page = link.textContent.trim().toLowerCase();
+        console.log("🟡 NAV:", page);
+        loadPage(page);
       });
     });
-  };
-});
+  });
 </script>
+
 
 <style>
   /* tiny wallet-card pop animation (scoped here so it exists when module is injected) */
