@@ -429,7 +429,30 @@
 
     console.log("✅ SideNav navigation listeners attached successfully.");
   });
+
+  // --------------------------------------------------
+  // 🌐 Expose key handlers globally for dynamic reloads
+  // --------------------------------------------------
+  window.fetchIATA = function () {
+    // Reuse the existing logic by invoking your internal initializer
+    const root = document.getElementById("workspace") || document.body;
+    if (typeof setupIataAutocomplete === "function") {
+      setupIataAutocomplete(root);
+    } else {
+      console.error("❌ setupIataAutocomplete() not found in scope");
+    }
+  };
   
+  window.attachYesNoHandlers = function () {
+    const root = document.getElementById("workspace") || document.body;
+    if (typeof setupRoutingToggles === "function") {
+      setupRoutingToggles(root);
+    } else {
+      console.error("❌ setupRoutingToggles() not found in scope");
+    }
+  };
+  
+    
 })(); // closes entire IIFE
 
 
