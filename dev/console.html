@@ -732,26 +732,42 @@ window.loadPage = async function (page) {
     // "console": "/dev/console.html",  // ⬅ disabled to prevent self-reload
   };
 
-  // 🏠 Prevent reloading the console into itself
+  // 🏠 Reload console landing page
     if (page === "console") {
-      console.log("🏠 Already on console — refreshing view only.");
+      console.log("🏠 Returning to console landing page...");
     
-      // Smooth scroll to top if user scrolled down
-      workspace.scrollTo({ top: 0, behavior: "smooth" });
+      try {
+        // Fade out current content
+        workspace.style.transition = "opacity 0.4s ease";
+        workspace.style.opacity = "0";
     
-      // Subtle fade-in effect for visual refresh
-      workspace.classList.add("fade-in");
-      setTimeout(() => workspace.classList.remove("fade-in"), 400);
+        // Wait a beat for smooth transition
+        await new Promise((resolve) => setTimeout(resolve, 250));
     
-      // Optional: ensure workspace is visible
-      workspace.style.opacity = "1";
-      return;
-    }
+        // Fetch and inject the main console content
+        const res = await fetch("/dev/console.html");
+        if (!res.ok) throw new Error(`Console fetch failed: ${res.status}`);
+        const html = await res.text();
     
-    const path = routes[page];
-    if (!path) {
-      console.warn(`⚠️ Unknown page "${page}".`);
-      workspace.style.opacity = "1";
+        // Extract only the workspace contents (avoid header duplication)
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        const newContent = doc.querySelector("#workspace")?.innerHTML || html;
+    
+        workspace.innerHTML = newContent;
+    
+        // Fade back in
+        requestAnimationFrame(() => {
+          workspace.style.opacity = "1";
+        });
+    
+        console.log("✅ Console landing page reloaded cleanly.");
+      } catch (err) {
+        console.error("❌ Console reload failed:", err);
+        workspace.innerHTML = "<p>Failed to reload console landing page.</p>";
+        workspace.style.opacity = "1";
+      }
+    
       return;
     }
 
