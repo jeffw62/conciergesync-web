@@ -734,7 +734,16 @@ window.loadPage = async function (page) {
 
   // 🏠 Prevent reloading the console into itself
     if (page === "console") {
-      console.log("🏠 Already on console — skipping self-reload.");
+      console.log("🏠 Already on console — refreshing view only.");
+    
+      // Smooth scroll to top if user scrolled down
+      workspace.scrollTo({ top: 0, behavior: "smooth" });
+    
+      // Subtle fade-in effect for visual refresh
+      workspace.classList.add("fade-in");
+      setTimeout(() => workspace.classList.remove("fade-in"), 400);
+    
+      // Optional: ensure workspace is visible
       workspace.style.opacity = "1";
       return;
     }
