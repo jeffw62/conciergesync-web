@@ -156,6 +156,17 @@
       const multiOk = root.querySelector("#multiConn button.active") !== null;
       const posOk = root.querySelector("#posFlight button.active") !== null;
       const routingOk = directOk && multiOk && posOk;
+        console.log("🧠 VALIDATION STATE", {
+          origin: originInput?.value,
+          destination: destinationInput?.value,
+          departDate: departDate?.value,
+          returnDate: returnDate?.value,
+          cabin: cabinSelect?.value,
+          flexChecked: flexToggles ? Array.from(flexToggles).some(f => f.checked) : null,
+          directStopActive: document.querySelector("#directStop button.active")?.dataset.val,
+          multiConnActive: document.querySelector("#multiConn button.active")?.dataset.val,
+          posFlightActive: document.querySelector("#posFlight button.active")?.dataset.val
+        });
       return originOk && destOk && dateOk && cabinOk && flexOk && routingOk;
     }
     
