@@ -213,8 +213,8 @@ whee<style>
     }
 </style>
 
-  <div id="redemptionForm" class="search-wrapper">
-      <div class="search-panel" id="searchPanel">
+  <div class="search-wrapper">
+    <div class="search-panel" id="searchPanel">
         
       <!-- STEP 1 -->
       <div class="step">
@@ -356,190 +356,15 @@ whee<style>
     </div>
   </div>
 
+<!-- Optional guard -->
 <script>
-  // 🧭 Routing Toggle Logic with Auto-Exclusion + Search Activation
-  (function() {
-    const groups = document.querySelectorAll(".toggle-group");
-    const searchBtn = document.getElementById("searchBtn");
-
-    if (!groups.length) {
-      console.warn("⚠️ No routing toggle groups found — skipping setup.");
-      return;
-    }
-
-    function updateSearchState() {
-      const allSelected = Array.from(groups).every(g => g.dataset.selected);
-      if (allSelected) {
-        searchBtn.removeAttribute("disabled");
-        searchBtn.classList.add("active");
-        console.log("✅ All routing toggles selected — Search enabled");
-      } else {
-        searchBtn.setAttribute("disabled", "true");
-        searchBtn.classList.remove("active");
-      }
-    }
-
-    function handleToggleClick(group, btn) {
-      group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
-      btn.classList.add("active");
-      group.dataset.selected = btn.dataset.val;
-      console.log(`🔘 ${group.id} set to "${btn.dataset.val}"`);
-
-      if (group.id === "directStop" && btn.dataset.val === "yes") {
-        const multi = document.getElementById("multiConn");
-        if (multi) {
-          multi.querySelectorAll("button").forEach(b => {
-            b.classList.remove("active");
-            if (b.dataset.val === "no") b.classList.add("active");
-          });
-          multi.dataset.selected = "no";
-          console.log("🔁 Auto-set multiConn → no (directStop = yes)");
-        }
-      } else if (group.id === "multiConn" && btn.dataset.val === "yes") {
-        const direct = document.getElementById("directStop");
-        if (direct) {
-          direct.querySelectorAll("button").forEach(b => {
-            b.classList.remove("active");
-            if (b.dataset.val === "no") b.classList.add("active");
-          });
-          direct.dataset.selected = "no";
-          console.log("🔁 Auto-set directStop → no (multiConn = yes)");
-        }
-      }
-
-      updateSearchState();
-    }
-
-    groups.forEach(group => {
-      const buttons = group.querySelectorAll("button[data-val]");
-      buttons.forEach(btn => {
-        btn.addEventListener("click", () => handleToggleClick(group, btn));
-      });
-    });
-
-    console.log("✅ Routing toggles with auto-logic initialized.");
-  })();
-</script>
-
-<script>
-  // --------------------------------------------------
-  // ✈️ IATA Autocomplete — Local Dataset Loader
-  // --------------------------------------------------
-  async function setupIataAutocomplete(root) {
-    const fields = ["origin", "destination"];
-    let airportData = [];
-
-    try {
-      const res = await fetch("/dev/asset/iata-icao.json");
-      airportData = await res.json();
-      console.log(`🗺️ Loaded ${airportData.length} airport entries.`);
-    } catch (err) {
-      console.error("❌ Failed to load IATA dataset:", err);
-      return;
-    }
-
-    function findMatches(query) {
-      const q = query.toUpperCase();
-      return airportData
-        .filter(a =>
-          a.iata?.startsWith(q) ||
-          a.city?.toUpperCase().includes(q) ||
-          a.name?.toUpperCase().includes(q)
-        )
-        .slice(0, 8);
-    }
-
-    fields.forEach(id => {
-      const input = root.querySelector(`#${id}`);
-      const suggBox = root.querySelector(`#${id}-suggestions`);
-      if (!input || !suggBox) return;
-
-      input.addEventListener("input", e => {
-        const val = e.target.value.trim();
-        suggBox.innerHTML = "";
-        if (val.length < 2) return;
-
-        const matches = findMatches(val);
-        matches.forEach(a => {
-          const div = document.createElement("div");
-          div.className = "suggestion";
-          div.textContent = `${a.iata?.toUpperCase()} — ${a.region_name}, ${a.country_code} • ${a.airport}`;
-          div.addEventListener("click", () => {
-            input.value = a.iata;
-            suggBox.innerHTML = "";
-          });
-          suggBox.appendChild(div);
-        });
-      });
-
-      input.addEventListener("blur", () => {
-        setTimeout(() => (suggBox.innerHTML = ""), 150);
-      });
-    });
-
-    console.log("✈️ IATA autocomplete initialized.");
-  }
-
-    // --------------------------------------------------
-    // 🧭 Routing Toggle Setup — Works with .toggle-group buttons
-    // --------------------------------------------------
-    function setupRoutingToggles(root) {
-      const groups = root.querySelectorAll(".toggle-group");
-      if (!groups.length) {
-        console.log("ℹ️ No .toggle-group elements detected in current module.");
-        return;
-      }
-    
-      console.log(`🧭 Found ${groups.length} toggle groups — initializing handlers...`);
-    
-      groups.forEach(group => {
-        const buttons = group.querySelectorAll("button[data-val]");
-        buttons.forEach(btn => {
-          btn.addEventListener("click", () => {
-            // clear any existing active button
-            buttons.forEach(b => b.classList.remove("active"));
-    
-            // set active on clicked button
-            btn.classList.add("active");
-    
-            // store the selection value
-            const value = btn.getAttribute("data-val");
-            group.dataset.selected = value;
-            console.log(`🔘 ${group.id} set to "${value}"`);
-          });
-        });
-      });
-    
-      console.log("✅ Routing toggles initialized successfully.");
-    }
-</script>
-
-    <!-- Optional guard -->
-    <script>
     if (!window.redemptionModuleInitialized) {
       window.redemptionModuleInitialized = true;
-    
-      (function () {
+      (function() {
         console.log("Redemption module initialized standalone.");
-    
-        // 🌐 Expose critical setup functions globally if present
-        if (typeof setupIataAutocomplete === "function") {
-          window.setupIataAutocomplete = setupIataAutocomplete;
-          console.log("🌐 setupIataAutocomplete exported globally.");
-        } else {
-          console.warn("⚠️ setupIataAutocomplete not found during export.");
-        }
-    
-        if (typeof setupRoutingToggles === "function") {
-          window.setupRoutingToggles = setupRoutingToggles;
-          console.log("🌐 setupRoutingToggles exported globally.");
-        } else {
-          console.warn("⚠️ setupRoutingToggles not found during export.");
-        }
       })();
     }
-    </script>
-
+</script>
   
 <script>
     window.addEventListener("load", () => {
@@ -594,13 +419,7 @@ whee<style>
     
           searchBtn.addEventListener("click", async (e) => {
             e.preventDefault();
-            if (typeof createSpinnerBridge === "function") {
-              createSpinnerBridge();
-              console.log("✨ ConciergeSync™ Gold Card shimmer activated");
-            } else {
-              console.warn("⚠️ createSpinnerBridge not found");
-            }
-
+            spinner.classList.add("active");
     
             const payload = {
               origin: document.getElementById("origin")?.value || "",
@@ -1002,5 +821,3 @@ window.showGoldCard = showGoldCard;
 
 <!-- Keep this commented out for now -->
 <!-- <script src="/dev/js/redemption-module.js"></script> -->
-
-
