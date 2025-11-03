@@ -356,15 +356,32 @@ whee<style>
     </div>
   </div>
 
-<!-- Optional guard -->
-<script>
+    <!-- Optional guard -->
+    <script>
     if (!window.redemptionModuleInitialized) {
       window.redemptionModuleInitialized = true;
-      (function() {
+    
+      (function () {
         console.log("Redemption module initialized standalone.");
+    
+        // 🌐 Expose critical setup functions globally if present
+        if (typeof setupIataAutocomplete === "function") {
+          window.setupIataAutocomplete = setupIataAutocomplete;
+          console.log("🌐 setupIataAutocomplete exported globally.");
+        } else {
+          console.warn("⚠️ setupIataAutocomplete not found during export.");
+        }
+    
+        if (typeof setupRoutingToggles === "function") {
+          window.setupRoutingToggles = setupRoutingToggles;
+          console.log("🌐 setupRoutingToggles exported globally.");
+        } else {
+          console.warn("⚠️ setupRoutingToggles not found during export.");
+        }
       })();
     }
-</script>
+    </script>
+
   
 <script>
     window.addEventListener("load", () => {
