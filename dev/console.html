@@ -792,6 +792,27 @@ window.loadPage = async function (page) {
   
     requestAnimationFrame(() => (workspace.style.opacity = "1"));
     console.log(`✅ ${page} module fully injected`);
+   
+    // ✅ Initialize dynamic elements for redemptions
+      if (page.includes("redem-con")) {
+        const root = document.getElementById("workspace") || document.body;
+      
+        // Trigger IATA and toggle setup if available
+        if (typeof window.setupIataAutocomplete === "function") {
+          console.log("✈️ Re-initializing IATA autocomplete (redem-con)");
+          window.setupIataAutocomplete(root);
+        } else {
+          console.warn("⚠️ setupIataAutocomplete not found at runtime.");
+        }
+      
+        if (typeof window.setupRoutingToggles === "function") {
+          console.log("🧭 Re-initializing routing toggles (redem-con)");
+          window.setupRoutingToggles(root);
+        } else {
+          console.warn("⚠️ setupRoutingToggles not found at runtime.");
+        }
+      }
+
   } catch (err) {
     console.error(`❌ Failed to load ${page}:`, err);
     workspace.innerHTML = `<div class="error-box">
