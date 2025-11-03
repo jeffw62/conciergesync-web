@@ -662,9 +662,3 @@ header {
 .side-nav a:hover {
   color: #bfa14a;
 }
-
-#workspace.fading {
-  opacity: 0.4 !important;
-  display: block !important;
-  visibility: visible !important;
-}
