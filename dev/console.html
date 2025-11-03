@@ -870,12 +870,35 @@ if (page.includes("redemption")) {
   // Inject redemption console HTML
   workspace.innerHTML = html;
   
-  // ✅ Load and execute redemption-console.js natively (no observers, no polling)
+  // ✅ Load and execute redemption-console.js natively
   const script = document.createElement("script");
   script.src = "/dev/js/redemption-console.js";
   script.defer = true;
-  script.onload = () => console.log("🟢 Redemption script loaded and executed");
+  
+  script.onload = () => {
+    console.log("🟢 Redemption script loaded and executed");
+  
+    // 💡 Safe delayed re-init after script load
+    setTimeout(() => {
+      console.log("🔁 Reinitializing IATA + toggle handlers...");
+      if (typeof window.fetchIATA === "function") {
+        window.fetchIATA();
+        console.log("🟢 fetchIATA() executed successfully");
+      } else {
+        console.warn("⚠️ fetchIATA() not defined yet");
+      }
+  
+      if (typeof window.attachYesNoHandlers === "function") {
+        window.attachYesNoHandlers();
+        console.log("🟢 attachYesNoHandlers() executed successfully");
+      } else {
+        console.warn("⚠️ attachYesNoHandlers() not defined yet");
+      }
+    }, 300); // wait 300 ms to ensure DOM + functions are ready
+  };
+  
   document.body.appendChild(script);
+
   
   console.log("🎯 Redemption module injected (clean rollback mode)");
   
