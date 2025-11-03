@@ -896,6 +896,7 @@ if (page.includes("redemption")) {
   const script = document.createElement("script");
   script.src = "/dev/js/redemption-console.js";
   script.async = false;
+  document.body.appendChild(script);
   
   script.onload = () => {
     console.log("🟢 Redemption script loaded and executed");
@@ -918,9 +919,6 @@ if (page.includes("redemption")) {
       }
     }, 300); // wait 300 ms to ensure DOM + functions are ready
   };
-  
-  document.body.appendChild(script);
-
   
   console.log("🎯 Redemption module injected (clean rollback mode)");
   
