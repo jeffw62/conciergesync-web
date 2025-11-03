@@ -764,62 +764,70 @@ window.loadPage = async function (page) {
     return; // stop here, do not continue to route loading
   }
   
-  // --- normal module routes ---
-  const path = routes[page];
-  if (!path) {
-    console.warn(`⚠️ Unknown page "${page}".`);
-    workspace.style.opacity = "1";
-    return;
-  }
+  // --------------------------------------------------
+  // 🌐 Dynamic Workspace Loader for Hamburger Navigation
+  // --------------------------------------------------
+  async function loadPage(page) {
+    const workspace = document.getElementById("workspace");
+    if (!workspace) {
+      console.warn("⚠️ No workspace found for dynamic load.");
+      return;
+    }
   
-  try {
-    const res = await fetch(path);
-    if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
-    const html = await res.text();
+    try {
+      console.log(`🔄 Loading ${page}...`);
+      workspace.style.transition = "opacity 0.4s ease";
+      workspace.style.opacity = "0";
   
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    const content = doc.body ? doc.body.innerHTML : html;
-    workspace.innerHTML = content;
+      const path = `/dev/${page}.html`;
+      const res = await fetch(path);
+      if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
   
-    Array.from(workspace.querySelectorAll("script")).forEach((s) => {
-      const newS = document.createElement("script");
-      if (s.src) newS.src = s.src;
-      else newS.textContent = s.textContent;
-      document.body.appendChild(newS);
-      s.remove();
-    });
+      const html = await res.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(html, "text/html");
+      const content = doc.body ? doc.body.innerHTML : html;
+      workspace.innerHTML = content;
   
-    requestAnimationFrame(() => (workspace.style.opacity = "1"));
-    console.log(`✅ ${page} module fully injected`);
-   
-    // ✅ Initialize dynamic elements for redemptions
+      // re-attach any inline scripts
+      Array.from(workspace.querySelectorAll("script")).forEach((s) => {
+        const newS = document.createElement("script");
+        if (s.src) newS.src = s.src;
+        else newS.textContent = s.textContent;
+        document.body.appendChild(newS);
+        s.remove();
+      });
+  
+      requestAnimationFrame(() => (workspace.style.opacity = "1"));
+      console.log(`✅ ${page} module fully injected`);
+  
+      // ✅ Initialize dynamic elements for redemption console
       if (page.includes("redem-con")) {
         const root = document.getElementById("workspace") || document.body;
-      
-    // 🧭 Safe deferred IATA + toggle initialization
-      setTimeout(() => {
-        try {
-          if (typeof window.setupIataAutocomplete === "function") {
-            console.log("✈️ Deferred: initializing IATA autocomplete (redem-con)");
-            window.setupIataAutocomplete(root);
-          } else {
-            console.warn("⚠️ setupIataAutocomplete still not found after defer.");
+  
+        // 🧭 Safe deferred IATA + toggle initialization
+        setTimeout(() => {
+          try {
+            if (typeof window.setupIataAutocomplete === "function") {
+              console.log("✈️ Deferred: initializing IATA autocomplete (redem-con)");
+              window.setupIataAutocomplete(root);
+            } else {
+              console.warn("⚠️ setupIataAutocomplete still not found after defer.");
+            }
+  
+            if (typeof window.setupRoutingToggles === "function") {
+              console.log("🔁 Deferred: initializing routing toggles (redem-con)");
+              window.setupRoutingToggles(root);
+            } else {
+              console.warn("⚠️ setupRoutingToggles still not found after defer.");
+            }
+          } catch (err) {
+            console.error("❌ Deferred init error:", err);
           }
-      
-          if (typeof window.setupRoutingToggles === "function") {
-            console.log("🔁 Deferred: initializing routing toggles (redem-con)");
-            window.setupRoutingToggles(root);
-          } else {
-            console.warn("⚠️ setupRoutingToggles still not found after defer.");
-          }
-        } catch (err) {
-          console.error("❌ Deferred init error:", err);
-        }
-      }, 400);
-
-
-  } catch (err) {
+        }, 400);
+      }
+  
+    } catch (err) {
       console.error(`❌ Failed to load ${page}:`, err);
       workspace.innerHTML = `
         <div class="error-box">
@@ -827,7 +835,8 @@ window.loadPage = async function (page) {
         </div>`;
       workspace.style.opacity = "1";
     }
-    };
+  }
+
 
   (async () => {
     // 🧭 Ensure workspace becomes visible *before* wallet logic runs
