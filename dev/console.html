@@ -993,5 +993,40 @@ if (page.includes("redemption")) {
   });
 </script>
 
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const navLinks = document.querySelectorAll("#sideNav a[data-page]");
+  const workspace = document.getElementById("workspace");
+
+  if (!workspace) {
+    console.warn("⚠️ No workspace element found for navigation injection.");
+    return;
+  }
+
+  // Wire up clicks for each nav link
+  navLinks.forEach(link => {
+    link.addEventListener("click", async (e) => {
+      e.preventDefault();
+
+      const page = link.dataset.page;
+      if (!page) return;
+
+      console.log(`🧭 Nav click: ${page}`);
+
+      // Call the same loader used by console modules
+      if (typeof loadPage === "function") {
+        await loadPage(page);
+      } else {
+        console.warn("⚠️ loadPage() function not available yet.");
+      }
+
+      // Close the side navigation after click
+      document.getElementById("sideNav").classList.remove("open");
+    });
+  });
+});
+</script>
+
+
 </body>
 </html>
