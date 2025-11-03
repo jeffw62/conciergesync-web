@@ -779,12 +779,28 @@
           const doc = parser.parseFromString(html, "text/html");
           const newContent = doc.querySelector("#workspace")?.innerHTML || html;
           workspace.innerHTML = newContent;
+          // --- DIAGNOSTIC: Verify what was injected ---
+            console.groupCollapsed(`🔎 Workspace injection check: ${page}`);
+            console.log("🧩 workspace exists:", !!workspace);
+            console.log("📄 Injected content length:", newContent?.length);
+            console.log("🪞 Workspace current innerHTML length:", workspace.innerHTML.length);
+            
+            // Log the first 300 characters of what got injected
+            console.log("🧾 Preview:", workspace.innerHTML.slice(0, 300));
+            
+            // Inspect the first-level children
+            console.log("🧱 Child elements now in workspace:", [...workspace.children].map(el => el.tagName));
+            
+            console.groupEnd();
             // --- Force immediate visibility (bypass fade timing issues) ---
             workspace.style.opacity = "1";
             workspace.style.display = "block";
             workspace.classList.remove("fade-out", "hidden", "invisible");
           requestAnimationFrame(() => (workspace.style.opacity = "1"));
           console.log(`✅ ${page} module fully injected and displayed`);
+
+          // --- DIAGNOSTIC: Log computed styles after visibility fix ---
+          console.log("🎨 Workspace final computed styles:", getComputedStyle(workspace));
         } catch (err) {
           console.error("❌ Console reload failed:", err);
           workspace.innerHTML = "<p>Failed to reload console landing page.</p>";
