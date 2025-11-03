@@ -780,16 +780,18 @@
         if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
         const html = await res.text();
   
-        // Inject cleanly
-        workspace.innerHTML = html;
-
-        workspace.querySelectorAll(":scope > *").forEach(el => {
-          el.style.display = "block";
-          el.style.visibility = "visible";
-          el.style.opacity = "1";
-        });
-
-        // Re-run any inline scripts in injected file
+        // --- Clean injection using DOMParser (prevents style/text bleed) ---
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+        
+        // 🔹 Remove previous module completely before injecting
+        workspace.replaceChildren(...doc.body.children);
+        
+        // 🔹 Guarantee visibility and top alignment
+        workspace.style.opacity = "1";
+        workspace.scrollTop = 0;
+        
+        // 🔹 Re-run any inline scripts in injected file
         workspace.querySelectorAll("script").forEach((s) => {
           const newScript = document.createElement("script");
           if (s.src) newScript.src = s.src;
