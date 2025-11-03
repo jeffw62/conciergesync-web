@@ -594,7 +594,13 @@ whee<style>
     
           searchBtn.addEventListener("click", async (e) => {
             e.preventDefault();
-            spinner.classList.add("active");
+            if (typeof createSpinnerBridge === "function") {
+              createSpinnerBridge();
+              console.log("✨ ConciergeSync™ Gold Card shimmer activated");
+            } else {
+              console.warn("⚠️ createSpinnerBridge not found");
+            }
+
     
             const payload = {
               origin: document.getElementById("origin")?.value || "",
