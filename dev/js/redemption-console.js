@@ -417,6 +417,16 @@
     });
   });
   
+  // Attach link listeners for hamburger nav
+  document.querySelectorAll('#sideNav a[data-page]').forEach(link => {
+    link.addEventListener('click', e => {
+      e.preventDefault();
+      const page = link.dataset.page;
+      console.log(`📂 Navigating to: ${page}`);
+      loadPage(page);
+      document.getElementById('sideNav').classList.remove('open');
+    });
+  });
 })(); // closes entire IIFE
 
 
