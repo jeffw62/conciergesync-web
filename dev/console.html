@@ -674,8 +674,9 @@
       greeting = "Good evening";
     }
     
-    const welcomeMsg = document.getElementById("welcomeMsg");
-    if (welcomeMsg) welcomeMsg.textContent = `${greeting}, Jeff.`;
+    window.welcomeMsg = window.welcomeMsg || document.getElementById("welcomeMsg");
+    if (window.welcomeMsg) window.welcomeMsg.textContent = `${greeting}, Jeff.`;
+
 
   </script>
 
