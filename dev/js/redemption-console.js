@@ -139,6 +139,9 @@
     // 🟡 STEP 3.3 — Search Activation Logic
     // -----------------------------------------------
     const originInput = root.querySelector("#origin");
+      console.log("🔎 Redemption form init check:");
+      console.log("departDate:", document.querySelector("#departDate"));
+      console.log("flexDays:", document.querySelector("#flexDays"));
     const destinationInput = root.querySelector("#destination");
     const departDate = root.querySelector("#departDate");
     const returnDate = root.querySelector("#returnDate");
