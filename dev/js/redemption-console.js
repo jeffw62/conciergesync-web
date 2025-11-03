@@ -143,7 +143,7 @@
     const departDate = root.querySelector("#departDate");
     const returnDate = root.querySelector("#returnDate");
     const cabinSelect = root.querySelector("#cabin");
-    const flexToggles = root.querySelectorAll("#flexDays");
+    const flexDays = root.querySelector('#flexDays');
     const routingToggles = root.querySelectorAll('.step.routing input[type="radio"]');
     
     function isFormReady() {
@@ -194,9 +194,9 @@
     
     // Attach live validation listeners for Step 1 & 2
     [
-      originInput, destinationInput, departDate, returnDate, cabinSelect,
-      ...flexToggles
+      originInput, destinationInput, departDate, returnDate, cabinSelect, flexDays
     ].forEach(el => el?.addEventListener("change", updateSearchState));
+
     
     // Listen for clicks on Step 2 routing buttons (Yes/No)
     const routingButtons = root.querySelectorAll(
