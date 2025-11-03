@@ -886,6 +886,7 @@ document.querySelectorAll(".nav-link").forEach(link => {
 
 // --- Redemptions Module (Full Rollback Stable) ---
 if (page.includes("redemption")) {
+  console.log("🧩 ENTERED redemption injection block");
   const res = await fetch("/dev/redem-con.html");
   html = await res.text();
   // Inject redemption console HTML
