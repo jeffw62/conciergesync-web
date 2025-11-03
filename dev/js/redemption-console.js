@@ -451,7 +451,15 @@
       console.error("❌ setupRoutingToggles() not found in scope");
     }
   };
+
+  // --------------------------------------------------
+  // 🌐 Expose key internal functions globally (for console reloads)
+  // --------------------------------------------------
+  window.setupIataAutocomplete = setupIataAutocomplete;
+  window.setupRoutingToggles = setupRoutingToggles;
   
+  console.log("🌐 Redemption functions exported globally for reattachment.");
+
     
 })(); // closes entire IIFE
 
