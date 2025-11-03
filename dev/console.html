@@ -749,7 +749,9 @@
   
       console.group(`🧭 Loading module: ${page}`);
       workspace.style.transition = "opacity 0.4s ease";
-      workspace.style.opacity = "0";
+      workspace.classList.remove("fade-out");
+      workspace.classList.add("fading");
+      workspace.style.opacity = "0.4";
   
       // Short fade delay
       await new Promise(resolve => setTimeout(resolve, 150));
@@ -780,7 +782,13 @@
   
         // Inject cleanly
         workspace.innerHTML = html;
-  
+
+        workspace.querySelectorAll(":scope > *").forEach(el => {
+          el.style.display = "block";
+          el.style.visibility = "visible";
+          el.style.opacity = "1";
+        });
+
         // Re-run any inline scripts in injected file
         workspace.querySelectorAll("script").forEach((s) => {
           const newScript = document.createElement("script");
