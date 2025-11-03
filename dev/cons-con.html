@@ -1,19 +1,44 @@
-<section class="dashboard">
-  <h2>Good evening, Jeff.</h2>
-  <p>Welcome to your ConciergeSync™ Console — your travel finances, unified in one glance.</p>
+<!-- /dev/cons-con.html -->
+<div class="console-dashboard fade-in">
+  <h2>Welcome back to ConciergeSync™</h2>
+  <p>This is your unified dashboard view.</p>
 
-  <h3>Total Portfolio Value</h3>
-  <p>$23,914</p>
+  <div class="dash-grid">
+    <div class="dash-card">
+      <h3>Wallet Overview</h3>
+      <p>Access your cards and balances.</p>
+    </div>
+    <div class="dash-card">
+      <h3>Flight Redemptions</h3>
+      <p>Search and compare award availability.</p>
+    </div>
+    <div class="dash-card">
+      <h3>Bonuses & Insights</h3>
+      <p>Track current transfer promos and value trends.</p>
+    </div>
+  </div>
+</div>
 
-  <h3>Total Points & Miles</h3>
-  <p>1.82 M</p>
-
-  <h3>Average CPM</h3>
-  <p>2.07¢ ▼</p>
-
-  <h3>Concierge Recommendation</h3>
-  <p>You could redeem <strong>150,000 UR</strong> for Singapore Airlines Business Class at <strong>2.8¢ per mile</strong> — an outstanding value worth $4,200.</p>
-
-  <h3>ConciergeSync™ Creed…</h3>
-  <p>Clarity eliminates confusion. Cleanliness eliminates clutter. <strong>Trust is our foundation.</strong></p>
-</section>
+<style>
+.console-dashboard {
+  padding: 24px;
+  font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif;
+  color: #0a1a33;
+}
+.dash-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+  margin-top: 20px;
+}
+.dash-card {
+  background: rgba(255,255,255,0.8);
+  border-radius: 12px;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  padding: 16px;
+  transition: transform 0.25s ease;
+}
+.dash-card:hover {
+  transform: translateY(-3px);
+}
+</style>
