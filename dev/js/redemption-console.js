@@ -31,7 +31,10 @@
 
     observer.observe(workspace, { childList: true, subtree: true });
   } else {
-    initializeHandlers(panel);
+    // defer initialization slightly to ensure full parse of setup functions
+      setTimeout(() => {
+        initializeHandlers(panel);
+    }, 150);
   }
 
   // --------------------------------------------------
@@ -470,21 +473,6 @@ function setupRoutingToggles(root) {
   window.setupRoutingToggles = setupRoutingToggles;
   
   console.log("🌐 Redemption functions exported globally for reattachment.");
-
-  // --- 🧭 Ensure runtime visibility immediately after script load ---
-  window.addEventListener("load", () => {
-    if (typeof setupIataAutocomplete === "function") {
-      console.log("✈️ setupIataAutocomplete verified at runtime.");
-    } else {
-      console.error("❌ setupIataAutocomplete missing at runtime.");
-    }
-  
-    if (typeof setupRoutingToggles === "function") {
-      console.log("🔁 setupRoutingToggles verified at runtime.");
-    } else {
-      console.error("❌ setupRoutingToggles missing at runtime.");
-    }
-  });
     
 })(); // closes entire IIFE
 
