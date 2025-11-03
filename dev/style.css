@@ -663,25 +663,23 @@ header {
   color: #bfa14a;
 }
 
-/* --- Global workspace layout padding --- */
-#workspace {
-  padding: 24px 40px 40px 40px; /* top, right, bottom, left */
-  box-sizing: border-box;
+/* --- Prevent injected modules from starting hidden --- */
+#workspace,
+#workspace > * {
+  display: block !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  position: relative !important;
+  transition: opacity 0.3s ease;
 }
 
-/* Optional: prevent modules from overriding padding accidentally */
-#workspace > * {
-  max-width: 100%;
-  margin-right: auto;
-  margin-left: auto;
+#workspace.fade-out,
+#workspace > *.fade-out {
+  opacity: 0.4 !important;
 }
 
-/* 🔧 Normalize all injected module roots */
-#workspace > * {
-  max-width: 100%;
-  width: 100%;
-  box-sizing: border-box;
-  margin: 0 auto;
-  padding-right: 24px;  /* matches header breathing room */
-  overflow-x: hidden;
+#workspace.fade-in,
+#workspace > *.fade-in {
+  opacity: 1 !important;
 }
+
