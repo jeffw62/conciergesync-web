@@ -663,23 +663,8 @@ header {
   color: #bfa14a;
 }
 
-/* --- Prevent injected modules from starting hidden --- */
-#workspace,
-#workspace > * {
-  display: block !important;
-  opacity: 1 !important;
-  visibility: visible !important;
-  position: relative !important;
-  transition: opacity 0.3s ease;
-}
-
-#workspace.fade-out,
-#workspace > *.fade-out {
+#workspace.fading {
   opacity: 0.4 !important;
+  display: block !important;
+  visibility: visible !important;
 }
-
-#workspace.fade-in,
-#workspace > *.fade-in {
-  opacity: 1 !important;
-}
-
