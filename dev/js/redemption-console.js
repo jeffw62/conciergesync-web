@@ -160,29 +160,32 @@
     }
     
     function updateSearchState() {
-    const ready = isFormReady();
-    console.log("🔍 Validation check:", {
-      origin: originInput.value.trim().toUpperCase(),
-      destination: destinationInput.value.trim().toUpperCase(),
-      date: departDate.value,
-      cabin: cabinSelect.value,
-      flexActive: root.querySelector("#exactBtn.active, #flexBtn.active"),
-      directActive: root.querySelector("#directStop .active"),
-      multiActive: root.querySelector("#multiConn .active"),
-      posActive: root.querySelector("#posFlight .active"),
-      ready
-    });
-  
-    if (ready) {
-      searchBtn.disabled = false;
-      if (searchWarning) searchWarning.style.display = "none";
-      searchBtn.classList.add("ready");
-    } else {
-      searchBtn.disabled = true;
-      if (searchWarning) searchWarning.style.display = "block";
-      searchBtn.classList.remove("ready");
+      const originInput = document.getElementById("origin");
+      const destinationInput = document.getElementById("destination");
+      const departDate = document.getElementById("departDate");
+      const cabinSelect = document.getElementById("cabin");
+      const searchWarning = document.getElementById("searchWarning");
+    
+      const allSelected = Array.from(groups).every(g => g.dataset.selected);
+      const originOk = originInput?.value?.length === 3;
+      const destOk = destinationInput?.value?.length === 3;
+      const dateOk = !!departDate?.value;
+      const cabinOk = !!cabinSelect?.value;
+    
+      const ready = allSelected && originOk && destOk && dateOk && cabinOk;
+    
+      if (ready) {
+        searchBtn.removeAttribute("disabled");
+        searchBtn.classList.add("active");
+        if (searchWarning) searchWarning.style.display = "none";
+        console.log("✅ All fields validated — Search enabled");
+      } else {
+        searchBtn.setAttribute("disabled", "true");
+        searchBtn.classList.remove("active");
+        if (searchWarning) searchWarning.style.display = "block";
+      }
     }
-  }
+
     
     // Attach live validation listeners for Step 1 & 2
     [
