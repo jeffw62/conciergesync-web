@@ -900,15 +900,21 @@ if (!window.iataObserver) {
 </script>
 
 <script>
-    // 🧭 Step 2: Toggle Logic
-    document.addEventListener("DOMContentLoaded", () => {
+    // 🧭 Step 2: Toggle Logic (console-aware)
+    function setupToggleLogic(root = document) {
       const toggles = {
-        direct: document.getElementById("directStop"),
-        multi: document.getElementById("multiConn"),
-        pos: document.getElementById("posFlight")
+        direct: root.getElementById("directStop"),
+        multi: root.getElementById("multiConn"),
+        pos: root.getElementById("posFlight")
       };
     
-      // Utility: activate button visually
+      // guard: make sure elements exist
+      if (!toggles.direct || !toggles.multi || !toggles.pos) {
+        console.warn("⚠️ Toggle elements not found yet, skipping init");
+        return;
+      }
+    
+      // activate button visually
       function setActive(group, value) {
         const buttons = group.querySelectorAll("button");
         buttons.forEach(btn => {
@@ -916,7 +922,7 @@ if (!window.iataObserver) {
         });
       }
     
-      // Utility: reset all other groups to "No" when one is set to "Yes"
+      // reset others when one is set to Yes
       function handleMutualExclusion(selectedKey) {
         for (const key in toggles) {
           if (key !== selectedKey) {
@@ -925,7 +931,6 @@ if (!window.iataObserver) {
         }
       }
     
-      // Attach listeners
       for (const [key, group] of Object.entries(toggles)) {
         group.addEventListener("click", e => {
           if (e.target.tagName !== "BUTTON") return;
@@ -934,7 +939,6 @@ if (!window.iataObserver) {
           setActive(group, val);
           if (val === "yes") handleMutualExclusion(key);
     
-          // For testing feedback
           const states = {
             direct: toggles.direct.querySelector(".active")?.dataset.val,
             multi: toggles.multi.querySelector(".active")?.dataset.val,
@@ -945,8 +949,27 @@ if (!window.iataObserver) {
       }
     
       console.log("✅ Toggle logic initialized");
-    });
+    }
+    
+    // Initialize if standalone
+    document.addEventListener("DOMContentLoaded", () => setupToggleLogic(document));
+    
+    // Also detect dynamic console injection
+    if (!window.toggleObserver) {
+      window.toggleObserver = new MutationObserver(muts => {
+        for (const m of muts) {
+          for (const node of m.addedNodes) {
+            if (node.nodeType === 1 && node.id === "workspace") {
+              setTimeout(() => setupToggleLogic(node), 300);
+            }
+          }
+        }
+      });
+      window.toggleObserver.observe(document.body, { childList: true, subtree: true });
+      console.log("🧭 Toggle observer initialized once globally");
+    }
 </script>
+
 
 
 <!-- === Dynamic Workspace Injection Target === -->
