@@ -868,14 +868,20 @@ function setupIataAutocomplete(root = document) {
 // Initialize once DOM content is ready (in case page loaded standalone)
 document.addEventListener("DOMContentLoaded", () => setupIataAutocomplete());
 
-// --- Detect dynamic load (via console.js workspace injection) ---
-    window.addEventListener("load", () => {
-      setTimeout(() => {
-        const workspace = document.getElementById("workspace") || document;
-        setupIataAutocomplete(workspace);
-      }, 400);
-    });
-</script>
+// --- Detect dynamic module injection (for console workspace) ---
+const observer = new MutationObserver((mutations, obs) => {
+  for (const m of mutations) {
+    for (const node of m.addedNodes) {
+      if (node.nodeType === 1 && node.id === "workspace") {
+        // Wait briefly for redem-con to be attached
+        setTimeout(() => setupIataAutocomplete(node), 300);
+      }
+    }
+  }
+});
+
+// Watch for workspace container being inserted or updated
+observer.observe(document.body, { childList: true, subtree: true });
 </script>
 
 <!-- === Dynamic Workspace Injection Target === -->
