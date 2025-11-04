@@ -897,8 +897,57 @@ if (!window.iataObserver) {
   console.log("🧭 IATA observer initialized once globally");
 }
 
-
 </script>
+
+<script>
+    // 🧭 Step 2: Toggle Logic
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggles = {
+        direct: document.getElementById("directStop"),
+        multi: document.getElementById("multiConn"),
+        pos: document.getElementById("posFlight")
+      };
+    
+      // Utility: activate button visually
+      function setActive(group, value) {
+        const buttons = group.querySelectorAll("button");
+        buttons.forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.val === value);
+        });
+      }
+    
+      // Utility: reset all other groups to "No" when one is set to "Yes"
+      function handleMutualExclusion(selectedKey) {
+        for (const key in toggles) {
+          if (key !== selectedKey) {
+            setActive(toggles[key], "no");
+          }
+        }
+      }
+    
+      // Attach listeners
+      for (const [key, group] of Object.entries(toggles)) {
+        group.addEventListener("click", e => {
+          if (e.target.tagName !== "BUTTON") return;
+          const val = e.target.dataset.val;
+    
+          setActive(group, val);
+          if (val === "yes") handleMutualExclusion(key);
+    
+          // For testing feedback
+          const states = {
+            direct: toggles.direct.querySelector(".active")?.dataset.val,
+            multi: toggles.multi.querySelector(".active")?.dataset.val,
+            pos: toggles.pos.querySelector(".active")?.dataset.val
+          };
+          console.log("🧩 Toggle states:", states);
+        });
+      }
+    
+      console.log("✅ Toggle logic initialized");
+    });
+</script>
+
 
 <!-- === Dynamic Workspace Injection Target === -->
 <div id="workspace" class="workspace">
