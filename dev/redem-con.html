@@ -867,6 +867,15 @@ function setupIataAutocomplete(root = document) {
 
 // Initialize once DOM content is ready (in case page loaded standalone)
 document.addEventListener("DOMContentLoaded", () => setupIataAutocomplete());
+
+// --- Detect dynamic load (via console.js workspace injection) ---
+    window.addEventListener("load", () => {
+      setTimeout(() => {
+        const workspace = document.getElementById("workspace") || document;
+        setupIataAutocomplete(workspace);
+      }, 400);
+    });
+</script>
 </script>
 
 <!-- === Dynamic Workspace Injection Target === -->
