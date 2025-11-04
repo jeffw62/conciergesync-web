@@ -869,7 +869,7 @@ function setupIataAutocomplete(root = document) {
 document.addEventListener("DOMContentLoaded", () => setupIataAutocomplete());
 
 // --- Detect dynamic module injection (for console workspace) ---
-const observer = new MutationObserver((mutations, obs) => {
+const iataObserver = new MutationObserver((mutations) => {
   for (const m of mutations) {
     for (const node of m.addedNodes) {
       if (node.nodeType === 1 && node.id === "workspace") {
@@ -881,7 +881,7 @@ const observer = new MutationObserver((mutations, obs) => {
 });
 
 // Watch for workspace container being inserted or updated
-observer.observe(document.body, { childList: true, subtree: true });
+iataObserver.observe(document.body, { childList: true, subtree: true });
 </script>
 
 <!-- === Dynamic Workspace Injection Target === -->
