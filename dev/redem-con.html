@@ -931,14 +931,19 @@ if (!window.iataObserver) {
         }
       }
     
+      // attach click listeners for all toggle groups
       for (const [key, group] of Object.entries(toggles)) {
         group.addEventListener("click", e => {
           if (e.target.tagName !== "BUTTON") return;
           const val = e.target.dataset.val;
     
+          // set this group's active state
           setActive(group, val);
+    
+          // enforce exclusivity across groups
           if (val === "yes") handleMutualExclusion(key);
     
+          // log current states
           const states = {
             direct: toggles.direct.querySelector(".active")?.dataset.val,
             multi: toggles.multi.querySelector(".active")?.dataset.val,
@@ -950,7 +955,7 @@ if (!window.iataObserver) {
     
       console.log("✅ Toggle logic initialized");
     }
-    
+
     // Initialize if standalone
     document.addEventListener("DOMContentLoaded", () => setupToggleLogic(document));
     
