@@ -967,12 +967,23 @@ if (!window.iataObserver) {
               const waitForContent = setInterval(() => {
                 const iataReady = node.querySelectorAll("input[data-iata]").length === 2;
                 const togglesReady = node.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
-                if (iataReady && togglesReady) {
+                if (iataReady || togglesReady) {
                   clearInterval(waitForContent);
-                  setupIataAutocomplete(node);
-                  setupToggleLogic(node);
-                  console.log("🚀 IATA + Toggle modules fully initialized after render");
+                
+                  // Always re-init both to ensure fresh bindings after workspace swap
+                  if (iataReady) {
+                    setupIataAutocomplete(node);
+                    console.log("✈️ IATA autocomplete (re)init done");
+                  }
+                
+                  if (togglesReady) {
+                    setupToggleLogic(node);
+                    console.log("🧩 Toggle logic (re)init done");
+                  }
+                
+                  console.log("🚀 Modules initialized after render");
                 }
+
               }, 300);
             }
           }
