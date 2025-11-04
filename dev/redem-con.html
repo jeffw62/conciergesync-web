@@ -873,6 +873,8 @@ if (!window.iataObserver) {
   window.iataObserver = new MutationObserver((mutations) => {
     for (const m of mutations) {
       for (const node of m.addedNodes) {
+
+        // ✅ Correct block here
         if (node.nodeType === 1) {
           const target = node.id === "workspace" ? node : node.querySelector("#workspace");
           if (target) {
@@ -887,9 +889,14 @@ if (!window.iataObserver) {
           }
         }
 
+      }
+    }
+  });
+
   window.iataObserver.observe(document.body, { childList: true, subtree: true });
   console.log("🧭 IATA observer initialized once globally");
 }
+
 
 </script>
 
