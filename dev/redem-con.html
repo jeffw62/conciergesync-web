@@ -903,9 +903,9 @@ if (!window.iataObserver) {
     // 🧭 Step 2: Toggle Logic (console-aware)
     function setupToggleLogic(root = document) {
       const toggles = {
-        direct: root.getElementById("directStop"),
-        multi: root.getElementById("multiConn"),
-        pos: root.getElementById("posFlight")
+        direct: root.querySelector("#directStop"),
+        multi: root.querySelector("#multiConn"),
+        pos: root.querySelector("#posFlight")
       };
     
       // guard: make sure elements exist
