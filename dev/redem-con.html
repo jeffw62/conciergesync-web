@@ -873,20 +873,19 @@ if (!window.iataObserver) {
   window.iataObserver = new MutationObserver((mutations) => {
     for (const m of mutations) {
       for (const node of m.addedNodes) {
-        if (node.nodeType === 1 && node.id === "workspace") {
-          // Wait until inputs are actually in DOM
-          const checkFields = setInterval(() => {
-            const hasFields = node.querySelectorAll("input[data-iata]").length;
-            if (hasFields) {
-              clearInterval(checkFields);
-              setupIataAutocomplete(node);
-              console.log("✈️ IATA fields detected dynamically and initialized");
-            }
-          }, 200);
+        if (node.nodeType === 1) {
+          const target = node.id === "workspace" ? node : node.querySelector("#workspace");
+          if (target) {
+            const checkFields = setInterval(() => {
+              const hasFields = document.querySelectorAll("input[data-iata]").length;
+              if (hasFields) {
+                clearInterval(checkFields);
+                setupIataAutocomplete(document);
+                console.log("✈️ IATA fields detected dynamically and initialized");
+              }
+            }, 200);
+          }
         }
-      }
-    }
-  });
 
   window.iataObserver.observe(document.body, { childList: true, subtree: true });
   console.log("🧭 IATA observer initialized once globally");
