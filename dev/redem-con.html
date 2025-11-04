@@ -224,18 +224,14 @@ whee<style>
         <div class="inline-fields">
           <div class="field">
             <label for="origin">Origin</label>
-            <input type="text" id="origin" placeholder="e.g. DFW" />
-            <!-- this div gives JS a place to inject dropdown options -->
-            <div id="origin-suggestions" class="suggestions"></div>
+            <input type="text" id="origin" data-iata placeholder="e.g. DFW" />
           </div>
           <div class="field">
             <label for="destination">Destination</label>
-            <input type="text" id="destination" placeholder="e.g. LHR" />
-            <div id="destination-suggestions" class="suggestions"></div>
-            <!-- this div gives JS a place to inject dropdown options -->
-            <div id="origin-suggestions" class="suggestions"></div>
+            <input type="text" id="destination" data-iata placeholder="e.g. LHR" />
           </div>
         </div>
+          
 
         <!-- Passengers / Service Class -->
         <div class="inline-fields">
@@ -813,6 +809,65 @@ window.showGoldCard = showGoldCard;
     };
 </script>
 
+<script>
+/**
+ * ✈️ Lightweight IATA Autocomplete
+ * Supports any <input> with [data-iata] attribute.
+ */
+function setupIataAutocomplete(root = document) {
+  const inputs = root.querySelectorAll("input[data-iata]");
+  if (!inputs.length) {
+    console.warn("⚠️ No IATA fields found for autocomplete.");
+    return;
+  }
+
+  // Simple demo dataset (expand later or replace with fetch)
+  const airports = [
+    { city: "Dallas", code: "DAL" },
+    { city: "Dallas–Fort Worth", code: "DFW" },
+    { city: "Denver", code: "DEN" },
+    { city: "Chicago O’Hare", code: "ORD" },
+    { city: "Miami", code: "MIA" },
+    { city: "Los Angeles", code: "LAX" },
+    { city: "New York JFK", code: "JFK" },
+    { city: "Atlanta", code: "ATL" },
+    { city: "London Heathrow", code: "LHR" },
+    { city: "Tokyo Haneda", code: "HND" }
+  ];
+
+  inputs.forEach(input => {
+    const listId = input.id + "-list";
+    let datalist = document.getElementById(listId);
+    if (!datalist) {
+      datalist = document.createElement("datalist");
+      datalist.id = listId;
+      document.body.appendChild(datalist);
+      input.setAttribute("list", listId);
+    }
+
+    input.addEventListener("input", () => {
+      const val = input.value.toLowerCase();
+      datalist.innerHTML = "";
+      if (val.length < 2) return; // wait for 2+ chars
+      airports
+        .filter(a =>
+          a.city.toLowerCase().includes(val) ||
+          a.code.toLowerCase().includes(val)
+        )
+        .forEach(a => {
+          const opt = document.createElement("option");
+          opt.value = `${a.city} (${a.code})`;
+          datalist.appendChild(opt);
+        });
+    });
+  });
+
+  console.log("✅ IATA autocomplete initialized on", inputs.length, "field(s)");
+}
+
+// Initialize once DOM content is ready (in case page loaded standalone)
+document.addEventListener("DOMContentLoaded", () => setupIataAutocomplete());
+</script>
 
 <!-- === Dynamic Workspace Injection Target === -->
 <div id="workspace" class="workspace">
