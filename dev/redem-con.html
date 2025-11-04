@@ -960,7 +960,14 @@ if (!window.iataObserver) {
         for (const m of muts) {
           for (const node of m.addedNodes) {
             if (node.nodeType === 1 && node.id === "workspace") {
-              setTimeout(() => setupToggleLogic(node), 300);
+              const checkToggles = setInterval(() => {
+                const hasToggles = document.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
+                if (hasToggles) {
+                  clearInterval(checkToggles);
+                  setupToggleLogic(node);
+                  console.log("🧩 Toggle elements detected dynamically and initialized");
+                }
+              }, 200);
             }
           }
         }
