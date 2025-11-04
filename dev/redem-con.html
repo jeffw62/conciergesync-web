@@ -995,6 +995,17 @@ if (!window.iataObserver) {
       console.log("🧭 Global observer initialized once (IATA + Toggle)");
     }
 
+    // --- Fallback trigger: ensure toggles initialize even if observer misses timing ---
+    setTimeout(() => {
+      const togglesReady = document.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
+      if (togglesReady) {
+        setupToggleLogic(document);
+        console.log("🕓 Fallback: Toggle logic initialized post-render");
+      } else {
+        console.warn("⚠️ Fallback check ran, but toggles not yet ready");
+      }
+    }, 1500);
+
 
 </script>
 
