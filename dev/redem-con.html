@@ -942,7 +942,9 @@ if (!window.iataObserver) {
           setActive(group, val);
     
           // enforce exclusivity across groups
-          if (val === "yes") handleMutualExclusion(key);
+          if (val === "yes" && key !== "pos") {
+              handleMutualExclusion(key);
+            }
     
           // log current states
           const states = {
