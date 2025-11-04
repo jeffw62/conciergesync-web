@@ -902,6 +902,7 @@ if (!window.iataObserver) {
 <script>
     // 🧭 Step 2: Toggle Logic (console-aware)
     function setupToggleLogic(root = document) {
+        console.log("🔧 setupToggleLogic called", root);
       const toggles = {
         direct: root.querySelector("#directStop"),
         multi: root.querySelector("#multiConn"),
