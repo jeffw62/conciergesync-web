@@ -957,27 +957,32 @@ if (!window.iataObserver) {
     }
     
     // --- Detect dynamic module injection (for console workspace) ---
-    const observer = new MutationObserver((mutations) => {
-      for (const m of mutations) {
-        for (const node of m.addedNodes) {
-          if (node.nodeType === 1 && node.id === "workspace") {
-            // Wait for redemption form content to fully render
-            const waitForContent = setInterval(() => {
-              const iataReady = node.querySelectorAll("input[data-iata]").length === 2;
-              const togglesReady = node.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
-              if (iataReady && togglesReady) {
-                clearInterval(waitForContent);
-                setupIataAutocomplete(node);
-                setupToggleLogic(node);
-                console.log("🚀 IATA + Toggle modules fully initialized after render");
-              }
-            }, 300);
+    // --- Unified Observer: handles both IATA + Toggle initialization ---
+    if (!window.globalObserver) {
+      window.globalObserver = new MutationObserver((mutations) => {
+        for (const m of mutations) {
+          for (const node of m.addedNodes) {
+            if (node.nodeType === 1 && node.id === "workspace") {
+              // Wait for redemption form content to fully render
+              const waitForContent = setInterval(() => {
+                const iataReady = node.querySelectorAll("input[data-iata]").length === 2;
+                const togglesReady = node.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
+                if (iataReady && togglesReady) {
+                  clearInterval(waitForContent);
+                  setupIataAutocomplete(node);
+                  setupToggleLogic(node);
+                  console.log("🚀 IATA + Toggle modules fully initialized after render");
+                }
+              }, 300);
+            }
           }
         }
-      }
-    });
-    observer.observe(document.body, { childList: true, subtree: true });
-    console.log("🧭 Toggle observer initialized once globally");
+      });
+    
+      window.globalObserver.observe(document.body, { childList: true, subtree: true });
+      console.log("🧭 Global observer initialized once (IATA + Toggle)");
+    }
+
 
 </script>
 
