@@ -856,6 +856,28 @@ function setupSearchButtonLogic(root = document) {
     return origin && destination && depart && anyYes && mode;
   }
 
+    // --- Debug helper: expose form readiness globally ---
+    (() => {
+      const fn = () => {
+        const origin = root.querySelector("#origin")?.value.trim();
+        const destination = root.querySelector("#destination")?.value.trim();
+        const depart = root.querySelector("#departDate")?.value.trim();
+        const direct = root.querySelector("#directStop button.active")?.dataset.val;
+        const multi = root.querySelector("#multiConn button.active")?.dataset.val;
+        const pos = root.querySelector("#posFlight button.active")?.dataset.val;
+        const mode = root.querySelector("#mode")?.value;
+        const anyYes = direct === "yes" || multi === "yes" || pos === "yes";
+    
+        console.log({ origin, destination, depart, direct, multi, pos, mode, anyYes });
+        console.log("🧩 isFormReady →", !!(origin && destination && depart && anyYes && mode));
+        return origin && destination && depart && anyYes && mode;
+      };
+    
+      // Force attach to real global scope even when module is sandboxed
+      window.debugFormReady = fn;
+      console.log("🪄 debugFormReady registered globally");
+    })();
+
   // --- UI updater ---
     function updateButtonState() {
       console.log("Check values:", {
