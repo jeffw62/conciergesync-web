@@ -299,56 +299,65 @@ whee<style>
       </div>
 
       <!-- STEP 2 -->
-      <!-- DIRECT NON-STOP -->
-        <label>Direct Non-stop</label>
-        <div class="toggle-group" id="directStop">
-          <button data-val="yes">Yes</button>
-          <button data-val="no" class="active">No</button>
-        </div>
-        
-        <!-- MULTIPLE CONNECTIONS -->
-        <label>Multiple Connections</label>
-        <div class="toggle-group" id="multiConn">
-          <button data-val="yes">Yes</button>
-          <button data-val="no" class="active">No</button>
-        </div>
-        
-        <!-- POSITIONING FLIGHT -->
-        <label>Positioning Flight Allowed</label>
-        <div class="toggle-group" id="posFlight">
-          <button data-val="yes">Yes</button>
-          <button data-val="no" class="active">No</button>
-        </div>
+<div class="step routing">
+  <h3>Step 2:&nbsp;Routing Preferences</h3>
 
-        <label for="program">Airline Program:</label>
-        <select id="program">
-          <option value="">All Programs</option>
-          <option value="american">American Airlines</option>
-          <option value="alaska">Alaska Airlines</option>
-          <option value="united">United Airlines</option>
-          <option value="delta">Delta Air Lines</option>
-          <option value="jetblue">JetBlue</option>
-          <option value="southwest">Southwest Airlines</option>
-          <option value="aeroplan">Air Canada Aeroplan</option>
-          <option value="avios">British Airways Avios</option>
-          <option value="flyingblue">Air France / KLM Flying Blue</option>
-          <option value="virginatlantic">Virgin Atlantic</option>
-          <option value="qantas">Qantas</option>
-          <option value="qatar">Qatar Airways Privilege Club</option>
-          <option value="ana">ANA Mileage Club</option>
-          <option value="emirates">Emirates Skywards</option>
-          <option value="etihad">Etihad Guest</option>
-          <option value="singapore">Singapore KrisFlyer</option>
-          <option value="turkish">Turkish Miles & Smiles</option>
-        </select>
-
-        <!-- STEP 3 -->
-        <h3 style="margin-top: 20px;">Step 3:&nbsp;Search</h3>
-        <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
-        <p id="searchWarning" style="display: block;">Complete Step 2 to continue.</p>
+  <div class="inline-toggles">
+    <!-- Direct Non-stop -->
+    <div id="directStop" class="toggle">
+      <label>Direct Non-stop</label>
+      <div class="buttons">
+        <button data-val="yes">Yes</button>
+        <button data-val="no">No</button>
       </div>
     </div>
-  </div>
+
+    <!-- MULTIPLE CONNECTIONS -->
+    <div id="multiConn" class="toggle">
+      <label>Multiple Connections</label>
+      <div class="buttons">
+        <button data-val="yes">Yes</button>
+        <button data-val="no">No</button>
+      </div>
+    </div>
+
+    <!-- POSITIONING FLIGHT -->
+    <div id="posFlight" class="toggle">
+      <label>Positioning Flight Allowed</label>
+      <div class="buttons">
+        <button data-val="yes">Yes</button>
+        <button data-val="no">No</button>
+      </div>
+    </div>
+
+    <label for="program">Airline Program:</label>
+    <select id="program">
+      <option value="">All Programs</option>
+      <option value="american">American Airlines</option>
+      <option value="alaska">Alaska Airlines</option>
+      <option value="united">United Airlines</option>
+      <option value="delta">Delta Air Lines</option>
+      <option value="jetblue">JetBlue</option>
+      <option value="southwest">Southwest Airlines</option>
+      <option value="aeroplan">Air Canada Aeroplan</option>
+      <option value="avios">British Airways Avios</option>
+      <option value="flyingblue">Air France / KLM Flying Blue</option>
+      <option value="virginatlantic">Virgin Atlantic</option>
+      <option value="qantas">Qantas</option>
+      <option value="qatar">Qatar Airways Privilege Club</option>
+      <option value="ana">ANA Mileage Club</option>
+      <option value="emirates">Emirates Skywards</option>
+      <option value="etihad">Etihad Guest</option>
+      <option value="singapore">Singapore KrisFlyer</option>
+      <option value="turkish">Turkish Miles & Smiles</option>
+    </select>
+
+    <!-- STEP 3 -->
+    <h3 style="margin-top: 20px;">Step 3:&nbsp;Search</h3>
+    <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
+    <p id="searchWarning" style="display: block;">Complete Step 2 to continue.</p>
+  </div> <!-- /.inline-toggles -->
+</div> <!-- /.step.routing -->
 
   <!-- ConciergeSync™ Spinner Bridge -->
   <div id="spinner-overlay" class="spinner-overlay">
