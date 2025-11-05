@@ -736,9 +736,6 @@ function setupIataAutocomplete(root = document) {
 
 <script>
 
-    console.log("🧭 Script loaded — preparing updateButtonState global");
-    window.updateButtonState = null;
-
  /**
  * ✈️ Lightweight IATA Autocomplete
  * Supports any <input> with [data-iata] attribute.
@@ -882,7 +879,7 @@ function setupSearchButtonLogic(root = document) {
       console.log("🪄 debugFormReady registered globally");
     })();
 
-// --- UI updater (globalized) ---
+// --- UI updater (globalized for console access) ---
 window.updateButtonState = function(root = document) {
   console.log("🧭 updateButtonState called");
   const searchBtn   = root.querySelector("#searchBtn");
@@ -899,7 +896,6 @@ window.updateButtonState = function(root = document) {
   const anyYes      = direct === "yes" || multi === "yes" || pos === "yes";
 
   const ready = origin && destination && depart && anyYes && mode;
-
   searchBtn.disabled = !ready;
   searchBtn.classList.toggle("active", ready);
   warning.style.display = ready ? "none" : "block";
