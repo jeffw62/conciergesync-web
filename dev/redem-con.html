@@ -1104,108 +1104,139 @@ if (!window.iataObserver) {
 -->
 
 <script>
-/* --------------------------------------------------------------
-   1. TOGGLE LOGIC – always start with a default “No”
-   -------------------------------------------------------------- */
-function setupToggleLogic(root = document) {
-  const groups = {
+/* ================================================================
+   FULLY WORKING TOGGLE + SEARCH BUTTON LOGIC
+   - Default: all "No" active
+   - Mutual exclusion (only one "Yes")
+   - Enables Search button when:
+        • Origin, Destination, Departure filled
+        • At least one routing option = "Yes"
+   ================================================================ */
+
+document.addEventListener("DOMContentLoaded", () => {
+  const root = document; // Change to document.getElementById("workspace") if injected later
+
+  // === 1. SELECT ELEMENTS ===
+  const searchBtn     = root.querySelector("#searchBtn");
+  const warning       = root.querySelector("#searchWarning");
+  const originInput   = root.querySelector("#origin");
+  const destInput     = root.querySelector("#destination");
+  const departInput   = root.querySelector("#departDate");
+  const modeInput     = root.querySelector("#mode");
+
+  const toggleGroups = {
     direct: root.querySelector("#directStop"),
-    multi : root.querySelector("#multiConn"),
-    pos   : root.querySelector("#posFlight")
+    multi:  root.querySelector("#multiConn"),
+    pos:    root.querySelector("#posFlight")
   };
 
-  // Guard
-  if (!groups.direct || !groups.multi || !groups.pos) return;
+  if (!searchBtn || !warning || !originInput || !destInput || !departInput || !modeInput) {
+    console.error("Missing required elements for search logic");
+    return;
+  }
 
-  // Helper: set active button for a group
-  function setActive(group, val) {
-    group.querySelectorAll("button").forEach(btn => {
-      btn.classList.toggle("active", btn.dataset.val === val);
+  // === 2. INITIALIZE TOGGLES WITH DEFAULT "No" ===
+  function initToggles() {
+    Object.values(toggleGroups).forEach(group => {
+      if (!group) return;
+      const noBtn = group.querySelector('button[data-val="no"]');
+      const yesBtn = group.querySelector('button[data-val="yes"]');
+      if (noBtn) noBtn.classList.add("active");
+      if (yesBtn) yesBtn.classList.remove("active");
     });
   }
 
-  // Initialise **all** groups to “No”
-  Object.values(groups).forEach(g => setActive(g, "no"));
+  // === 3. TOGGLE CLICK HANDLER ===
+  function setupToggleHandlers() {
+    Object.entries(toggleGroups).forEach(([key, group]) => {
+      if (!group) return;
 
-  // Click handling
-  Object.entries(groups).forEach(([key, group]) => {
-    group.addEventListener("click", e => {
-      if (e.target.tagName !== "BUTTON") return;
-      const val = e.target.dataset.val;          // "yes" | "no"
-      setActive(group, val);
+      group.addEventListener("click", (e) => {
+        const btn = e.target.closest("button");
+        if (!btn || !btn.dataset.val) return;
 
-      // Mutual exclusion (only one “yes” allowed, except “pos”)
-      if (val === "yes" && key !== "pos") {
-        Object.entries(groups).forEach(([k, g]) => {
-          if (k !== key) setActive(g, "no");
+        const value = btn.dataset.val; // "yes" or "no"
+
+        // Update this group
+        group.querySelectorAll("button").forEach(b => {
+          b.classList.toggle("active", b === btn);
         });
-      }
 
-      // ----> IMPORTANT: fire the readiness check
-      updateSearchButton();
-    });
-  });
+        // Mutual exclusion: if "yes" clicked (except pos), reset others to "no"
+        if (value === "yes" && key !== "pos") {
+          Object.entries(toggleGroups).forEach(([k, g]) => {
+            if (k !== key && g) {
+              const noBtn = g.querySelector('button[data-val="no"]');
+              const yesBtn = g.querySelector('button[data-val="yes"]');
+              if (noBtn) noBtn.classList.add("active");
+              if (yesBtn) yesBtn.classList.remove("active");
+            }
+          });
+        }
 
-  console.log("Toggle groups initialised (default = No)");
-}
-    
-/* --------------------------------------------------------------
-   2. SEARCH BUTTON LOGIC – enable when everything is filled
-   -------------------------------------------------------------- */
-function updateSearchButton(root = document) {
-  const searchBtn   = root.querySelector("#searchBtn");
-  const warning     = root.querySelector("#searchWarning");
-  if (!searchBtn || !warning) return;
-
-  // ----- Step 1 -----
-  const origin      = root.querySelector("#origin")?.value.trim();
-  const destination = root.querySelector("#destination")?.value.trim();
-  const departDate  = root.querySelector("#departDate")?.value.trim();
-
-  // ----- Step 2 -----
-  const direct = root.querySelector("#directStop button.active")?.dataset.val;
-  const multi  = root.querySelector("#multiConn button.active")?.dataset.val;
-  const pos    = root.querySelector("#posFlight button.active")?.dataset.val;
-  const anyYes = direct === "yes" || multi === "yes" || pos === "yes";
-
-  // ----- Mode (exact / flex) -----
-  const mode = root.querySelector("#mode")?.value;
-
-  const ready = origin && destination && departDate && anyYes && mode;
-
-  searchBtn.disabled = !ready;
-  warning.style.display = ready ? "none" : "block";
-
-  console.log("Button readiness:", {origin, destination, departDate, direct, multi, pos, anyYes, mode, ready});
-}
-
-/* --------------------------------------------------------------
-   3. GLOBAL INITIALISER (called once on DOM ready)
-   -------------------------------------------------------------- */
-document.addEventListener("DOMContentLoaded", () => {
-  const root = document;                 // or #workspace if you inject later
-  setupToggleLogic(root);
-  updateSearchButton(root);              // initial check
-
-  // React to any change
-  root.addEventListener("input",  () => updateSearchButton(root));
-  root.addEventListener("change", () => updateSearchButton(root));
-  root.addEventListener("click",  e => {
-    if (e.target.closest("#directStop, #multiConn, #posFlight, #exactBtn, #flexBtn")) {
-      updateSearchButton(root);
-    }
-  });
-
-  // ---- Click handler (always attached) ----
-  const searchBtn = root.querySelector("#searchBtn");
-  if (searchBtn) {
-    searchBtn.addEventListener("click", e => {
-      if (searchBtn.disabled) return;
-      e.preventDefault();
-      console.log("SEARCH FIRED!");
-      // <-- your existing fetch payload code goes here -->
+        // Re-check form readiness
+        checkFormReadiness();
+      });
     });
   }
+
+  // === 4. FORM READINESS CHECK ===
+  function checkFormReadiness() {
+    const origin = originInput.value.trim();
+    const dest = destInput.value.trim();
+    const depart = departInput.value;
+    const mode = modeInput.value;
+
+    // Check if any toggle is "yes"
+    const anyYes = Object.values(toggleGroups).some(group => {
+      if (!group) return false;
+      const activeBtn = group.querySelector("button.active");
+      return activeBtn && activeBtn.dataset.val === "yes";
+    });
+
+    const isReady = origin && dest && depart && mode && anyYes;
+
+    // Update button
+    searchBtn.disabled = !isReady;
+    warning.style.display = isReady ? "none" : "block";
+
+    console.log("Form Ready?", { origin, dest, depart, mode, anyYes, isReady });
+  }
+
+  // === 5. ATTACH INPUT LISTENERS ===
+  [originInput, destInput, departInput].forEach(input => {
+    input.addEventListener("input", checkFormReadiness);
+    input.addEventListener("change", checkFormReadiness);
+  });
+
+  // Mode change (Exact/Flex)
+  const exactBtn = root.querySelector("#exactBtn");
+  const flexBtn = root.querySelector("#flexBtn");
+  if (exactBtn && flexBtn) {
+    exactBtn.addEventListener("click", () => {
+      modeInput.value = "exact";
+      checkFormReadiness();
+    });
+    flexBtn.addEventListener("click", () => {
+      modeInput.value = "flexible";
+      checkFormReadiness();
+    });
+  }
+
+  // === 6. SEARCH BUTTON CLICK ===
+  searchBtn.addEventListener("click", (e) => {
+    if (searchBtn.disabled) return;
+    e.preventDefault();
+    console.log("SEARCH TRIGGERED!");
+    // Your API call here
+  });
+
+  // === 7. INITIALIZE ===
+  initToggles();
+  setupToggleHandlers();
+  checkFormReadiness(); // Initial check
+
+  console.log("Toggle & Search Logic Fully Initialized");
 });
 </script>
 
