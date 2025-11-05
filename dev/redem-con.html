@@ -974,6 +974,7 @@ if (!window.iataObserver) {
 
 </script>
 
+<!--
 <script>
     // 🧭 Step 2: Toggle Logic (console-aware)
     function setupToggleLogic(root = document) {
@@ -1100,8 +1101,113 @@ if (!window.iataObserver) {
       }
     }, 1500);
 </script>
+-->
 
+<script>
+/* --------------------------------------------------------------
+   1. TOGGLE LOGIC – always start with a default “No”
+   -------------------------------------------------------------- */
+function setupToggleLogic(root = document) {
+  const groups = {
+    direct: root.querySelector("#directStop"),
+    multi : root.querySelector("#multiConn"),
+    pos   : root.querySelector("#posFlight")
+  };
 
+  // Guard
+  if (!groups.direct || !groups.multi || !groups.pos) return;
+
+  // Helper: set active button for a group
+  function setActive(group, val) {
+    group.querySelectorAll("button").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.val === val);
+    });
+  }
+
+  // Initialise **all** groups to “No”
+  Object.values(groups).forEach(g => setActive(g, "no"));
+
+  // Click handling
+  Object.entries(groups).forEach(([key, group]) => {
+    group.addEventListener("click", e => {
+      if (e.target.tagName !== "BUTTON") return;
+      const val = e.target.dataset.val;          // "yes" | "no"
+      setActive(group, val);
+
+      // Mutual exclusion (only one “yes” allowed, except “pos”)
+      if (val === "yes" && key !== "pos") {
+        Object.entries(groups).forEach(([k, g]) => {
+          if (k !== key) setActive(g, "no");
+        });
+      }
+
+      // ----> IMPORTANT: fire the readiness check
+      updateSearchButton();
+    });
+  });
+
+  console.log("Toggle groups initialised (default = No)");
+}
+
+/* --------------------------------------------------------------
+   2. SEARCH BUTTON LOGIC – enable when everything is filled
+   -------------------------------------------------------------- */
+function updateSearchButton(root = document) {
+  const searchBtn   = root.querySelector("#searchBtn");
+  const warning     = root.querySelector("#searchWarning");
+  if (!searchBtn || !warning) return;
+
+  // ----- Step 1 -----
+  const origin      = root.querySelector("#origin")?.value.trim();
+  const destination = root.querySelector("#destination")?.value.trim();
+  const departDate  = root.querySelector("#departDate")?.value.trim();
+
+  // ----- Step 2 -----
+  const direct = root.querySelector("#directStop button.active")?.dataset.val;
+  const multi  = root.querySelector("#multiConn button.active")?.dataset.val;
+  const pos    = root.querySelector("#posFlight button.active")?.dataset.val;
+  const anyYes = direct === "yes" || multi === "yes" || pos === "yes";
+
+  // ----- Mode (exact / flex) -----
+  const mode = root.querySelector("#mode")?.value;
+
+  const ready = origin && destination && departDate && anyYes && mode;
+
+  searchBtn.disabled = !ready;
+  warning.style.display = ready ? "none" : "block";
+
+  console.log("Button readiness:", {origin, destination, departDate, direct, multi, pos, anyYes, mode, ready});
+}
+
+/* --------------------------------------------------------------
+   3. GLOBAL INITIALISER (called once on DOM ready)
+   -------------------------------------------------------------- */
+document.addEventListener("DOMContentLoaded", () => {
+  const root = document;                 // or #workspace if you inject later
+  setupToggleLogic(root);
+  updateSearchButton(root);              // initial check
+
+  // React to any change
+  root.addEventListener("input",  () => updateSearchButton(root));
+  root.addEventListener("change", () => updateSearchButton(root));
+  root.addEventListener("click",  e => {
+    if (e.target.closest("#directStop, #multiConn, #posFlight, #exactBtn, #flexBtn")) {
+      updateSearchButton(root);
+    }
+  });
+
+  // ---- Click handler (always attached) ----
+  const searchBtn = root.querySelector("#searchBtn");
+  if (searchBtn) {
+    searchBtn.addEventListener("click", e => {
+      if (searchBtn.disabled) return;
+      e.preventDefault();
+      console.log("SEARCH FIRED!");
+      // <-- your existing fetch payload code goes here -->
+    });
+  }
+});
+</script>
 
 
 <!-- === Dynamic Workspace Injection Target === -->
