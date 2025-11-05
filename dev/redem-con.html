@@ -858,6 +858,10 @@ function setupSearchButtonLogic(root = document) {
 
   // --- UI updater ---
   function updateButtonState() {
+      window.debugFormReady = () => {
+          console.log("🧩 Form readiness check →", isFormReady());
+          return isFormReady();
+        };
     console.log("Check values:", {
       origin: root.querySelector("#origin")?.value.trim(),
       destination: root.querySelector("#destination")?.value.trim(),
