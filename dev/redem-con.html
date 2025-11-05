@@ -878,43 +878,47 @@ function setupSearchButtonLogic(root = document) {
       console.log("🪄 debugFormReady registered globally");
     })();
 
-  // --- UI updater ---
-    function updateButtonState() {
-      console.log("Check values:", {
-        origin: root.querySelector("#origin")?.value.trim(),
-        destination: root.querySelector("#destination")?.value.trim(),
-        depart: root.querySelector("#departDate")?.value.trim(),
-        direct: root.querySelector("#directStop button.active")?.dataset.val,
-        multi: root.querySelector("#multiConn button.active")?.dataset.val,
-        pos: root.querySelector("#posFlight button.active")?.dataset.val,
-        mode: root.querySelector("#mode")?.value
-      });
-    
-      const ready = isFormReady();
-      searchBtn.disabled = !ready;
-      searchBtn.classList.toggle("active", ready);
-      searchWarning.style.display = ready ? "none" : "block";
-      if (!ready) {
-        searchBtn.textContent = "Search";
-      }
-      console.log(`🔍 Search button state: ${ready ? "enabled" : "disabled"}`);
-    }
-    
-    // --- Helper: external check for readiness ---
-    window.debugFormReady = () => {
-      const origin = root.querySelector("#origin")?.value.trim();
-      const destination = root.querySelector("#destination")?.value.trim();
-      const depart = root.querySelector("#departDate")?.value.trim();
-      const direct = root.querySelector("#directStop button.active")?.dataset.val;
-      const multi = root.querySelector("#multiConn button.active")?.dataset.val;
-      const pos = root.querySelector("#posFlight button.active")?.dataset.val;
-      const mode = root.querySelector("#mode")?.value;
-      const anyYes = direct === "yes" || multi === "yes" || pos === "yes";
-    
-      console.log({ origin, destination, depart, direct, multi, pos, mode, anyYes });
-      console.log("🧩 isFormReady →", !!(origin && destination && depart && anyYes && mode));
-      return origin && destination && depart && anyYes && mode;
-    };
+// --- UI updater (globalized) ---
+window.updateButtonState = function(root = document) {
+  console.log("🧭 updateButtonState called");
+  const searchBtn   = root.querySelector("#searchBtn");
+  const warning     = root.querySelector("#searchWarning");
+  if (!searchBtn || !warning) return;
+
+  const origin      = root.querySelector("#origin")?.value.trim();
+  const destination = root.querySelector("#destination")?.value.trim();
+  const depart      = root.querySelector("#departDate")?.value.trim();
+  const direct      = root.querySelector("#directStop button.active")?.dataset.val;
+  const multi       = root.querySelector("#multiConn button.active")?.dataset.val;
+  const pos         = root.querySelector("#posFlight button.active")?.dataset.val;
+  const mode        = root.querySelector("#mode")?.value;
+  const anyYes      = direct === "yes" || multi === "yes" || pos === "yes";
+
+  const ready = origin && destination && depart && anyYes && mode;
+
+  searchBtn.disabled = !ready;
+  searchBtn.classList.toggle("active", ready);
+  warning.style.display = ready ? "none" : "block";
+
+  console.log(`🔍 Search button state: ${ready ? "enabled" : "disabled"}`);
+};
+
+// --- Diagnostic helper (optional, global) ---
+window.debugFormReady = () => {
+  const root = document;
+  const origin = root.querySelector("#origin")?.value.trim();
+  const destination = root.querySelector("#destination")?.value.trim();
+  const depart = root.querySelector("#departDate")?.value.trim();
+  const direct = root.querySelector("#directStop button.active")?.dataset.val;
+  const multi = root.querySelector("#multiConn button.active")?.dataset.val;
+  const pos = root.querySelector("#posFlight button.active")?.dataset.val;
+  const mode = root.querySelector("#mode")?.value;
+  const anyYes = direct === "yes" || multi === "yes" || pos === "yes";
+
+  console.log({ origin, destination, depart, direct, multi, pos, mode, anyYes });
+  console.log("🧩 isFormReady →", !!(origin && destination && depart && anyYes && mode));
+  return origin && destination && depart && anyYes && mode;
+};
 
 // --- Event listeners to detect change ---
 root.addEventListener("input", updateButtonState);
@@ -927,7 +931,6 @@ root.addEventListener("click", e => {
     updateButtonState();
   }
 });
-
 
   // --- Initial state check ---
   updateButtonState();
