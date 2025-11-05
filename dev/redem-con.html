@@ -868,8 +868,15 @@ function setupSearchButtonLogic(root = document) {
   // --- Event listeners to detect change ---
   root.addEventListener("input", updateButtonState);
   root.addEventListener("click", e => {
-    if (e.target.closest(".toggle-group button")) updateButtonState();
-  });
+  if (
+    e.target.closest("#directStop button") ||
+    e.target.closest("#multiConn button") ||
+    e.target.closest("#posFlight button")
+  ) {
+    updateButtonState();
+  }
+});
+
 
   // --- Initial state check ---
   updateButtonState();
