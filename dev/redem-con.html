@@ -909,6 +909,60 @@ function setupFlexDaysLogic(root = document) {
   console.log("✅ Flex Days logic initialized");
 }
 
+// 🕹️ Step 4: Search Button Logic
+function setupSearchButtonLogic(root = document) {
+  const searchBtn = root.querySelector("#searchBtn");
+  const searchWarning = root.querySelector("#searchWarning");
+  if (!searchBtn) {
+    console.warn("⚠️ Search button not found.");
+    return;
+  }
+
+  // --- Helper: determine readiness of all prior steps ---
+  function isFormReady() {
+    const origin = root.querySelector("#origin")?.value.trim();
+    const destination = root.querySelector("#destination")?.value.trim();
+    const depart = root.querySelector("#departDate")?.value.trim();
+    const direct = root.querySelector("#directStop button.active")?.dataset.val;
+    const multi = root.querySelector("#multiConn button.active")?.dataset.val;
+    const pos = root.querySelector("#posFlight button.active")?.dataset.val;
+    const mode = root.querySelector("#mode")?.value;
+
+    // Must have Step 1 (route + date) and Step 2 (routing toggles)
+    return origin && destination && depart && (direct || multi || pos) && mode;
+  }
+
+  // --- UI updater ---
+  function updateButtonState() {
+    const ready = isFormReady();
+    searchBtn.disabled = !ready;
+    searchBtn.classList.toggle("active", ready);
+    searchWarning.style.display = ready ? "none" : "block";
+    if (!ready) {
+      searchBtn.textContent = "Search";
+    }
+  }
+
+  // --- Event listeners to detect change ---
+  root.addEventListener("input", updateButtonState);
+  root.addEventListener("click", e => {
+    if (e.target.closest(".toggle-group button")) updateButtonState();
+  });
+
+  // --- Initial state check ---
+  updateButtonState();
+
+  // --- Click handler (payload will come next step) ---
+  searchBtn.addEventListener("click", e => {
+    if (searchBtn.disabled) return;
+    e.preventDefault();
+    console.log("🚀 Search triggered — all steps complete.");
+    // placeholder for payload build
+  });
+
+  console.log("✅ Search button logic initialized");
+}
+    
 // --- Detect dynamic module injection (for console workspace) ---
 if (!window.iataObserver) {
   window.iataObserver = new MutationObserver((mutations) => {
@@ -1012,26 +1066,31 @@ if (!window.iataObserver) {
                 const iataReady = node.querySelectorAll("input[data-iata]").length === 2;
                 const togglesReady = node.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
                 const flexReady = node.querySelector("#exactBtn") && node.querySelector("#flexBtn");
-    
-                if (iataReady || togglesReady || flexReady) {
+                const searchReady = node.querySelector("#searchBtn");
+                
+                if (iataReady || togglesReady || flexReady || searchReady) {
                   clearInterval(waitForContent);
-    
-                  // Always re-init all to ensure bindings after workspace swap
+                
                   if (iataReady) {
                     setupIataAutocomplete(node);
                     console.log("✈️ IATA autocomplete (re)init done");
                   }
-    
+                
                   if (togglesReady) {
                     setupToggleLogic(node);
                     console.log("🧩 Toggle logic (re)init done");
                   }
-    
+                
                   if (flexReady) {
                     setupFlexDaysLogic(node);
                     console.log("📅 Flex Days logic (re)init done");
                   }
-    
+                
+                  if (searchReady) {
+                    setupSearchButtonLogic(node);
+                    console.log("🕹️ Search button logic (re)init done");
+                  }
+                
                   console.log("🚀 Modules initialized after render");
                 }
               }, 300);
