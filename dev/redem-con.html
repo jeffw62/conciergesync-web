@@ -299,25 +299,25 @@ whee<style>
       </div>
 
       <!-- STEP 2 -->
-      <div class="step routing">
-        <h3>Step 2:&nbsp;Routing Preferences</h3>
-
+      <!-- DIRECT NON-STOP -->
         <label>Direct Non-stop</label>
         <div class="toggle-group" id="directStop">
           <button data-val="yes">Yes</button>
-          <button data-val="no">No</button>
+          <button data-val="no" class="active">No</button>
         </div>
-
+        
+        <!-- MULTIPLE CONNECTIONS -->
         <label>Multiple Connections</label>
         <div class="toggle-group" id="multiConn">
           <button data-val="yes">Yes</button>
-          <button data-val="no">No</button>
+          <button data-val="no" class="active">No</button>
         </div>
-
+        
+        <!-- POSITIONING FLIGHT -->
         <label>Positioning Flight Allowed</label>
         <div class="toggle-group" id="posFlight">
           <button data-val="yes">Yes</button>
-          <button data-val="no">No</button>
+          <button data-val="no" class="active">No</button>
         </div>
 
         <label for="program">Airline Program:</label>
@@ -1114,15 +1114,18 @@ if (!window.iataObserver) {
    ================================================================ */
 
 document.addEventListener("DOMContentLoaded", () => {
-  const root = document; // Change to document.getElementById("workspace") if injected later
+  const root = document;
 
-  // === 1. SELECT ELEMENTS ===
+  // ELEMENTS
   const searchBtn     = root.querySelector("#searchBtn");
   const warning       = root.querySelector("#searchWarning");
   const originInput   = root.querySelector("#origin");
   const destInput     = root.querySelector("#destination");
   const departInput   = root.querySelector("#departDate");
   const modeInput     = root.querySelector("#mode");
+  const exactBtn      = root.querySelector("#exactBtn");
+  const flexBtn       = root.querySelector("#flexBtn");
+  const flexPicker    = root.querySelector("#flexPicker");
 
   const toggleGroups = {
     direct: root.querySelector("#directStop"),
@@ -1130,12 +1133,13 @@ document.addEventListener("DOMContentLoaded", () => {
     pos:    root.querySelector("#posFlight")
   };
 
+  // VALIDATE ELEMENTS
   if (!searchBtn || !warning || !originInput || !destInput || !departInput || !modeInput) {
-    console.error("Missing required elements for search logic");
+    console.error("Missing form elements");
     return;
   }
 
-  // === 2. INITIALIZE TOGGLES WITH DEFAULT "No" ===
+  // INIT: Ensure "No" is active
   function initToggles() {
     Object.values(toggleGroups).forEach(group => {
       if (!group) return;
@@ -1146,97 +1150,94 @@ document.addEventListener("DOMContentLoaded", () => {
     });
   }
 
-  // === 3. TOGGLE CLICK HANDLER ===
-  function setupToggleHandlers() {
+  // TOGGLE CLICK
+  function setupToggles() {
     Object.entries(toggleGroups).forEach(([key, group]) => {
       if (!group) return;
 
-      group.addEventListener("click", (e) => {
+      group.addEventListener("click", e => {
         const btn = e.target.closest("button");
         if (!btn || !btn.dataset.val) return;
 
-        const value = btn.dataset.val; // "yes" or "no"
+        const val = btn.dataset.val;
 
         // Update this group
         group.querySelectorAll("button").forEach(b => {
           b.classList.toggle("active", b === btn);
         });
 
-        // Mutual exclusion: if "yes" clicked (except pos), reset others to "no"
-        if (value === "yes" && key !== "pos") {
+        // Mutual exclusion (except pos)
+        if (val === "yes" && key !== "pos") {
           Object.entries(toggleGroups).forEach(([k, g]) => {
             if (k !== key && g) {
               const noBtn = g.querySelector('button[data-val="no"]');
-              const yesBtn = g.querySelector('button[data-val="yes"]');
-              if (noBtn) noBtn.classList.add("active");
-              if (yesBtn) yesBtn.classList.remove("active");
+              if (noBtn) {
+                noBtn.classList.add("active");
+                g.querySelector('button[data-val="yes"]')?.classList.remove("active");
+              }
             }
           });
         }
 
-        // Re-check form readiness
-        checkFormReadiness();
+        checkForm();
       });
     });
   }
 
-  // === 4. FORM READINESS CHECK ===
-  function checkFormReadiness() {
+  // MODE TOGGLE
+  if (exactBtn && flexBtn && flexPicker) {
+    function setMode(mode) {
+      modeInput.value = mode;
+      exactBtn.classList.toggle("active", mode === "exact");
+      flexBtn.classList.toggle("active", mode === "flexible");
+      flexPicker.style.display = mode === "flexible" ? "block" : "none";
+      checkForm();
+    }
+    exactBtn.addEventListener("click", () => setMode("exact"));
+    flexBtn.addEventListener("click", () => setMode("flexible"));
+    setMode(modeInput.value || "exact");
+  }
+
+  // CHECK FORM READINESS
+  function checkForm() {
     const origin = originInput.value.trim();
     const dest = destInput.value.trim();
     const depart = departInput.value;
     const mode = modeInput.value;
 
-    // Check if any toggle is "yes"
     const anyYes = Object.values(toggleGroups).some(group => {
-      if (!group) return false;
-      const activeBtn = group.querySelector("button.active");
-      return activeBtn && activeBtn.dataset.val === "yes";
+      const active = group?.querySelector("button.active");
+      return active && active.dataset.val === "yes";
     });
 
-    const isReady = origin && dest && depart && mode && anyYes;
+    const ready = origin && dest && depart && mode && anyYes;
 
-    // Update button
-    searchBtn.disabled = !isReady;
-    warning.style.display = isReady ? "none" : "block";
+    searchBtn.disabled = !ready;
+    warning.style.display = ready ? "none" : "block";
 
-    console.log("Form Ready?", { origin, dest, depart, mode, anyYes, isReady });
+    console.log("Form Ready:", { origin, dest, depart, mode, anyYes, ready });
   }
 
-  // === 5. ATTACH INPUT LISTENERS ===
-  [originInput, destInput, departInput].forEach(input => {
-    input.addEventListener("input", checkFormReadiness);
-    input.addEventListener("change", checkFormReadiness);
+  // LISTENERS
+  [originInput, destInput, departInput].forEach(el => {
+    el.addEventListener("input", checkForm);
+    el.addEventListener("change", checkForm);
   });
 
-  // Mode change (Exact/Flex)
-  const exactBtn = root.querySelector("#exactBtn");
-  const flexBtn = root.querySelector("#flexBtn");
-  if (exactBtn && flexBtn) {
-    exactBtn.addEventListener("click", () => {
-      modeInput.value = "exact";
-      checkFormReadiness();
-    });
-    flexBtn.addEventListener("click", () => {
-      modeInput.value = "flexible";
-      checkFormReadiness();
-    });
-  }
-
-  // === 6. SEARCH BUTTON CLICK ===
-  searchBtn.addEventListener("click", (e) => {
+  // SEARCH CLICK
+  searchBtn.addEventListener("click", e => {
     if (searchBtn.disabled) return;
     e.preventDefault();
-    console.log("SEARCH TRIGGERED!");
+    console.log("SEARCH FIRED!");
     // Your API call here
   });
 
-  // === 7. INITIALIZE ===
+  // INIT
   initToggles();
-  setupToggleHandlers();
-  checkFormReadiness(); // Initial check
+  setupToggles();
+  checkForm();
 
-  console.log("Toggle & Search Logic Fully Initialized");
+  console.log("TOGGLES & SEARCH: FULLY ACTIVE");
 });
 </script>
 
