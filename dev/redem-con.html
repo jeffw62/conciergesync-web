@@ -152,10 +152,10 @@ whee<style>
       border-color: #bfa14a;
     }
 
-    /* dim default (disabled) */
+    /* --- Search Button Styling --- */
     .search-btn {
       width: 100%;
-      background: #e0cf9f;       /* pale gold */
+      background: #e0cf9f;       /* pale gold (disabled base) */
       color: #fff;
       border: none;
       border-radius: 6px;
@@ -166,13 +166,18 @@ whee<style>
       transition: all 0.25s ease;
     }
     
-    /* bold active (enabled) */
+    /* --- Active / Hover / Enabled --- */
     .search-btn:enabled {
       cursor: pointer;
       background: #bfa14a;       /* strong gold */
       box-shadow: 0 0 8px rgba(191,161,74,0.4);
       opacity: 1;
       transition: background-color 0.25s ease, opacity 0.25s ease;
+    }
+
+    .search-btn:enabled:hover {
+      background: #c8ad54; /* lighter hover gold */
+      box-shadow: 0 0 12px rgba(191,161,74,0.6);
     }
     
     /* optional hover pop */
