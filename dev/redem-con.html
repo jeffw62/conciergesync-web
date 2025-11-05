@@ -1099,6 +1099,18 @@ if (!window.iataObserver) {
         console.warn("⚠️ Fallback ran, but no modules ready");
       }
     }, 1500);
+
+    // 🧭 Global failsafe: ensure Search button state stays in sync
+    window.addEventListener("load", () => updateButtonState(document));
+    
+    document.addEventListener("input", () => updateButtonState(document));
+    document.addEventListener("change", () => updateButtonState(document));
+    document.addEventListener("click", e => {
+      if (e.target.closest("#directStop, #multiConn, #posFlight, #exactBtn, #flexBtn")) {
+        updateButtonState(document);
+      }
+    });
+
 </script>
 
 <!-- === Dynamic Workspace Injection Target === -->
