@@ -849,8 +849,11 @@ function setupSearchButtonLogic(root = document) {
     const pos = root.querySelector("#posFlight button.active")?.dataset.val;
     const mode = root.querySelector("#mode")?.value;
 
-    // Must have Step 1 (route + date) and Step 2 (routing toggles)
-    return origin && destination && depart && (direct || multi || pos) && mode;
+    // Must have Step 1 (route + date) and at least one routing toggle set to "yes"
+    const anyYes =
+      direct === "yes" || multi === "yes" || pos === "yes";
+    
+    return origin && destination && depart && anyYes && mode;
   }
 
   // --- UI updater ---
