@@ -830,24 +830,6 @@ function setupFlexDaysLogic(root = document) {
   console.log("✅ Flex Days logic initialized");
 }
 
-  exactBtn.addEventListener("click", () => {
-    mode = "exact";
-    updateUI();
-  });
-
-  flexBtn.addEventListener("click", () => {
-    mode = "flex";
-    updateUI();
-  });
-
-  flexSelect?.addEventListener("change", e => {
-    console.log(`📆 Flex range set to ±${e.target.value} days`);
-  });
-
-  updateUI();
-  console.log("✅ Flex Days logic initialized");
-}
-
 // === Step 4: Search Button Logic ===
 function setupSearchButtonLogic(root = document) {
   const searchBtn = root.querySelector("#searchBtn");
