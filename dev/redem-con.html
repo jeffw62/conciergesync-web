@@ -868,6 +868,47 @@ function setupIataAutocomplete(root = document) {
 // --- Initialize once DOM content is ready (in case page loaded standalone) ---
 document.addEventListener("DOMContentLoaded", () => setupIataAutocomplete());
 
+// 🗓️ Step 3: Flex Days logic
+function setupFlexDaysLogic(root = document) {
+  const exactBtn = root.querySelector("#exactBtn");
+  const flexBtn = root.querySelector("#flexBtn");
+  const flexPicker = root.querySelector("#flexPicker");
+  const modeField = root.querySelector("#mode");
+  const flexSelect = root.querySelector("#flexDays");
+
+  if (!exactBtn || !flexBtn || !flexPicker || !modeField) {
+    console.warn("⚠️ Flex Days elements not found, skipping init");
+    return;
+  }
+
+  let mode = modeField.value || "exact";
+
+  function updateUI() {
+    exactBtn.classList.toggle("active", mode === "exact");
+    flexBtn.classList.toggle("active", mode === "flex");
+    flexPicker.style.display = mode === "flex" ? "block" : "none";
+    modeField.value = mode;
+    console.log(`📅 Flex mode set to: ${mode}`);
+  }
+
+  exactBtn.addEventListener("click", () => {
+    mode = "exact";
+    updateUI();
+  });
+
+  flexBtn.addEventListener("click", () => {
+    mode = "flex";
+    updateUI();
+  });
+
+  flexSelect?.addEventListener("change", e => {
+    console.log(`📆 Flex range set to ±${e.target.value} days`);
+  });
+
+  updateUI();
+  console.log("✅ Flex Days logic initialized");
+}
+
 // --- Detect dynamic module injection (for console workspace) ---
 if (!window.iataObserver) {
   window.iataObserver = new MutationObserver((mutations) => {
