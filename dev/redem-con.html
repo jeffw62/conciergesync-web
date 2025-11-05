@@ -960,7 +960,7 @@ if (!window.iataObserver) {
     }
     
     // --- Detect dynamic module injection (for console workspace) ---
-    // --- Unified Observer: handles both IATA + Toggle initialization ---
+    // --- Unified Observer: handles IATA + Toggle + Flex initialization ---
     if (!window.globalObserver) {
       window.globalObserver = new MutationObserver((mutations) => {
         for (const m of mutations) {
@@ -970,23 +970,29 @@ if (!window.iataObserver) {
               const waitForContent = setInterval(() => {
                 const iataReady = node.querySelectorAll("input[data-iata]").length === 2;
                 const togglesReady = node.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
-                if (iataReady || togglesReady) {
+                const flexReady = node.querySelector("#exactBtn") && node.querySelector("#flexBtn");
+    
+                if (iataReady || togglesReady || flexReady) {
                   clearInterval(waitForContent);
-                
-                  // Always re-init both to ensure fresh bindings after workspace swap
+    
+                  // Always re-init all to ensure bindings after workspace swap
                   if (iataReady) {
                     setupIataAutocomplete(node);
                     console.log("✈️ IATA autocomplete (re)init done");
                   }
-                
+    
                   if (togglesReady) {
                     setupToggleLogic(node);
                     console.log("🧩 Toggle logic (re)init done");
                   }
-                
+    
+                  if (flexReady) {
+                    setupFlexDaysLogic(node);
+                    console.log("📅 Flex Days logic (re)init done");
+                  }
+    
                   console.log("🚀 Modules initialized after render");
                 }
-
               }, 300);
             }
           }
@@ -994,22 +1000,27 @@ if (!window.iataObserver) {
       });
     
       window.globalObserver.observe(document.body, { childList: true, subtree: true });
-      console.log("🧭 Global observer initialized once (IATA + Toggle)");
+      console.log("🧭 Global observer initialized once (IATA + Toggle + Flex)");
     }
-
-    // --- Fallback trigger: ensure toggles initialize even if observer misses timing ---
+    
+    // --- Fallback trigger: ensure all modules initialize even if observer misses timing ---
     setTimeout(() => {
+      const iataReady = document.querySelectorAll("input[data-iata]").length === 2;
       const togglesReady = document.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
-      if (togglesReady) {
-        setupToggleLogic(document);
-        console.log("🕓 Fallback: Toggle logic initialized post-render");
+      const flexReady = document.querySelector("#exactBtn") && document.querySelector("#flexBtn");
+    
+      if (iataReady) setupIataAutocomplete(document);
+      if (togglesReady) setupToggleLogic(document);
+      if (flexReady) setupFlexDaysLogic(document);
+    
+      if (iataReady || togglesReady || flexReady) {
+        console.log("🕓 Fallback: Module(s) initialized post-render");
       } else {
-        console.warn("⚠️ Fallback check ran, but toggles not yet ready");
+        console.warn("⚠️ Fallback ran, but no modules ready");
       }
     }, 1500);
-
-
 </script>
+
 
 
 
