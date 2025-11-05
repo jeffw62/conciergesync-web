@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ConciergeSync™ – Dev Home</title>
+
+  <!-- Premium Typography -->
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.min.js"></script>
+
+  <style>
+    /* === ROOT VARIABLES === */
+    :root {
+      --navy: #0a1a33;
+      --gold: #bfa14a;
+      --gold-light: #d4af37;
+      --text-light: #e6e6e6;
+      --text-dark: #1a1a1a;
+      --bg: #fafafa;
+      --shadow-sm: 0 4px 12px rgba(10, 26, 51, 0.08);
+      --shadow-md: 0 12px 32px rgba(10, 26, 51, 0.15);
+      --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.25);
+      --radius: 8px;
+      --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* === BASE === */
+    *, *::before, *::after { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, -apple-system, sans-serif;
+      background: var(--bg);
+      color: var(--text-dark);
+      line-height: 1.7;
+      letter-spacing: 0.01em;
+      -webkit-font-smoothing: antialiased;
+      text-rendering: optimizeLegibility;
+    }
+
+    h1, h2, .logo {
+      font-family: 'Playfair Display', Georgia, serif;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+    }
+
+    a { text-decoration: none; color: inherit; }
+
+    /* === HEADER === */
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 20px 40px;
+      background: var(--navy);
+      color: #fff;
+      position: sticky;
+      top: 0;
+      z-index: 1000;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+
+    header.scrolled {
+      padding: 16px 40px;
+      backdrop-filter: blur(10px);
+    }
+
+    .logo {
+      font-size: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: var(--transition);
+    }
+
+    .logo img { height: 36px; border-radius: 4px; }
+    .logo a:hover { opacity: 0.9; transform: translateY(-1px); }
+
+    nav {
+      display: none;
+      gap: 32px;
+      font-weight: 500;
+    }
+
+    nav a {
+      position: relative;
+      transition: var(--transition);
+    }
+
+    nav a::after {
+      content: '';
+      position: absolute;
+      bottom: -6px;
+      left: 0;
+      width: 0;
+      height: 2px;
+      background: var(--gold);
+      transition: width 0.3s ease;
+    }
+
+    nav a:hover::after { width: 100%; }
+    nav a:hover { color: var(--gold-light); }
+
+    .menu-toggle {
+      display: flex;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      padding: 8px;
+      border-radius: 6px;
+      transition: var(--transition);
+    }
+
+    .menu-toggle span {
+      width: 24px;
+      height: 2px;
+      background: #fff;
+      border-radius: 2px;
+      transition: var(--transition);
+    }
+
+    .menu-toggle:hover { background: rgba(255,255,255,0.1); }
+
+    /* === HERO === */
+    .hero {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      background: var(--navy);
+      padding: 80px 40px;
+      color: #fff;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(135deg, rgba(10,26,51,0.9), rgba(10,26,51,0.7));
+      z-index: 1;
+    }
+
+    .hero > * { position: relative; z-index: 2; }
+
+    .hero::after {
+      content: "";
+      position: absolute;
+      left: 0; right: 0; bottom: 0;
+      height: 6px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      z-index: 3;
+    }
+
+    .hero-text {
+      flex: 1 1 500px;
+      min-width: 300px;
+      max-width: 660px;
+    }
+
+    .hero h1 {
+      font-size: 3rem;
+      margin: 0 0 20px;
+      line-height: 1.2;
+    }
+
+    .hero p {
+      font-size: 1.2rem;
+      margin: 0 0 32px;
+      color: var(--text-light);
+      line-height: 1.7;
+    }
+
+    .btn {
+      background: var(--gold);
+      color: var(--navy);
+      padding: 16px 36px;
+      border: none;
+      border-radius: var(--radius);
+      font-weight: 600;
+      font-size: 1.05rem;
+      letter-spacing: 0.5px;
+      cursor: pointer;
+      display: inline-block;
+      transition: var(--transition);
+      box-shadow: 0 4px 12px rgba(191, 161, 74, 0.3);
+    }
+
+    .btn:hover {
+      background: var(--gold-light);
+      transform: translateY(-3px);
+      box-shadow: 0 12px 24px rgba(191, 161, 74, 0.4);
+    }
+
+    /* === HERO VIDEO === */
+    .hero-video {
+      flex: 1 1 500px;
+      max-width: 560px;
+      position: relative;
+      border-radius: var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow-lg);
+    }
+
+    .hero-video video {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      display: block;
+    }
+
+    .hero-video::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      border-radius: var(--radius);
+      pointer-events: none;
+    }
+
+    /* === SECTIONS === */
+    .sections {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 40px;
+      padding: 80px 40px;
+      text-align: center;
+    }
+
+    .icon-tile {
+      flex: 1 1 160px;
+      min-width: 140px;
+      position: relative;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .icon-tile:hover { transform: translateY(-4px); }
+
+    .icon-tile i {
+      width: 36px;
+      height: 36px;
+      stroke: var(--navy);
+      stroke-width: 1.8;
+      margin-bottom: 12px;
+      transition: var(--transition);
+      filter: drop-shadow(0 0 8px transparent);
+    }
+
+    .icon-tile:hover i {
+      stroke: var(--gold);
+      filter: drop-shadow(0 0 12px rgba(191, 161, 74, 0.6));
+    }
+
+    .icon-tile p {
+      font-weight: 600;
+      font-size: 1.1rem;
+      margin: 0;
+      color: var(--text-dark);
+    }
+
+    .icon-preview {
+      position: absolute;
+      bottom: 130%;
+      left: 50%;
+      transform: translateX(-50%) translateY(8px);
+      background: #fff;
+      border: 1px solid rgba(191, 161, 74, 0.3);
+      border-radius: var(--radius);
+      padding: 16px;
+      width: 280px;
+      box-shadow: var(--shadow-md);
+      text-align: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: var(--transition);
+      z-index: 100;
+    }
+
+    .icon-preview img {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .icon-preview p {
+      font-size: 0.9rem;
+      color: var(--navy);
+      margin: 0;
+      font-weight: 500;
+    }
+
+    .icon-tile:hover .icon-preview {
+      opacity: 1;
+      transform: translateX(-50%) translateY(-12px);
+    }
+
+    /* === FOOTER PLACEHOLDER === */
+    #footer {
+      min-height: 120px;
+      background: var(--navy);
+      color: #aaa;
+      padding: 40px;
+      text-align: center;
+      font-size: 0.9rem;
+    }
+
+    /* === RESPONSIVE === */
+    @media (min-width: 769px) {
+      header nav { display: flex; }
+      .menu-toggle { display: none; }
+    }
+
+    @media (max-width: 900px) {
+      .hero {
+        flex-direction: column;
+        text-align: center;
+        padding: 60px 5%;
+      }
+      .hero h1 { font-size: 2.5rem; }
+      .hero-video { margin-top: 32px; max-width: 100%; }
+    }
+
+    @media (max-width: 768px) {
+      header {
+        padding: 16px 20px;
+      }
+      .logo { font-size: 1.3rem; }
+      .logo img { height: 32px; }
+
+      nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: var(--navy);
+        flex-direction: column;
+        max-height: 0;
+        overflow: hidden;
+        opacity: 0;
+        transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+        box-shadow: var(--shadow-md);
+        z-index: 999;
+      }
+
+      nav.active {
+        max-height: 500px;
+        opacity: 1;
+        padding: 24px 20px;
+      }
+
+      nav a {
+        padding: 12px 0;
+        font-size: 1.1rem;
+      }
+
+      .menu-toggle { display: flex; }
+    }
+
+    @media (max-width: 480px) {
+      .hero h1 { font-size: 2.2rem; }
+      .btn { padding: 14px 28px; font-size: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header id="header">
+    <div class="logo">
+      <a href="/dev/home.html">
+        <img src="/dev/asset/CS_Logo_Premium_2x.png" alt="ConciergeSync">
+        ConciergeSync™
+      </a>
+    </div>
+    <div class="menu-toggle" id="menuToggle">
+      <span></span><span></span><span></span>
+    </div>
+    <nav id="nav">
+      <a href="/dev/about.html">About</a>
+      <a href="/dev/betap.html">Beta Program</a>
+      <a href="#">Helpful Hints</a>
+      <a href="#">Contact</a>
+    </nav>
+  </header>
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-text">
+      <h1>Turn Your Points Into Real Money Value</h1>
+      <p>
+        ConciergeSync™ is the <strong>travel finance platform</strong> that helps you optimize cards, miles,
+        and redemptions with accuracy and clarity. Join our beta program and be part of shaping the future of travel.
+      </p>
+      <a href="/dev/betap.html" class="btn">Experience ConciergeSync™</a>
+    </div>
+    <div class="hero-video">
+      <video autoplay muted loop playsinline poster="/dev/asset/video-poster.jpg">
+        <source src="https://cdn.coverr.co/videos/coverr-plane-window-view-9585/1080p.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+      </video>
+    </div>
+  </section>
+
+  <!-- ICON SECTIONS -->
+  <section class="sections">
+    <div class="icon-tile">
+      <i data-lucide="bar-chart-3"></i>
+      <p>Dashboard</p>
+      <div class="icon-preview">
+        <img src="/dev/asset/dashboard-preview.jpg" alt="Dashboard Preview">
+        <p>Your unified view of cards, points, and redemptions.</p>
+      </div>
+    </div>
+    <div class="icon-tile">
+      <i data-lucide="target"></i>
+      <p>Redemption Engine</p>
+    </div>
+    <div class="icon-tile">
+      <i data-lucide="credit-card"></i>
+      <p>My Cards</p>
+    </div>
+    <div class="icon-tile">
+      <i data-lucide="plane"></i>
+      <p>My Programs</p>
+    </div>
+    <div class="icon-tile">
+      <i data-lucide="lightbulb"></i>
+      <p>Helpful Hints</p>
+    </div>
+    <div class="icon-tile">
+      <i data-lucide="settings"></i>
+      <p>Settings</p>
+    </div>
+  </section>
+
+  <!-- FOOTER PLACEHOLDER -->
+  <div id="footer">
+    <p>Loading footer&hellip;</p>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script>
+    // === FOOTER INJECTION (with fallback) ===
+    fetch("/dev/footer.html")
+      .then(r => r.text())
+      .then(html => {
+        const footer = document.getElementById("footer");
+        footer.innerHTML = html;
+      })
+      .catch(() => {
+        document.getElementById("footer").innerHTML = `
+          <p style="margin:0; color:#999;">
+            © ${new Date().getFullYear()} ConciergeSync™. All rights reserved.
+          </p>
+        `;
+      });
+
+    // === MOBILE MENU TOGGLE ===
+    document.addEventListener("DOMContentLoaded", () => {
+      const toggle = document.getElementById("menuToggle");
+      const nav = document.getElementById("nav");
+      const header = document.getElementById("header");
+
+      toggle?.addEventListener("click", () => {
+        nav.classList.toggle("active");
+        document.body.style.overflow = nav.classList.contains("active") ? "hidden" : "";
+      });
+
+      // Close on outside click
+      document.addEventListener("click", (e) => {
+        if (!header.contains(e.target) && nav.classList.contains("active")) {
+          nav.classList.remove("active");
+          document.body.style.overflow = "";
+        }
+      });
+
+      // Sticky header shrink
+      let lastScroll = 0;
+      window.addEventListener("scroll", () => {
+        const current = window.scrollY;
+        if (current > 100 && current > lastScroll) {
+          header.classList.add("scrolled");
+        } else {
+          header.classList.remove("scrolled");
+        }
+        lastScroll = current;
+      });
+    });
+
+    // === LUCIDE ICONS ===
+    lucide.createIcons();
+  </script>
+</body>
+</html>
