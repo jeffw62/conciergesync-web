@@ -914,12 +914,12 @@ function setupFlexDaysLogic(root = document) {
   console.log("✅ Flex Days logic initialized");
 }
 
-// 🕹️ Step 4: Search Button Logic
+// === Step 4: Search Button Logic ===
 function setupSearchButtonLogic(root = document) {
   const searchBtn = root.querySelector("#searchBtn");
   const searchWarning = root.querySelector("#searchWarning");
-  if (!searchBtn) {
-    console.warn("⚠️ Search button not found.");
+  if (!searchBtn || !searchWarning) {
+    console.warn("⚠️ Search button or warning element not found, skipping init");
     return;
   }
 
@@ -946,6 +946,7 @@ function setupSearchButtonLogic(root = document) {
     if (!ready) {
       searchBtn.textContent = "Search";
     }
+    console.log(`🔍 Search button state: ${ready ? "enabled" : "disabled"}`);
   }
 
   // --- Event listeners to detect change ---
@@ -957,12 +958,12 @@ function setupSearchButtonLogic(root = document) {
   // --- Initial state check ---
   updateButtonState();
 
-  // --- Click handler (payload will come next step) ---
+  // --- Click handler (payload logic added later) ---
   searchBtn.addEventListener("click", e => {
     if (searchBtn.disabled) return;
     e.preventDefault();
     console.log("🚀 Search triggered — all steps complete.");
-    // placeholder for payload build
+    // (placeholder for API payload)
   });
 
   console.log("✅ Search button logic initialized");
