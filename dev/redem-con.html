@@ -858,7 +858,16 @@ function setupSearchButtonLogic(root = document) {
 
   // --- UI updater ---
   function updateButtonState() {
-    const ready = isFormReady();
+    console.log("🧩 Check values:", {
+      origin: root.querySelector("#origin")?.value.trim(),
+      destination: root.querySelector("#destination")?.value.trim(),
+      depart: root.querySelector("#departDate")?.value.trim(),
+      direct: root.querySelector("#directStop button.active")?.dataset.val,
+      multi: root.querySelector("#multiConn button.active")?.dataset.val,
+      pos: root.querySelector("#posFlight button.active")?.dataset.val,
+      mode: root.querySelector("#mode")?.value
+    });
+      const ready = isFormReady();
     searchBtn.disabled = !ready;
     searchBtn.classList.toggle("active", ready);
     searchWarning.style.display = ready ? "none" : "block";
