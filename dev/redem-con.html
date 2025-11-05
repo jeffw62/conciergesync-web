@@ -873,28 +873,42 @@ function setupIataAutocomplete(root = document) {
 // --- Initialize once DOM content is ready (in case page loaded standalone) ---
 document.addEventListener("DOMContentLoaded", () => setupIataAutocomplete());
 
-// 🗓️ Step 3: Flex Days logic
+// 📅 Step 3: Flex Days logic
 function setupFlexDaysLogic(root = document) {
   const exactBtn = root.querySelector("#exactBtn");
   const flexBtn = root.querySelector("#flexBtn");
   const flexPicker = root.querySelector("#flexPicker");
-  const modeField = root.querySelector("#mode");
+  const modeInput = root.querySelector("#mode"); // renamed for clarity
   const flexSelect = root.querySelector("#flexDays");
 
-  if (!exactBtn || !flexBtn || !flexPicker || !modeField) {
+  if (!exactBtn || !flexBtn || !flexPicker || !modeInput) {
     console.warn("⚠️ Flex Days elements not found, skipping init");
     return;
   }
 
-  let mode = modeField.value || "exact";
-
-  function updateUI() {
-    exactBtn.classList.toggle("active", mode === "exact");
-    flexBtn.classList.toggle("active", mode === "flex");
-    flexPicker.style.display = mode === "flex" ? "block" : "none";
-    modeField.value = mode;
-    console.log(`📅 Flex mode set to: ${mode}`);
+  // Helper — set mode and update UI
+  function setMode(value) {
+    modeInput.value = value;
+    exactBtn.classList.toggle("active", value === "exact");
+    flexBtn.classList.toggle("active", value === "flex");
+    flexPicker.style.display = value === "flex" ? "block" : "none";
+    console.log(`📅 Flex mode set to: ${value}`);
   }
+
+  // Initial setup
+  setMode(modeInput.value || "exact");
+
+  // Button listeners
+  exactBtn.addEventListener("click", () => setMode("exact"));
+  flexBtn.addEventListener("click", () => setMode("flex"));
+
+  // Flex day dropdown
+  flexSelect.addEventListener("change", (e) => {
+    console.log(`📆 Flex range set to ±${e.target.value} days`);
+  });
+
+  console.log("✅ Flex Days logic initialized");
+}
 
   exactBtn.addEventListener("click", () => {
     mode = "exact";
