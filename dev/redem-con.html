@@ -735,7 +735,11 @@ function setupIataAutocomplete(root = document) {
 </script>
 
 <script>
-/**
+
+    console.log("🧭 Script loaded — preparing updateButtonState global");
+    window.updateButtonState = null;
+
+ /**
  * ✈️ Lightweight IATA Autocomplete
  * Supports any <input> with [data-iata] attribute.
  */
