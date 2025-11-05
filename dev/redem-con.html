@@ -723,95 +723,15 @@ window.showGoldCard = showGoldCard;
     };
 </script>
 
-<!-- ✅ Global Exports Only (keep these, delete old mode & search duplications) -->
 <script>
-    window.initRedemptionForm = function() {
-      console.log("Redemption form initialized.");
-      const ws = document.getElementById("workspace");
-      if (!ws) return;
-    
-      const originInput = ws.querySelector("#origin");
-      const destinationInput = ws.querySelector("#destination");
-    
-      if (originInput && destinationInput) {
-        originInput.addEventListener("input", () => {
-          console.log("Origin input changed:", originInput.value);
-        });
-        destinationInput.addEventListener("input", () => {
-          console.log("Destination input changed:", destinationInput.value);
-        });
-      }
-    };
-    
-    window.fetchIATA = function() {
-      console.log("Fetching IATA data (delegated)...");
-      const ws = document.getElementById("workspace");
-      if (!ws) return;
-    
-      if (window.__redem_iata_blur_handler) {
-        ws.removeEventListener("blur", window.__redem_iata_blur_handler, true);
-      }
-    
-      window.__redem_iata_blur_handler = function(evt) {
-        try {
-          if (!evt || typeof evt !== "object" || !evt.target) return;
-          const t = evt.target;
-          if (!(t instanceof HTMLInputElement)) return;
-          if (!t.matches || !t.matches("[data-iata]")) return;
-    
-          console.log("Fetch IATA for:", t.value);
-        } catch (err) {
-          console.error("IATA delegated handler error:", err);
-        }
-      };
-      ws.addEventListener("blur", window.__redem_iata_blur_handler, true);
-    
-      if (window.__redem_iata_input_handler) {
-        ws.removeEventListener("input", window.__redem_iata_input_handler, false);
-      }
-    
-      window.__redem_iata_input_handler = function(evt) {
-        try {
-          if (!evt || !evt.target) return;
-          const t = evt.target;
-          if (!(t instanceof HTMLInputElement)) return;
-          if (!t.matches("[data-iata]")) return;
-          console.log("IATA input change:", t.value);
-        } catch (err) {
-          console.error("IATA input delegated handler error:", err);
-        }
-      };
-      ws.addEventListener("input", window.__redem_iata_input_handler, false);
-    };
-    
-    window.attachYesNoHandlers = function() {
-      console.log("Attaching delegated yes/no handlers...");
-      const ws = document.getElementById("workspace");
-      if (!ws) return;
-    
-      if (window.__redem_yesno_click_handler) {
-        ws.removeEventListener("click", window.__redem_yesno_click_handler, false);
-      }
-    
-      window.__redem_yesno_click_handler = function(evt) {
-        try {
-          const btn = evt.target.closest("[data-yesno]");
-          if (!btn) return;
-          btn.classList.toggle("active");
-          console.log("Toggled:", btn.dataset.yesno);
-    
-          const searchBtn = ws.querySelector("#searchBtn");
-          if (searchBtn) {
-            const anyActive = !!ws.querySelector("[data-yesno].active");
-            searchBtn.disabled = !anyActive;
-            console.log("Search button disabled:", searchBtn.disabled);
-          }
-        } catch (err) {
-          console.error("Yes/No delegated handler error:", err);
-        }
-      };
-      ws.addEventListener("click", window.__redem_yesno_click_handler, false);
-    };
+/**
+ * ✈️ setupIataAutocomplete — temporary safe stub
+ * Keeps observers and fallback logic stable until full autocomplete is connected.
+ * Prevents "undefined function" errors across modules.
+ */
+function setupIataAutocomplete(root = document) {
+  console.log("✈️ setupIataAutocomplete placeholder called (safe stub)");
+}
 </script>
 
 <script>
