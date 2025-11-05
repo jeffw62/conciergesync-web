@@ -904,6 +904,23 @@
       });
     });
   });
+
+  // 🧩 Wait until redem-con module defines updateButtonState
+  const waitForUpdateButtonState = setInterval(() => {
+    if (typeof window.updateButtonState === "function") {
+      clearInterval(waitForUpdateButtonState);
+      console.log("🧭 updateButtonState detected — binding global listeners");
+
+      document.addEventListener("input",  () => updateButtonState(document));
+      document.addEventListener("change", () => updateButtonState(document));
+      document.addEventListener("click",  e => {
+        if (e.target.closest("#directStop, #multiConn, #posFlight, #exactBtn, #flexBtn")) {
+          updateButtonState(document);
+        }
+      });
+    }
+  }, 300);
+  
 </script>
 
 </body>
