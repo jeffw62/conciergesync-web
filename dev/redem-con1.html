@@ -592,19 +592,356 @@
     </div>
   </div>
 
-  <!-- SCRIPTS (Preserved Functionality) -->
-  <script>
-    // [All your existing JS logic here — unchanged]
-    // Mode toggle, search, IATA autocomplete, etc.
-    // Paste your original <script> blocks below:
-  </script>
+  <!-- ✅ Spinner Bridge (keep and fix comment) -->
+<script>
+    window.createSpinnerBridge = () => {
+      const old = document.getElementById('spinner-bridge');
+      if (old) old.remove();
+    
+      const bridge = document.createElement('div');
+      bridge.id = 'spinner-bridge';
+      Object.assign(bridge.style, {
+        position: 'fixed',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        background: 'rgba(10,26,51,0.85)',
+        zIndex: 9998
+      });
+    
+      const card = document.createElement('img');
+      card.id = 'gold-card';
+      card.src = '/dev/asset/CS_logo_vert_gold_card.png';
+      Object.assign(card.style, {
+        width: '400px',
+        opacity: 1,
+        visibility: 'visible',
+        zIndex: 9999
+      });
+      bridge.appendChild(card);
+    
+      const shimmer = document.createElement('div');
+      shimmer.id = 'shimmer-overlay';
+      Object.assign(shimmer.style, {
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        width: '100%',
+        height: '100%',
+        background: 'linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
+        backgroundSize: '200% 100%',
+        animation: 'shimmerMove 2s infinite'
+      });
+      bridge.appendChild(shimmer);
+    
+      const style = document.createElement('style');
+      style.textContent = `
+        @keyframes shimmerMove {
+          0% { background-position: 200% 0; }
+          100% { background-position: -200% 0; }
+        }
+      `;
+      document.head.appendChild(style);
+    
+      document.body.appendChild(bridge);
+      console.log('✅ Spinner bridge & gold card created manually');
+    };
+</script>
 
-  <!-- Include your existing JS here -->
-  <script>
-    // === Paste all your original JS from the first file here ===
-    // (Mode toggle, search, IATA, toggle logic, etc.)
-    // Everything works — just wrapped in luxury UI.
-  </script>
+<!-- ✅ Global Exports Only (keep these, delete old mode & search duplications) -->
+<script>
+    window.initRedemptionForm = function() {
+      console.log("Redemption form initialized.");
+      const ws = document.getElementById("workspace");
+      if (!ws) return;
+    
+      const originInput = ws.querySelector("#origin");
+      const destinationInput = ws.querySelector("#destination");
+    
+      if (originInput && destinationInput) {
+        originInput.addEventListener("input", () => {
+          console.log("Origin input changed:", originInput.value);
+        });
+        destinationInput.addEventListener("input", () => {
+          console.log("Destination input changed:", destinationInput.value);
+        });
+      }
+    };
+    
+    window.fetchIATA = function() {
+      console.log("Fetching IATA data (delegated)...");
+      const ws = document.getElementById("workspace");
+      if (!ws) return;
+    
+      if (window.__redem_iata_blur_handler) {
+        ws.removeEventListener("blur", window.__redem_iata_blur_handler, true);
+      }
+    
+      window.__redem_iata_blur_handler = function(evt) {
+        try {
+          if (!evt || typeof evt !== "object" || !evt.target) return;
+          const t = evt.target;
+          if (!(t instanceof HTMLInputElement)) return;
+          if (!t.matches || !t.matches("[data-iata]")) return;
+    
+          console.log("Fetch IATA for:", t.value);
+        } catch (err) {
+          console.error("IATA delegated handler error:", err);
+        }
+      };
+      ws.addEventListener("blur", window.__redem_iata_blur_handler, true);
+    
+      if (window.__redem_iata_input_handler) {
+        ws.removeEventListener("input", window.__redem_iata_input_handler, false);
+      }
+    
+      window.__redem_iata_input_handler = function(evt) {
+        try {
+          if (!evt || !evt.target) return;
+          const t = evt.target;
+          if (!(t instanceof HTMLInputElement)) return;
+          if (!t.matches("[data-iata]")) return;
+          console.log("IATA input change:", t.value);
+        } catch (err) {
+          console.error("IATA input delegated handler error:", err);
+        }
+      };
+      ws.addEventListener("input", window.__redem_iata_input_handler, false);
+    };
+    
+    window.attachYesNoHandlers = function() {
+      console.log("Attaching delegated yes/no handlers...");
+      const ws = document.getElementById("workspace");
+      if (!ws) return;
+    
+      if (window.__redem_yesno_click_handler) {
+        ws.removeEventListener("click", window.__redem_yesno_click_handler, false);
+      }
+    
+      window.__redem_yesno_click_handler = function(evt) {
+        try {
+          const btn = evt.target.closest("[data-yesno]");
+          if (!btn) return;
+          btn.classList.toggle("active");
+          console.log("Toggled:", btn.dataset.yesno);
+    
+          const searchBtn = ws.querySelector("#searchBtn");
+          if (searchBtn) {
+            const anyActive = !!ws.querySelector("[data-yesno].active");
+            searchBtn.disabled = !anyActive;
+            console.log("Search button disabled:", searchBtn.disabled);
+          }
+        } catch (err) {
+          console.error("Yes/No delegated handler error:", err);
+        }
+      };
+      ws.addEventListener("click", window.__redem_yesno_click_handler, false);
+    };
+</script>
+
+<script>
+/**
+ * ✈️ Lightweight IATA Autocomplete
+ * Supports any <input> with [data-iata] attribute.
+ */
+function setupIataAutocomplete(root = document) {
+  const inputs = root.querySelectorAll("input[data-iata]");
+  if (!inputs.length) {
+    console.warn("⚠️ No IATA fields found for autocomplete.");
+    return;
+  }
+
+  // Simple demo dataset (expand later or replace with fetch)
+  const airports = [
+    { city: "Dallas", code: "DAL" },
+    { city: "Dallas–Fort Worth", code: "DFW" },
+    { city: "Denver", code: "DEN" },
+    { city: "Chicago O’Hare", code: "ORD" },
+    { city: "Miami", code: "MIA" },
+    { city: "Los Angeles", code: "LAX" },
+    { city: "New York JFK", code: "JFK" },
+    { city: "Atlanta", code: "ATL" },
+    { city: "London Heathrow", code: "LHR" },
+    { city: "Tokyo Haneda", code: "HND" }
+  ];
+
+  inputs.forEach(input => {
+    const listId = input.id + "-list";
+    let datalist = document.getElementById(listId);
+    if (!datalist) {
+      datalist = document.createElement("datalist");
+      datalist.id = listId;
+      document.body.appendChild(datalist);
+      input.setAttribute("list", listId);
+    }
+
+    input.addEventListener("input", () => {
+      const val = input.value.toLowerCase();
+      datalist.innerHTML = "";
+      if (val.length < 2) return; // wait for 2+ chars
+      airports
+        .filter(a =>
+          a.city.toLowerCase().includes(val) ||
+          a.code.toLowerCase().includes(val)
+        )
+        .forEach(a => {
+          const opt = document.createElement("option");
+          opt.value = `${a.city} (${a.code})`;
+          datalist.appendChild(opt);
+        });
+    });
+  });
+
+  console.log("✅ IATA autocomplete initialized on", inputs.length, "field(s)");
+}
+
+// --- Initialize once DOM content is ready (in case page loaded standalone) ---
+document.addEventListener("DOMContentLoaded", () => setupIataAutocomplete());
+
+// --- Detect dynamic module injection (for console workspace) ---
+if (!window.iataObserver) {
+  window.iataObserver = new MutationObserver((mutations) => {
+    for (const m of mutations) {
+      for (const node of m.addedNodes) {
+
+        // ✅ Correct block here
+        if (node.nodeType === 1) {
+          const target = node.id === "workspace" ? node : node.querySelector("#workspace");
+          if (target) {
+            const checkFields = setInterval(() => {
+              const hasFields = document.querySelectorAll("input[data-iata]").length;
+              if (hasFields) {
+                clearInterval(checkFields);
+                setupIataAutocomplete(document);
+                console.log("✈️ IATA fields detected dynamically and initialized");
+              }
+            }, 200);
+          }
+        }
+
+      }
+    }
+  });
+
+  window.iataObserver.observe(document.body, { childList: true, subtree: true });
+  console.log("🧭 IATA observer initialized once globally");
+}
+
+</script>
+
+<script>
+    // 🧭 Step 2: Toggle Logic (console-aware)
+    function setupToggleLogic(root = document) {
+        console.log("🔧 setupToggleLogic called", root);
+      const toggles = {
+        direct: root.querySelector("#directStop"),
+        multi: root.querySelector("#multiConn"),
+        pos: root.querySelector("#posFlight")
+      };
+    
+      // guard: make sure elements exist
+      if (!toggles.direct || !toggles.multi || !toggles.pos) {
+        console.warn("⚠️ Toggle elements not found yet, skipping init");
+        return;
+      }
+    
+      // activate button visually
+      function setActive(group, value) {
+        const buttons = group.querySelectorAll("button");
+        buttons.forEach(btn => {
+          btn.classList.toggle("active", btn.dataset.val === value);
+        });
+      }
+    
+      // reset others when one is set to Yes
+      function handleMutualExclusion(selectedKey) {
+        for (const key in toggles) {
+          if (key !== selectedKey) {
+            setActive(toggles[key], "no");
+          }
+        }
+      }
+    
+      // attach click listeners for all toggle groups
+      for (const [key, group] of Object.entries(toggles)) {
+        group.addEventListener("click", e => {
+          if (e.target.tagName !== "BUTTON") return;
+          const val = e.target.dataset.val;
+    
+          // set this group's active state
+          setActive(group, val);
+    
+          // enforce exclusivity across groups
+          if (val === "yes" && key !== "pos") {
+              handleMutualExclusion(key);
+            }
+    
+          // log current states
+          const states = {
+            direct: toggles.direct.querySelector(".active")?.dataset.val,
+            multi: toggles.multi.querySelector(".active")?.dataset.val,
+            pos: toggles.pos.querySelector(".active")?.dataset.val
+          };
+          console.log("🧩 Toggle states:", states);
+        });
+      }
+    
+      console.log("✅ Toggle logic initialized");
+    }
+    
+    // --- Detect dynamic module injection (for console workspace) ---
+    // --- Unified Observer: handles both IATA + Toggle initialization ---
+    if (!window.globalObserver) {
+      window.globalObserver = new MutationObserver((mutations) => {
+        for (const m of mutations) {
+          for (const node of m.addedNodes) {
+            if (node.nodeType === 1 && node.id === "workspace") {
+              // Wait for redemption form content to fully render
+              const waitForContent = setInterval(() => {
+                const iataReady = node.querySelectorAll("input[data-iata]").length === 2;
+                const togglesReady = node.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
+                if (iataReady || togglesReady) {
+                  clearInterval(waitForContent);
+                
+                  // Always re-init both to ensure fresh bindings after workspace swap
+                  if (iataReady) {
+                    setupIataAutocomplete(node);
+                    console.log("✈️ IATA autocomplete (re)init done");
+                  }
+                
+                  if (togglesReady) {
+                    setupToggleLogic(node);
+                    console.log("🧩 Toggle logic (re)init done");
+                  }
+                
+                  console.log("🚀 Modules initialized after render");
+                }
+
+              }, 300);
+            }
+          }
+        }
+      });
+    
+      window.globalObserver.observe(document.body, { childList: true, subtree: true });
+      console.log("🧭 Global observer initialized once (IATA + Toggle)");
+    }
+
+    // --- Fallback trigger: ensure toggles initialize even if observer misses timing ---
+    setTimeout(() => {
+      const togglesReady = document.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
+      if (togglesReady) {
+        setupToggleLogic(document);
+        console.log("🕓 Fallback: Toggle logic initialized post-render");
+      } else {
+        console.warn("⚠️ Fallback check ran, but toggles not yet ready");
+      }
+    }, 1500);
+</script>
 
 </body>
 </html>
