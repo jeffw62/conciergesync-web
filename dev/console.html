@@ -623,16 +623,17 @@
   </div>
 </main>
 
-
-
   <!-- Footer Injection -->
   <div id="footer"></div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
-    // --- Footer loader ---
+  /**
+   * 🧭 Footer Loader + Navigation Toggle (Universal)
+   * Clean, idempotent, and safe for both direct load and injected contexts.
+   */
+  (function initializeFooterAndNav() {
     const footerEl = document.getElementById("footer");
-    if (footerEl) {
+    if (footerEl && !footerEl.dataset.loaded) {
       fetch("/dev/footer.html")
         .then(res => {
           if (!res.ok) throw new Error(`HTTP ${res.status}`);
@@ -640,29 +641,47 @@
         })
         .then(html => {
           footerEl.innerHTML = html;
+          footerEl.dataset.loaded = "true";
           console.log("✅ Footer loaded successfully.");
         })
         .catch(err => console.error("❌ Footer failed to load:", err));
-    } else {
+    } else if (!footerEl) {
       console.warn("⚠️ #footer element not found in DOM.");
+    } else {
+      console.log("ℹ️ Footer already loaded — skipping duplicate fetch.");
     }
   
-    // --- Hamburger toggle ---
     const toggle = document.querySelector(".menu-toggle");
     const nav = document.querySelector("header nav");
     if (toggle && nav) {
-      toggle.addEventListener("click", () => {
+      // remove existing listener if present (avoid duplicates)
+      toggle.removeEventListener("click", window._footerNavHandler || (() => {}));
+  
+      window._footerNavHandler = () => {
         nav.classList.toggle("active");
-        console.log(`🍔 Nav menu toggled → ${nav.classList.contains("active") ? "open" : "closed"}`);
-      });
+        console.log(
+          `🍔 Nav menu toggled → ${nav.classList.contains("active") ? "open" : "closed"}`
+        );
+      };
+  
+      toggle.addEventListener("click", window._footerNavHandler);
     } else {
       console.warn("⚠️ Hamburger or nav not found in DOM.");
     }
+  })();
+  
+  // Re-run automatically if injected later into workspace
+  document.addEventListener("module:ready", e => {
+    if (e.detail?.workspace) initializeFooterAndNav();
   });
 </script>
 
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  /**
+   * 💹 Avg Cost per Mile Ticker
+   * Self-contained, idempotent, and dynamic-injection safe.
+   */
+  (function initializeTicker() {
     const tickerValue = document.getElementById("tickerValue");
     const tickerTrend = document.getElementById("tickerTrend");
   
@@ -671,230 +690,267 @@
       return;
     }
   
-    let current = 2.13;
+    // Prevent duplicate intervals
+    if (window._tickerInterval) {
+      clearInterval(window._tickerInterval);
+    }
   
-    setInterval(() => {
-      // random delta between -0.05 and +0.05
-      const delta = (Math.random() - 0.5) * 0.1;
+    // Initialize state
+    let current = parseFloat(tickerValue.dataset.start || "2.13");
+    tickerValue.textContent = current.toFixed(2) + "¢";
+    tickerTrend.textContent = "▲";
+    tickerTrend.className = "good";
+  
+    // Random fluctuation generator
+    window._tickerInterval = setInterval(() => {
+      const delta = (Math.random() - 0.5) * 0.1; // between -0.05 and +0.05
       current = Math.max(1.5, Math.min(3.5, current + delta));
   
       const goingDown = delta < 0;
-  
       tickerValue.textContent = current.toFixed(2) + "¢";
       tickerTrend.textContent = goingDown ? "▼" : "▲";
-  
-      // 🔁 Optional: flip logic if up is "good"
       tickerTrend.className = goingDown ? "bad" : "good";
     }, 3000);
+  
+    console.log("💹 Ticker initialized.");
+  })();
+  
+  // Reinitialize automatically after module injection
+  document.addEventListener("module:ready", e => {
+    if (e.detail?.workspace) initializeTicker();
   });
 </script>
-    
+
 <script>
-  // --- Time-based greeting logic ---
-  document.addEventListener("DOMContentLoaded", () => {
+  /**
+   * 👋 Greeting + Account Menu Controller
+   * Clean, idempotent, and injection-aware.
+   */
+  (function initializeHeaderLogic() {
+    // --- Personalized greeting ---
     const welcomeMsg = document.getElementById("welcome-message");
-    if (!welcomeMsg) {
-      console.warn("⚠️ No element found with id='welcome-message'");
-      return;
-    }
+    if (welcomeMsg) {
+      const now = new Date();
+      const hour = now.getHours();
+      const username = window.currentUser || "Jeff";
+      let greeting =
+        hour < 12 ? "Good morning" :
+        hour < 18 ? "Good afternoon" :
+        "Good evening";
   
-    const now = new Date();
-    const hour = now.getHours();
-    let greeting;
-  
-    if (hour < 12) {
-      greeting = "Good morning";
-    } else if (hour < 18) {
-      greeting = "Good afternoon";
+      welcomeMsg.textContent = `${greeting}, ${username}.`;
+      console.log("👋 Greeting updated:", welcomeMsg.textContent);
     } else {
-      greeting = "Good evening";
+      console.warn("⚠️ No element found with id='welcome-message'");
     }
   
-    welcomeMsg.textContent = `${greeting}, Jeff.`;
-  });
-</script>
-
-  <!-- account dropdown behavior -->
-<script>
-  const accountBtn = document.getElementById('accountBtn');
-  const accountMenu = accountBtn.parentElement;
-
-  accountBtn.addEventListener('click', () => {
-    accountMenu.classList.toggle('active');
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!accountMenu.contains(e.target)) {
-      accountMenu.classList.remove('active');
+    // --- Account dropdown behavior ---
+    const accountBtn = document.getElementById("accountBtn");
+    const accountMenu = accountBtn?.parentElement;
+    if (accountBtn && accountMenu) {
+      // clear any previous handler before rebinding
+      accountBtn.removeEventListener("click", window._accountClickHandler || (()=>{}));
+      document.removeEventListener("click", window._accountOutsideHandler || (()=>{}));
+  
+      window._accountClickHandler = () => {
+        accountMenu.classList.toggle("active");
+        console.log("👤 Account menu toggled:", accountMenu.classList.contains("active"));
+      };
+  
+      window._accountOutsideHandler = (e) => {
+        if (!accountMenu.contains(e.target)) {
+          accountMenu.classList.remove("active");
+        }
+      };
+  
+      accountBtn.addEventListener("click", window._accountClickHandler);
+      document.addEventListener("click", window._accountOutsideHandler);
+  
+    } else {
+      console.warn("⚠️ Account button or menu not found in DOM.");
     }
+  
+    console.log("✅ Header logic initialized");
+  })();
+  
+  // Reinitialize automatically after module injection
+  document.addEventListener("module:ready", e => {
+    if (e.detail?.workspace) initializeHeaderLogic();
   });
 </script>
 
-<!-- ✅ Clean global console module loader -->
-<!-- Console module loader -->
 <script>
-  document.addEventListener("DOMContentLoaded", () => {
+  /**
+   * 🧭 ConciergeSync™ Global Module Loader
+   * Clean, idempotent, and console-safe.
+   * Handles fade transitions, route fetch, event dispatch, and global re-init.
+   */
+  (function initializeModuleLoader() {
     const workspace = document.getElementById("workspace");
     if (!workspace) {
       console.error("❌ No workspace element found on page load.");
       return;
     }
   
-    // --- Unified Page Loader ---
+    // prevent redeclaration on reinjection
+    if (window._moduleLoaderInitialized) {
+      console.log("ℹ️ Module loader already active — skipping reinit.");
+      return;
+    }
+    window._moduleLoaderInitialized = true;
+  
+    // --- Central route registry ---
+    const routes = {
+      "cons-con": "/dev/cons-con.html",
+      "wallet-con": "/dev/wallet-con.html",
+      "redem-con": "/dev/redem-con.html",
+      "prog-con": "/dev/prog-con.html",
+      "bonus-con": "/dev/bonus-con.html",
+      "hints-con": "/dev/hints-con.html"
+    };
+  
+    // --- Core loader ---
     window.loadPage = async function (page) {
-      if (!page) {
-        console.warn("⚠️ loadPage called without target page");
-        return;
-      }
-  
-      console.group(`🧭 Loading module: ${page}`);
-      workspace.style.transition = "opacity 0.4s ease";
-      workspace.classList.remove("fade-out");
-      workspace.classList.add("fading");
-      workspace.style.opacity = "0.4";
-  
-      // Short fade delay
-      await new Promise(resolve => setTimeout(resolve, 150));
-  
-      // Route map
-      const routes = {
-        "cons-con": "/dev/cons-con.html",
-        "wallet-con": "/dev/wallet-con.html",
-        "redem-con": "/dev/redem-con.html",
-        "prog-con": "/dev/prog-con.html",
-        "bonus-con": "/dev/bonus-con.html",
-        "hints-con": "/dev/hints-con.html"
-      };
+      if (!page) return console.warn("⚠️ loadPage called without target page");
   
       const path = routes[page];
       if (!path) {
         console.warn(`⚠️ Unknown route: ${page}`);
-        workspace.innerHTML = `<p>Unknown section: ${page}</p>`;
-        workspace.style.opacity = "1";
-        console.groupEnd();
+        workspace.innerHTML = `<p class="missing">Unknown section: ${page}</p>`;
         return;
       }
   
+      console.group(`🧭 Loading module: ${page}`);
       try {
-        const res = await fetch(path);
-        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+        // cancel duplicate loads
+        if (window._loadingInProgress) {
+          console.warn("⏳ Another load in progress — ignoring duplicate click.");
+          return;
+        }
+        window._loadingInProgress = true;
+  
+        // graceful fade out
+        workspace.style.transition = "opacity 0.3s ease";
+        workspace.style.opacity = "0.25";
+  
+        const res = await fetch(path, { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  
         const html = await res.text();
-      
-        // --- Clean injection using DOMParser ---
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
-        
-        // 🔹 Replace workspace content
+  
+        // Dispatch unload for cleanup
+        document.dispatchEvent(new CustomEvent("module:unload", { detail: { previous: page } }));
+  
+        // Inject new module
         workspace.replaceChildren(...doc.body.children);
         workspace.scrollTop = 0;
-        
-        // 🔹 Fade-in reveal
+  
+        // fade back in
         requestAnimationFrame(() => {
           workspace.style.opacity = "1";
           workspace.classList.add("fade-in");
           setTimeout(() => workspace.classList.remove("fade-in"), 400);
         });
-        
-        // 🔹 Tell any injected module it’s ready
-        const event = new CustomEvent("module:ready", { detail: { page, workspace } });
-        document.dispatchEvent(event);
-        
-        console.log(`✅ Module injected and event dispatched: ${page}`);
-
-        } catch (err) {
-          console.error(`❌ Failed to load ${page}:`, err);
-          workspace.innerHTML = `<p>Failed to load ${page}</p>`;
-          workspace.style.opacity = "1";
-        }
-        
+  
+        // Notify new module ready
+        document.dispatchEvent(new CustomEvent("module:ready", { detail: { page, workspace } }));
+        console.log(`✅ Module injected and ready: ${page}`);
+      } catch (err) {
+        console.error(`❌ Failed to load module ${page}:`, err);
+        workspace.innerHTML = `<p class="error">Failed to load ${page}</p>`;
+        workspace.style.opacity = "1";
+      } finally {
+        window._loadingInProgress = false;
         console.groupEnd();
-        }
-    // --- Navigation Click Handling ---
-    document.querySelectorAll(".nav-link, #sideNav a[data-page]").forEach(link => {
-      link.addEventListener("click", async (e) => {
-        e.preventDefault();
-        const page = link.dataset.page;
-        if (!page) return;
-        console.log(`🪄 Nav → ${page}`);
-        await loadPage(page);
-        document.getElementById("sideNav")?.classList.remove("open");
-      });
-    });
-  });
-</script>
-
-
-
-<style>
-  /* tiny wallet-card pop animation (scoped here so it exists when module is injected) */
-  @keyframes walletCardPop {
-    0% { transform: translateY(12px) scale(0.98); opacity: 0; }
-    60% { transform: translateY(-6px) scale(1.02); opacity: 1; }
-    100% { transform: translateY(0) scale(1); opacity: 1; }
-  }
-</style>
-
-  </div>
-  
-<script>
-  // === Phase 3 – Hamburger Drawer Logic ===
-  document.addEventListener("DOMContentLoaded", () => {
-    const navToggle = document.getElementById("navToggle");
-    const sideNav = document.getElementById("sideNav");
-    const closeNav = document.getElementById("closeNav");
-
-    // open drawer
-    navToggle?.addEventListener("click", () => {
-      sideNav.classList.add("open");
-    });
-
-    // close drawer (X button)
-    closeNav?.addEventListener("click", () => {
-      sideNav.classList.remove("open");
-    });
-
-    // close if clicking outside drawer
-    document.addEventListener("click", (e) => {
-      if (sideNav.classList.contains("open") &&
-          !sideNav.contains(e.target) &&
-          !navToggle.contains(e.target)) {
-        sideNav.classList.remove("open");
       }
-    });
-  });
-</script>
-
-<script>
-  document.addEventListener("DOMContentLoaded", () => {
-    const navLinks = document.querySelectorAll("#sideNav a[data-page]");
-    const workspace = document.getElementById("workspace");
+    };
   
-    if (!workspace) {
-      console.warn("⚠️ No workspace element found for navigation injection.");
+    // --- Navigation Click Handling ---
+    const navLinks = document.querySelectorAll(".nav-link, #sideNav a[data-page]");
+    navLinks.forEach(link => {
+      link.removeEventListener("click", window._navHandler || (()=>{}));
+    });
+  
+    window._navHandler = async e => {
+      e.preventDefault();
+      const page = e.currentTarget.dataset.page;
+      if (!page) return;
+      console.log(`🪄 Nav → ${page}`);
+      await loadPage(page);
+      document.getElementById("sideNav")?.classList.remove("open");
+    };
+  
+    navLinks.forEach(link => link.addEventListener("click", window._navHandler));
+  
+    console.log("✅ Global module loader initialized.");
+  })();
+</script>
+  
+<script>
+  /**
+   * 🍔 ConciergeSync™ Hamburger Drawer Logic
+   * Idempotent, module-aware, and accessible.
+   */
+  (function initDrawer() {
+    const navToggle = document.getElementById("navToggle");
+    const sideNav   = document.getElementById("sideNav");
+    const closeNav  = document.getElementById("closeNav");
+  
+    if (!navToggle || !sideNav) {
+      console.warn("⚠️ Drawer elements missing — skipping init");
       return;
     }
   
-    // Wire up clicks for each nav link
-    navLinks.forEach(link => {
-      link.addEventListener("click", async (e) => {
-        e.preventDefault();
+    // Remove any previous handlers (if reinjected)
+    navToggle.removeEventListener("click", window._drawerToggleHandler || (()=>{}));
+    closeNav?.removeEventListener("click", window._drawerCloseHandler || (()=>{}));
+    document.removeEventListener("click", window._drawerOutsideHandler || (()=>{}));
+    document.removeEventListener("keydown", window._drawerEscHandler || (()=>{}));
   
-        const page = link.dataset.page;
-        if (!page) return;
+    // Define fresh handlers
+    window._drawerToggleHandler = () => {
+      const isOpen = sideNav.classList.toggle("open");
+      document.body.style.overflow = isOpen ? "hidden" : "";
+      sideNav.setAttribute("aria-expanded", isOpen);
+      console.log(`🍔 Drawer toggled → ${isOpen ? "open" : "closed"}`);
+    };
   
-        console.log(`🧭 Nav click: ${page}`);
+    window._drawerCloseHandler = () => {
+      sideNav.classList.remove("open");
+      document.body.style.overflow = "";
+      sideNav.setAttribute("aria-expanded", "false");
+    };
   
-        // ✅ Call the correct global loader
-        if (typeof loadPage === "function") {
-          await loadPage(page);
-        } else {
-          console.warn("⚠️ loadPage() function not available yet.");
-        }
+    window._drawerOutsideHandler = (e) => {
+      if (
+        sideNav.classList.contains("open") &&
+        !sideNav.contains(e.target) &&
+        !navToggle.contains(e.target)
+      ) {
+        window._drawerCloseHandler();
+      }
+    };
   
-        // Close the side navigation after click
-        document.getElementById("sideNav").classList.remove("open");
-      });
-    });
+    window._drawerEscHandler = (e) => {
+      if (e.key === "Escape" && sideNav.classList.contains("open")) {
+        window._drawerCloseHandler();
+      }
+    };
+  
+    // Attach new handlers
+    navToggle.addEventListener("click", window._drawerToggleHandler);
+    closeNav?.addEventListener("click", window._drawerCloseHandler);
+    document.addEventListener("click", window._drawerOutsideHandler);
+    document.addEventListener("keydown", window._drawerEscHandler);
+  
+    console.log("✅ Drawer logic initialized");
+  })();
+  
+  // Re-initialize after module swap
+  document.addEventListener("module:ready", e => {
+    if (e.detail?.workspace) initDrawer();
   });
 </script>
 
