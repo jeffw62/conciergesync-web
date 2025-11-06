@@ -781,16 +781,12 @@
         if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
         const html = await res.text();
       
-        // --- Use DOMParser to avoid style/text bleed ---
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
-      
-        // 🔹 Replace workspace contents with parsed module body children
-        workspace.replaceChildren(...Array.from(doc.body.children));
+        // ✅ Legacy injection (restores previous working behavior)
+        workspace.innerHTML = html;
         workspace.style.opacity = "1";
         workspace.scrollTop = 0;
-      
-        console.log(`📦 Injected module: ${page} (via DOMParser)`);
+        
+        console.log(`📦 Injected module: ${page} (legacy injection restored)`);
       
         // ✅ Execute any inline scripts found in the parsed document
         doc.querySelectorAll("script").forEach(oldScript => {
