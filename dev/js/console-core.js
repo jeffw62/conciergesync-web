@@ -197,7 +197,15 @@
             newScript.textContent = oldScript.textContent;
           }
         
-          document.body.appendChild(newScript);
+          if (newScript.src) {
+          // force a unique cache-buster each load
+          const cacheBust = `&_t=${Date.now()}`;
+          const srcBase = newScript.src.includes("?")
+            ? `${newScript.src}${cacheBust}`
+            : `${newScript.src}?_t=${Date.now()}`;
+          newScript.src = srcBase;
+        }
+        document.body.appendChild(newScript);
         });
         
         console.log("⚙️ Re-executed script tags for module:", page);
