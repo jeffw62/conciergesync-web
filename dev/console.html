@@ -806,6 +806,14 @@
       
         console.log(`🧭 Inline scripts executed for: ${page}`);
 
+        // 🔁 After module scripts run, trigger its ready hook if available
+        if (typeof window.onModuleReady === "function") {
+          console.log(`🪄 Calling module hook for ${page}...`);
+          window.onModuleReady(workspace);
+        } else {
+          console.log(`ℹ️ No module hook found for ${page}`);
+        }
+
         // 🔁 After module injection, call the module's own init hook if it exists
         if (typeof window.onModuleReady === "function") {
           console.log("🪄 Calling onModuleReady hook for", page);
