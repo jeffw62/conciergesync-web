@@ -183,7 +183,58 @@
 
         document.dispatchEvent(new CustomEvent("module:unload", { detail: { previous: page } }));
 
+        const _moduleScripts = Array.from(doc.querySelectorAll('script'));
         workspace.replaceChildren(...doc.body.children);
+        // -----------------------------
+        // Re-execute captured scripts (robust, cache-bust safe)
+        // Uses the scripts snapshot taken from `doc` before we moved nodes into workspace.
+        // -----------------------------
+        {
+          for (const oldScript of _moduleScripts) {
+            if (oldScript.src) {
+              try {
+                // fetch the script text bypassing cache
+                const resp = await fetch(oldScript.src, { cache: 'no-store' });
+                if (!resp.ok) throw new Error(`Fetch ${oldScript.src} failed: ${resp.status}`);
+                const text = await resp.text();
+        
+                // create a blob URL so browser sees a unique URL & executes it
+                const blob = new Blob([text], { type: 'application/javascript' });
+                const blobUrl = URL.createObjectURL(blob);
+        
+                const s = document.createElement('script');
+                s.setAttribute('data-temp', '1');
+                if (oldScript.async) s.async = true;
+                if (oldScript.defer) s.defer = true;
+                s.src = blobUrl;
+                document.body.appendChild(s);
+        
+                s.addEventListener('load', () => {
+                  try { URL.revokeObjectURL(blobUrl); } catch (e) {}
+                });
+                setTimeout(() => {
+                  try { URL.revokeObjectURL(blobUrl); } catch (e) {}
+                }, 60_000);
+        
+                console.log(`🔁 Re-executed external script via blob: ${oldScript.src}`);
+              } catch (err) {
+                console.error(`❌ Failed to re-execute external script ${oldScript.src}:`, err);
+              }
+            } else {
+              // Inline script: inject text so it executes in page scope
+              try {
+                const s = document.createElement('script');
+                s.setAttribute('data-temp', '1');
+                s.textContent = oldScript.textContent;
+                document.body.appendChild(s);
+                console.log('🔁 Re-executed inline script');
+              } catch (err) {
+                console.error('❌ Failed to re-execute inline script:', err);
+              }
+            }
+          }
+        }
+
         workspace.scrollTop = 0;
 
         // 🔁 Re-activate any <script> tags inside injected module
