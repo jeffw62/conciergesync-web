@@ -460,6 +460,32 @@ whee<style>
               if (workspace) {
                 workspace.innerHTML = resHTML;
                 console.log("✅ Redemption results loaded into console workspace.");
+
+                  if (workspace) {
+                      workspace.innerHTML = resHTML;
+                      console.log("✅ Redemption results loaded into console workspace.");
+                    
+                      // ✅ Execute inline scripts from the injected module so their code actually runs
+                      workspace.querySelectorAll("script").forEach(oldScript => {
+                        const newScript = document.createElement("script");
+                        if (oldScript.src) {
+                          newScript.src = oldScript.src;
+                        } else {
+                          newScript.textContent = oldScript.textContent;
+                        }
+                        document.body.appendChild(newScript);
+                        oldScript.remove();
+                      });
+                    
+                    } else {
+                      console.warn("⚠️ Workspace not found – redirect suppressed for debugging.");
+                      // window.location.assign("/dev/redemption-results.html");
+                      const msg = document.createElement("div");
+                      msg.textContent = "⚠️ Workspace element not found — results cannot be injected.";
+                      msg.style.cssText = "color: gold; text-align:center; margin-top:2rem;";
+                      document.body.appendChild(msg);
+                    }
+
               } else {
                   console.warn("⚠️ Workspace not found – redirect suppressed for debugging.");
                   // window.location.assign("/dev/redemption-results.html");
