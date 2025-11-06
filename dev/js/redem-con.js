@@ -110,30 +110,40 @@
   console.groupEnd();
 })();
 
-// === ConciergeSync™ Redem-Con Initialization Hook ===
-document.addEventListener("module:ready", (e) => {
-  if (e.detail?.page !== "redem-con") return;
+// === ConciergeSync™ Redem-Con Initialization Bridge ===
+(function attachRedemConHook() {
+  // Ensure listener is attached only once
+  if (window._redemConAttached) return;
+  window._redemConAttached = true;
 
-  console.group("🧩 Initializing Redemption Module");
+  // Attach listener
+  document.addEventListener("module:ready", (e) => {
+    // Log immediately so we know this hook is live
+    console.log("🪝 redem-con.js listening for module:ready", e.detail);
 
-  try {
-    setupIataAutocomplete();
-    console.log("✈️ IATA autocomplete initialized");
+    if (e.detail?.page !== "redem-con") return;
 
-    setupToggleLogic();
-    console.log("🧩 Toggle logic active");
+    console.group("🧩 Initializing Redemption Module");
+    try {
+      setupIataAutocomplete?.();
+      console.log("✈️ IATA autocomplete initialized");
 
-    setupFlexDaysLogic();
-    console.log("📅 Flex-days logic active");
+      setupToggleLogic?.();
+      console.log("🧩 Toggle logic active");
 
-    setupSearchButtonLogic();
-    console.log("🕹️ Search button logic ready");
+      setupFlexDaysLogic?.();
+      console.log("📅 Flex-days logic active");
 
-    console.groupEnd();
-    console.log("✅ Redemption module fully initialized");
-  } catch (err) {
-    console.error("❌ Error initializing Redemption Module:", err);
-    console.groupEnd();
-  }
-});
+      setupSearchButtonLogic?.();
+      console.log("🕹️ Search button logic ready");
 
+      console.groupEnd();
+      console.log("✅ Redemption module fully initialized");
+    } catch (err) {
+      console.error("❌ Error initializing Redemption Module:", err);
+      console.groupEnd();
+    }
+  });
+
+  console.log("🪝 redem-con.js hook attached and waiting for module:ready");
+})();
