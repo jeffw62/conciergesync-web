@@ -1153,7 +1153,14 @@ if (!window.iataObserver) {
         console.warn("⚠️ updateButtonState still undefined after injection");
       }
     }, 250);
+    
+    // 🔁 Reinitialize after console injection
+    if (typeof setupToggleLogic === "function") setupToggleLogic(document);
+    console.log("🧩 Toggle logic reinitialized after workspace injection");
+    
 </script>
+
+
 
 <!-- === Dynamic Workspace Injection Target === -->
 <div id="workspace" class="workspace">
