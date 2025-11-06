@@ -776,23 +776,35 @@
       }
       
       try {
-        // ✅ Fetch and inject the module HTML
+        // ✅ Fetch module HTML
         const res = await fetch(path);
         if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
         const html = await res.text();
-        workspace.innerHTML = html;
-        console.log(`📦 Injected module: ${page}`);
       
-        // ✅ Execute inline scripts from the injected module (so redem-con logic runs)
-        workspace.querySelectorAll("script").forEach(oldScript => {
+        // --- Use DOMParser to avoid style/text bleed ---
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
+      
+        // 🔹 Replace workspace contents with parsed module body children
+        workspace.replaceChildren(...Array.from(doc.body.children));
+        workspace.style.opacity = "1";
+        workspace.scrollTop = 0;
+      
+        console.log(`📦 Injected module: ${page} (via DOMParser)`);
+      
+        // ✅ Execute any inline scripts found in the parsed document
+        doc.querySelectorAll("script").forEach(oldScript => {
           const newScript = document.createElement("script");
           if (oldScript.src) {
             newScript.src = oldScript.src;
+            // preserve async/defer if present
+            if (oldScript.async) newScript.async = true;
+            if (oldScript.defer) newScript.defer = true;
           } else {
             newScript.textContent = oldScript.textContent;
           }
           document.body.appendChild(newScript);
-          oldScript.remove();
+          // don't attempt to remove oldScript from doc — it was parsed only
         });
       
         console.log(`🧭 Executed inline scripts from injected module: ${page}`);
@@ -800,6 +812,7 @@
       } catch (err) {
         console.error(`❌ Failed to load module: ${page}`, err);
       }
+
 
   
         // --- Clean injection using DOMParser (prevents style/text bleed) ---
