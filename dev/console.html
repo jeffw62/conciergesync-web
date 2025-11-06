@@ -805,6 +805,13 @@
           document.body.appendChild(newScript);
         });
         console.log(`🧭 Inline scripts executed for: ${page}`);
+
+        }  // ← ensure this closing brace exists before catch
+        catch (err) {
+          console.error(`❌ Failed to load ${page}:`, err);
+          workspace.innerHTML = `<p>Failed to load ${page}</p>`;
+          workspace.style.opacity = "1";
+        }
       
         // Fade-in reveal
         requestAnimationFrame(() => {
