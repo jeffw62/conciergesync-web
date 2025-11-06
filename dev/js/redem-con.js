@@ -109,3 +109,31 @@
   console.log("✅ Redemption module fully initialized");
   console.groupEnd();
 })();
+
+// === ConciergeSync™ Redem-Con Initialization Hook ===
+document.addEventListener("module:ready", (e) => {
+  if (e.detail?.page !== "redem-con") return;
+
+  console.group("🧩 Initializing Redemption Module");
+
+  try {
+    setupIataAutocomplete();
+    console.log("✈️ IATA autocomplete initialized");
+
+    setupToggleLogic();
+    console.log("🧩 Toggle logic active");
+
+    setupFlexDaysLogic();
+    console.log("📅 Flex-days logic active");
+
+    setupSearchButtonLogic();
+    console.log("🕹️ Search button logic ready");
+
+    console.groupEnd();
+    console.log("✅ Redemption module fully initialized");
+  } catch (err) {
+    console.error("❌ Error initializing Redemption Module:", err);
+    console.groupEnd();
+  }
+});
+
