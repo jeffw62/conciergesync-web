@@ -783,45 +783,42 @@
         // --- Clean injection using DOMParser (prevents style/text bleed) ---
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
-        
+      
         // 🔹 Remove previous module completely before injecting
         workspace.replaceChildren(...doc.body.children);
-        
+      
         // 🔹 Guarantee visibility and top alignment
         workspace.style.opacity = "1";
         workspace.scrollTop = 0;
-        
+      
         // ✅ Execute inline scripts from parsed doc (so functions inside module become real)
         doc.querySelectorAll("script").forEach(oldScript => {
           const newScript = document.createElement("script");
           if (oldScript.src) {
             newScript.src = oldScript.src;
-            // preserve attributes if any
             if (oldScript.async) newScript.async = true;
             if (oldScript.defer) newScript.defer = true;
           } else {
             newScript.textContent = oldScript.textContent;
           }
           document.body.appendChild(newScript);
-        }); // ✅ this closes the forEach loop properly
-        
+        });
+      
         console.log(`🧭 Inline scripts executed for: ${page}`);
-        
+      
         // Fade-in reveal
         requestAnimationFrame(() => {
           workspace.style.opacity = "1";
           workspace.classList.add("fade-in");
           setTimeout(() => workspace.classList.remove("fade-in"), 400);
         });
-        
+      
         console.log(`✅ Module loaded: ${page}`);
-        
-        } // ✅ this closes the try block
-        catch (err) {
-          console.error(`❌ Failed to load ${page}:`, err);
-          workspace.innerHTML = `<p>Failed to load ${page}</p>`;
-          workspace.style.opacity = "1";
-        }
+      } catch (err) {
+        console.error(`❌ Failed to load ${page}:`, err);
+        workspace.innerHTML = `<p>Failed to load ${page}</p>`;
+        workspace.style.opacity = "1";
+      }
 
         // Fade-in reveal
         requestAnimationFrame(() => {
