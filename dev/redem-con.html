@@ -359,823 +359,136 @@ whee<style>
 
 <!-- Optional guard -->
 <script>
-    if (!window.redemptionModuleInitialized) {
-      window.redemptionModuleInitialized = true;
-      (function() {
-        console.log("Redemption module initialized standalone.");
-      })();
-    }
-</script>
-  
-<script>
-    window.addEventListener("load", () => {
-      console.log("🧭 Mode toggle logic loaded.");
-    
-      const modeInput = document.getElementById("mode");
-      const exactBtn = document.getElementById("exactBtn");
-      const flexBtn = document.getElementById("flexBtn");
-      const flexPicker = document.getElementById("flexPicker");
-    
-      if (!modeInput || !exactBtn || !flexBtn) {
-        console.warn("⚠️ Mode toggle elements not found in DOM.");
-        return;
-      }
-    
-      // --- Exact Date button ---
-      exactBtn.addEventListener("click", () => {
-        modeInput.value = "exact";
-        flexPicker.style.display = "none";
-        exactBtn.classList.add("active");
-        flexBtn.classList.remove("active");
-        console.log("🟢 Mode switched to EXACT — current value:", modeInput.value);
-      });
-    
-      // --- Flexible ± Days button ---
-      flexBtn.addEventListener("click", () => {
-        modeInput.value = "flexible";
-        flexPicker.style.display = "block";
-        flexBtn.classList.add("active");
-        exactBtn.classList.remove("active");
-        console.log("🟣 Mode switched to FLEXIBLE — current value:", modeInput.value);
-      });
-    });
-</script>
+// =========================================================
+// ConciergeSync™ Redemption Module — Clean Unified Script
+// =========================================================
 
-<script>
-    document.addEventListener("DOMContentLoaded", () => {
-      console.log("🧭 Search logic attached — DOM fully loaded.");
-      const searchBtn = document.getElementById("searchBtn");
-      const spinner   = document.getElementById("spinner-overlay");
-    
-      if (!searchBtn || !spinner) {
-        console.warn("⚠️ Search button or spinner not found.");
-        return;
-      }
-    
-      spinner.classList.remove("active");
-    
-      const observer = new MutationObserver(() => {
-        if (!searchBtn.disabled) {
-          observer.disconnect();
-    
-          searchBtn.addEventListener("click", async (e) => {
-            e.preventDefault();
-            spinner.classList.add("active");
-    
-            const payload = {
-              origin: document.getElementById("origin")?.value || "",
-              destination: document.getElementById("destination")?.value || "",
-              passengers: document.getElementById("passengers")?.value || "1",
-              cabin: document.getElementById("cabin")?.value || "Economy",
-              departDate: document.getElementById("departDate")?.value || "",
-              returnDate: document.getElementById("returnDate")?.value || "",
-              flexDays: document.getElementById("flexDays")?.value || "0",
-              includePartners: document.getElementById("partnerSpace")?.checked || false,
-              mode: document.getElementById("mode")?.value || "exact"
-            };
-    
-            console.log("🧭 Payload ready:", payload);
-    
-            try {
-              const res = await fetch("/api/search", {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(payload)
-              });
-    
-              if (!res.ok) throw new Error("Search request failed");
-    
-              const data = await res.json();
-              await Promise.all([
-                sessionStorage.setItem("latestRedemptionResults", JSON.stringify(data)),
-                sessionStorage.setItem("latestRedemptionSearch", JSON.stringify(payload))
-              ]);
-    
-              await new Promise(r => setTimeout(r, 2600));
-    
-              const resModule = await fetch("/dev/redemption-results.html");
-              const resHTML = await resModule.text();
-              const workspace = document.getElementById("workspace");
-    
-              if (workspace) {
-                workspace.innerHTML = resHTML;
-                console.log("✅ Redemption results loaded into console workspace.");
-
-                  if (workspace) {
-                      workspace.innerHTML = resHTML;
-                      console.log("✅ Redemption results loaded into console workspace.");
-                    
-                      // ✅ Execute inline scripts from the injected module so their code actually runs
-                      workspace.querySelectorAll("script").forEach(oldScript => {
-                        const newScript = document.createElement("script");
-                        if (oldScript.src) {
-                          newScript.src = oldScript.src;
-                        } else {
-                          newScript.textContent = oldScript.textContent;
-                        }
-                        document.body.appendChild(newScript);
-                        oldScript.remove();
-                      });
-                    
-                    } else {
-                      console.warn("⚠️ Workspace not found – redirect suppressed for debugging.");
-                      // window.location.assign("/dev/redemption-results.html");
-                      const msg = document.createElement("div");
-                      msg.textContent = "⚠️ Workspace element not found — results cannot be injected.";
-                      msg.style.cssText = "color: gold; text-align:center; margin-top:2rem;";
-                      document.body.appendChild(msg);
-                    }
-
-              } else {
-                  console.warn("⚠️ Workspace not found – redirect suppressed for debugging.");
-                  // window.location.assign("/dev/redemption-results.html");
-                  const msg = document.createElement("div");
-                  msg.textContent = "⚠️ Workspace element not found — results cannot be injected.";
-                  msg.style.cssText = "color: gold; text-align:center; margin-top:2rem;";
-                  document.body.appendChild(msg);
-                }
-            } catch (err) {
-              console.error("❌ Search error:", err);
-            }
-          });
-        }
-      });
-    
-      observer.observe(searchBtn, { attributes: true, attributeFilter: ["disabled"] });
-    });
-</script>
-
-
-<!-- ========== END SCRIPT SECTION ========== -->
-
-<!-- ConciergeSync™ Spinner Overlay : Gold-Border Luxury Card -->
-<style>
-/* ---------- Self-Hosted ConciergeSync™ Fonts ---------- */
-  @font-face {
-    font-family: "Cormorant Garamond";
-    src: url("/dev/fonts/CormorantGaramond-Regular.ttf") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: "Cormorant Garamond";
-    src: url("/dev/fonts/CormorantGaramond-Medium.ttf") format("truetype");
-    font-weight: 500;
-    font-style: normal;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: "Libre Baskerville";
-    src: url("/dev/fonts/LibreBaskerville-Regular.ttf") format("truetype");
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-  }
-  @font-face {
-    font-family: "Libre Baskerville";
-    src: url("/dev/fonts/LibreBaskerville-Bold.ttf") format("truetype");
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-  }
-  
-  /* ---------- Spinner Overlay ---------- */
-  .spinner-overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100vw;
-    height: 100vh;
-    background: rgba(10, 26, 51, 0.55); /* was 0.75 → lightens the scene */
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 9990;
-    opacity: 0;
-    transition: opacity 1s ease;
-  }
-  
-  .spinner-overlay.active {
-    display: flex;             /* 🔹 becomes visible only when .active is added */
-    opacity: 1;
-    visibility: visible;
-  }
-
-  /* === Spinner Bridge Alignment Layer === */
-  #spinner-bridge {
-    position: fixed !important;
-    top: 0;
-    left: 0;
-    width: 100vw;              /* full viewport width */
-    height: 100vh;             /* full viewport height */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(10, 26, 51, 0.85);
-    z-index: 9998;
-    overflow: hidden;
-  }
-
-  /* ---------- Gold Card ---------- */
-  /* === ConciergeSync™ Gold Card — Visibility Lock === */
-  #gold-card {
-    visibility: visible !important;
-    opacity: 1 !important;
-    display: flex !important;
-    align-items: center;
-    justify-content: center;
-    position: absolute !important;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -45%); /* proportional, device-responsive bias */
-    width: 260px;
-    z-index: 9999 !important;
-    pointer-events: none;
-  }
-
-    .gold-card::after {
-    content: "";
-    position: relative;
-    inset: 0;
-    border-radius: 16px;
-    z-index: 1;                        /* ensures shimmer is on top */
-    background: linear-gradient(
-      100deg,
-      rgba(255,255,255,0) 0%,
-      rgba(255,255,255,0.25) 48%,
-      rgba(255,255,255,0) 52%
-    );
-    background-size: 400% 100%;
-    background-position: -200% 0;
-    animation: shimmer 4s linear infinite;
-    opacity: 0.6;
-    mix-blend-mode: screen;
-    pointer-events: none;
-  }
-
-
-  /* ---------- Gold Card Text ---------- */
-  .gold-card p {
-    font-family: "Cormorant Garamond", "Libre Baskerville", serif;
-    font-weight: 500;
-    font-size: 1rem;
-    letter-spacing: 1.3px;
-    color: #0a1a33;
-    text-align: center;
-    text-shadow:
-      0 0.8px 0 rgba(255,255,255,0.25),
-      0 -0.8px 0 rgba(0,0,0,0.2);
-  }
-
-  .spinner-overlay {
-    background: rgba(10, 26, 51, 0.35); /* was 0.55 or higher */
-  }
-
-  /* ----------- Gold card shimmer animation ----------- */
-    @keyframes shimmer {
-    0%   { background-position: -300% 0; }
-    100% { background-position: 300% 0; }
-  } 
-
-.search-btn.loading {
-  opacity: 0.8;
-  cursor: wait;
-  transition: all 0.3s ease;
-  }
-
-.spinner {
-  display: inline-block;
-  width: 14px;
-  height: 14px;
-  margin-right: 8px;
-  border: 2px solid rgba(255,255,255,0.6);
-  border-top-color: #fff;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  vertical-align: middle;
-}
-
-@keyframes spin {
-  to { transform: rotate(360deg); }
-}
-
-</style>
-
-<!-- <script>
-  function showGoldCard() {
-  const spinner = document.getElementById("spinner-overlay");
-  const wrapper = document.querySelector(".search-wrapper");
-
-  if (!spinner || !wrapper) return;
-
-  // fade form out
-  wrapper.style.transition = "opacity 1.2s ease";   // slower fade
-  wrapper.style.opacity = "0";
-
-  // show overlay with a slight delay for smoother handoff
-  setTimeout(() => {
-    spinner.classList.add("active");
-  }, 300);
-
-  // keep overlay visible a bit longer, then fade it out
-  setTimeout(() => {
-    spinner.classList.remove("active");
-    wrapper.style.opacity = "1"; // fade form back in
-  }, 3200);
-}
-
-window.showGoldCard = showGoldCard;
-
-</script> -->
-
-<!-- ✅ Spinner Bridge (keep and fix comment) -->
-<script>
-    window.createSpinnerBridge = () => {
-      const old = document.getElementById('spinner-bridge');
-      if (old) old.remove();
-    
-      const bridge = document.createElement('div');
-      bridge.id = 'spinner-bridge';
-      Object.assign(bridge.style, {
-        position: 'fixed',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        display: 'flex',
-        alignItems: 'center',
-        justifyContent: 'center',
-        background: 'rgba(10,26,51,0.85)',
-        zIndex: 9998
-      });
-    
-      const card = document.createElement('img');
-      card.id = 'gold-card';
-      card.src = '/dev/asset/CS_logo_vert_gold_card.png';
-      Object.assign(card.style, {
-        width: '400px',
-        opacity: 1,
-        visibility: 'visible',
-        zIndex: 9999
-      });
-      bridge.appendChild(card);
-    
-      const shimmer = document.createElement('div');
-      shimmer.id = 'shimmer-overlay';
-      Object.assign(shimmer.style, {
-        position: 'absolute',
-        top: 0,
-        left: 0,
-        width: '100%',
-        height: '100%',
-        background: 'linear-gradient(120deg, transparent 0%, rgba(255,255,255,0.4) 50%, transparent 100%)',
-        backgroundSize: '200% 100%',
-        animation: 'shimmerMove 2s infinite'
-      });
-      bridge.appendChild(shimmer);
-    
-      const style = document.createElement('style');
-      style.textContent = `
-        @keyframes shimmerMove {
-          0% { background-position: 200% 0; }
-          100% { background-position: -200% 0; }
-        }
-      `;
-      document.head.appendChild(style);
-    
-      document.body.appendChild(bridge);
-      console.log('✅ Spinner bridge & gold card created manually');
-    };
-</script>
-
-<script>
-/**
- * ✈️ setupIataAutocomplete — temporary safe stub
- * Keeps observers and fallback logic stable until full autocomplete is connected.
- * Prevents "undefined function" errors across modules.
- */
-function setupIataAutocomplete(root = document) {
-  console.log("✈️ setupIataAutocomplete placeholder called (safe stub)");
-}
-</script>
-
-<script>
-
- /**
- * ✈️ Lightweight IATA Autocomplete
- * Supports any <input> with [data-iata] attribute.
- */
-function setupIataAutocomplete(root = document) {
+// --- IATA Autocomplete ---
+function setupIataAutocomplete(root=document) {
   const inputs = root.querySelectorAll("input[data-iata]");
-  if (!inputs.length) {
-    console.warn("⚠️ No IATA fields found for autocomplete.");
-    return;
-  }
+  if (!inputs.length) return console.warn("⚠️ No IATA fields found");
 
-  // Simple demo dataset (expand later or replace with fetch)
   const airports = [
-    { city: "Dallas", code: "DAL" },
-    { city: "Dallas–Fort Worth", code: "DFW" },
-    { city: "Denver", code: "DEN" },
-    { city: "Chicago O’Hare", code: "ORD" },
-    { city: "Miami", code: "MIA" },
-    { city: "Los Angeles", code: "LAX" },
-    { city: "New York JFK", code: "JFK" },
-    { city: "Atlanta", code: "ATL" },
-    { city: "London Heathrow", code: "LHR" },
-    { city: "Tokyo Haneda", code: "HND" }
+    { city:"Dallas", code:"DAL" }, { city:"Dallas–Fort Worth", code:"DFW" },
+    { city:"Denver", code:"DEN" }, { city:"Chicago O’Hare", code:"ORD" },
+    { city:"Miami", code:"MIA" }, { city:"Los Angeles", code:"LAX" },
+    { city:"New York JFK", code:"JFK" }, { city:"Atlanta", code:"ATL" },
+    { city:"London Heathrow", code:"LHR" }, { city:"Tokyo Haneda", code:"HND" }
   ];
 
-  inputs.forEach(input => {
-    const listId = input.id + "-list";
-    let datalist = document.getElementById(listId);
-    if (!datalist) {
-      datalist = document.createElement("datalist");
-      datalist.id = listId;
+  inputs.forEach(input=>{
+    const listId=input.id+"-list";
+    let datalist=document.getElementById(listId);
+    if(!datalist){
+      datalist=document.createElement("datalist");
+      datalist.id=listId;
       document.body.appendChild(datalist);
-      input.setAttribute("list", listId);
+      input.setAttribute("list",listId);
     }
-
-    input.addEventListener("input", () => {
-      const val = input.value.toLowerCase();
-      datalist.innerHTML = "";
-      if (val.length < 2) return; // wait for 2+ chars
-      airports
-        .filter(a =>
-          a.city.toLowerCase().includes(val) ||
-          a.code.toLowerCase().includes(val)
-        )
-        .forEach(a => {
-          const opt = document.createElement("option");
-          opt.value = `${a.city} (${a.code})`;
-          datalist.appendChild(opt);
-        });
-    });
-  });
-
-  console.log("✅ IATA autocomplete initialized on", inputs.length, "field(s)");
-}
-
-// --- Initialize once DOM content is ready (in case page loaded standalone) ---
-document.addEventListener("DOMContentLoaded", () => setupIataAutocomplete());
-
-// 📅 Step 3: Flex Days logic
-function setupFlexDaysLogic(root = document) {
-  const exactBtn = root.querySelector("#exactBtn");
-  const flexBtn = root.querySelector("#flexBtn");
-  const flexPicker = root.querySelector("#flexPicker");
-  const modeInput = root.querySelector("#mode"); // renamed for clarity
-  const flexSelect = root.querySelector("#flexDays");
-
-  if (!exactBtn || !flexBtn || !flexPicker || !modeInput) {
-    console.warn("⚠️ Flex Days elements not found, skipping init");
-    return;
-  }
-
-  // Helper — set mode and update UI
-  function setMode(value) {
-    modeInput.value = value;
-    exactBtn.classList.toggle("active", value === "exact");
-    flexBtn.classList.toggle("active", value === "flex");
-    flexPicker.style.display = value === "flex" ? "block" : "none";
-    console.log(`📅 Flex mode set to: ${value}`);
-  }
-
-  // Initial setup
-  setMode(modeInput.value || "exact");
-
-  // Button listeners
-  exactBtn.addEventListener("click", () => setMode("exact"));
-  flexBtn.addEventListener("click", () => setMode("flex"));
-
-  // Flex day dropdown
-  flexSelect.addEventListener("change", (e) => {
-    console.log(`📆 Flex range set to ±${e.target.value} days`);
-  });
-
-  console.log("✅ Flex Days logic initialized");
-}
-
-// === Step 4: Search Button Logic ===
-function setupSearchButtonLogic(root = document) {
-  const searchBtn = root.querySelector("#searchBtn");
-  const searchWarning = root.querySelector("#searchWarning");
-  if (!searchBtn || !searchWarning) {
-    console.warn("⚠️ Search button or warning element not found, skipping init");
-    return;
-  }
-
-  // --- Helper: determine readiness of all prior steps ---
-  function isFormReady() {
-    const origin = root.querySelector("#origin")?.value.trim();
-    const destination = root.querySelector("#destination")?.value.trim();
-    const depart = root.querySelector("#departDate")?.value.trim();
-    const direct = root.querySelector("#directStop button.active")?.dataset.val;
-    const multi = root.querySelector("#multiConn button.active")?.dataset.val;
-    const pos = root.querySelector("#posFlight button.active")?.dataset.val;
-    const mode = root.querySelector("#mode")?.value;
-
-    // Must have Step 1 (route + date) and at least one routing toggle set to "yes"
-    const anyYes =
-      direct === "yes" || multi === "yes" || pos === "yes";
-    
-    return origin && destination && depart && anyYes && mode;
-  }
-
-    // --- Debug helper: expose form readiness globally ---
-    (() => {
-      const fn = () => {
-        const origin = root.querySelector("#origin")?.value.trim();
-        const destination = root.querySelector("#destination")?.value.trim();
-        const depart = root.querySelector("#departDate")?.value.trim();
-        const direct = root.querySelector("#directStop button.active")?.dataset.val;
-        const multi = root.querySelector("#multiConn button.active")?.dataset.val;
-        const pos = root.querySelector("#posFlight button.active")?.dataset.val;
-        const mode = root.querySelector("#mode")?.value;
-        const anyYes = direct === "yes" || multi === "yes" || pos === "yes";
-    
-        console.log({ origin, destination, depart, direct, multi, pos, mode, anyYes });
-        console.log("🧩 isFormReady →", !!(origin && destination && depart && anyYes && mode));
-        return origin && destination && depart && anyYes && mode;
-      };
-    
-      // Force attach to real global scope even when module is sandboxed
-      window.debugFormReady = fn;
-      console.log("🪄 debugFormReady registered globally");
-    })();
-
-// --- UI updater (globalized for console access) ---
-window.updateButtonState = function(root = document) {
-  console.log("🧭 updateButtonState called");
-  const searchBtn   = root.querySelector("#searchBtn");
-  const warning     = root.querySelector("#searchWarning");
-  if (!searchBtn || !warning) return;
-
-  const origin      = root.querySelector("#origin")?.value.trim();
-  const destination = root.querySelector("#destination")?.value.trim();
-  const depart      = root.querySelector("#departDate")?.value.trim();
-  const direct      = root.querySelector("#directStop button.active")?.dataset.val;
-  const multi       = root.querySelector("#multiConn button.active")?.dataset.val;
-  const pos         = root.querySelector("#posFlight button.active")?.dataset.val;
-  const mode        = root.querySelector("#mode")?.value;
-  const anyYes      = direct === "yes" || multi === "yes" || pos === "yes";
-
-  const ready = origin && destination && depart && anyYes && mode;
-  searchBtn.disabled = !ready;
-  searchBtn.classList.toggle("active", ready);
-  warning.style.display = ready ? "none" : "block";
-
-  console.log(`🔍 Search button state: ${ready ? "enabled" : "disabled"}`);
-};
-
-// --- Diagnostic helper (optional, global) ---
-window.debugFormReady = () => {
-  const root = document;
-  const origin = root.querySelector("#origin")?.value.trim();
-  const destination = root.querySelector("#destination")?.value.trim();
-  const depart = root.querySelector("#departDate")?.value.trim();
-  const direct = root.querySelector("#directStop button.active")?.dataset.val;
-  const multi = root.querySelector("#multiConn button.active")?.dataset.val;
-  const pos = root.querySelector("#posFlight button.active")?.dataset.val;
-  const mode = root.querySelector("#mode")?.value;
-  const anyYes = direct === "yes" || multi === "yes" || pos === "yes";
-
-  console.log({ origin, destination, depart, direct, multi, pos, mode, anyYes });
-  console.log("🧩 isFormReady →", !!(origin && destination && depart && anyYes && mode));
-  return origin && destination && depart && anyYes && mode;
-};
-
-// --- Event listeners to detect change ---
-root.addEventListener("input", updateButtonState);
-root.addEventListener("click", e => {
-  if (
-    e.target.closest("#directStop button") ||
-    e.target.closest("#multiConn button") ||
-    e.target.closest("#posFlight button")
-  ) {
-    updateButtonState();
-  }
-});
-
-  // --- Initial state check ---
-  updateButtonState();
-
-  // --- Click handler (payload logic added later) ---
-  searchBtn.addEventListener("click", e => {
-    if (searchBtn.disabled) return;
-    e.preventDefault();
-    console.log("🚀 Search triggered — all steps complete.");
-    // (placeholder for API payload)
-  });
-
-  console.log("✅ Search button logic initialized");
-}
-    
-// --- Detect dynamic module injection (for console workspace) ---
-if (!window.iataObserver) {
-  window.iataObserver = new MutationObserver((mutations) => {
-    for (const m of mutations) {
-      for (const node of m.addedNodes) {
-
-        // ✅ Correct block here
-        if (node.nodeType === 1) {
-          const target = node.id === "workspace" ? node : node.querySelector("#workspace");
-          if (target) {
-            const checkFields = setInterval(() => {
-              const hasFields = document.querySelectorAll("input[data-iata]").length;
-              if (hasFields) {
-                clearInterval(checkFields);
-                setupIataAutocomplete(document);
-                console.log("✈️ IATA fields detected dynamically and initialized");
-              }
-            }, 200);
-          }
-        }
-
-      }
-    }
-  });
-
-  window.iataObserver.observe(document.body, { childList: true, subtree: true });
-  console.log("🧭 IATA observer initialized once globally");
-}
-
-</script>
-
-<script>
-    // 🧭 Step 2: Toggle Logic (console-aware)
-    function setupToggleLogic(root = document) {
-        console.log("🔧 setupToggleLogic called", root);
-      const toggles = {
-        direct: root.querySelector("#directStop"),
-        multi: root.querySelector("#multiConn"),
-        pos: root.querySelector("#posFlight")
-      };
-    
-      // guard: make sure elements exist
-      if (!toggles.direct || !toggles.multi || !toggles.pos) {
-        console.warn("⚠️ Toggle elements not found yet, skipping init");
-        return;
-      }
-    
-      // activate button visually
-      function setActive(group, value) {
-        const buttons = group.querySelectorAll("button");
-        buttons.forEach(btn => {
-          btn.classList.toggle("active", btn.dataset.val === value);
-        });
-      }
-    
-      // reset others when one is set to Yes
-      function handleMutualExclusion(selectedKey) {
-        for (const key in toggles) {
-          if (key !== selectedKey) {
-            setActive(toggles[key], "no");
-          }
-        }
-      }
-    
-      // attach click listeners for all toggle groups
-      for (const [key, group] of Object.entries(toggles)) {
-        group.addEventListener("click", e => {
-          if (e.target.tagName !== "BUTTON") return;
-          const val = e.target.dataset.val;
-    
-          // set this group's active state
-          setActive(group, val);
-    
-          // enforce exclusivity across groups
-          if (val === "yes" && key !== "pos") {
-              handleMutualExclusion(key);
-            }
-    
-          // log current states
-          const states = {
-            direct: toggles.direct.querySelector(".active")?.dataset.val,
-            multi: toggles.multi.querySelector(".active")?.dataset.val,
-            pos: toggles.pos.querySelector(".active")?.dataset.val
-          };
-          console.log("🧩 Toggle states:", states);
-        });
-      }
-    
-      console.log("✅ Toggle logic initialized");
-    }
-    
-    // --- Detect dynamic module injection (for console workspace) ---
-    // --- Unified Observer: handles IATA + Toggle + Flex initialization ---
-    if (!window.globalObserver) {
-      window.globalObserver = new MutationObserver((mutations) => {
-        for (const m of mutations) {
-          for (const node of m.addedNodes) {
-            if (node.nodeType === 1 && node.id === "workspace") {
-              // Wait for redemption form content to fully render
-              const waitForContent = setInterval(() => {
-                const iataReady = node.querySelectorAll("input[data-iata]").length === 2;
-                const togglesReady = node.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
-                const flexReady = node.querySelector("#exactBtn") && node.querySelector("#flexBtn");
-                const searchReady = node.querySelector("#searchBtn");
-                
-                if (iataReady || togglesReady || flexReady || searchReady) {
-                  clearInterval(waitForContent);
-                
-                  if (iataReady) {
-                    setupIataAutocomplete(node);
-                    console.log("✈️ IATA autocomplete (re)init done");
-                  }
-                
-                  if (togglesReady) {
-                    setupToggleLogic(node);
-                    console.log("🧩 Toggle logic (re)init done");
-                  }
-                
-                  if (flexReady) {
-                    setupFlexDaysLogic(node);
-                    console.log("📅 Flex Days logic (re)init done");
-                  }
-                
-                  if (searchReady) {
-                    setupSearchButtonLogic(node);
-                    console.log("🕹️ Search button logic (re)init done");
-                  }
-                
-                  console.log("🚀 Modules initialized after render");
-                }
-              }, 300);
-            }
-          }
-        }
+    input.addEventListener("input",()=>{
+      const val=input.value.toLowerCase();
+      datalist.innerHTML="";
+      if(val.length<2)return;
+      airports.filter(a=>a.city.toLowerCase().includes(val)||a.code.toLowerCase().includes(val))
+      .forEach(a=>{
+        const opt=document.createElement("option");
+        opt.value=`${a.city} (${a.code})`;
+        datalist.appendChild(opt);
       });
-    
-      window.globalObserver.observe(document.body, { childList: true, subtree: true });
-      console.log("🧭 Global observer initialized once (IATA + Toggle + Flex)");
-    }
-    
-    // 🔁 Universal module init hook (called automatically by console after injection)
-    window.onModuleReady = (root = document) => {
-      console.log("🧩 Redem-con module initializing...");
-    
-      try {
-        if (typeof setupIataAutocomplete === "function") setupIataAutocomplete(root);
-        if (typeof setupToggleLogic === "function") setupToggleLogic(root);
-        if (typeof setupFlexDaysLogic === "function") setupFlexDaysLogic(root);
-        if (typeof updateButtonState === "function") updateButtonState(root);
-    
-        console.log("✅ Redem-con fully initialized.");
-      } catch (err) {
-        console.error("❌ Error during redem-con init:", err);
+    });
+  });
+  console.log("✅ IATA autocomplete ready");
+}
+
+// --- Flex Days ---
+function setupFlexDaysLogic(root=document){
+  const exactBtn=root.querySelector("#exactBtn");
+  const flexBtn=root.querySelector("#flexBtn");
+  const flexPicker=root.querySelector("#flexPicker");
+  const modeInput=root.querySelector("#mode");
+  if(!exactBtn||!flexBtn||!flexPicker||!modeInput) return;
+
+  const setMode=v=>{
+    modeInput.value=v;
+    exactBtn.classList.toggle("active",v==="exact");
+    flexBtn.classList.toggle("active",v==="flex");
+    flexPicker.style.display=v==="flex"?"block":"none";
+    console.log("📅 Mode:",v);
+  };
+  setMode(modeInput.value||"exact");
+  exactBtn.onclick=()=>setMode("exact");
+  flexBtn.onclick=()=>setMode("flex");
+  console.log("✅ Flex logic ready");
+}
+
+// --- Toggle Logic ---
+function setupToggleLogic(root=document){
+  const groups={direct:"#directStop",multi:"#multiConn",pos:"#posFlight"};
+  for(const k in groups){
+    const group=root.querySelector(groups[k]);
+    if(!group)return;
+    group.onclick=e=>{
+      if(e.target.tagName!=="BUTTON")return;
+      const val=e.target.dataset.val;
+      group.querySelectorAll("button").forEach(b=>b.classList.toggle("active",b.dataset.val===val));
+      if(val==="yes"&&k!=="pos"){ // exclusivity
+        Object.entries(groups).forEach(([key,sel])=>{
+          if(key!==k) root.querySelectorAll(sel+" button").forEach(b=>b.classList.toggle("active",b.dataset.val==="no"));
+        });
       }
+      window.updateButtonState(root);
     };
-
-    // 🧭 Global failsafe: ensure Search button state stays in sync
-    window.addEventListener("load", () => updateButtonState(document));
-    
-    document.addEventListener("input", () => updateButtonState(document));
-    document.addEventListener("change", () => updateButtonState(document));
-    document.addEventListener("click", e => {
-      if (e.target.closest("#directStop, #multiConn, #posFlight, #exactBtn, #flexBtn")) {
-        updateButtonState(document);
-      }
-    });
-    document.addEventListener("click", e => {
-      if (e.target.closest("#directStop, #multiConn, #posFlight, #exactBtn, #flexBtn")) {
-        updateButtonState(document);
-      }
-    });
-
-    // --- Ensure global functions are ready after module injection ---
-    setTimeout(() => {
-      if (typeof window.updateButtonState === "function") {
-        console.log("🧭 updateButtonState global confirmed active");
-      } else {
-        console.warn("⚠️ updateButtonState still undefined after injection");
-      }
-    }, 250);
-    
-    // 🔁 Reinitialize after console injection
-    if (typeof setupToggleLogic === "function") setupToggleLogic(document);
-    console.log("🧩 Toggle logic reinitialized after workspace injection");
-    
-</script>
-
-<script>
-document.addEventListener("module:ready", e => {
-  if (e.detail.page !== "redem-con") return;
-  console.log("🧩 Redem-con initializing via event...");
-
-  try {
-    setupIataAutocomplete(document);
-    setupToggleLogic(document);
-    setupFlexDaysLogic(document);
-    updateButtonState(document);
-    console.log("✅ Redem-con ready.");
-  } catch (err) {
-    console.error("❌ Redem-con init error:", err);
   }
-});
-</script>
+  console.log("✅ Toggle logic ready");
+}
 
+// --- Search Button Logic ---
+function setupSearchButtonLogic(root=document){
+  const btn=root.querySelector("#searchBtn");
+  const warning=root.querySelector("#searchWarning");
+  if(!btn||!warning)return;
+
+  window.updateButtonState=(root=document)=>{
+    const origin=root.querySelector("#origin")?.value.trim();
+    const dest=root.querySelector("#destination")?.value.trim();
+    const depart=root.querySelector("#departDate")?.value.trim();
+    const mode=root.querySelector("#mode")?.value;
+    const toggles=["#directStop","#multiConn","#posFlight"]
+      .map(sel=>root.querySelector(sel+" button.active")?.dataset.val);
+    const anyYes=toggles.includes("yes");
+    const ready=origin&&dest&&depart&&anyYes&&mode;
+    btn.disabled=!ready;
+    btn.classList.toggle("active",ready);
+    warning.style.display=ready?"none":"block";
+  };
+
+  root.addEventListener("input",()=>updateButtonState(root));
+  root.addEventListener("click",()=>updateButtonState(root));
+
+  btn.onclick=e=>{
+    if(btn.disabled)return;
+    e.preventDefault();
+    console.log("🚀 Search triggered");
+  };
+  updateButtonState(root);
+  console.log("✅ Search logic ready");
+}
+
+// --- Universal Init ---
+window.onModuleReady=function(root=document){
+  console.log("🧩 Redem-con initializing cleanly...");
+  try{
+    setupIataAutocomplete(root);
+    setupToggleLogic(root);
+    setupFlexDaysLogic(root);
+    setupSearchButtonLogic(root);
+    updateButtonState(root);
+    console.log("✅ Redem-con fully initialized.");
+  }catch(err){
+    console.error("❌ Init failed:",err);
+  }
+};
+</script>
 
 <!-- === Dynamic Workspace Injection Target === -->
 <div id="workspace" class="workspace">
