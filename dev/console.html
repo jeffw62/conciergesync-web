@@ -801,6 +801,14 @@
         
         console.log(`✅ Module injected and event dispatched: ${page}`);
 
+        } catch (err) {
+          console.error(`❌ Failed to load ${page}:`, err);
+          workspace.innerHTML = `<p>Failed to load ${page}</p>`;
+          workspace.style.opacity = "1";
+        }
+        
+        console.groupEnd();
+
     // --- Navigation Click Handling ---
     document.querySelectorAll(".nav-link, #sideNav a[data-page]").forEach(link => {
       link.addEventListener("click", async (e) => {
