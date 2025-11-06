@@ -1112,22 +1112,21 @@ if (!window.iataObserver) {
       console.log("🧭 Global observer initialized once (IATA + Toggle + Flex)");
     }
     
-    // --- Fallback trigger: ensure all modules initialize even if observer misses timing ---
-    setTimeout(() => {
-      const iataReady = document.querySelectorAll("input[data-iata]").length === 2;
-      const togglesReady = document.querySelectorAll("#directStop, #multiConn, #posFlight").length === 3;
-      const flexReady = document.querySelector("#exactBtn") && document.querySelector("#flexBtn");
+    // 🔁 Universal module init hook (called automatically by console after injection)
+    window.onModuleReady = (root = document) => {
+      console.log("🧩 Redem-con module initializing...");
     
-      if (iataReady) setupIataAutocomplete(document);
-      if (togglesReady) setupToggleLogic(document);
-      if (flexReady) setupFlexDaysLogic(document);
+      try {
+        if (typeof setupIataAutocomplete === "function") setupIataAutocomplete(root);
+        if (typeof setupToggleLogic === "function") setupToggleLogic(root);
+        if (typeof setupFlexDaysLogic === "function") setupFlexDaysLogic(root);
+        if (typeof updateButtonState === "function") updateButtonState(root);
     
-      if (iataReady || togglesReady || flexReady) {
-        console.log("🕓 Fallback: Module(s) initialized post-render");
-      } else {
-        console.warn("⚠️ Fallback ran, but no modules ready");
+        console.log("✅ Redem-con fully initialized.");
+      } catch (err) {
+        console.error("❌ Error during redem-con init:", err);
       }
-    }, 1500);
+    };
 
     // 🧭 Global failsafe: ensure Search button state stays in sync
     window.addEventListener("load", () => updateButtonState(document));
