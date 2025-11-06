@@ -186,6 +186,22 @@
         workspace.replaceChildren(...doc.body.children);
         workspace.scrollTop = 0;
 
+        // 🔁 Re-activate any <script> tags inside injected module
+        doc.querySelectorAll("script").forEach(oldScript => {
+          const newScript = document.createElement("script");
+        
+          if (oldScript.src) {
+            newScript.src = oldScript.src;
+            newScript.async = false; // preserve order
+          } else {
+            newScript.textContent = oldScript.textContent;
+          }
+        
+          document.body.appendChild(newScript);
+        });
+        
+        console.log("⚙️ Re-executed script tags for module:", page);
+
         requestAnimationFrame(() => {
           workspace.style.opacity = "1";
           workspace.classList.add("fade-in");
