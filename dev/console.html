@@ -805,20 +805,6 @@
         });
       
         console.log(`🧭 Inline scripts executed for: ${page}`);
-      
-        // Fade-in reveal
-        requestAnimationFrame(() => {
-          workspace.style.opacity = "1";
-          workspace.classList.add("fade-in");
-          setTimeout(() => workspace.classList.remove("fade-in"), 400);
-        });
-      
-        console.log(`✅ Module loaded: ${page}`);
-      } catch (err) {
-        console.error(`❌ Failed to load ${page}:`, err);
-        workspace.innerHTML = `<p>Failed to load ${page}</p>`;
-        workspace.style.opacity = "1";
-      }
 
         // Fade-in reveal
         requestAnimationFrame(() => {
@@ -834,20 +820,6 @@
         workspace.style.opacity = "1";
       }
 
-        // Fade-in reveal
-        requestAnimationFrame(() => {
-          workspace.style.opacity = "1";
-          workspace.classList.add("fade-in");
-          setTimeout(() => workspace.classList.remove("fade-in"), 400);
-        });
-  
-        console.log(`✅ Module loaded: ${page}`);
-      } catch (err) {
-        console.error(`❌ Failed to load ${page}:`, err);
-        workspace.innerHTML = `<p>Failed to load ${page}</p>`;
-        workspace.style.opacity = "1";
-      }
-  
       console.groupEnd();
     };
   
