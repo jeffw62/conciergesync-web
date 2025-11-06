@@ -809,12 +809,6 @@
       
         console.log(`🧭 Executed inline scripts from injected module: ${page}`);
       
-      } catch (err) {
-        console.error(`❌ Failed to load module: ${page}`, err);
-      }
-
-
-  
         // --- Clean injection using DOMParser (prevents style/text bleed) ---
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
