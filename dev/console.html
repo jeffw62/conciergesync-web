@@ -806,6 +806,18 @@
       
         console.log(`🧭 Inline scripts executed for: ${page}`);
 
+        // 🔁 After module injection, call the module's own init hook if it exists
+        if (typeof window.onModuleReady === "function") {
+          console.log("🪄 Calling onModuleReady hook for", page);
+          try {
+            window.onModuleReady(document);
+          } catch (err) {
+            console.warn("⚠️ Module ready hook threw:", err);
+          }
+        } else {
+          console.log("ℹ️ No module hook found for", page);
+        }
+
         // Fade-in reveal
         requestAnimationFrame(() => {
           workspace.style.opacity = "1";
