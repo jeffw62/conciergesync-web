@@ -808,10 +808,6 @@
         });
       
         console.log(`🧭 Executed inline scripts from injected module: ${page}`);
-      
-        // --- Clean injection using DOMParser (prevents style/text bleed) ---
-        const parser = new DOMParser();
-        const doc = parser.parseFromString(html, "text/html");
         
         // 🔹 Remove previous module completely before injecting
         workspace.replaceChildren(...doc.body.children);
