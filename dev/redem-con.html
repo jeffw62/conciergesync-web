@@ -1159,6 +1159,22 @@ if (!window.iataObserver) {
     
 </script>
 
+<script>
+document.addEventListener("module:ready", e => {
+  if (e.detail.page !== "redem-con") return;
+  console.log("🧩 Redem-con initializing via event...");
+
+  try {
+    setupIataAutocomplete(document);
+    setupToggleLogic(document);
+    setupFlexDaysLogic(document);
+    updateButtonState(document);
+    console.log("✅ Redem-con ready.");
+  } catch (err) {
+    console.error("❌ Redem-con init error:", err);
+  }
+});
+</script>
 
 
 <!-- === Dynamic Workspace Injection Target === -->
