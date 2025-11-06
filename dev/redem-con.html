@@ -1139,7 +1139,20 @@ if (!window.iataObserver) {
         updateButtonState(document);
       }
     });
+    document.addEventListener("click", e => {
+      if (e.target.closest("#directStop, #multiConn, #posFlight, #exactBtn, #flexBtn")) {
+        updateButtonState(document);
+      }
+    });
 
+    // --- Ensure global functions are ready after module injection ---
+    setTimeout(() => {
+      if (typeof window.updateButtonState === "function") {
+        console.log("🧭 updateButtonState global confirmed active");
+      } else {
+        console.warn("⚠️ updateButtonState still undefined after injection");
+      }
+    }, 250);
 </script>
 
 <!-- === Dynamic Workspace Injection Target === -->
