@@ -774,36 +774,15 @@
         console.groupEnd();
         return;
       }
-      
+  
       try {
-        // ✅ Fetch module HTML
         const res = await fetch(path);
         if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
         const html = await res.text();
-      
-        // ✅ Legacy injection (restores previous working behavior)
-        workspace.innerHTML = html;
-        workspace.style.opacity = "1";
-        workspace.scrollTop = 0;
-        
-        console.log(`📦 Injected module: ${page} (legacy injection restored)`);
-      
-        // ✅ Execute any inline scripts found in the parsed document
-        doc.querySelectorAll("script").forEach(oldScript => {
-          const newScript = document.createElement("script");
-          if (oldScript.src) {
-            newScript.src = oldScript.src;
-            // preserve async/defer if present
-            if (oldScript.async) newScript.async = true;
-            if (oldScript.defer) newScript.defer = true;
-          } else {
-            newScript.textContent = oldScript.textContent;
-          }
-          document.body.appendChild(newScript);
-          // don't attempt to remove oldScript from doc — it was parsed only
-        });
-      
-        console.log(`🧭 Executed inline scripts from injected module: ${page}`);
+  
+        // --- Clean injection using DOMParser (prevents style/text bleed) ---
+        const parser = new DOMParser();
+        const doc = parser.parseFromString(html, "text/html");
         
         // 🔹 Remove previous module completely before injecting
         workspace.replaceChildren(...doc.body.children);
@@ -925,24 +904,6 @@
       });
     });
   });
-</script>
-
-<script>
-// 🧩 Wait until redem-con module defines updateButtonState
-const waitForUpdateButtonState = setInterval(() => {
-  if (typeof window.updateButtonState === "function") {
-    clearInterval(waitForUpdateButtonState);
-    console.log("🧭 updateButtonState detected — binding global listeners");
-
-    document.addEventListener("input",  () => updateButtonState(document));
-    document.addEventListener("change", () => updateButtonState(document));
-    document.addEventListener("click",  e => {
-      if (e.target.closest("#directStop, #multiConn, #posFlight, #exactBtn, #flexBtn")) {
-        updateButtonState(document);
-      }
-    });
-  }
-}, 300);
 </script>
 
 </body>
