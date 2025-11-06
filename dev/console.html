@@ -780,69 +780,27 @@
         if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
         const html = await res.text();
       
-        // --- Clean injection using DOMParser (prevents style/text bleed) ---
+        // --- Clean injection using DOMParser ---
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
-      
-        // 🔹 Remove previous module completely before injecting
+        
+        // 🔹 Replace workspace content
         workspace.replaceChildren(...doc.body.children);
-      
-        // 🔹 Guarantee visibility and top alignment
-        workspace.style.opacity = "1";
         workspace.scrollTop = 0;
-      
-        // ✅ Execute inline scripts from parsed doc (so functions inside module become real)
-        doc.querySelectorAll("script").forEach(oldScript => {
-          const newScript = document.createElement("script");
-          if (oldScript.src) {
-            newScript.src = oldScript.src;
-            if (oldScript.async) newScript.async = true;
-            if (oldScript.defer) newScript.defer = true;
-          } else {
-            newScript.textContent = oldScript.textContent;
-          }
-          document.body.appendChild(newScript);
-        });
-      
-        console.log(`🧭 Inline scripts executed for: ${page}`);
-
-        // 🔁 After module scripts run, trigger its ready hook if available
-        if (typeof window.onModuleReady === "function") {
-          console.log(`🪄 Calling module hook for ${page}...`);
-          window.onModuleReady(workspace);
-        } else {
-          console.log(`ℹ️ No module hook found for ${page}`);
-        }
-
-        // 🔁 After module injection, call the module's own init hook if it exists
-        if (typeof window.onModuleReady === "function") {
-          console.log("🪄 Calling onModuleReady hook for", page);
-          try {
-            window.onModuleReady(document);
-          } catch (err) {
-            console.warn("⚠️ Module ready hook threw:", err);
-          }
-        } else {
-          console.log("ℹ️ No module hook found for", page);
-        }
-
-        // Fade-in reveal
+        
+        // 🔹 Fade-in reveal
         requestAnimationFrame(() => {
           workspace.style.opacity = "1";
           workspace.classList.add("fade-in");
           setTimeout(() => workspace.classList.remove("fade-in"), 400);
         });
-      
-        console.log(`✅ Module loaded: ${page}`);
-      } catch (err) {
-        console.error(`❌ Failed to load ${page}:`, err);
-        workspace.innerHTML = `<p>Failed to load ${page}</p>`;
-        workspace.style.opacity = "1";
-      }
+        
+        // 🔹 Tell any injected module it’s ready
+        const event = new CustomEvent("module:ready", { detail: { page, workspace } });
+        document.dispatchEvent(event);
+        
+        console.log(`✅ Module injected and event dispatched: ${page}`);
 
-      console.groupEnd();
-    };
-  
     // --- Navigation Click Handling ---
     document.querySelectorAll(".nav-link, #sideNav a[data-page]").forEach(link => {
       link.addEventListener("click", async (e) => {
