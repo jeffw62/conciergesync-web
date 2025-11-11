@@ -20,22 +20,66 @@
   }
 
   /* ============================================================
-     IATA Autocomplete
+     ✈️  IATA Autocomplete (local dataset, expandable)
   ============================================================ */
-  function setupIataAutocomplete(ctx = root) {
-    const iataInputs = ctx.querySelectorAll("input[data-iata]");
-    if (!iataInputs.length) return console.warn("⚠️ No IATA inputs found.");
-    iataInputs.forEach(input => {
-      input.addEventListener("input", e => {
-        const val = e.target.value.toUpperCase().trim();
-        if (val.length >= 2) {
-          console.log(`🔍 IATA lookup for: ${val}`);
-          // (placeholder for API-driven suggestions)
-        }
+function setupIataAutocomplete(ctx = root) {
+  const iataInputs = ctx.querySelectorAll("input[data-iata]");
+  if (!iataInputs.length) return console.warn("⚠️ No IATA inputs found.");
+
+  // Local static list for now — can later move to an API
+  const IATA_AIRPORTS = [
+    { code: "ATL", city: "Atlanta", country: "USA" },
+    { code: "DFW", city: "Dallas/Fort Worth", country: "USA" },
+    { code: "JFK", city: "New York (JFK)", country: "USA" },
+    { code: "LHR", city: "London Heathrow", country: "UK" },
+    { code: "CDG", city: "Paris CDG", country: "France" },
+    { code: "LAX", city: "Los Angeles", country: "USA" },
+    { code: "CUN", city: "Cancún", country: "Mexico" },
+    { code: "MCO", city: "Orlando", country: "USA" },
+    { code: "FRA", city: "Frankfurt", country: "Germany" },
+    { code: "NRT", city: "Tokyo Narita", country: "Japan" },
+  ];
+
+  iataInputs.forEach(input => {
+    const container = input.nextElementSibling;
+    if (!container || !container.classList.contains("suggestions")) {
+      console.warn(`⚠️ Missing suggestions container for ${input.id}`);
+      return;
+    }
+
+    input.addEventListener("input", e => {
+      const term = e.target.value.toUpperCase().trim();
+      container.innerHTML = "";
+
+      if (term.length < 2) return;
+
+      const matches = IATA_AIRPORTS.filter(
+        a =>
+          a.code.includes(term) ||
+          a.city.toUpperCase().includes(term)
+      ).slice(0, 6);
+
+      matches.forEach(a => {
+        const opt = document.createElement("div");
+        opt.className = "suggestion";
+        opt.textContent = `${a.city} (${a.code})`;
+        opt.addEventListener("click", () => {
+          input.value = a.code;
+          container.innerHTML = "";
+          input.dispatchEvent(new Event("change"));
+        });
+        container.appendChild(opt);
       });
     });
-    console.log("✅ IATA autocomplete active");
-  }
+
+    document.addEventListener("click", e => {
+      if (!container.contains(e.target) && e.target !== input)
+        container.innerHTML = "";
+    });
+  });
+
+  console.log("✅ IATA autocomplete active");
+}
 
   /* ============================================================
      Toggle Logic (Direct / Multi / Positioning)
