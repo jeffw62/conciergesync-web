@@ -11,7 +11,8 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
 // === Unified Partner Bridge (SerpApi + SeatsAero + Duffel) ===
-import { SeatsAeroService, applySanityFilter, fetchCashFare, testDuffelSearch } from "./dev/server/partners.js";
+import { SeatsAeroService, applySanityFilter, fetchCashFare } from "./dev/server/partners.js";
+import { Duffel } from "./dev/server/partners.js";
 
 // ===========================================
 // Simple in-memory cache for SerpApi results
@@ -638,4 +639,4 @@ app.listen(PORT, () => {
 
 // === Duffel Test Route ===
 // (import removed — now handled by partners.js)
-app.get("/api/test-duffel-search", testDuffelSearch);
+app.get("/api/test-duffel-search", Duffel.testDuffelSearch);
