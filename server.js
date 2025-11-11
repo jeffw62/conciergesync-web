@@ -631,17 +631,24 @@ app.get("/api/partners/heartbeat", async (req, res) => {
 
   try {
     // --- SerpApi ---
-    const serp = await fetch("https://serpapi.com/account");
-    if (serp.ok) status.SerpApi = "ok";
-  } catch { status.SerpApi = "error"; }
+    const serp = await fetch("https://serpapi.com/account", {
+      headers: { "Authorization": `Bearer ${process.env.SERP_API_KEY}` }
+    });
+    status.SerpApi = serp.ok ? "ok" : "error";
+  } catch {
+    status.SerpApi = "error";
+  }
 
   try {
     // --- Seats.Aero ---
-    const sa = await fetch("https://seats.aero/partnerapi/health", {
-      headers: { "Partner-Authorization": process.env.SEATSAERO_KEY }
-    });
+    const sa = await fetch(
+      "https://seats.aero/partnerapi/search?origin_airport=DFW&destination_airport=LHR&start_date=2025-12-01&end_date=2025-12-02&take=1",
+      { headers: { "Partner-Authorization": process.env.SEATSAERO_KEY } }
+    );
     status.SeatsAero = sa.ok ? "ok" : "error";
-  } catch { status.SeatsAero = "error"; }
+  } catch {
+    status.SeatsAero = "error";
+  }
 
   try {
     // --- Duffel ---
@@ -661,12 +668,16 @@ app.get("/api/partners/heartbeat", async (req, res) => {
       })
     });
     status.Duffel = df.ok ? "ok" : "error";
-  } catch { status.Duffel = "error"; }
+  } catch {
+    status.Duffel = "error";
+  }
 
   try {
-    // --- Plaid (placeholder) ---
+    // --- Plaid (placeholder until integration) ---
     status.Plaid = "stub";
-  } catch { status.Plaid = "error"; }
+  } catch {
+    status.Plaid = "error";
+  }
 
   res.json({
     ok: Object.values(status).every(v => v === "ok" || v === "stub"),
