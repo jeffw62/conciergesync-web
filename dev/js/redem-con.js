@@ -355,11 +355,30 @@ function setupIataAutocomplete(ctx = root) {
   }
 
   // Auto-run when script executed; if inside injection, attempt to attach after DOM ready
-  if(document.readyState === 'complete' || document.readyState === 'interactive'){
-    setTimeout(()=> attachSearchHandler(document), 50);
-  } else {
-    window.addEventListener('DOMContentLoaded', ()=> attachSearchHandler(document));
-  }
+function bootRedemCon() {
+  // attach core search handler
+  try { attachSearchHandler(document); } catch (e) { console.warn("attachSearchHandler failed:", e); }
+
+  // attach IATA autocomplete
+  try { setupIataAutocomplete(document); } catch (e) { console.warn("setupIataAutocomplete failed:", e); }
+
+  // also re-run updateButtonState once to catch any pre-filled values
+  try { typeof updateButtonState === 'function' && updateButtonState(document); } catch (e) { /* ignore */ }
+
+  // If this module is injected into the console workspace (replaceChildren), the DOM may be re-written;
+  // schedule a follow-up attach to be safe (idempotent guards inside the functions prevent double-bind)
+  setTimeout(() => {
+    try { attachSearchHandler(document); } catch (e) {}
+    try { setupIataAutocomplete(document); } catch (e) {}
+    try { typeof updateButtonState === 'function' && updateButtonState(document); } catch (e) {}
+  }, 250);
+}
+
+if (document.readyState === 'complete' || document.readyState === 'interactive') {
+  setTimeout(bootRedemCon, 50);
+} else {
+  window.addEventListener('DOMContentLoaded', bootRedemCon);
+}
 
   // If console injects via AJAX and workspace.replaceChildren(...doc.body.children) fires,
   // this handler will still attach because attachSearchHandler searches globally for #cs-redem-form.
