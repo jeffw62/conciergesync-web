@@ -5,9 +5,9 @@
 // using SerpApi's Google Flights engine
 // ==========================================================
 
-const axios = require("axios");
+import axios from "axios";
 
-async function fetchCashFare({ origin, destination, departDate, travelClass = 1 }) {
+export async function fetchCashFare({ origin, destination, departDate, travelClass = 1 }) {
   const apiKey = process.env.SERP_API_KEY;
   if (!apiKey) {
     console.warn("⚠️  Missing SERP_API_KEY");
@@ -85,5 +85,3 @@ async function fetchCashFare({ origin, destination, departDate, travelClass = 1 
     return null;
   }
 }
-
-module.exports = { fetchCashFare };
