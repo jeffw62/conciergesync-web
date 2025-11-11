@@ -550,17 +550,22 @@ app.post("/api/redemption", async (req, res) => {
 });
 
 // ===============================================
-// Bulk Test Route (optional diagnostic)
+// ✅ Updated Seats.Aero partner test route (replaces deprecated bulk endpoint)
 // ===============================================
 app.get("/api/redemption/testBulk", async (req, res) => {
   try {
-    const url = `${seatsService.baseUrl}/bulk-availability?sources=aeroplan&region=NorthAmerica-Europe&month=2025-10`;
-    console.log("📦 SA Bulk request URL:", url);
+    const origin = req.query.origin || "DFW";
+    const destination = req.query.destination || "LHR";
+    const startDate = req.query.start || "2025-12-01";
+    const endDate = req.query.end || "2025-12-05";
+
+    const url = `https://seats.aero/partnerapi/search?origin_airport=${origin}&destination_airport=${destination}&start_date=${startDate}&end_date=${endDate}&take=10`;
+
+    console.log("📦 Updated SA test URL:", url);
 
     const response = await fetch(url, {
-      method: "GET",
       headers: {
-        "Partner-Authorization": seatsService.apiKey,
+        "Partner-Authorization": process.env.SEATSAERO_KEY,
         Accept: "application/json",
       },
     });
@@ -571,14 +576,16 @@ app.get("/api/redemption/testBulk", async (req, res) => {
     }
 
     const data = await response.json();
-    res.json(data);
-
+    res.status(200).json({
+      ok: true,
+      count: data.data?.length || 0,
+      sample: data.data?.slice(0, 2) || [],
+    });
   } catch (err) {
-    console.error("❌ testBulk route error:", err);
+    console.error("❌ Seats.Aero test error:", err);
     res.status(500).json({ error: err.message });
   }
 });
-
 
 // =====================================================
 // Dynamic SerpApi test route
