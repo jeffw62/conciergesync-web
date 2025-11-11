@@ -693,7 +693,7 @@ app.get("/api/test-duffel-search", async (req, res) => {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${process.env.DUFFEL_API_KEY}`,
-        "Duffel-Version": "latest", // ✅ latest supported version as of Nov 2025
+        "Duffel-Version": "2025-09-01", // ✅ latest supported version as of Nov 2025
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
