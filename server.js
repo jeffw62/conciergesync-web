@@ -684,6 +684,7 @@ app.listen(PORT, () => {
 // ... all your existing routes above
 
 // ===== ConciergeSync™ Duffel Test Search =====
+console.log("✈️  Initiating Duffel test search using API key:", process.env.DUFFEL_API_KEY ? "✅ present" : "❌ missing");
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 app.get("/api/test-duffel-search", async (req, res) => {
@@ -692,7 +693,7 @@ app.get("/api/test-duffel-search", async (req, res) => {
       method: "POST",
       headers: {
         "Authorization": `Bearer ${process.env.DUFFEL_API_KEY}`,
-        "Duffel-Version": "v1",
+        "Duffel-Version": "2024-07-01", // ✅ current stable API version
         "Content-Type": "application/json"
       },
       body: JSON.stringify({
