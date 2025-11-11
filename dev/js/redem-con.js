@@ -228,7 +228,23 @@
       const btn = ev.target.closest('.cs-action-btn');
       if(!btn) return;
       const idx = Number(btn.dataset.route || 0);
-      alert('Selected sample redemption: ' + sampleRoutes[idx].title);
+      const selected = sampleRoutes[idx];
+    
+      // Persist selection
+      try {
+        sessionStorage.setItem('latestRedemptionSelection', JSON.stringify(selected));
+        console.log('💾 Stored latestRedemptionSelection:', selected);
+      } catch(err) {
+        console.error('sessionStorage write failed', err);
+      }
+    
+      // Optional visual feedback
+      btn.textContent = 'Selected ✓';
+      btn.disabled = true;
+    
+      // Route to results page (for now: console log)
+      console.log('➡️ Ready to route to redemption-results-con.html');
+      // TODO: integrate workspace loader or navigation when ready
     });
   }
 
