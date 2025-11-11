@@ -10,8 +10,8 @@ import { dirname } from "path";
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// --- SerpApi helper (fetches indicative cash fares)
-import { fetchCashFare } from "./dev/server/serpapi.js";
+// === Unified Partner Bridge (SerpApi + SeatsAero + Duffel) ===
+import { SeatsAeroService, applySanityFilter, fetchCashFare, testDuffelSearch } from "./dev/server/partners.js";
 
 // ===========================================
 // Simple in-memory cache for SerpApi results
@@ -34,7 +34,6 @@ const PORT = process.env.PORT || 3000;
 // ===============================================
 // Seats.Aero Partner Service Class
 // ===============================================
-import { SeatsAeroService, applySanityFilter } from "./dev/server/seatsaero.js";
 const seatsService = new SeatsAeroService(process.env.SEATSAERO_KEY);
 
 app.get("/api/test", (req, res) => {
@@ -638,5 +637,5 @@ app.listen(PORT, () => {
 // ... all your existing routes above
 
 // === Duffel Test Route ===
-import { testDuffelSearch } from "./dev/server/duffel.js";
+// (import removed — now handled by partners.js)
 app.get("/api/test-duffel-search", testDuffelSearch);
