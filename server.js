@@ -670,7 +670,7 @@ app.listen(PORT, () => {
 // ... all your existing routes above
 
 // ===== ConciergeSync™ Duffel Test Search =====
-import fetch from "node-fetch";
+const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 app.get("/api/test-duffel-search", async (req, res) => {
   try {
@@ -703,9 +703,4 @@ app.get("/api/test-duffel-search", async (req, res) => {
     console.error("Duffel API error:", err);
     res.status(500).json({ error: err.message });
   }
-});
-
-// ===== Server Listener =====
-app.listen(process.env.PORT || 3000, () => {
-  console.log(`✅ Server running on port ${process.env.PORT || 3000}`);
 });
