@@ -1,10 +1,17 @@
 // ===============================================
 // ConciergeSync Web Service (Seats.Aero Integration)
 // ===============================================
-const express = require("express");
-const path = require("path");
-// SerpApi helper (fetches indicative cash fares)
-const { fetchCashFare } = require("./dev/server/serpapi.js");
+import express from "express";
+import path from "path";
+import { fileURLToPath } from "url";
+import { dirname } from "path";
+
+// --- Fix __dirname and __filename (since they're not built-in under ESM)
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+// --- SerpApi helper (fetches indicative cash fares)
+import { fetchCashFare } from "./dev/server/serpapi.js";
 
 // ===========================================
 // Simple in-memory cache for SerpApi results
