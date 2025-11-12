@@ -31,6 +31,7 @@ Server structure: `/dev/server/` contains `partners.js` unified bridge + individ
 | 🎛️ | Enable flex-days dropdown + budget-airline toggle + auto-toggles (form) | Jeff | JS logic partially implemented |
 | 🧾 | Create `/docs/TODO.md` (this file) | Jeff | ✅ Complete |
 | 🧩 | Migrate existing inline task notes into structured GitHub Issues | Homer / Jeff | Next → after branch setup |
+| ✅ | Merge Plaid integration stub into dev | Jeff | First feature branch successfully merged via PR #1 |
 
 ---
 
