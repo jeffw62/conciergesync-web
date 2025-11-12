@@ -11,6 +11,22 @@
   "theme_color": "#0d1b2a",
   "background_color": "#0d1b2a",
   "display": "standalone",
+    "screenshots": [
+    {
+      "src": "/dev/asset/icons/pwa-screenshot-desktop.png",
+      "sizes": "1280x720",
+      "type": "image/png",
+      "form_factor": "wide",
+      "label": "ConciergeSync™ Web Console — Desktop View"
+    },
+    {
+      "src": "/dev/asset/icons/pwa-screenshot-mobile.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow",
+      "label": "ConciergeSync™ Web Console — Mobile View"
+    }
+  ]
   "start_url": "/dev/index.html",
   "scope": "/dev/"
 }
