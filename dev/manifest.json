@@ -2,16 +2,35 @@
   "name": "ConciergeSync™ Web Console",
   "short_name": "ConciergeSync",
   "description": "Unified travel finance console — clarity, clean, true.",
-  "icons": [
-    { "src": "/dev/asset/icons/android-chrome-192x192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/dev/asset/icons/android-chrome-512x512.png", "sizes": "512x512", "type": "image/png" },
-    { "src": "/dev/asset/icons/favicon-32x32.png", "sizes": "32x32", "type": "image/png" },
-    { "src": "/dev/asset/icons/apple-touch-icon.png", "sizes": "180x180", "type": "image/png" }
-  ],
+  "start_url": "/dev/home.html",
+  "scope": "/dev/",
   "theme_color": "#0d1b2a",
   "background_color": "#0d1b2a",
   "display": "standalone",
-    "screenshots": [
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/dev/asset/icons/android-chrome-192x192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "/dev/asset/icons/android-chrome-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    },
+    {
+      "src": "/dev/asset/icons/favicon-32x32.png",
+      "sizes": "32x32",
+      "type": "image/png"
+    },
+    {
+      "src": "/dev/asset/icons/apple-touch-icon.png",
+      "sizes": "180x180",
+      "type": "image/png"
+    }
+  ],
+  "screenshots": [
     {
       "src": "/dev/asset/icons/pwa-screenshot-desktop.png",
       "sizes": "1280x720",
@@ -27,6 +46,4 @@
       "label": "ConciergeSync™ Web Console — Mobile View"
     }
   ]
-  "start_url": "/dev/home.html",
-  "scope": "/dev/"
 }
