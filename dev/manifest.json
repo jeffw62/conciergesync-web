@@ -27,6 +27,6 @@
       "label": "ConciergeSync™ Web Console — Mobile View"
     }
   ]
-  "start_url": "/dev/index.html",
+  "start_url": "/dev/home.html",
   "scope": "/dev/"
 }
