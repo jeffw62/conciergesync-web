@@ -214,6 +214,16 @@
     });
     </script>
   
-<script src="/dev/js/redemption-results.js"></script>
+  <script src="/dev/js/redemption-results.js"></script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker
+        .register("/dev/service-worker.js")
+        .then(() => console.log("🪄 ConciergeSync™ service worker registered."))
+        .catch(err => console.warn("Service Worker registration failed:", err));
+    }
+  </script>
+
 </body>
 </html>
