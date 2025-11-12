@@ -47,6 +47,7 @@ All code here is production-bound and deployed via **Render**.
 - Coordinate with Jeff before modifying repo structure or deleting files  
 
 ---
+📎 **See also:** [Repository Cleanup Tasks →](/docs/TODO.md#repository-cleanup--pending-tasks)
 
 **Last Updated:** November 12, 2025  
 **Maintainer:** Jeff Wynn  
