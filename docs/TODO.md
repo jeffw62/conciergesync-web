@@ -21,6 +21,18 @@ Server structure: `/dev/server/` contains `partners.js` unified bridge + individ
 
 ---
 
+## 🧹 Repository Cleanup — Pending Tasks
+
+| Task | Status | Notes |
+|------|:------:|------|
+| Move inline `// TODO:` notes into `/docs/TODO.md` | ⏳ | Centralizes task tracking |
+| Remove unused or legacy files (`old-*`, `/test/`) | ⏳ | Confirm before deletion |
+| Review `/assets/` for large or unused media | ⏳ | Archive if uncertain |
+| Standardize naming conventions (`redem-con.js`, etc.) | ⏳ | Maintain clarity |
+| Add `.env.example` for environment variables | ⏳ | Document required API keys |
+| Confirm `/docs/TODO.md` reflects latest milestone | ✅ | Phase 2 baseline complete |
+
+
 ## 🧱 Current Core Tasks — Week of Nov 11 → Nov 18  2025
 
 | Status | Task | Owner | Notes |
@@ -31,6 +43,7 @@ Server structure: `/dev/server/` contains `partners.js` unified bridge + individ
 | 🎛️ | Enable flex-days dropdown + budget-airline toggle + auto-toggles (form) | Jeff | JS logic partially implemented |
 | 🧾 | Create `/docs/TODO.md` (this file) | Jeff | ✅ Complete |
 | 🧩 | Migrate existing inline task notes into structured GitHub Issues | Homer / Jeff | Next → after branch setup |
+| ✅ | Merge Plaid integration stub into dev | Jeff | First feature branch successfully merged via PR #1 |
 
 ---
 
