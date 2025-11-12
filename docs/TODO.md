@@ -21,6 +21,18 @@ Server structure: `/dev/server/` contains `partners.js` unified bridge + individ
 
 ---
 
+## 🧹 Repository Cleanup — Pending Tasks
+
+| Task | Status | Notes |
+|------|:------:|------|
+| Move inline `// TODO:` notes into `/docs/TODO.md` | ⏳ | Centralizes task tracking |
+| Remove unused or legacy files (`old-*`, `/test/`) | ⏳ | Confirm before deletion |
+| Review `/assets/` for large or unused media | ⏳ | Archive if uncertain |
+| Standardize naming conventions (`redem-con.js`, etc.) | ⏳ | Maintain clarity |
+| Add `.env.example` for environment variables | ⏳ | Document required API keys |
+| Confirm `/docs/TODO.md` reflects latest milestone | ✅ | Phase 2 baseline complete |
+
+
 ## 🧱 Current Core Tasks — Week of Nov 11 → Nov 18  2025
 
 | Status | Task | Owner | Notes |
