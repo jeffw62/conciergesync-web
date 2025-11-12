@@ -32,5 +32,33 @@
   <p>Redirecting to ConciergeSync…  
      If you are not redirected, <a href="/dev/home.html">click here</a>.
   </p>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker
+      .register("/dev/service-worker.js")
+      .then(reg => {
+        console.log("🪄 ConciergeSync™ service worker registered.");
+  
+        // 💡 Check for updates automatically
+        if (reg.waiting) {
+          reg.waiting.postMessage("SKIP_WAITING");
+        }
+  
+        reg.addEventListener("updatefound", () => {
+          const newWorker = reg.installing;
+          if (newWorker) {
+            newWorker.addEventListener("statechange", () => {
+              if (newWorker.state === "installed" && navigator.serviceWorker.controller) {
+                newWorker.postMessage("SKIP_WAITING");
+              }
+            });
+          }
+        });
+      })
+      .catch(err => console.warn("Service Worker registration failed:", err));
+  }
+</script>
+
 </body>
 </html>
