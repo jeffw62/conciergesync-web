@@ -1,0 +1,68 @@
+{
+  "regions": {
+    "East": [
+      { "code": "BOS", "city": "Boston", "country": "United States" },
+      { "code": "JFK", "city": "New York (JFK)", "country": "United States" },
+      { "code": "EWR", "city": "Newark", "country": "United States" },
+      { "code": "PHL", "city": "Philadelphia", "country": "United States" },
+      { "code": "BWI", "city": "Baltimore/Washington", "country": "United States" },
+      { "code": "DCA", "city": "Washington National", "country": "United States" },
+      { "code": "IAD", "city": "Washington Dulles", "country": "United States" },
+      { "code": "CLT", "city": "Charlotte", "country": "United States" },
+      { "code": "ATL", "city": "Atlanta", "country": "United States" },
+      { "code": "MCO", "city": "Orlando", "country": "United States" },
+      { "code": "MIA", "city": "Miami", "country": "United States" },
+      { "code": "TPA", "city": "Tampa", "country": "United States" },
+      { "code": "RDU", "city": "Raleigh–Durham", "country": "United States" }
+    ],
+    "Central": [
+      { "code": "ORD", "city": "Chicago O’Hare", "country": "United States" },
+      { "code": "MDW", "city": "Chicago Midway", "country": "United States" },
+      { "code": "DFW", "city": "Dallas–Fort Worth", "country": "United States" },
+      { "code": "DAL", "city": "Dallas Love Field", "country": "United States" },
+      { "code": "IAH", "city": "Houston Intercontinental", "country": "United States" },
+      { "code": "HOU", "city": "Houston Hobby", "country": "United States" },
+      { "code": "MSP", "city": "Minneapolis–St. Paul", "country": "United States" },
+      { "code": "STL", "city": "St. Louis", "country": "United States" },
+      { "code": "BNA", "city": "Nashville", "country": "United States" },
+      { "code": "MCI", "city": "Kansas City", "country": "United States" },
+      { "code": "AUS", "city": "Austin", "country": "United States" },
+      { "code": "MSY", "city": "New Orleans", "country": "United States" },
+      { "code": "CLE", "city": "Cleveland", "country": "United States" },
+      { "code": "CMH", "city": "Columbus", "country": "United States" },
+      { "code": "DTW", "city": "Detroit", "country": "United States" }
+    ],
+    "West": [
+      { "code": "LAX", "city": "Los Angeles", "country": "United States" },
+      { "code": "SFO", "city": "San Francisco", "country": "United States" },
+      { "code": "SAN", "city": "San Diego", "country": "United States" },
+      { "code": "SJC", "city": "San Jose", "country": "United States" },
+      { "code": "SEA", "city": "Seattle", "country": "United States" },
+      { "code": "PDX", "city": "Portland", "country": "United States" },
+      { "code": "LAS", "city": "Las Vegas", "country": "United States" },
+      { "code": "PHX", "city": "Phoenix", "country": "United States" },
+      { "code": "DEN", "city": "Denver", "country": "United States" },
+      { "code": "SLC", "city": "Salt Lake City", "country": "United States" },
+      { "code": "HNL", "city": "Honolulu", "country": "United States" },
+      { "code": "OGG", "city": "Maui (Kahului)", "country": "United States" },
+      { "code": "ANC", "city": "Anchorage", "country": "United States" }
+    ],
+    "Canada": [
+      { "code": "YYZ", "city": "Toronto Pearson", "country": "Canada" },
+      { "code": "YUL", "city": "Montreal", "country": "Canada" },
+      { "code": "YOW", "city": "Ottawa", "country": "Canada" },
+      { "code": "YYC", "city": "Calgary", "country": "Canada" },
+      { "code": "YVR", "city": "Vancouver", "country": "Canada" },
+      { "code": "YWG", "city": "Winnipeg", "country": "Canada" },
+      { "code": "YEG", "city": "Edmonton", "country": "Canada" },
+      { "code": "YYT", "city": "St. John’s", "country": "Canada" },
+      { "code": "YHZ", "city": "Halifax", "country": "Canada" }
+    ],
+    "Territories": [
+      { "code": "SJU", "city": "San Juan", "country": "Puerto Rico" },
+      { "code": "STT", "city": "St. Thomas", "country": "U.S. Virgin Islands" },
+      { "code": "GUM", "city": "Guam", "country": "United States" },
+      { "code": "SPN", "city": "Saipan", "country": "Northern Mariana Islands" }
+    ]
+  }
+}
