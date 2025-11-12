@@ -28,7 +28,7 @@ console.log("SerpApi key detected:", !!process.env.SERP_API_KEY);
 const app = express();
 
 // Serve all static assets from /dev
-app.use(express.static(__dirname + '/dev'));
+app.use('/dev', express.static(path.join(__dirname, 'dev')));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
