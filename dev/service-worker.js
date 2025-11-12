@@ -48,3 +48,21 @@ self.addEventListener("fetch", event => {
     caches.match(event.request).then(res => res || fetch(event.request))
   );
 });
+// 🔁 Auto-update logic — ensures users get new builds immediately
+self.addEventListener("message", event => {
+  if (event.data === "SKIP_WAITING") {
+    self.skipWaiting();
+  }
+});
+
+self.addEventListener("activate", event => {
+  event.waitUntil(
+    (async () => {
+      const clients = await self.clients.matchAll({ type: "window" });
+      for (const client of clients) {
+        client.navigate(client.url); // reload open tabs with the new service worker
+      }
+    })()
+  );
+});
+
