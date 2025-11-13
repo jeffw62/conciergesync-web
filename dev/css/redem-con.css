@@ -1,0 +1,217 @@
+/* ===========================================================
+   ConciergeSync™ Redemption Console — Full-Bleed (Option B)
+   CCT: Clarity • Clean • True
+   =========================================================== */
+
+.redem-con {
+  width: 100%;
+  padding: 40px 52px;
+  box-sizing: border-box;
+  background: var(--cream, #FDFBF7);
+  font-family: "Inter", sans-serif;
+  color: #1A1A1A;
+}
+
+/* Typography */
+.redem-con h3 {
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.45rem;
+  font-weight: 500;
+  letter-spacing: 0.4px;
+  margin: 28px 0 22px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.redem-con .step-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--gold, #BFA14A);
+  color: #fff;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  box-shadow: 0 2px 6px rgba(191,161,74,0.28);
+}
+
+/* Layout */
+.redem-con .search-panel {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 42px;
+}
+
+@media (max-width: 820px) {
+  .redem-con .search-panel {
+    grid-template-columns: 1fr;
+  }
+  .redem-con {
+    padding: 28px 24px;
+  }
+}
+
+/* Fields */
+.redem-con .field {
+  position: relative;
+  margin-bottom: 26px;
+}
+
+.redem-con .field input,
+.redem-con .field select {
+  width: 100%;
+  padding: 16px 15px 14px;
+  border: 1.4px solid #DDD;
+  border-radius: 12px;
+  font-size: 1rem;
+  transition: all 0.25s ease;
+  background: #fff;
+}
+
+.redem-con .field input:focus,
+.redem-con .field select:focus {
+  border-color: var(--gold, #BFA14A);
+  box-shadow: 0 0 0 4px rgba(191,161,74,0.18);
+}
+
+/* Labels */
+.redem-con label {
+  margin-bottom: 6px;
+  display: block;
+  color: #444;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
+.redem-con small.hint {
+  display: block;
+  margin-top: 6px;
+  font-size: 0.82rem;
+  color: #666;
+  font-style: italic;
+}
+
+/* Inline fields */
+.redem-con .inline-fields {
+  display: flex;
+  gap: 16px;
+}
+.redem-con .inline-fields .field {
+  flex: 1;
+}
+
+/* Toggles */
+.redem-con .toggle-group {
+  display: inline-flex;
+  gap: 8px;
+  background: #EFE9DC;
+  padding: 4px;
+  border-radius: 12px;
+  margin-bottom: 18px;
+}
+
+.redem-con .toggle-group button {
+  border: none;
+  padding: 8px 20px;
+  border-radius: 10px;
+  background: transparent;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  color: #555;
+  transition: all 0.25s;
+}
+
+.redem-con .toggle-group button.active {
+  background: var(--gold, #BFA14A);
+  color: white;
+  box-shadow: 0 3px 10px rgba(191,161,74,0.35);
+}
+
+/* Exact / Flex Buttons */
+.redem-con .card-options {
+  display: flex;
+  gap: 14px;
+  margin: 20px 0;
+}
+
+.redem-con .option-btn {
+  flex: 1;
+  padding: 15px;
+  background: #EEE7D8;
+  border-radius: 14px;
+  border: 1.3px solid #DDD2B6;
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.25s ease;
+  color: var(--charcoal, #1A1A1A);
+}
+
+.redem-con .option-btn.active {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: white;
+  box-shadow: 0 6px 14px rgba(191,161,74,0.32);
+}
+
+/* Search button */
+.redem-con .search-btn {
+  width: 100%;
+  padding: 18px;
+  border: none;
+  border-radius: 16px;
+  margin-top: 24px;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.15rem;
+  letter-spacing: 1.1px;
+  font-weight: 500;
+  background: #D8C993;
+  cursor: not-allowed;
+  opacity: 0.7;
+  transition: all 0.3s;
+}
+
+.redem-con .search-btn:enabled {
+  background: linear-gradient(135deg, #BFA14A, #DCC990);
+  opacity: 1;
+  cursor: pointer;
+  box-shadow: 0 8px 20px rgba(191,161,74,0.33);
+}
+
+.redem-con .search-btn:enabled:hover {
+  transform: translateY(-3px);
+  background: linear-gradient(135deg, #D4B862, #E8D7A6);
+}
+
+/* Warning */
+.redem-con #searchWarning {
+  font-size: 0.85rem;
+  color: #A33;
+  margin-top: 6px;
+}
+
+/* Spinner overlay */
+.redem-con .spinner-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.55);
+  backdrop-filter: blur(6px);
+}
+
+.redem-con .gold-card {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  padding: 28px 36px;
+  background: var(--gold, #BFA14A);
+  border-radius: 14px;
+  color: white;
+  font-family: 'Cormorant Garamond', serif;
+  font-size: 1.2rem;
+  text-align: center;
+}
