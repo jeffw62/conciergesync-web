@@ -209,12 +209,9 @@
 }
 
 /* Hint line under the date buttons */
-.hint {
+.redem-con small.hint {
+  margin-top: 6px !important;   /* pull it closer to the buttons */
   display: block;
-  margin-top: 6px;     /* was ~12–16px depending on defaults → tighten it */
-  margin-bottom: 10px;
-  
-  font-size: 13px;
   color: rgba(255,255,255,0.78);
 }
 
