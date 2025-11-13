@@ -244,10 +244,12 @@
 }
 
 /* Warning --------------------------------------------------- */
-.redem-con #searchWarning {
-  font-size: 0.85rem;
-  color: rgba(255,255,255,0.70);
-  margin-top: 6px;
+.redem-con .step-warning {
+  display: block;
+  margin-top: 10px;
+  color: rgba(255,255,255,0.70);  /* elegant, non-intrusive */
+  font-size: 15px;
+  letter-spacing: 0.3px;
 }
 
 /* Spinner --------------------------------------------------- */
