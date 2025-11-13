@@ -208,9 +208,9 @@
   box-shadow: 0 6px 14px rgba(191,161,74,0.32);
 }
 
-.redem-con .hint {
-  margin-top: 6px !important;      /* pull it closer to the buttons above */
-  margin-bottom: 10px !important;  /* keep checkbox from rising */
+.redem-con small.hint {
+  margin-top: 6px !important;      /* pull closer to the buttons */
+  margin-bottom: 10px !important;  /* keep space above checkbox */
   display: block;
 }
 
