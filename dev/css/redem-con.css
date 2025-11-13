@@ -208,12 +208,6 @@
   box-shadow: 0 6px 14px rgba(191,161,74,0.32);
 }
 
-.redem-con small.hint {
-  margin-top: 6px !important;      /* pull closer to the buttons */
-  margin-bottom: 10px !important;  /* keep space above checkbox */
-  display: block;
-}
-
 /* Search Button -------------------------------------------- */
 .redem-con .search-btn {
   width: 100%;
@@ -273,4 +267,11 @@
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.2rem;
   text-align: center;
+}
+
+/* 🚨 Nuclear override for the date hint spacing */
+#searchPanel .step small.hint {
+  margin-top: 4px !important;
+  margin-bottom: 14px !important;
+  display: block !important;
 }
