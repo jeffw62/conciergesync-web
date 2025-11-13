@@ -32,19 +32,19 @@
 
 .module-title {
   position: absolute;
-  top: 24px;
+  top: 10px;     /* was 24px */
   left: 32px;
 
   font-family: "Cormorant Garamond", serif;
   font-weight: 500;
   font-size: 17px;
-  letter-spacing: 0.35px;
+  letter-spacing: 0.5px;
 
-  color: rgba(191,161,74,0.42);
-
+  color: rgba(191,161,74,0.55);
   pointer-events: none;
   user-select: none;
 }
+
 
 /* Typography ------------------------------------------------ */
 .redem-con h3 {
