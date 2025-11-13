@@ -298,3 +298,23 @@
   margin: 0 !important;
   padding: 0 !important;
 }
+
+/* Airline Program Row --------------------------------------------- */
+#searchPanel .program-row {
+  display: flex;
+  align-items: center;
+  gap: 14px; /* space between label + dropdown */
+  margin-top: 12px; /* keeps spacing consistent */
+}
+
+#searchPanel .program-row label {
+  margin: 0;
+  padding: 0;
+  font-weight: 600;
+}
+
+#searchPanel .program-row select {
+  height: 34px;          /* nicer sizing */
+  padding: 4px 8px;
+  border-radius: 6px;
+}
