@@ -281,3 +281,20 @@
   margin-top: 0 !important;    /* remove unwanted gap */
   line-height: 1.35 !important;
 }
+
+/* Horizontal alignment for checkbox + label */
+#searchPanel .checkbox-row {
+  display: flex !important;
+  align-items: center !important;
+  gap: 10px !important;   /* spacing between checkbox and text */
+  margin-top: -4px !important;  /* optional micro-adjust */
+}
+
+#searchPanel .checkbox-row input[type="checkbox"] {
+  margin: 0 !important;
+}
+
+#searchPanel .checkbox-row label {
+  margin: 0 !important;
+  padding: 0 !important;
+}
