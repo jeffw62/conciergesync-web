@@ -97,22 +97,30 @@ header nav a:hover {
 
 
 /* ============================================================
-   GOLD WORKSPACE FRAME (⭐ The big one ⭐)
+   GOLD CONSOLE FRAME (⭐ The big one ⭐)
    ============================================================ */
 
 #workspace {
   width: 100%;
   max-width: 1200px;
-  margin: 40px auto;
+  margin: 60px auto;
 
-  border: 3px solid #BFA14A;
-  border-radius: 18px;
-  padding: 40px;
+  /* 🖋️ The fine-line gold stroke */
+  border: 1.5px solid rgba(191,161,74,0.75);
+
+  /* Subtle curvature */
+  border-radius: 22px;
+
+  /* 🕊️ Featherlight calligraphy shadow */
+  box-shadow:
+    0 0 1px rgba(191,161,74,0.40),
+    0 0 18px rgba(191,161,74,0.18),
+    0 0 42px rgba(191,161,74,0.10);
+
+  /* Breathing room */
+  padding: 50px;
   background: transparent;
-
-  box-shadow: 0 0 24px rgba(191,161,74,0.20);
 }
-
 
 /* ============================================================
    CPM Ticker
