@@ -208,11 +208,10 @@
   box-shadow: 0 6px 14px rgba(191,161,74,0.32);
 }
 
-/* Hint line under the date buttons */
-.redem-con small.hint {
-  margin-top: 6px !important;   /* pull it closer to the buttons */
+.redem-con .hint {
+  margin-top: 6px !important;      /* pull it closer to the buttons above */
+  margin-bottom: 10px !important;  /* keep checkbox from rising */
   display: block;
-  color: rgba(255,255,255,0.78);
 }
 
 /* Search Button -------------------------------------------- */
