@@ -1,123 +1,189 @@
 <style>
+  @import url('https://rsms.me/inter/inter.css');
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap');
 
-  /* ========================
-     CORE BASELINE STYLES
-  ========================= */
-  body {
-    margin: 0;
-    padding: 0;
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-    background-color: #0a1a33;
-    color: #111;
+  :root {
+    --navy: #0A1A33;
+    --gold: #BFA14A;
+    --gold-light: #D6B658;
+    --gold-pale: #E0CF9F;
+    --cream: #FDFBF7;
+    --charcoal: #1A1A1A;
+    --glass: rgba(255,255,255,0.07);
+    --shadow-gold: rgba(191,161,74,0.25);
   }
 
+  * { box-sizing: border-box; }
+  body, html { margin: 0; padding: 0; }
+
   .search-wrapper {
-    max-width: 700px;
+    max-width: 780px;
     margin: 40px auto;
-    background: #fff;
-    border-radius: 10px;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
-    padding: 28px 32px 32px;
+    background: var(--cream);
+    border-radius: 24px;
+    padding: 48px 52px;
+    position: relative;
+    box-shadow:
+      0 20px 40px rgba(10,26,51,0.15),
+      0 0 0 1px rgba(191,161,74,0.08);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    animation: fadeInUp 0.8s ease-out;
+  }
+
+  .search-wrapper::before {
+    content: '';
+    position: absolute;
+    inset: 1px;
+    border-radius: 23px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
+    pointer-events: none;
+  }
+
+  h3 {
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 1.35rem;
+    margin: 32px 0 20px;
+    color: var(--charcoal);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    letter-spacing: 0.5px;
+  }
+
+  .step-num {
+    display: inline-flex;
+    width: 36px;
+    height: 36px;
+    background: var(--gold);
+    color: white;
+    border-radius: 50%;
+    font-weight: 600;
+    font-size: 0.95rem;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 3px 8px var(--shadow-gold);
+    flex-shrink: 0;
+  }
+
+  label {
+    font-weight: 500;
+    color: #555;
+    margin-bottom: 6px;
+    display: block;
   }
 
   .search-panel {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 32px;
+    gap: 40px;
     align-items: start;
+    position: relative;
+    z-index: 1;
   }
 
-  h3 {
-    font-size: 1.15rem;
-    font-weight: 600;
-    color: #bfa14a;
-    margin-top: 0;
-    margin-bottom: 12px;
+  @media (max-width: 760px) {
+    .search-panel { grid-template-columns: 1fr; }
+    .search-wrapper { padding: 36px 28px; margin: 40px 20px; }
   }
 
-  label {
-    display: block;
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
+  .field { position: relative; margin-bottom: 24px; }
 
-  input[type="text"],
-  input[type="number"],
-  input[type="date"],
-  select {
+  .field input,
+  .field select {
     width: 100%;
-    padding: 7px 9px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    font-size: 0.95rem;
-    color: #111;
+    padding: 16px 16px 14px;
+    border: 1.5px solid #ddd;
+    border-radius: 14px;
+    font-size: 1rem;
     background: #fff;
-    box-sizing: border-box;
+    transition: all 0.3s ease;
   }
 
-  /* Two-field row pairs */
-  .inline-fields {
-    display: flex;
-    justify-content: space-between;
-    gap: 14px;
-    margin-bottom: 10px;
+  .field input:focus,
+  .field select:focus {
+    outline: none;
+    border-color: var(--gold);
+    box-shadow:
+      0 0 0 4px rgba(191,161,74,0.15),
+      0 4px 12px rgba(191,161,74,0.1);
+    transform: translateY(-1px);
   }
 
-  .inline-fields .field {
-    flex: 1 1 48%;
-  }
+  .inline-fields { display: flex; gap: 18px; margin-bottom: 12px; }
+  .inline-fields .field { flex: 1; margin-bottom: 0; }
 
-  /* Exact / Flexible buttons */
   .card-options {
     display: flex;
-    justify-content: space-between;
-    gap: 14px;
-    margin-top: 6px;
-    margin-bottom: 10px;
+    gap: 16px;
+    margin: 24px 0;
   }
 
   .option-btn {
-    flex: 1 1 48%;
-    border: 1px solid #ccc;
-    border-radius: 6px;
-    padding: 10px;
-    background: #f7f7f7;
+    flex: 1;
+    padding: 16px;
+    border-radius: 16px;
+    background: #f8f6f2;
+    border: 1.5px solid #e0d9c9;
+    font-weight: 600;
     font-size: 0.95rem;
+    color: var(--charcoal);
     cursor: pointer;
-    transition: all 0.25s ease;
+    transition: all 0.35s ease;
   }
 
   .option-btn.active {
-    background: #bfa14a;
-    border-color: #bfa14a;
-    color: #fff;
+    background: var(--gold);
+    color: white;
+    border-color: var(--gold);
+    box-shadow: 0 8px 20px var(--shadow-gold);
   }
 
-  .option-btn:hover {
-    background: #d6b658;
-    color: #fff;
-    border-color: #d6b658;
+  .toggle-group {
+    display: flex;
+    gap: 8px;
+    margin-bottom: 16px;
+    background: #f0ebe2;
+    padding: 4px;
+    border-radius: 12px;
+    width: fit-content;
   }
 
-  /* Checkbox row */
+  .toggle-group button {
+    padding: 8px 18px;
+    border-radius: 10px;
+    background: transparent;
+    color: #666;
+    font-weight: 600;
+    font-size: 0.9rem;
+    border: none;
+    cursor: pointer;
+    transition: all 0.3s ease;
+  }
+
+  .toggle-group button.active {
+    background: var(--gold);
+    color: white;
+    box-shadow: 0 4px 10px var(--shadow-gold);
+  }
+
   .checkbox-row {
     display: flex;
     align-items: center;
-    gap: 8px;
-    margin-top: 4px;
-    margin-bottom: 8px;
+    gap: 10px;
+    margin: 12px 0;
   }
 
   .checkbox-row input[type="checkbox"] {
-    width: 18px;
-    height: 18px;
-    accent-color: #bfa14a;
+    width: 20px; height: 20px;
+    accent-color: var(--gold);
     cursor: pointer;
   }
 
   .checkbox-row label {
-    font-size: 0.9rem;
-    color: #111;
+    font-size: 0.95rem;
+    color: var(--charcoal);
     margin: 0;
     cursor: pointer;
   }
@@ -125,161 +191,108 @@
   small.hint {
     display: block;
     font-size: 0.85rem;
-    color: #333;
-    margin-top: 4px;
+    color: #666;
+    margin-top: 8px;
+    font-style: italic;
   }
 
-  /* Step 2 + Step 3 */
-  .toggle-group {
-    display: inline-flex;
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-
-  .toggle-group button {
-    padding: 6px 10px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    background: #f7f7f7;
-    cursor: pointer;
-    transition: 0.25s ease;
-  }
-
-  .toggle-group button.active,
-  .toggle-group button:hover {
-    background: #bfa14a;
-    color: #fff;
-    border-color: #bfa14a;
-  }
-
-  /* --- Search Button Styling --- */
   .search-btn {
     width: 100%;
-    background: #e0cf9f;       /* pale gold (disabled base) */
-    color: #fff;
+    padding: 18px;
+    margin-top: 32px;
+    border-radius: 16px;
+    font-family: 'Cormorant Garamond', serif;
+    font-weight: 500;
+    font-size: 1.1rem;
+    letter-spacing: 1.2px;
+    text-transform: uppercase;
+    transition: all 0.4s ease;
+    background: #e0cf9f;
+    color: white;
     border: none;
-    border-radius: 6px;
-    padding: 12px;
-    font-size: 1rem;
     cursor: not-allowed;
     opacity: 0.7;
-    transition: all 0.25s ease;
   }
-  
-  /* --- Active / Hover / Enabled --- */
+
   .search-btn:enabled {
+    background: linear-gradient(135deg, #BFA14A, #D4C07A);
+    box-shadow: 0 8px 20px rgba(191,161,74,0.3);
     cursor: pointer;
-    background: #bfa14a;       /* strong gold */
-    box-shadow: 0 0 8px rgba(191,161,74,0.4);
     opacity: 1;
-    transition: background-color 0.25s ease, opacity 0.25s ease;
   }
 
   .search-btn:enabled:hover {
-    background: #c8ad54; /* lighter hover gold */
-    box-shadow: 0 0 12px rgba(191,161,74,0.6);
-  }
-  
-  /* optional hover pop */
-  .search-btn:enabled:hover {
-    background: #d6b658;       /* slightly brighter on hover */
+    background: linear-gradient(135deg, #D6B658, #E0CF9F);
+    transform: translateY(-3px);
+    box-shadow: 0 12px 28px rgba(191,161,74,0.35);
   }
 
   #searchWarning {
     font-size: 0.85rem;
     color: #a00;
-    margin-top: 6px;
+    margin-top: 8px;
   }
 
-  /* Responsive collapse */
-  @media (max-width: 760px) {
-    .search-panel {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  .suggestions {
-    position: absolute;
-    background: #fff;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    max-height: 140px;
-    overflow-y: auto;
-    font-size: 0.9rem;
-    margin-top: 2px;
-    z-index: 100;
-  }
-  .suggestions div {
-    padding: 6px 8px;
-    cursor: pointer;
-  }
-  .suggestions div:hover {
-    background: #f5f5f5;
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
   }
 </style>
 
 <div class="search-wrapper">
   <div class="search-panel" id="searchPanel">
-      
+
     <!-- STEP 1 -->
     <div class="step">
-      <h3>Step 1:&nbsp;Enter Origin & Destination</h3>
+      <h3><span class="step-num">1</span> Origin & Destination</h3>
 
-      <!-- Origin / Destination -->
       <div class="inline-fields">
         <div class="field">
-          <label for="origin">Origin</label>
-          <input type="text" id="origin" data-iata placeholder="e.g. DFW" />
-          <div id="origin-suggestions" class="suggestions"></div>
+          <input type="text" id="origin" data-iata placeholder=" " />
+          <label for="origin">Origin (e.g. DFW)</label>
         </div>
         <div class="field">
-          <label for="destination">Destination</label>
-          <input type="text" id="destination" data-iata placeholder="e.g. LHR" />
-          <div id="destination-suggestions" class="suggestions"></div>
+          <input type="text" id="destination" data-iata placeholder=" " />
+          <label for="destination">Destination (e.g. LHR)</label>
         </div>
       </div>
-        
 
-      <!-- Passengers / Service Class -->
       <div class="inline-fields">
         <div class="field">
+          <input type="number" id="passengers" min="1" value="1" placeholder=" " />
           <label for="passengers">Passengers</label>
-          <input type="number" id="passengers" min="1" value="1" />
         </div>
         <div class="field">
-          <label for="cabin">Service Class</label>
           <select id="cabin">
+            <option value="" disabled selected></option>
             <option value="Economy">Economy</option>
             <option value="Premium Economy">Premium Economy</option>
             <option value="Business">Business</option>
             <option value="First">First</option>
           </select>
+          <label for="cabin">Service Class</label>
         </div>
       </div>
 
-      <!-- Departure / Return Date -->
       <div class="inline-fields">
         <div class="field">
+          <input type="date" id="departDate" placeholder=" " />
           <label for="departDate">Departure Date</label>
-          <input type="date" id="departDate" />
         </div>
         <div class="field">
-          <label for="returnDate">Return Date</label>
-          <input type="date" id="returnDate" />
+          <input type="date" id="returnDate" placeholder=" " />
+          <label for="returnDate">Return Date (Optional)</label>
         </div>
       </div>
 
-      <!-- Exact / Flexible -->
       <div class="card-options">
         <button class="option-btn active" id="exactBtn">Exact Date</button>
-        <button class="option-btn" id="flexBtn">Flexible +/- Days</button>
+        <button class="option-btn" id="flexBtn">Flexible ± Days</button>
       </div>
-      <div id="flexPicker" class="flex-picker" style="display:none;">
 
-        <!-- 🔒 Hidden field to track mode -->
+      <div id="flexPicker" style="display:none;">
         <input type="hidden" id="mode" value="exact">
-      
-        <label for="flexDays">Search Days +/- Date Selected:</label>
+        <label for="flexDays">Search within ± days:</label>
         <select id="flexDays">
           <option value="1">1 day</option>
           <option value="3">3 days</option>
@@ -288,19 +301,17 @@
           <option value="14">14 days</option>
         </select>
       </div>
-      
+
       <small class="hint">
-        Select “Exact Date” to search only that day, or “Flexible” to include a +/- 14-day window.
+        Select “Exact Date” to search only that day, or “Flexible” to include a ±14-day window.
       </small>
 
-      <!-- Checkbox -->
       <div class="checkbox-row">
         <input type="checkbox" id="partnerSpace" />
         <label for="partnerSpace">Include partner award space</label>
       </div>
 
-      <!-- Airline Program (moved here) -->
-      <label for="program">Airline Program:</label>
+      <label for="program">Airline Program</label>
       <select id="program">
         <option value="">All Programs</option>
         <option value="american">American Airlines</option>
@@ -325,53 +336,45 @@
 
     <!-- STEP 2 -->
     <div class="step routing">
-      <h3>Step 2:&nbsp;Routing Preferences</h3>
+      <h3><span class="step-num">2</span> Routing Preferences</h3>
 
       <label>Direct Non-stop</label>
       <div class="toggle-group" id="directStop">
         <button data-val="yes">Yes</button>
-        <button data-val="no">No</button>
+        <button data-val="no" class="active">No</button>
       </div>
 
       <label>Multiple Connections</label>
       <div class="toggle-group" id="multiConn">
         <button data-val="yes">Yes</button>
-        <button data-val="no">No</button>
+        <button data-val="no" class="active">No</button>
       </div>
 
       <label>Positioning Flight Allowed</label>
       <div class="toggle-group" id="posFlight">
         <button data-val="yes">Yes</button>
-        <button data-val="no">No</button>
+        <button data-val="no" class="active">No</button>
       </div>
 
-      <!-- Budget Airlines Selector -->
       <label for="budgetAirlines">Budget Airlines</label>
       <select id="budgetAirlines">
-        <option value="">Include All</option>
-        <option value="exclude">Exclude Budget Airlines</option>
-        <option value="only">Show Budget Airlines Only</option>
+        <option value="include">Include All</option>
+        <option value="exclude">Exclude Budget Carriers</option>
+        <option value="only">Show Only Budget Carriers</option>
       </select>
-      <small class="hint">Covers carriers such as Spirit, Frontier, Ryanair, and Wizz Air.</small>
+      <small class="hint">
+        Covers carriers such as Spirit, Frontier, Ryanair, and Wizz Air.
+      </small>
 
-      <!-- STEP 3 -->
-      <h3 style="margin-top: 20px;">Step 3:&nbsp;Search</h3>
-      
-      <form id="cs-redem-form">
-        <button id="searchBtn" class="search-btn" type="submit" disabled>Search</button>
-      </form>
-      
+      <h3 style="margin-top: 32px;"><span class="step-num">3</span> Search</h3>
+      <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
       <p id="searchWarning" style="display: block;">Complete Step 2 to continue.</p>
     </div>
   </div>
 </div>
 
-<!-- ConciergeSync™ Spinner Bridge -->
 <div id="spinner-overlay" class="spinner-overlay">
   <div class="gold-card">
     <p>Your personalized ConciergeSync™ results...</p>
   </div>
 </div>
-
-<!-- === End of Redemption Module === -->
-<script src="/dev/js/redem-con.js?v=2025.11.06"></script>
