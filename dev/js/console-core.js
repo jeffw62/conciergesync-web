@@ -158,6 +158,20 @@
       "hints-con": "/dev/hints-con.html"
     };
 
+    // --- Load CSS with cache-bust (ensures fresh render per module) ---
+    function loadCSS(href) {
+      // remove existing instance to avoid duplicates
+      const existing = [...document.querySelectorAll("link")].find(l =>
+        l.href.includes("redem-con.css")
+      );
+      if (existing) existing.remove();
+    
+      const link = document.createElement("link");
+      link.rel = "stylesheet";
+      link.href = href + "?_t=" + Date.now();
+      document.head.appendChild(link);
+    }
+
     window.loadPage = async function (page) {
       if (!page) return console.warn("⚠️ loadPage called without target page");
       const path = routes[page];
@@ -173,6 +187,11 @@
 
         workspace.style.transition = "opacity 0.3s ease";
         workspace.style.opacity = "0.25";
+
+        // --- Load CSS for redemption console BEFORE fetching HTML ---
+        if (page === "redem-con") {
+            loadCSS("/dev/css/redem-con.css");
+        }
 
         const res = await fetch(path, { cache: "no-store" });
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
