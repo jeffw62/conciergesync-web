@@ -1,245 +1,5 @@
-<style>
-  @import url('https://rsms.me/inter/inter.css');
-  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&display=swap');
+<div class="redem-con">
 
-  :root {
-    --navy: #0A1A33;
-    --gold: #BFA14A;
-    --gold-light: #D6B658;
-    --gold-pale: #E0CF9F;
-    --cream: #FDFBF7;
-    --charcoal: #1A1A1A;
-    --glass: rgba(255,255,255,0.07);
-    --shadow-gold: rgba(191,161,74,0.25);
-  }
-
-  * { box-sizing: border-box; }
-  body, html { margin: 0; padding: 0; }
-
-  .search-wrapper {
-    max-width: 780px;
-    margin: 40px auto;
-    background: var(--cream);
-    border-radius: 24px;
-    padding: 48px 52px;
-    position: relative;
-    box-shadow:
-      0 20px 40px rgba(10,26,51,0.15),
-      0 0 0 1px rgba(191,161,74,0.08);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    animation: fadeInUp 0.8s ease-out;
-  }
-
-  .search-wrapper::before {
-    content: '';
-    position: absolute;
-    inset: 1px;
-    border-radius: 23px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.1), rgba(255,255,255,0.03));
-    pointer-events: none;
-  }
-
-  h3 {
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 500;
-    font-size: 1.35rem;
-    margin: 32px 0 20px;
-    color: var(--charcoal);
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    letter-spacing: 0.5px;
-  }
-
-  .step-num {
-    display: inline-flex;
-    width: 36px;
-    height: 36px;
-    background: var(--gold);
-    color: white;
-    border-radius: 50%;
-    font-weight: 600;
-    font-size: 0.95rem;
-    align-items: center;
-    justify-content: center;
-    box-shadow: 0 3px 8px var(--shadow-gold);
-    flex-shrink: 0;
-  }
-
-  label {
-    font-weight: 500;
-    color: #555;
-    margin-bottom: 6px;
-    display: block;
-  }
-
-  .search-panel {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 40px;
-    align-items: start;
-    position: relative;
-    z-index: 1;
-  }
-
-  @media (max-width: 760px) {
-    .search-panel { grid-template-columns: 1fr; }
-    .search-wrapper { padding: 36px 28px; margin: 40px 20px; }
-  }
-
-  .field { position: relative; margin-bottom: 24px; }
-
-  .field input,
-  .field select {
-    width: 100%;
-    padding: 16px 16px 14px;
-    border: 1.5px solid #ddd;
-    border-radius: 14px;
-    font-size: 1rem;
-    background: #fff;
-    transition: all 0.3s ease;
-  }
-
-  .field input:focus,
-  .field select:focus {
-    outline: none;
-    border-color: var(--gold);
-    box-shadow:
-      0 0 0 4px rgba(191,161,74,0.15),
-      0 4px 12px rgba(191,161,74,0.1);
-    transform: translateY(-1px);
-  }
-
-  .inline-fields { display: flex; gap: 18px; margin-bottom: 12px; }
-  .inline-fields .field { flex: 1; margin-bottom: 0; }
-
-  .card-options {
-    display: flex;
-    gap: 16px;
-    margin: 24px 0;
-  }
-
-  .option-btn {
-    flex: 1;
-    padding: 16px;
-    border-radius: 16px;
-    background: #f8f6f2;
-    border: 1.5px solid #e0d9c9;
-    font-weight: 600;
-    font-size: 0.95rem;
-    color: var(--charcoal);
-    cursor: pointer;
-    transition: all 0.35s ease;
-  }
-
-  .option-btn.active {
-    background: var(--gold);
-    color: white;
-    border-color: var(--gold);
-    box-shadow: 0 8px 20px var(--shadow-gold);
-  }
-
-  .toggle-group {
-    display: flex;
-    gap: 8px;
-    margin-bottom: 16px;
-    background: #f0ebe2;
-    padding: 4px;
-    border-radius: 12px;
-    width: fit-content;
-  }
-
-  .toggle-group button {
-    padding: 8px 18px;
-    border-radius: 10px;
-    background: transparent;
-    color: #666;
-    font-weight: 600;
-    font-size: 0.9rem;
-    border: none;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .toggle-group button.active {
-    background: var(--gold);
-    color: white;
-    box-shadow: 0 4px 10px var(--shadow-gold);
-  }
-
-  .checkbox-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    margin: 12px 0;
-  }
-
-  .checkbox-row input[type="checkbox"] {
-    width: 20px; height: 20px;
-    accent-color: var(--gold);
-    cursor: pointer;
-  }
-
-  .checkbox-row label {
-    font-size: 0.95rem;
-    color: var(--charcoal);
-    margin: 0;
-    cursor: pointer;
-  }
-
-  small.hint {
-    display: block;
-    font-size: 0.85rem;
-    color: #666;
-    margin-top: 8px;
-    font-style: italic;
-  }
-
-  .search-btn {
-    width: 100%;
-    padding: 18px;
-    margin-top: 32px;
-    border-radius: 16px;
-    font-family: 'Cormorant Garamond', serif;
-    font-weight: 500;
-    font-size: 1.1rem;
-    letter-spacing: 1.2px;
-    text-transform: uppercase;
-    transition: all 0.4s ease;
-    background: #e0cf9f;
-    color: white;
-    border: none;
-    cursor: not-allowed;
-    opacity: 0.7;
-  }
-
-  .search-btn:enabled {
-    background: linear-gradient(135deg, #BFA14A, #D4C07A);
-    box-shadow: 0 8px 20px rgba(191,161,74,0.3);
-    cursor: pointer;
-    opacity: 1;
-  }
-
-  .search-btn:enabled:hover {
-    background: linear-gradient(135deg, #D6B658, #E0CF9F);
-    transform: translateY(-3px);
-    box-shadow: 0 12px 28px rgba(191,161,74,0.35);
-  }
-
-  #searchWarning {
-    font-size: 0.85rem;
-    color: #a00;
-    margin-top: 8px;
-  }
-
-  @keyframes fadeInUp {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-</style>
-
-<div class="search-wrapper">
   <div class="search-panel" id="searchPanel">
 
     <!-- STEP 1 -->
@@ -248,40 +8,40 @@
 
       <div class="inline-fields">
         <div class="field">
-          <input type="text" id="origin" data-iata placeholder=" " />
           <label for="origin">Origin (e.g. DFW)</label>
+          <input type="text" id="origin" data-iata />
         </div>
         <div class="field">
-          <input type="text" id="destination" data-iata placeholder=" " />
           <label for="destination">Destination (e.g. LHR)</label>
+          <input type="text" id="destination" data-iata />
         </div>
       </div>
 
       <div class="inline-fields">
         <div class="field">
-          <input type="number" id="passengers" min="1" value="1" placeholder=" " />
           <label for="passengers">Passengers</label>
+          <input type="number" id="passengers" min="1" value="1" />
         </div>
         <div class="field">
+          <label for="cabin">Service Class</label>
           <select id="cabin">
-            <option value="" disabled selected></option>
+            <option value=""></option>
             <option value="Economy">Economy</option>
             <option value="Premium Economy">Premium Economy</option>
             <option value="Business">Business</option>
             <option value="First">First</option>
           </select>
-          <label for="cabin">Service Class</label>
         </div>
       </div>
 
       <div class="inline-fields">
         <div class="field">
-          <input type="date" id="departDate" placeholder=" " />
           <label for="departDate">Departure Date</label>
+          <input type="date" id="departDate" />
         </div>
         <div class="field">
-          <input type="date" id="returnDate" placeholder=" " />
           <label for="returnDate">Return Date (Optional)</label>
+          <input type="date" id="returnDate" />
         </div>
       </div>
 
@@ -302,9 +62,7 @@
         </select>
       </div>
 
-      <small class="hint">
-        Select “Exact Date” to search only that day, or “Flexible” to include a ±14-day window.
-      </small>
+      <small class="hint">Select “Exact Date” or “Flexible” ±14 days.</small>
 
       <div class="checkbox-row">
         <input type="checkbox" id="partnerSpace" />
@@ -362,19 +120,21 @@
         <option value="exclude">Exclude Budget Carriers</option>
         <option value="only">Show Only Budget Carriers</option>
       </select>
-      <small class="hint">
-        Covers carriers such as Spirit, Frontier, Ryanair, and Wizz Air.
-      </small>
 
-      <h3 style="margin-top: 32px;"><span class="step-num">3</span> Search</h3>
+      <small class="hint">Covers Spirit, Frontier, Ryanair, Wizz Air.</small>
+
+      <h3 style="margin-top: 28px;"><span class="step-num">3</span> Search</h3>
+
       <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
-      <p id="searchWarning" style="display: block;">Complete Step 2 to continue.</p>
+      <p id="searchWarning">Complete Step 2 to continue.</p>
+    </div>
+
+  </div>
+
+  <div id="spinner-overlay" class="spinner-overlay">
+    <div class="gold-card">
+      <p>Your personalized ConciergeSync™ results...</p>
     </div>
   </div>
-</div>
 
-<div id="spinner-overlay" class="spinner-overlay">
-  <div class="gold-card">
-    <p>Your personalized ConciergeSync™ results...</p>
-  </div>
 </div>
