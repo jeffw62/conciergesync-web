@@ -269,12 +269,15 @@
   text-align: center;
 }
 
-/* 🧨 MOAB Override — force hint line spacing */
-#searchPanel .step > small.hint {
-  margin-top: 2px !important;       /* always closer to Exact Date buttons */
-  margin-bottom: 16px !important;   /* always pushing the checkbox downward */
-  line-height: 1.35 !important;
+/* 🧨 MOAB v2 — precise placement of hint line */
+#searchPanel .step small.hint {
   display: block !important;
   position: relative !important;
-  top: -4px !important;             /* direct lift upward */
+
+  /* Adjust these two to place it EXACTLY */
+  top: -10px !important;        /* lift upward more */
+  margin-bottom: 22px !important; /* push checkbox downward */
+
+  margin-top: 0 !important;    /* remove unwanted gap */
+  line-height: 1.35 !important;
 }
