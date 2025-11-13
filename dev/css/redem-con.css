@@ -22,6 +22,30 @@
   box-shadow: 0 0 18px rgba(191,161,74,0.15);
 }
 
+/* ===========================================================
+   Module Title
+   =========================================================== */
+
+.redem-con {
+  position: relative;
+}
+
+.module-title {
+  position: absolute;
+  top: 24px;
+  left: 32px;
+
+  font-family: "Cormorant Garamond", serif;
+  font-weight: 500;
+  font-size: 17px;
+  letter-spacing: 0.35px;
+
+  color: rgba(191,161,74,0.42);
+
+  pointer-events: none;
+  user-select: none;
+}
+
 /* Typography ------------------------------------------------ */
 .redem-con h3 {
   font-family: 'Cormorant Garamond', serif;
