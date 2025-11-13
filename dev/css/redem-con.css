@@ -28,22 +28,21 @@
 
 .module-title {
   position: absolute;
-
-  /* Move it right so it aligns with the left column, not the dot */
-  left: 48px;   /* adjust as needed (44–52px range typically perfect) */
-
-  /* Move it UP so it sits just under the gold frame */
-  top: 10px;    /* was 24px — now much closer to the frame */
-
+  top: -6px;       /* fine-tuned earlier */
+  left: 32px;
   font-family: "Cormorant Garamond", serif;
-  font-weight: 500;
   font-size: 17px;
-  letter-spacing: 0.5px;
-
-  color: rgba(191,161,74,0.50);
-
+  font-weight: 500;
+  letter-spacing: 1px;              /* ← refined spacing */
+  color: rgba(191,161,74,0.48);      /* soft gold */
+  transition: color 0.45s ease;      /* match border glow timing */
   pointer-events: none;
   user-select: none;
+}
+
+/* When frame glows */
+#workspace:hover .module-title {
+  color: rgba(191,161,74,0.72);      /* just slightly brighter */
 }
 
 /* Typography ------------------------------------------------ */
