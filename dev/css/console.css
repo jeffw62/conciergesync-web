@@ -97,44 +97,37 @@ header nav a:hover {
 
 
 /* ------------------------------------------------------------- */
-/*   GOLD CONSOLE FRAME — Monte Blanc Signature Edition           */
+/*   GOLD CONSOLE FRAME — Monte Blanc Signature Edition          */
 /* ------------------------------------------------------------- */
 
 #workspace {
   width: 100%;
   max-width: 1200px;
-  margin: 70px auto;                 /* more breathing above */
-  padding: 58px;                     /* refined interior spacing */
+  margin: 60px auto;
 
-  /* 🖋️ Ultra-fine real-gold stroke with light falloff */
-  border: 1px solid transparent;
-  border-radius: 24px;
+  /* 🖋️ Ultra-fine Monte Blanc stroke */
+  border: 1px solid rgba(191,161,74,0.70);
 
-  background:
-    linear-gradient(#0a1a33, #0a1a33) padding-box,
-    linear-gradient(
-      140deg,
-      rgba(255, 240, 180, 0.22) 0%,      /* faint highlight */
-      rgba(191,161,74,0.80) 40%,         /* gold core */
-      rgba(130,106,40,0.55) 100%         /* deeper falloff */
-    ) border-box;
+  border-radius: 22px;
 
-  /* 🕊️ Feather-light radiance */
+  /* 🕊️ Subtle, feather-light radiance */
   box-shadow:
-    0 0 1px rgba(191,161,74,0.40),
-    0 0 18px rgba(191,161,74,0.12),
-    0 0 42px rgba(191,161,74,0.08);
+    0 0 1px rgba(191,161,74,0.45),
+    0 0 16px rgba(191,161,74,0.14),
+    0 0 36px rgba(191,161,74,0.08);
 
-  transition: box-shadow 0.45s ease, filter 0.45s ease;
+  padding: 50px;
+  background: transparent;
+
+  transition: box-shadow 0.45s ease, border-color 0.45s ease;
 }
 
-/* ✨ Bloom on cursor presence */
 #workspace:hover {
-  filter: brightness(1.06);
+  border-color: rgba(191,161,74,0.90);
   box-shadow:
     0 0 2px rgba(191,161,74,0.55),
-    0 0 26px rgba(191,161,74,0.20),
-    0 0 58px rgba(191,161,74,0.10);
+    0 0 22px rgba(191,161,74,0.22),
+    0 0 48px rgba(191,161,74,0.12);
 }
 
 /* ============================================================
