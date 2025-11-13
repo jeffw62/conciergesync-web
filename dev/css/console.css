@@ -105,21 +105,29 @@ header nav a:hover {
   max-width: 1200px;
   margin: 60px auto;
 
-  /* 🖋️ The fine-line gold stroke */
-  border: 1.5px solid rgba(191,161,74,0.75);
+  /* 🖋️ Ultra-fine Monte Blanc stroke */
+  border: 1px solid rgba(191,161,74,0.70);
 
-  /* Subtle curvature */
   border-radius: 22px;
 
-  /* 🕊️ Featherlight calligraphy shadow */
+  /* 🕊️ Subtle, feather-light radiance */
   box-shadow:
-    0 0 1px rgba(191,161,74,0.40),
-    0 0 18px rgba(191,161,74,0.18),
-    0 0 42px rgba(191,161,74,0.10);
+    0 0 1px rgba(191,161,74,0.45),
+    0 0 16px rgba(191,161,74,0.14),
+    0 0 36px rgba(191,161,74,0.08);
 
-  /* Breathing room */
   padding: 50px;
   background: transparent;
+
+  transition: box-shadow 0.45s ease, border-color 0.45s ease;
+}
+
+#workspace:hover {
+  border-color: rgba(191,161,74,0.90);
+  box-shadow:
+    0 0 2px rgba(191,161,74,0.55),
+    0 0 22px rgba(191,161,74,0.22),
+    0 0 48px rgba(191,161,74,0.12);
 }
 
 /* ============================================================
