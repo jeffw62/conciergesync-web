@@ -1,1 +1,286 @@
-placeholder
+/* ============================================================
+   ConciergeSync™ — Console Chrome Stylesheet
+   Defines the visual frame, header, nav, workspace & overlays
+   ============================================================ */
+
+/* --- Global Layout --- */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  background: linear-gradient(180deg, #0a1a33 0%, #121a27 100%);
+  color: #fff;
+}
+
+
+/* ============================================================
+   HEADER + NAV
+   ============================================================ */
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: #0a1a33;
+  color: #fff;
+  padding: 10px 40px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.4);
+}
+
+header .logo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+header .logo img {
+  height: 40px;
+  width: auto;
+  object-fit: contain;
+}
+
+header nav {
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  margin-left: auto;
+}
+
+header nav a {
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: opacity 0.2s ease;
+}
+
+header nav a:hover {
+  opacity: 0.75;
+}
+
+@media (max-width: 768px) {
+  header .logo img {
+    height: 32px;
+    max-width: 140px;
+  }
+}
+
+
+/* ============================================================
+   CONSOLE CONTAINER (Shell)
+   ============================================================ */
+
+.console-container {
+  position: relative;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  isolation: isolate;
+
+  display: flex;
+  flex-direction: column;
+
+  animation: fadeIn 0.6s ease;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+
+/* ============================================================
+   GOLD WORKSPACE FRAME (⭐ The big one ⭐)
+   ============================================================ */
+
+#workspace {
+  width: 100%;
+  max-width: 1200px;
+  margin: 40px auto;
+
+  border: 3px solid #BFA14A;
+  border-radius: 18px;
+  padding: 40px;
+  background: transparent;
+
+  box-shadow: 0 0 24px rgba(191,161,74,0.20);
+}
+
+
+/* ============================================================
+   CPM Ticker
+   ============================================================ */
+
+.ticker-bar {
+  background: rgba(0,0,0,0.25);
+  color: #fff;
+  font-size: 1rem;
+  letter-spacing: 0.5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 0;
+  border-top: 1px solid rgba(255,255,255,0.1);
+  border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.ticker-bar .label {
+  color: #bfa14a;
+  font-weight: 600;
+}
+
+#tickerValue { 
+  font-weight: 700; 
+  font-size: 1.1rem; 
+}
+
+#tickerTrend.good { color: #3ad97f; }
+#tickerTrend.bad  { color: #ff6060; }
+
+
+/* ============================================================
+   NAV LINK CLUSTER (Top Right)
+   ============================================================ */
+
+.console-nav {
+  display: flex;
+  gap: 28px;
+}
+
+.console-nav .nav-link {
+  color: rgba(212, 212, 212, 0.65);
+  text-decoration: none;
+  font-size: 0.95rem;
+  letter-spacing: 0.4px;
+  transition: all 0.25s ease;
+  padding: 6px 8px;
+  border-radius: 4px;
+  transform: translateY(0);
+}
+
+.console-nav .nav-link:hover {
+  color: #fff;
+  background: rgba(212,175,55,0.1);
+  box-shadow: 0 0 8px rgba(212,175,55,0.2) inset;
+  transform: translateY(-1px);
+}
+
+.console-nav .nav-link.secondary {
+  color: rgba(212,212,212,0.7);
+  font-size: 0.9rem;
+}
+
+.console-nav .nav-link.secondary:hover {
+  color: #fff;
+  background: rgba(255,255,255,0.06);
+}
+
+
+/* ============================================================
+   ACCOUNT DROPDOWN
+   ============================================================ */
+
+.account-menu { position: relative; }
+
+.profile-btn {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+}
+
+.profile-btn i {
+  font-size: 1.3rem;
+  color: rgba(212,212,212,0.65);
+  transition: 0.25s ease;
+}
+
+.profile-btn:hover i {
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.account-dropdown {
+  display: none;
+  position: absolute;
+  right: 0;
+  top: 110%;
+  background: rgba(10,18,36,0.98);
+  border: 1px solid rgba(191,161,74,0.4);
+  border-radius: 8px;
+  min-width: 160px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.4);
+  z-index: 999;
+}
+
+.account-dropdown a {
+  display: block;
+  color: #d4d4d4;
+  text-decoration: none;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  transition: 0.2s ease;
+}
+
+.account-dropdown a:hover {
+  color: #fff;
+  background: rgba(212,175,55,0.1);
+}
+
+.account-menu.active .account-dropdown {
+  display: block;
+}
+
+
+/* ============================================================
+   FONT AWESOME FIX
+   ============================================================ */
+
+.fa, .fa-solid, .fa-regular, .fa-brands,
+i.fa, i.fa-solid, i.fa-regular, i.fa-brands,
+button.profile-btn > i {
+  font-family: "Font Awesome 6 Free" !important;
+  font-weight: 900 !important;
+  -webkit-font-smoothing: antialiased;
+}
+
+
+/* ============================================================
+   WALLET OVERLAY LOADER
+   ============================================================ */
+
+.wallet-loader-overlay {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(10, 20, 40, 0.85);
+  backdrop-filter: blur(4px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+  z-index: 9999;
+  opacity: 1;
+  transition: opacity 0.4s ease;
+}
+
+.wallet-loader-overlay p {
+  font-size: 1rem;
+  font-weight: 500;
+  letter-spacing: 0.3px;
+  opacity: 0.9;
+}
+
+
