@@ -118,14 +118,14 @@
         <button data-val="no" class="active">No</button>
       </div>
 
-      <label for="budgetAirlines">Budget Airlines</label>
-      <select id="budgetAirlines">
-        <option value="include">Include All</option>
-        <option value="exclude">Exclude Budget Carriers</option>
-        <option value="only">Show Only Budget Carriers</option>
-      </select>
-
-      <small class="hint">Covers Spirit, Frontier, Ryanair, Wizz Air.</small>
+      <div class="checkbox-row">
+        <input type="checkbox" id="allowBudget" />
+        <label for="allowBudget">Include budget airlines</label>
+      </div>
+      
+      <small class="budget-note">
+        Covers Spirit, Frontier, Ryanair, Wizz Air.
+      </small>
 
       <h3 style="margin-top: 28px;"><span class="step-num">3</span> Search</h3>
 
