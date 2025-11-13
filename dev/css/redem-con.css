@@ -45,9 +45,9 @@
   color: rgba(191,161,74,0.72);      /* just slightly brighter */
 }
 
-/* ------------------------------------- */
-/*  Checkbox (Include partner award)     */
-/* ------------------------------------- */
+//* ===========================================================
+   Checkbox (Include partner award)
+   =========================================================== */
 
 .checkbox-row {
   display: flex;
@@ -206,6 +206,16 @@
   border-color: #BFA14A;
   color: white;
   box-shadow: 0 6px 14px rgba(191,161,74,0.32);
+}
+
+/* Hint line under the date buttons */
+.hint {
+  display: block;
+  margin-top: 6px;     /* was ~12–16px depending on defaults → tighten it */
+  margin-bottom: 10px;
+  
+  font-size: 13px;
+  color: rgba(255,255,255,0.78);
 }
 
 /* Search Button -------------------------------------------- */
