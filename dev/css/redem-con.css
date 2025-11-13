@@ -28,7 +28,7 @@
 
 .module-title {
   position: absolute;
-  top: -6px;       /* fine-tuned earlier */
+  top: 10px;
   left: 32px;
   font-family: "Cormorant Garamond", serif;
   font-size: 17px;
