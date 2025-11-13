@@ -1,5 +1,5 @@
 /* ===========================================================
-   ConciergeSync™ Redemption Console — Full-Bleed (Option B)
+   ConciergeSync™ Redemption Console — Option A (3px Gold Frame)
    CCT: Clarity • Clean • True
    =========================================================== */
 
@@ -7,28 +7,39 @@
   width: 100%;
   padding: 40px 52px;
   box-sizing: border-box;
-  background: var(--cream, #FDFBF7);
-  font-family: "Inter", sans-serif;
-  color: #1A1A1A;
+
+  /* 🍾 NEW: 3px luxury gold frame around the workspace */
+  border: 3px solid #BFA14A;
+  border-radius: 16px;
+
+  /* Let the navy console show through */
+  background: transparent;
+
+  /* Breathing space inside the frame */
+  margin: 20px auto;
+
+  /* Subtle depth—luxury, not loud */
+  box-shadow: 0 0 18px rgba(191,161,74,0.15);
 }
 
-/* Typography */
+/* Typography ------------------------------------------------ */
 .redem-con h3 {
   font-family: 'Cormorant Garamond', serif;
   font-size: 1.45rem;
   font-weight: 500;
   letter-spacing: 0.4px;
-  margin: 28px 0 22px;
+  margin: 32px 0 26px;
   display: flex;
   align-items: center;
   gap: 10px;
+  color: #F4F2EC; /* Soft cream for contrast on navy */
 }
 
 .redem-con .step-num {
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: var(--gold, #BFA14A);
+  background: #BFA14A;
   color: #fff;
   font-size: 0.9rem;
   display: flex;
@@ -38,7 +49,7 @@
   box-shadow: 0 2px 6px rgba(191,161,74,0.28);
 }
 
-/* Layout */
+/* Layout ---------------------------------------------------- */
 .redem-con .search-panel {
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -46,15 +57,19 @@
 }
 
 @media (max-width: 820px) {
-  .redem-con .search-panel {
-    grid-template-columns: 1fr;
-  }
-  .redem-con {
-    padding: 28px 24px;
-  }
+  .redem-con .search-panel { grid-template-columns: 1fr; }
+  .redem-con { padding: 28px 24px; }
 }
 
-/* Fields */
+/* Fields ---------------------------------------------------- */
+.redem-con label {
+  margin-bottom: 6px;
+  display: block;
+  color: #E8E4D8;
+  font-weight: 500;
+  font-size: 0.95rem;
+}
+
 .redem-con .field {
   position: relative;
   margin-bottom: 26px;
@@ -64,37 +79,23 @@
 .redem-con .field select {
   width: 100%;
   padding: 16px 15px 14px;
-  border: 1.4px solid #DDD;
-  border-radius: 12px;
+  border: 1.4px solid rgba(255,255,255,0.28);
+  border-radius: 10px;
   font-size: 1rem;
   transition: all 0.25s ease;
-  background: #fff;
+  background: rgba(255,255,255,0.07);
+  color: #fff;
+  backdrop-filter: blur(4px);
 }
 
 .redem-con .field input:focus,
 .redem-con .field select:focus {
-  border-color: var(--gold, #BFA14A);
-  box-shadow: 0 0 0 4px rgba(191,161,74,0.18);
+  border-color: #BFA14A;
+  box-shadow: 0 0 0 3px rgba(191,161,74,0.25);
+  background: rgba(255,255,255,0.14);
 }
 
-/* Labels */
-.redem-con label {
-  margin-bottom: 6px;
-  display: block;
-  color: #444;
-  font-weight: 500;
-  font-size: 0.95rem;
-}
-
-.redem-con small.hint {
-  display: block;
-  margin-top: 6px;
-  font-size: 0.82rem;
-  color: #666;
-  font-style: italic;
-}
-
-/* Inline fields */
+/* Inline fields -------------------------------------------- */
 .redem-con .inline-fields {
   display: flex;
   gap: 16px;
@@ -103,11 +104,11 @@
   flex: 1;
 }
 
-/* Toggles */
+/* Toggles --------------------------------------------------- */
 .redem-con .toggle-group {
   display: inline-flex;
   gap: 8px;
-  background: #EFE9DC;
+  background: rgba(255,255,255,0.08);
   padding: 4px;
   border-radius: 12px;
   margin-bottom: 18px;
@@ -121,17 +122,17 @@
   cursor: pointer;
   font-weight: 600;
   font-size: 0.9rem;
-  color: #555;
+  color: #E8E4D8;
   transition: all 0.25s;
 }
 
 .redem-con .toggle-group button.active {
-  background: var(--gold, #BFA14A);
-  color: white;
+  background: #BFA14A;
+  color: #fff;
   box-shadow: 0 3px 10px rgba(191,161,74,0.35);
 }
 
-/* Exact / Flex Buttons */
+/* Exact / Flex --------------------------------------------- */
 .redem-con .card-options {
   display: flex;
   gap: 14px;
@@ -141,23 +142,23 @@
 .redem-con .option-btn {
   flex: 1;
   padding: 15px;
-  background: #EEE7D8;
+  background: rgba(255,255,255,0.08);
   border-radius: 14px;
-  border: 1.3px solid #DDD2B6;
+  border: 1.3px solid rgba(255,255,255,0.2);
   cursor: pointer;
   font-weight: 600;
   transition: all 0.25s ease;
-  color: var(--charcoal, #1A1A1A);
+  color: #E8E4D8;
 }
 
 .redem-con .option-btn.active {
-  background: var(--gold);
-  border-color: var(--gold);
+  background: #BFA14A;
+  border-color: #BFA14A;
   color: white;
   box-shadow: 0 6px 14px rgba(191,161,74,0.32);
 }
 
-/* Search button */
+/* Search Button -------------------------------------------- */
 .redem-con .search-btn {
   width: 100%;
   padding: 18px;
@@ -169,6 +170,7 @@
   letter-spacing: 1.1px;
   font-weight: 500;
   background: #D8C993;
+  color: #444;
   cursor: not-allowed;
   opacity: 0.7;
   transition: all 0.3s;
@@ -178,6 +180,7 @@
   background: linear-gradient(135deg, #BFA14A, #DCC990);
   opacity: 1;
   cursor: pointer;
+  color: white;
   box-shadow: 0 8px 20px rgba(191,161,74,0.33);
 }
 
@@ -186,14 +189,14 @@
   background: linear-gradient(135deg, #D4B862, #E8D7A6);
 }
 
-/* Warning */
+/* Warning --------------------------------------------------- */
 .redem-con #searchWarning {
   font-size: 0.85rem;
-  color: #A33;
+  color: #F2A3A3;
   margin-top: 6px;
 }
 
-/* Spinner overlay */
+/* Spinner --------------------------------------------------- */
 .redem-con .spinner-overlay {
   display: none;
   position: fixed;
@@ -208,7 +211,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 28px 36px;
-  background: var(--gold, #BFA14A);
+  background: #BFA14A;
   border-radius: 14px;
   color: white;
   font-family: 'Cormorant Garamond', serif;
