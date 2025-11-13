@@ -45,6 +45,33 @@
   color: rgba(191,161,74,0.72);      /* just slightly brighter */
 }
 
+/* ------------------------------------- */
+/*  Checkbox (Include partner award)     */
+/* ------------------------------------- */
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  margin-top: 14px;     /* spacing from the hint text */
+  margin-bottom: 18px;  /* spacing before Airline Program */
+}
+
+.checkbox-row input[type="checkbox"] {
+  width: 18px;
+  height: 18px;
+  margin: 0;
+  cursor: pointer;
+}
+
+.checkbox-row label {
+  font-size: 14px;
+  color: rgba(255,255,255,0.88);
+  user-select: none;
+  cursor: pointer;
+}
+
 /* Typography ------------------------------------------------ */
 .redem-con h3 {
   font-family: 'Cormorant Garamond', serif;
