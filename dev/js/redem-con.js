@@ -180,6 +180,14 @@ function setupIataAutocomplete(ctx = root) {
     const pos    = ctx.querySelector("#posFlight button.active")?.dataset.val;
     const mode   = ctx.querySelector("#mode")?.value;
 
+      if (!["exact", "flex"].includes(mode)) {
+        searchButton.disabled = true;
+        return;
+      }
+
+    const serviceClass = ctx.querySelector("#serviceClass")?.value;
+    const passengers = ctx.querySelector("#passengers")?.value;
+    
     // --- If Flexible Mode, require flexDays selection ---
       if (mode === "flex") {
         const flexDaysVal = ctx.querySelector("#flexDays")?.value;
@@ -190,7 +198,14 @@ function setupIataAutocomplete(ctx = root) {
       }
 
     const anyYes = [direct, multi, pos].includes("yes");
-    const ready = origin && destination && depart && anyYes && mode;
+
+      // --- Routing sanity check: Direct=NO AND Multi=NO → cannot search ---
+      if (direct === "no" && multi === "no") {
+        searchButton.disabled = true;
+        return;
+      }
+    
+    const ready = origin && destination && depart && anyYes && mode && serviceClass && passengers;
 
     searchButton.disabled = !ready;
     console.log(`🔁 Search button ${ready ? "ENABLED" : "disabled"}`);
