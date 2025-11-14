@@ -188,6 +188,18 @@
   filter: grayscale(40%);
 }
 
+.redem-con .pos-warning {
+  background: rgba(191,161,74,0.18);  /* soft gold wash */
+  border-left: 4px solid #BFA14A;      /* luxury gold accent line */
+  padding: 10px 14px;
+  border-radius: 8px;
+  margin: 10px 0 18px 0;
+  font-size: 0.9rem;
+  color: #E8E4D8;
+  line-height: 1.4;
+  display: none; /* default hidden, JS will toggle this */
+}
+
 /* Exact / Flex --------------------------------------------- */
 .redem-con .card-options {
   display: flex;
