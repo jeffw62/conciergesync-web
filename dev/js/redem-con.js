@@ -109,11 +109,13 @@ function setupIataAutocomplete(ctx = root) {
         if (parent.id === "directStop" && e.target.dataset.val === "yes") {
           setToggleState("multiConn", "no");
           setToggleState("posFlight", "no");
+          root.querySelector("#posFlight")?.classList.add("disabled-toggle");
         }
 
         // --- Routing Rule: Multi = YES forces Direct = NO ---
         if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
           setToggleState("directStop", "no");
+          root.querySelector("#posFlight")?.classList.remove("disabled-toggle");
         }
 
         // --- Routing Rule: Multi = YES makes Positioning selectable (required later) ---
