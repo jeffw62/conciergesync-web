@@ -12,6 +12,16 @@
   const destinationInput = root.querySelector("#destination");
   const searchButton = root.querySelector("#searchBtn");
 
+  // --- Helper: programmatically set a toggle group to yes/no ---
+  function setToggleState(groupId, value) {
+    const group = root.getElementById(groupId) || document.getElementById(groupId);
+    if (!group) return;
+  
+    group.querySelectorAll("button").forEach(btn => {
+      btn.classList.toggle("active", btn.dataset.val === value);
+    });
+  }
+
   // --- Ensure core elements exist before continuing ---
   if (!originInput || !destinationInput || !searchButton) {
     console.warn("⚠️ Redemption module: key inputs not found yet.");
@@ -91,6 +101,25 @@ function setupIataAutocomplete(ctx = root) {
         const parent = e.target.closest("div");
         parent.querySelectorAll("button").forEach(b => b.classList.remove("active"));
         e.target.classList.add("active");
+        
+        // --- Routing Rule: Direct Only = YES forces Multi & Positioning to NO ---
+        if (parent.id === "directStop" && e.target.dataset.val === "yes") {
+          setToggleState("multiConn", "no");
+          setToggleState("posFlight", "no");
+        }
+
+        // --- Routing Rule: Multi = YES forces Direct = NO ---
+        if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
+          setToggleState("directStop", "no");
+        }
+
+        // --- Routing Rule: Multi = YES makes Positioning selectable (required later) ---
+        if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
+          // If positioning has no active selection yet, default to "no"
+          const posActive = root.querySelector("#posFlight button.active");
+          if (!posActive) setToggleState("posFlight", "no");
+        }
+
         updateButtonState(ctx);
       });
     });
