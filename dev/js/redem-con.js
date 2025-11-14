@@ -123,6 +123,7 @@ function setupIataAutocomplete(ctx = root) {
               posWarning.style.display = "block";
             }, 120); // small grace delay for smoother UX
           }
+        }
         
         // --- When user clicks Positioning, hide the warning ---
         if (parent.id === "posFlight") {
