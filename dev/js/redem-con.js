@@ -1,11 +1,11 @@
 /**
- * ✈️ ConciergeSync™ Redemption Module Logic
+ * ConciergeSync™ Redemption Module Logic
  * Handles IATA autocomplete, toggle logic, flex-days, and search-button activation.
  * Designed for console injection (no <body>, no duplicate DOM roots).
  */
 
 (function initRedemptionModule() {
-  console.group("🧩 Initializing Redemption Module");
+  console.group("Initializing Redemption Module");
 
   const root = document; // workspace context (injected)
   const originInput = root.querySelector("#origin");
@@ -16,7 +16,7 @@
   function setToggleState(groupId, value) {
     const group = root.getElementById(groupId) || document.getElementById(groupId);
     if (!group) return;
-  
+
     group.querySelectorAll("button").forEach(btn => {
       btn.classList.toggle("active", btn.dataset.val === value);
     });
@@ -24,81 +24,80 @@
 
   // --- Ensure core elements exist before continuing ---
   if (!originInput || !destinationInput || !searchButton) {
-    console.warn("⚠️ Redemption module: key inputs not found yet.");
+    console.warn("Redemption module: key inputs not found yet.");
     console.groupEnd();
     return;
   }
-})();
+
   /* ============================================================
-     ✈️  IATA Autocomplete (local dataset, expandable)
+     IATA Autocomplete (local dataset, expandable)
   ============================================================ */
-function setupIataAutocomplete(ctx = root) {
-  const iataInputs = ctx.querySelectorAll("input[data-iata]");
-  if (!iataInputs.length) return console.warn("⚠️ No IATA inputs found.");
+  function setupIataAutocomplete(ctx = root) {
+    const iataInputs = ctx.querySelectorAll("input[data-iata]");
+    if (!iataInputs.length) return console.warn("No IATA inputs found.");
 
-  // Local static list for now — can later move to an API
-  const IATA_AIRPORTS = [
-    { code: "ATL", city: "Atlanta", country: "USA" },
-    { code: "DFW", city: "Dallas/Fort Worth", country: "USA" },
-    { code: "JFK", city: "New York (JFK)", country: "USA" },
-    { code: "LHR", city: "London Heathrow", country: "UK" },
-    { code: "CDG", city: "Paris CDG", country: "France" },
-    { code: "LAX", city: "Los Angeles", country: "USA" },
-    { code: "CUN", city: "Cancún", country: "Mexico" },
-    { code: "MCO", city: "Orlando", country: "USA" },
-    { code: "FRA", city: "Frankfurt", country: "Germany" },
-    { code: "NRT", city: "Tokyo Narita", country: "Japan" },
-  ];
+    // Local static list for now — can later move to an API
+    const IATA_AIRPORTS = [
+      { code: "ATL", city: "Atlanta", country: "USA" },
+      { code: "DFW", city: "Dallas/Fort Worth", country: "USA" },
+      { code: "JFK", city: "New York (JFK)", country: "USA" },
+      { code: "LHR", city: "London Heathrow", country: "UK" },
+      { code: "CDG", city: "Paris CDG", country: "France" },
+      { code: "LAX", city: "Los Angeles", country: "USA" },
+      { code: "CUN", city: "Cancún", country: "Mexico" },
+      { code: "MCO", city: "Orlando", country: "USA" },
+      { code: "FRA", city: "Frankfurt", country: "Germany" },
+      { code: "NRT", city: "Tokyo Narita", country: "Japan" },
+    ];
 
-  iataInputs.forEach(input => {
-    const container = input.nextElementSibling;
-    if (!container || !container.classList.contains("suggestions")) {
-      console.warn(`⚠️ Missing suggestions container for ${input.id}`);
-      return;
-    }
+    iataInputs.forEach(input => {
+      const container = input.nextElementSibling;
+      if (!container || !container.classList.contains("suggestions")) {
+        console.warn(`Missing suggestions container for ${input.id}`);
+        return;
+      }
 
-    input.addEventListener("input", e => {
-      const term = e.target.value.toUpperCase().trim();
-      container.innerHTML = "";
+      input.addEventListener("input", e => {
+        const term = e.target.value.toUpperCase().trim();
+        container.innerHTML = "";
 
-      if (term.length < 2) return;
+        if (term.length < 2) return;
 
-      const matches = IATA_AIRPORTS.filter(
-        a =>
-          a.code.includes(term) ||
-          a.city.toUpperCase().includes(term)
-      ).slice(0, 6);
+        const matches = IATA_AIRPORTS.filter(
+          a =>
+            a.code.includes(term) ||
+            a.city.toUpperCase().includes(term)
+        ).slice(0, 6);
 
-      matches.forEach(a => {
-        const opt = document.createElement("div");
-        opt.className = "suggestion";
-        opt.textContent = `${a.city} (${a.code})`;
-        opt.addEventListener("click", () => {
-          input.value = a.code;
-          container.innerHTML = "";
-          input.dispatchEvent(new Event("change"));
-          updateButtonState(root);
-          input.blur();
+        matches.forEach(a => {
+          const opt = document.createElement("div");
+          opt.className = "suggestion";
+          opt.textContent = `${a.city} (${a.code})`;
+          opt.addEventListener("click", () => {
+            input.value = a.code;
+            container.innerHTML = "";
+            input.dispatchEvent(new Event("change"));
+            updateButtonState(root);
+            input.blur();
+          });
+          container.appendChild(opt);
         });
-        container.appendChild(opt);
+      });
+
+      document.addEventListener("click", (e) => {
+        if (!input.contains(e.target) && !container.contains(e.target)) {
+          container.innerHTML = "";
+        }
       });
     });
 
-    document.addEventListener("click", (e) => {
-      if (!input.contains(e.target) && !container.contains(e.target)) {
-        container.innerHTML = "";
-      }
-    });
-  });
+    console.log("IATA autocomplete active");
+  }
 
-  console.log("✅ IATA autocomplete active");
-}
-  
   /* ============================================================
      Toggle Logic (Direct / Multi / Positioning)
   ============================================================ */
   function setupToggleLogic(ctx = root) {
-
     let posWarningTimer = null;
     
     const posWarning = ctx.querySelector("#posWarning");
@@ -111,33 +110,28 @@ function setupIataAutocomplete(ctx = root) {
         
         // --- Show/hide Positioning warning depending on state ---
         if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
-          // Multi = YES → Direct forced to NO
           setToggleState("directStop", "no");
           root.querySelector("#posFlight")?.classList.remove("disabled-toggle");
         
-          // Check if Positioning has any selection yet
           const posActive = ctx.querySelector("#posFlight button.active")?.dataset.val;
           if (!posActive) {
             clearTimeout(posWarningTimer);
             posWarningTimer = setTimeout(() => {
               posWarning.style.display = "block";
-            }, 120); // small grace delay for smoother UX
+            }, 120);
           }
         }
         
-        // --- When user clicks Positioning, hide the warning ---
         if (parent.id === "posFlight") {
           clearTimeout(posWarningTimer);
           posWarning.style.display = "none";
         }
         
-        // --- If Multi is turned OFF, hide the warning ---
         if (parent.id === "multiConn" && e.target.dataset.val === "no") {
           clearTimeout(posWarningTimer);
           posWarning.style.display = "none";
         }
         
-        // --- Routing Rule: Direct Only = YES forces Multi & Positioning to NO ---
         if (parent.id === "directStop" && e.target.dataset.val === "yes") {
           setToggleState("multiConn", "no");
           setToggleState("posFlight", "no");
@@ -145,21 +139,18 @@ function setupIataAutocomplete(ctx = root) {
           posWarning.style.display = "none";
         }
         
-        // --- If Direct toggles to NO, re-enable Positioning ---
         if (parent.id === "directStop" && e.target.dataset.val === "no") {
           root.querySelector("#posFlight")?.classList.remove("disabled-toggle");
         }
         
-        // --- Routing Rule: Multi = YES forces Direct = NO ---
         if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
           setToggleState("directStop", "no");
         }
         
         updateButtonState(ctx);
-
       });
     });
-    console.log("✅ Toggle logic active");
+    console.log("Toggle logic active");
   }
 
   /* ============================================================
@@ -169,36 +160,37 @@ function setupIataAutocomplete(ctx = root) {
     const exactBtn = ctx.querySelector("#exactBtn");
     const flexBtn  = ctx.querySelector("#flexBtn");
     if (!exactBtn || !flexBtn) return;
+
     [exactBtn, flexBtn].forEach(btn => {
-    btn.addEventListener("click", () => {
-      exactBtn.classList.remove("active");
-      flexBtn.classList.remove("active");
-      btn.classList.add("active");
+      btn.addEventListener("click", () => {
+        exactBtn.classList.remove("active");
+        flexBtn.classList.remove("active");
+        btn.classList.add("active");
   
-      // --- Step 3B: Date Mode Visual + Value Updates ---
-      const modeInput = ctx.querySelector("#mode");
-      const flexPicker = ctx.querySelector("#flexPicker");
-      
-      if (btn === exactBtn) {
-        modeInput.value = "exact";
-        flexPicker.style.display = "none";
-      }
+        const modeInput = ctx.querySelector("#mode");
+        const flexPicker = ctx.querySelector("#flexPicker");
+        
+        if (btn === exactBtn) {
+          modeInput.value = "exact";
+          flexPicker.style.display = "none";
+        }
   
-      if (btn === flexBtn) {
-        modeInput.value = "flex";
-        flexPicker.style.display = "block";
-      }
+        if (btn === flexBtn) {
+          modeInput.value = "flex";
+          flexPicker.style.display = "block";
+        }
   
-      updateButtonState(ctx);
-    });   // <-- closes addEventListener
-  });     // <-- closes forEach   ❗ THIS was missing
-  
-  const flexSelect = ctx.querySelector("#flexDays");
-  if (flexSelect) {
-    flexSelect.addEventListener("change", () => updateButtonState(ctx));
+        updateButtonState(ctx);
+      });
+    });
+
+    const flexSelect = ctx.querySelector("#flexDays");
+    if (flexSelect) {
+      flexSelect.addEventListener("change", () => updateButtonState(ctx));
+    }
+    console.log("Flex-day logic active");
   }
-  console.log("✅ Flex-day logic active");
-    
+
   /* ============================================================
      Button State Logic
   ============================================================ */
@@ -210,52 +202,46 @@ function setupIataAutocomplete(ctx = root) {
     const multi  = ctx.querySelector("#multiConn button.active")?.dataset.val;
     const pos    = ctx.querySelector("#posFlight button.active")?.dataset.val;
 
-      // --- Routing Rule: Multi = YES requires Positioning Yes/No selection ---
-      if (multi === "yes" && !pos) {
-        searchButton.disabled = true;
-        return;
-      }
+    if (multi === "yes" && !pos) {
+      searchButton.disabled = true;
+      return;
+    }
 
-    const mode   = ctx.querySelector("#mode")?.value;
+    const mode = ctx.querySelector("#mode")?.value;
 
-      if (!["exact", "flex"].includes(mode)) {
-        searchButton.disabled = true;
-        return;
-      }
+    if (!["exact", "flex"].includes(mode)) {
+      searchButton.disabled = true;
+      return;
+    }
 
     const serviceClass = ctx.querySelector("#serviceClass")?.value;
     const passengers = ctx.querySelector("#passengers")?.value;
-    const allowBudget = ctx.querySelector("#allowBudget")?.checked;
     
-    // --- If Flexible Mode, require flexDays selection ---
-      if (mode === "flex") {
-        const flexDaysVal = ctx.querySelector("#flexDays")?.value;
-        if (!flexDaysVal) {
-          searchButton.disabled = true;
-          return;
-        }
-      }
-
-    const anyYes = [direct, multi, pos].includes("yes");
-
-      // --- Routing sanity check: Direct=NO AND Multi=NO → cannot search ---
-      if (direct === "no" && multi === "no") {
+    if (mode === "flex") {
+      const flexDaysVal = ctx.querySelector("#flexDays")?.value;
+      if (!flexDaysVal) {
         searchButton.disabled = true;
         return;
       }
+    }
+
+    if (direct === "no" && multi === "no") {
+      searchButton.disabled = true;
+      return;
+    }
     
-   const ready =
-    origin &&
-    destination &&
-    depart &&
-    serviceClass &&
-    passengers &&
-    (direct === "yes" || multi === "yes") &&   // routing requirement
-    (!(multi === "yes") || pos) &&             // if Multi=YES → pos required
-    (mode === "exact" || (mode === "flex" && ctx.querySelector("#flexDays")?.value));
+    const ready =
+      origin &&
+      destination &&
+      depart &&
+      serviceClass &&
+      passengers &&
+      (direct === "yes" || multi === "yes") &&
+      (!(multi === "yes") || pos) &&
+      (mode === "exact" || (mode === "flex" && ctx.querySelector("#flexDays")?.value));
 
     searchButton.disabled = !ready;
-    console.log(`🔁 Search button ${ready ? "ENABLED" : "disabled"}`);
+    console.log(`Search button ${ready ? "ENABLED" : "disabled"}`);
   }
 
   /* ============================================================
@@ -271,12 +257,12 @@ function setupIataAutocomplete(ctx = root) {
   ============================================================ */
   setTimeout(() => {
     updateButtonState(root);
-    console.log("🕓 Fallback recheck complete.");
+    console.log("Fallback recheck complete.");
   }, 1500);
 
-  console.log("✅ Redemption module fully initialized");
+  console.log("Redemption module fully initialized");
   console.groupEnd();
-})();
+})(); // ← Correctly closes the IIFE
 
 // === ConciergeSync™ Redem-Con Initialization Bridge ===
 (function attachRedemConHook() {
