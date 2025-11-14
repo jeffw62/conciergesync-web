@@ -169,36 +169,34 @@ function setupIataAutocomplete(ctx = root) {
     const flexBtn  = ctx.querySelector("#flexBtn");
     if (!exactBtn || !flexBtn) return;
     [exactBtn, flexBtn].forEach(btn => {
-      btn.addEventListener("click", () => {
-        exactBtn.classList.remove("active");
-        flexBtn.classList.remove("active");
-        btn.classList.add("active");
-
-        // --- Step 3B: Date Mode Visual + Value Updates ---
-        const modeInput = ctx.querySelector("#mode");
-        const flexPicker = ctx.querySelector("#flexPicker");
-        
-        // If Exact Mode
-        if (btn === exactBtn) {
-          modeInput.value = "exact";
-          flexPicker.style.display = "none";
-        }
-        
-        // If Flexible Mode
-        if (btn === flexBtn) {
-          modeInput.value = "flex";
-          flexPicker.style.display = "block";
-        }
-
-        updateButtonState(ctx);
-      });
-    });
-      const flexSelect = ctx.querySelector("#flexDays");
-      if (flexSelect) {
-        flexSelect.addEventListener("change", () => updateButtonState(ctx));
+    btn.addEventListener("click", () => {
+      exactBtn.classList.remove("active");
+      flexBtn.classList.remove("active");
+      btn.classList.add("active");
+  
+      // --- Step 3B: Date Mode Visual + Value Updates ---
+      const modeInput = ctx.querySelector("#mode");
+      const flexPicker = ctx.querySelector("#flexPicker");
+      
+      if (btn === exactBtn) {
+        modeInput.value = "exact";
+        flexPicker.style.display = "none";
       }
-    console.log("✅ Flex-day logic active");
+  
+      if (btn === flexBtn) {
+        modeInput.value = "flex";
+        flexPicker.style.display = "block";
+      }
+  
+      updateButtonState(ctx);
+    });   // <-- closes addEventListener
+  });     // <-- closes forEach   ❗ THIS was missing
+  
+  const flexSelect = ctx.querySelector("#flexDays");
+  if (flexSelect) {
+    flexSelect.addEventListener("change", () => updateButtonState(ctx));
   }
+  console.log("✅ Flex-day logic active");
 
   /* ============================================================
      Button State Logic
