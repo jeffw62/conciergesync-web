@@ -141,9 +141,30 @@ function setupIataAutocomplete(ctx = root) {
         exactBtn.classList.remove("active");
         flexBtn.classList.remove("active");
         btn.classList.add("active");
+
+        // --- Step 3B: Date Mode Visual + Value Updates ---
+        const modeInput = ctx.querySelector("#mode");
+        const flexPicker = ctx.querySelector("#flexPicker");
+        
+        // If Exact Mode
+        if (btn === exactBtn) {
+          modeInput.value = "exact";
+          flexPicker.style.display = "none";
+        }
+        
+        // If Flexible Mode
+        if (btn === flexBtn) {
+          modeInput.value = "flex";
+          flexPicker.style.display = "block";
+        }
+
         updateButtonState(ctx);
       });
     });
+      const flexSelect = ctx.querySelector("#flexDays");
+      if (flexSelect) {
+        flexSelect.addEventListener("change", () => updateButtonState(ctx));
+      }
     console.log("✅ Flex-day logic active");
   }
 
@@ -158,6 +179,15 @@ function setupIataAutocomplete(ctx = root) {
     const multi  = ctx.querySelector("#multiConn button.active")?.dataset.val;
     const pos    = ctx.querySelector("#posFlight button.active")?.dataset.val;
     const mode   = ctx.querySelector("#mode")?.value;
+
+    // --- If Flexible Mode, require flexDays selection ---
+      if (mode === "flex") {
+        const flexDaysVal = ctx.querySelector("#flexDays")?.value;
+        if (!flexDaysVal) {
+          searchButton.disabled = true;
+          return;
+        }
+      }
 
     const anyYes = [direct, multi, pos].includes("yes");
     const ready = origin && destination && depart && anyYes && mode;
