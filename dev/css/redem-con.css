@@ -182,6 +182,12 @@
   box-shadow: 0 3px 10px rgba(191,161,74,0.35);
 }
 
+.redem-con .toggle-group.disabled-toggle {
+  opacity: 0.35;
+  pointer-events: none;
+  filter: grayscale(40%);
+}
+
 /* Exact / Flex --------------------------------------------- */
 .redem-con .card-options {
   display: flex;
