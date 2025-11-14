@@ -302,8 +302,8 @@ function setupIataAutocomplete(ctx = root) {
       setupFlexDaysLogic?.();
       console.log("📅 Flex-days logic active");
 
-      setupSearchButtonLogic?.();
-      console.log("🕹️ Search button logic ready");
+      //setupSearchButtonLogic?.();
+      //console.log("🕹️ Search button logic ready");
 
       console.groupEnd();
       console.log("✅ Redemption module fully initialized");
