@@ -4,7 +4,7 @@
  * Designed for console injection (no <body>, no duplicate DOM roots).
  */
 
-(function initRedemptionModule() {
+(function initRedemptionModule() {FV
   console.group("🧩 Initializing Redemption Module");
 
   const root = document; // workspace context (injected)
@@ -198,7 +198,7 @@ function setupIataAutocomplete(ctx = root) {
     flexSelect.addEventListener("change", () => updateButtonState(ctx));
   }
   console.log("✅ Flex-day logic active");
-
+}
   /* ============================================================
      Button State Logic
   ============================================================ */
