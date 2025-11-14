@@ -92,7 +92,8 @@ function setupIataAutocomplete(ctx = root) {
   });
 
   console.log("✅ IATA autocomplete active");
-
+}
+  
   /* ============================================================
      Toggle Logic (Direct / Multi / Positioning)
   ============================================================ */
