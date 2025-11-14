@@ -427,3 +427,34 @@ select option {
   color: #000 !important;
   background-color: #fff !important;
 }
+
+/* Remove Chrome/Edge number spinners */
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Remove Firefox number spinners */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+/* CS Luxury Number Input Styling */
+input[type="number"] {
+  background-color: #1a2332;
+  border: 2px solid #bca66a;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 1rem;
+  color: #ffffff;
+  font-family: inherit;
+  width: 100%;
+  outline: none;
+  transition: 0.15s ease;
+}
+
+input[type="number"]:focus {
+  border-color: #e2cf91;
+  box-shadow: 0 0 8px rgba(188,166,106,0.6);
+}
