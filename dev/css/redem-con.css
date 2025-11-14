@@ -383,3 +383,9 @@
   margin-left: 32px;  /* aligns neatly under the checkbox label */
   margin-top: -4px;
 }
+
+/* Fix invisible <option> text inside dropdowns */
+select option {
+  color: #000 !important;
+  background-color: #fff !important;
+}
