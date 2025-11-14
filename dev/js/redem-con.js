@@ -73,7 +73,7 @@
         matches.forEach(a => {
           const opt = document.createElement("div");
           opt.className = "suggestion";
-          opt.textContent = `${a.name || a.city || "Airport"} (${a.iata})`;
+          opt.textContent = `${a.airport} (${a.iata})`;
   
           opt.addEventListener("click", () => {
             input.value = a.iata;
