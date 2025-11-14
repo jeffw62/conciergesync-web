@@ -98,6 +98,7 @@ function setupIataAutocomplete(ctx = root) {
      Toggle Logic (Direct / Multi / Positioning)
   ============================================================ */
   function setupToggleLogic(ctx = root) {
+    const posWarning = ctx.querySelector("#posWarning");
     const toggles = ctx.querySelectorAll("#directStop button, #multiConn button, #posFlight button");
     toggles.forEach(btn => {
       btn.addEventListener("click", e => {
@@ -105,24 +106,39 @@ function setupIataAutocomplete(ctx = root) {
         parent.querySelectorAll("button").forEach(b => b.classList.remove("active"));
         e.target.classList.add("active");
         
+        // --- Show/hide Positioning warning depending on state ---
+        if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
+          // Multi = YES → Direct forced to NO
+          setToggleState("directStop", "no");
+        
+          // Check if Positioning has any selection yet
+          const posActive = ctx.querySelector("#posFlight button.active")?.dataset.val;
+          if (!posActive) {
+            posWarning.style.display = "block";  // show the warning
+          }
+        }
+        
+        // --- When user clicks Positioning, hide the warning ---
+        if (parent.id === "posFlight") {
+          posWarning.style.display = "none";
+        }
+
+        // --- If Multi is turned OFF, hide the warning ---
+        if (parent.id === "multiConn" && e.target.dataset.val === "no") {
+          posWarning.style.display = "none";
+        }
+        
         // --- Routing Rule: Direct Only = YES forces Multi & Positioning to NO ---
         if (parent.id === "directStop" && e.target.dataset.val === "yes") {
           setToggleState("multiConn", "no");
           setToggleState("posFlight", "no");
-          root.querySelector("#posFlight")?.classList.add("disabled-toggle");
+          posWarning.style.display = "none"; // hide warning if it was up
         }
-
+        
         // --- Routing Rule: Multi = YES forces Direct = NO ---
+        // (Already handled above, but safe to keep structured)
         if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
           setToggleState("directStop", "no");
-          root.querySelector("#posFlight")?.classList.remove("disabled-toggle");
-        }
-
-        // --- Routing Rule: Multi = YES makes Positioning selectable (required later) ---
-        if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
-          // If positioning has no active selection yet, default to "no"
-          const posActive = root.querySelector("#posFlight button.active");
-          if (!posActive) setToggleState("posFlight", "no");
         }
 
         updateButtonState(ctx);
@@ -180,6 +196,13 @@ function setupIataAutocomplete(ctx = root) {
     const direct = ctx.querySelector("#directStop button.active")?.dataset.val;
     const multi  = ctx.querySelector("#multiConn button.active")?.dataset.val;
     const pos    = ctx.querySelector("#posFlight button.active")?.dataset.val;
+
+      // --- Routing Rule: Multi = YES requires Positioning Yes/No selection ---
+      if (multi === "yes" && !pos) {
+        searchButton.disabled = true;
+        return;
+      }
+
     const mode   = ctx.querySelector("#mode")?.value;
 
       if (!["exact", "flex"].includes(mode)) {
@@ -189,6 +212,7 @@ function setupIataAutocomplete(ctx = root) {
 
     const serviceClass = ctx.querySelector("#serviceClass")?.value;
     const passengers = ctx.querySelector("#passengers")?.value;
+    const allowBudget = ctx.querySelector("#allowBudget")?.checked;
     
     // --- If Flexible Mode, require flexDays selection ---
       if (mode === "flex") {
@@ -207,7 +231,15 @@ function setupIataAutocomplete(ctx = root) {
         return;
       }
     
-    const ready = origin && destination && depart && anyYes && mode && serviceClass && passengers;
+   const ready =
+    origin &&
+    destination &&
+    depart &&
+    serviceClass &&
+    passengers &&
+    (direct === "yes" || multi === "yes") &&   // routing requirement
+    (!(multi === "yes") || pos) &&             // if Multi=YES → pos required
+    (mode === "exact" || (mode === "flex" && ctx.querySelector("#flexDays")?.value));
 
     searchButton.disabled = !ready;
     console.log(`🔁 Search button ${ready ? "ENABLED" : "disabled"}`);
