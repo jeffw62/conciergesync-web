@@ -276,21 +276,30 @@
     if (e.detail?.page !== "redem-con") return;
 
     console.group("Initializing Redemption Module");
-    try {
-      setupIataAutocomplete?.();
-      console.log("IATA autocomplete initialized");
-      setupToggleLogic?.();
-      console.log("Toggle logic active");
-      setupFlexDaysLogic?.();
-      console.log("Flex-days logic active");
-      console.groupEnd();
-      console.log("Redemption module fully initialized");
-    } catch (err) {
-      console.error("Error initializing Redemption Module:", err);
-      console.groupEnd();
-    }
-  });
-})(); // ← Closes attachRedemConHook IIFE
+      try {
+        const ws = e.detail.workspace || document;
+      
+        setupIataAutocomplete?.(ws);
+        console.log("IATA autocomplete initialized");
+      
+        setupToggleLogic?.(ws);
+        console.log("Toggle logic active");
+      
+        setupFlexDaysLogic?.(ws);
+        console.log("Flex-days logic active");
+      
+        updateButtonState?.(ws);
+        console.log("Button-state logic re-evaluated");
+      
+        console.groupEnd();
+        console.log("Redemption module fully initialized");
+      } catch (err) {
+        console.error("Error initializing Redemption Module:", err);
+        console.groupEnd();
+      }
+      });
+      })(); // ← Closes attachRedemConHook IIFE
+
 
 // ===== ConciergeSync — redem-con mock search handler (drop-in) =====
 (function () {
