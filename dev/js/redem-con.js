@@ -32,7 +32,7 @@
   /* ============================================================
      IATA Autocomplete (local dataset, expandable)
   ============================================================ */
-  function setupIataAutocomplete(ctx = root) {
+  async function setupIataAutocomplete(ctx = root) {
     const iataInputs = ctx.querySelectorAll("input[data-iata]");
     if (!iataInputs.length) return console.warn("No IATA inputs found.");
   
