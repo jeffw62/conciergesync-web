@@ -35,62 +35,65 @@
   function setupIataAutocomplete(ctx = root) {
     const iataInputs = ctx.querySelectorAll("input[data-iata]");
     if (!iataInputs.length) return console.warn("No IATA inputs found.");
-
-    // Local static list for now — can later move to an API
-    const IATA_AIRPORTS = [
-      { code: "ATL", city: "Atlanta", country: "USA" },
-      { code: "DFW", city: "Dallas/Fort Worth", country: "USA" },
-      { code: "JFK", city: "New York (JFK)", country: "USA" },
-      { code: "LHR", city: "London Heathrow", country: "UK" },
-      { code: "CDG", city: "Paris CDG", country: "France" },
-      { code: "LAX", city: "Los Angeles", country: "USA" },
-      { code: "CUN", city: "Cancún", country: "Mexico" },
-      { code: "MCO", city: "Orlando", country: "USA" },
-      { code: "FRA", city: "Frankfurt", country: "Germany" },
-      { code: "NRT", city: "Tokyo Narita", country: "Japan" },
-    ];
-
+  
+    let IATA_AIRPORTS = [];
+  
+    async function loadIataData() {
+      try {
+        const res = await fetch("/dev/asset/iata-icao.json", { cache: "no-store" });
+        IATA_AIRPORTS = await res.json();
+        console.log("🌎 Loaded IATA dataset:", IATA_AIRPORTS.length, "airports");
+      } catch (err) {
+        console.error("❌ Failed to load IATA JSON:", err);
+      }
+    }
+  
+    // Load dataset before proceeding
+    await loadIataData();
+  
     iataInputs.forEach(input => {
       const container = input.nextElementSibling;
       if (!container || !container.classList.contains("suggestions")) {
         console.warn(`Missing suggestions container for ${input.id}`);
         return;
       }
-
+  
       input.addEventListener("input", e => {
         const term = e.target.value.toUpperCase().trim();
         container.innerHTML = "";
-
-        if (term.length < 2) return;
-
-        const matches = IATA_AIRPORTS.filter(
-          a =>
-            a.code.includes(term) ||
-            a.city.toUpperCase().includes(term)
-        ).slice(0, 6);
-
+  
+        if (term.length < 2 || !IATA_AIRPORTS.length) return;
+  
+        const matches = IATA_AIRPORTS.filter(a =>
+          a.iata?.toUpperCase().includes(term) ||
+          a.name?.toUpperCase().includes(term) ||
+          a.city?.toUpperCase().includes(term)
+        ).slice(0, 8);
+  
         matches.forEach(a => {
           const opt = document.createElement("div");
           opt.className = "suggestion";
-          opt.textContent = `${a.city} (${a.code})`;
+          opt.textContent = `${a.city || a.name} (${a.iata})`;
+  
           opt.addEventListener("click", () => {
-            input.value = a.code;
+            input.value = a.iata;
             container.innerHTML = "";
             input.dispatchEvent(new Event("change"));
             updateButtonState(root);
             input.blur();
           });
+  
           container.appendChild(opt);
         });
       });
-
+  
       document.addEventListener("click", (e) => {
         if (!input.contains(e.target) && !container.contains(e.target)) {
           container.innerHTML = "";
         }
       });
     });
-
+  
     console.log("IATA autocomplete active");
   }
 
