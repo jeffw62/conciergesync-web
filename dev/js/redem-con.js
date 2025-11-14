@@ -65,15 +65,15 @@
         if (term.length < 2 || !IATA_AIRPORTS.length) return;
   
         const matches = IATA_AIRPORTS.filter(a =>
-          a.iata?.toUpperCase().includes(term) ||
-          a.name?.toUpperCase().includes(term) ||
-          a.city?.toUpperCase().includes(term)
+          (a.iata && a.iata.toUpperCase().includes(term)) ||
+          (a.city && a.city.toUpperCase().includes(term)) ||
+          (a.name && a.name.toUpperCase().includes(term))
         ).slice(0, 8);
   
         matches.forEach(a => {
           const opt = document.createElement("div");
           opt.className = "suggestion";
-          opt.textContent = `${a.city || a.name} (${a.iata})`;
+          opt.textContent = `${a.name || a.city || "Airport"} (${a.iata})`;
   
           opt.addEventListener("click", () => {
             input.value = a.iata;
