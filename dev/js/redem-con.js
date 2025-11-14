@@ -113,7 +113,7 @@ function setupIataAutocomplete(ctx = root) {
         if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
           // Multi = YES → Direct forced to NO
           setToggleState("directStop", "no");
-            root.querySelector("#posFlight")?.classList.remove("disabled-toggle");
+          root.querySelector("#posFlight")?.classList.remove("disabled-toggle");
         
           // Check if Positioning has any selection yet
           const posActive = ctx.querySelector("#posFlight button.active")?.dataset.val;
@@ -130,7 +130,7 @@ function setupIataAutocomplete(ctx = root) {
           clearTimeout(posWarningTimer);
           posWarning.style.display = "none";
         }
-
+        
         // --- If Multi is turned OFF, hide the warning ---
         if (parent.id === "multiConn" && e.target.dataset.val === "no") {
           clearTimeout(posWarningTimer);
@@ -142,21 +142,21 @@ function setupIataAutocomplete(ctx = root) {
           setToggleState("multiConn", "no");
           setToggleState("posFlight", "no");
           clearTimeout(posWarningTimer);
-          posWarning.style.display = "none"; // hide warning if it was up
+          posWarning.style.display = "none";
         }
-
+        
         // --- If Direct toggles to NO, re-enable Positioning ---
         if (parent.id === "directStop" && e.target.dataset.val === "no") {
           root.querySelector("#posFlight")?.classList.remove("disabled-toggle");
         }
         
         // --- Routing Rule: Multi = YES forces Direct = NO ---
-        // (Already handled above, but safe to keep structured)
         if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
           setToggleState("directStop", "no");
         }
-
+        
         updateButtonState(ctx);
+
       });
     });
     console.log("✅ Toggle logic active");
