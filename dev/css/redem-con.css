@@ -226,6 +226,39 @@
   box-shadow: 0 6px 14px rgba(191,161,74,0.32);
 }
 
+/* Flex container */
+#flexPicker {
+  display: none;          /* hidden until flex is selected */
+  margin-top: 16px;
+  padding: 8px 0;
+}
+
+/* Label above dropdown */
+#flexPicker label {
+  font-size: 14px;
+  color: #ccc;
+  margin-bottom: 6px;
+  display: block;
+}
+
+/* Dropdown alignment */
+#flexDays {
+  width: 180px;
+  padding: 8px 12px;
+  font-size: 15px;
+  border-radius: 8px;
+  border: 1px solid #555;
+  background-color: #20262e;
+  color: #f5f5f5;
+}
+
+/* Instruction text below dropdown */
+.flex-instructions {
+  margin-top: 8px;
+  font-size: 13px;
+  color: #aaa;
+}
+
 /* Search Button -------------------------------------------- */
 .redem-con .search-btn {
   width: 100%;
