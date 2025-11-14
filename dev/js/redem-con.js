@@ -98,6 +98,9 @@ function setupIataAutocomplete(ctx = root) {
      Toggle Logic (Direct / Multi / Positioning)
   ============================================================ */
   function setupToggleLogic(ctx = root) {
+
+    let posWarningTimer = null;
+    
     const posWarning = ctx.querySelector("#posWarning");
     const toggles = ctx.querySelectorAll("#directStop button, #multiConn button, #posFlight button");
     toggles.forEach(btn => {
@@ -110,21 +113,26 @@ function setupIataAutocomplete(ctx = root) {
         if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
           // Multi = YES → Direct forced to NO
           setToggleState("directStop", "no");
+            root.querySelector("#posFlight")?.classList.remove("disabled-toggle");
         
           // Check if Positioning has any selection yet
           const posActive = ctx.querySelector("#posFlight button.active")?.dataset.val;
           if (!posActive) {
-            posWarning.style.display = "block";  // show the warning
+            clearTimeout(posWarningTimer);
+            posWarningTimer = setTimeout(() => {
+              posWarning.style.display = "block";
+            }, 120); // small grace delay for smoother UX
           }
-        }
         
         // --- When user clicks Positioning, hide the warning ---
         if (parent.id === "posFlight") {
+          clearTimeout(posWarningTimer);
           posWarning.style.display = "none";
         }
 
         // --- If Multi is turned OFF, hide the warning ---
         if (parent.id === "multiConn" && e.target.dataset.val === "no") {
+          clearTimeout(posWarningTimer);
           posWarning.style.display = "none";
         }
         
@@ -132,7 +140,13 @@ function setupIataAutocomplete(ctx = root) {
         if (parent.id === "directStop" && e.target.dataset.val === "yes") {
           setToggleState("multiConn", "no");
           setToggleState("posFlight", "no");
+          clearTimeout(posWarningTimer);
           posWarning.style.display = "none"; // hide warning if it was up
+        }
+
+        // --- If Direct toggles to NO, re-enable Positioning ---
+        if (parent.id === "directStop" && e.target.dataset.val === "no") {
+          root.querySelector("#posFlight")?.classList.remove("disabled-toggle");
         }
         
         // --- Routing Rule: Multi = YES forces Direct = NO ---
