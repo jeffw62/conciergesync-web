@@ -77,14 +77,17 @@ function setupIataAutocomplete(ctx = root) {
           input.value = a.code;
           container.innerHTML = "";
           input.dispatchEvent(new Event("change"));
+          updateButtonState(root);
+          input.blur();
         });
         container.appendChild(opt);
       });
     });
 
-    document.addEventListener("click", e => {
-      if (!container.contains(e.target) && e.target !== input)
+    document.addEventListener("click", (e) => {
+      if (!input.contains(e.target) && !container.contains(e.target)) {
         container.innerHTML = "";
+      }
     });
   });
 
