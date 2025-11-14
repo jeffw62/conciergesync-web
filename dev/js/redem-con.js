@@ -4,7 +4,7 @@
  * Designed for console injection (no <body>, no duplicate DOM roots).
  */
 
-(function initRedemptionModule() {FV
+(function initRedemptionModule() {
   console.group("🧩 Initializing Redemption Module");
 
   const root = document; // workspace context (injected)
@@ -28,7 +28,7 @@
     console.groupEnd();
     return;
   }
-
+}
   /* ============================================================
      ✈️  IATA Autocomplete (local dataset, expandable)
   ============================================================ */
@@ -92,7 +92,6 @@ function setupIataAutocomplete(ctx = root) {
   });
 
   console.log("✅ IATA autocomplete active");
-}
 
   /* ============================================================
      Toggle Logic (Direct / Multi / Positioning)
@@ -198,7 +197,7 @@ function setupIataAutocomplete(ctx = root) {
     flexSelect.addEventListener("change", () => updateButtonState(ctx));
   }
   console.log("✅ Flex-day logic active");
-}
+    
   /* ============================================================
      Button State Logic
   ============================================================ */
@@ -286,7 +285,6 @@ function setupIataAutocomplete(ctx = root) {
 
   // Attach listener
   document.addEventListener("module:ready", (e) => {
-    // Log immediately so we know this hook is live
     console.log("🪝 redem-con.js listening for module:ready", e.detail);
 
     if (e.detail?.page !== "redem-con") return;
@@ -302,9 +300,6 @@ function setupIataAutocomplete(ctx = root) {
       setupFlexDaysLogic?.();
       console.log("📅 Flex-days logic active");
 
-      //setupSearchButtonLogic?.();
-      //console.log("🕹️ Search button logic ready");
-
       console.groupEnd();
       console.log("✅ Redemption module fully initialized");
     } catch (err) {
@@ -312,9 +307,6 @@ function setupIataAutocomplete(ctx = root) {
       console.groupEnd();
     }
   });
-
-  console.log("🪝 redem-con.js hook attached and waiting for module:ready");
-})();
 
 // ===== ConciergeSync — redem-con mock search handler (drop-in) =====
 // Paste this into /dev/redem-con.js (replace existing form submit handler).
