@@ -1,63 +1,64 @@
 <div class="redem-con">
 
   <div class="module-title">DISCOVERY - FLIGHT DECK</div>
+
   <form id="discovery-flights-form">
     <div class="search-panel" id="searchPanel">
 
-    <!-- STEP 1 -->
-    <div class="step">
-      <h3><span class="step-num">1</span> Origin & Destination</h3>
+      <!-- STEP 1 -->
+      <div class="step">
+        <h3><span class="step-num">1</span> Origin & Destination</h3>
 
-      <div class="inline-fields">
-        <div class="field">
-          <label for="origin">Origin (e.g. DFW)</label>
-          <input type="text" id="origin" data-iata />
-          <div id="origin-suggestions" class="suggestions"></div>
+        <div class="inline-fields">
+          <div class="field">
+            <label for="origin">Origin (e.g. DFW)</label>
+            <input type="text" id="origin" data-iata />
+            <div id="origin-suggestions" class="suggestions"></div>
+          </div>
+          <div class="field">
+            <label for="destination">Destination (e.g. LHR)</label>
+            <input type="text" id="destination" data-iata />
+            <div id="destination-suggestions" class="suggestions"></div>
+          </div>
         </div>
-        <div class="field">
-          <label for="destination">Destination (e.g. LHR)</label>
-          <input type="text" id="destination" data-iata />
-          <div id="destination-suggestions" class="suggestions"></div>
-        </div>
-      </div>
 
-      <div class="inline-fields">
-        <div class="field">
-          <label for="passengers">Passengers</label>
-          <input type="number" id="passengers" min="1" max="9" step="1" value="1" />
+        <div class="inline-fields">
+          <div class="field">
+            <label for="passengers">Passengers</label>
+            <input type="number" id="passengers" min="1" max="9" step="1" value="1" />
+          </div>
+          <div class="field">
+            <label for="serviceClass">Service Class</label>
+            <select id="serviceClass">
+              <option value=""></option>
+              <option value="Economy">Economy</option>
+              <option value="Premium Economy">Premium Economy</option>
+              <option value="Business">Business</option>
+              <option value="First">First</option>
+            </select>
+          </div>
         </div>
-        <div class="field">
-          <label for="cabin">Service Class</label>
-          <select id="serviceClass">
-            <option value=""></option>
-            <option value="Economy">Economy</option>
-            <option value="Premium Economy">Premium Economy</option>
-            <option value="Business">Business</option>
-            <option value="First">First</option>
-          </select>
+
+        <div class="inline-fields">
+          <div class="field">
+            <label for="departDate">Departure Date</label>
+            <input type="date" id="departDate" />
+          </div>
+          <div class="field">
+            <label for="returnDate">Return Date (Optional)</label>
+            <input type="date" id="returnDate" />
+          </div>
         </div>
-      </div>
 
-      <div class="inline-fields">
-        <div class="field">
-          <label for="departDate">Departure Date</label>
-          <input type="date" id="departDate" />
+        <div class="card-options">
+          <button class="option-btn active" id="exactBtn">Exact Date</button>
+          <button class="option-btn" id="flexBtn">Flexible ± Days</button>
         </div>
-        <div class="field">
-          <label for="returnDate">Return Date (Optional)</label>
-          <input type="date" id="returnDate" />
-        </div>
-      </div>
 
-      <div class="card-options">
-        <button class="option-btn active" id="exactBtn">Exact Date</button>
-        <button class="option-btn" id="flexBtn">Flexible ± Days</button>
-      </div>
+        <input type="hidden" id="mode" value="exact" />
 
-      <input type="hidden" id="mode" value="exact" />
-
-      <div id="flexPicker">
-        <label for="flexDays">Search within ± 14 days:</label>
+        <div id="flexPicker">
+          <label for="flexDays">Search within ± 14 days:</label>
           <select id="flexDays">
             <option value="">Select range</option>
             <option value="1">1 day</option>
@@ -68,87 +69,86 @@
           </select>
         </div>
 
-      <div class="checkbox-row">
-        <input type="checkbox" id="partnerSpace" />
-        <label for="partnerSpace">Include partner award space</label>
+        <div class="checkbox-row">
+          <input type="checkbox" id="partnerSpace" />
+          <label for="partnerSpace">Include partner award space</label>
+        </div>
+
+        <div class="program-row">
+          <label for="program">Airline Program</label>
+          <select id="program">
+            <option value="">All Programs</option>
+            <option value="american">American Airlines</option>
+            <option value="alaska">Alaska Airlines</option>
+            <option value="united">United Airlines</option>
+            <option value="delta">Delta Air Lines</option>
+            <option value="jetblue">JetBlue</option>
+            <option value="southwest">Southwest Airlines</option>
+            <option value="aeroplan">Air Canada Aeroplan</option>
+            <option value="avios">British Airways Avios</option>
+            <option value="flyingblue">Air France / KLM Flying Blue</option>
+            <option value="virginatlantic">Virgin Atlantic</option>
+            <option value="qantas">Qantas</option>
+            <option value="qatar">Qatar Airways Privilege Club</option>
+            <option value="ana">ANA Mileage Club</option>
+            <option value="emirates">Emirates Skywards</option>
+            <option value="etihad">Etihad Guest</option>
+            <option value="singapore">Singapore KrisFlyer</option>
+            <option value="turkish">Turkish Miles & Smiles</option>
+          </select>
+        </div>
       </div>
 
-      <div class="program-row">
-        <label for="program">Airline Program</label>
-        <select id="program">
-          <option value="">All Programs</option>
-          <option value="american">American Airlines</option>
-          <option value="alaska">Alaska Airlines</option>
-          <option value="united">United Airlines</option>
-          <option value="delta">Delta Air Lines</option>
-          <option value="jetblue">JetBlue</option>
-          <option value="southwest">Southwest Airlines</option>
-          <option value="aeroplan">Air Canada Aeroplan</option>
-          <option value="avios">British Airways Avios</option>
-          <option value="flyingblue">Air France / KLM Flying Blue</option>
-          <option value="virginatlantic">Virgin Atlantic</option>
-          <option value="qantas">Qantas</option>
-          <option value="qatar">Qatar Airways Privilege Club</option>
-          <option value="ana">ANA Mileage Club</option>
-          <option value="emirates">Emirates Skywards</option>
-          <option value="etihad">Etihad Guest</option>
-          <option value="singapore">Singapore KrisFlyer</option>
-          <option value="turkish">Turkish Miles & Smiles</option>
-        </select>
-      </div>
-      </div>
+      <!-- STEP 2 -->
+      <div class="step routing">
+        <h3><span class="step-num">2</span> Routing Preferences</h3>
 
-    <!-- STEP 2 -->
-    <div class="step routing">
-      <h3><span class="step-num">2</span> Routing Preferences</h3>
+        <label>Direct Non-stop</label>
+        <div class="toggle-group" id="directStop">
+          <button data-val="yes">Yes</button>
+          <button data-val="no" class="active">No</button>
+        </div>
 
-      <label>Direct Non-stop</label>
-      <div class="toggle-group" id="directStop">
-        <button data-val="yes">Yes</button>
-        <button data-val="no" class="active">No</button>
-      </div>
+        <label>Multiple Connections</label>
+        <div class="toggle-group" id="multiConn">
+          <button data-val="yes">Yes</button>
+          <button data-val="no" class="active">No</button>
+        </div>
 
-      <label>Multiple Connections</label>
-      <div class="toggle-group" id="multiConn">
-        <button data-val="yes">Yes</button>
-        <button data-val="no" class="active">No</button>
-      </div>
+        <label>Positioning Flight Allowed</label>
+        <div class="toggle-group" id="posFlight">
+          <button data-val="yes">Yes</button>
+          <button data-val="no" class="active">No</button>
+        </div>
 
-      <label>Positioning Flight Allowed</label>
-      <div class="toggle-group" id="posFlight">
-        <button data-val="yes">Yes</button>
-        <button data-val="no" class="active">No</button>
+        <div id="posWarning" class="pos-warning" style="display:none;">
+          Please select Yes or No for Positioning Flights.
+        </div>
+
+        <div class="checkbox-row">
+          <input type="checkbox" id="allowBudget" />
+          <label for="allowBudget">Include budget airlines</label>
+        </div>
+
+        <small class="budget-note">
+          Covers Spirit, Frontier, Ryanair, Etc.
+        </small>
+
+        <h3 style="margin-top: 28px;"><span class="step-num">3</span> Search</h3>
+
+        <button id="searchBtn" class="search-btn" type="submit" disabled>Search</button>
+        <small id="searchWarning" class="step-warning">Complete Step 2 to continue.</small>
       </div>
 
-      <div id="posWarning" class="pos-warning" style="display:none;">
-        Please select Yes or No for Positioning Flights.
-      </div>
+    </div> <!-- end search-panel -->
+  </form> <!-- end form -->
 
-      <div class="checkbox-row">
-        <input type="checkbox" id="allowBudget" />
-        <label for="allowBudget">Include budget airlines</label>
-      </div>
-      
-      <small class="budget-note">
-        Covers Spirit, Frontier, Ryanair, Etc.
-      </small>
-
-      <h3 style="margin-top: 28px;"><span class="step-num">3</span> Search</h3>
-
-      <button id="searchBtn" class="search-btn" type="submit" disabled>Search</button>
-         <small id="searchWarning" class="step-warning">Complete Step 2 to continue.</small>
-  </div>
-    </form>
-      <div id="spinner-overlay" class="spinner-overlay">
-  </div>
-
-    </form>
-    <div id="spinner-overlay" class="spinner-overlay">
-      <div class="gold-card">
-        <p>Your personalized ConciergeSync™ results...</p>
-      </div>
+  <div id="spinner-overlay" class="spinner-overlay">
+    <div class="gold-card">
+      <p>Your personalized ConciergeSync™ results...</p>
     </div>
+  </div>
 
-</div>
+</div> <!-- end redem-con -->
 
 <script src="/dev/js/redem-con.js"></script>
