@@ -397,8 +397,11 @@
   }
 
   function attachSearchHandler(root) {
-    const form = $qs(root, '#cs-redem-form') || $qs(document, '#cs-redem-form');
-    if (!form) return console.warn('redem-con: form #cs-redem-form not found');
+    const form = $qs(root, '#discovery-flights-form') || $qs(document, '#discovery-flights-form');
+    if (!form) return console.warn('Discovery – Flights: form not found');
+
+    console.log("🔗 attachSearchHandler: form found", form);
+    
     if (form.__csBound) return;
     form.__csBound = true;
 
