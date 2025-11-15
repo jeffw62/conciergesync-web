@@ -400,7 +400,7 @@
     if (form.__csBound) return;
     form.__csBound = true;
 
-    const btn = form.querySelector('button[type="submit"], #searchButton') || form.querySelector('.search-btn');
+   const btn = form.querySelector('#searchBtn');
     form.addEventListener('submit', function submitHandler(e) {
       e.preventDefault();
       if (!btn) return;
