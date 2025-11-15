@@ -198,6 +198,8 @@
      Button State Logic
   ============================================================ */
   function updateButtonState(ctx = root) {
+    console.log("🔍 updateButtonState root:", ctx, "searchButton:", searchButton);
+    
     const origin = ctx.querySelector("#origin")?.value.trim();
     const destination = ctx.querySelector("#destination")?.value.trim();
     const depart = ctx.querySelector("#departDate")?.value.trim();
