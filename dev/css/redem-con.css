@@ -459,13 +459,49 @@ input[type="number"]:focus {
   box-shadow: 0 0 8px rgba(188,166,106,0.6);
 }
 
+/* === ConciergeSync™ Custom Select === */
 select {
   appearance: none;
   -webkit-appearance: none;
   -moz-appearance: none;
-  background-image: url("data:image/svg+xml;utf8,<svg fill='white' height='12' width='12' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'><polygon points='0,0 20,0 10,10'/></svg>");
+
+  background-color: #1a2332;
+  border: 2px solid #bca66a;
+  border-radius: 10px;
+
+  padding: 10px 40px 10px 12px;
+  font-size: 1rem;
+  color: #ffffff;
+  font-family: inherit;
+
+  outline: none;
+  cursor: pointer;
+
+  background-image: url("data:image/svg+xml;utf8,<svg fill='%23bca66a' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5'/></svg>");
   background-repeat: no-repeat;
-  background-position: right 16px center;
-  background-size: 12px;
-  padding-right: 40px;
+  background-position: right 12px center;
+  background-size: 16px;
+}
+
+/* When open or focused */
+select:focus {
+  border-color: #e2cf91;
+  box-shadow: 0 0 8px rgba(188,166,106,0.6);
+}
+
+/* Option styles inside dropdown */
+select option {
+  background-color: #0f1824;
+  color: #ffffff;
+  padding: 10px;
+  font-size: 1rem;
+}
+
+input[type="number"] {
+  appearance: textfield;
+}
+
+input[type="number"]::-webkit-inner-spin-button,
+input[type="number"]::-webkit-outer-spin-button {
+  -webkit-appearance: none;
 }
