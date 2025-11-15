@@ -100,7 +100,7 @@
 }
 
 /* Layout ---------------------------------------------------- */
-.redem-con .search-panel {
+.redem-con form#discovery-flights-form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 42px;
