@@ -1,8 +1,8 @@
 <div class="redem-con">
 
   <div class="module-title">DISCOVERY - FLIGHT DECK</div>
-  <div class="search-panel" id="searchPanel">
-    <form id="discovery-flights-form">
+  <form id="discovery-flights-form">
+    <div class="search-panel" id="searchPanel">
 
     <!-- STEP 1 -->
     <div class="step">
@@ -137,15 +137,17 @@
 
       <button id="searchBtn" class="search-btn" type="submit" disabled>Search</button>
          <small id="searchWarning" class="step-warning">Complete Step 2 to continue.</small>
-    </div>
+  </div>
     </form>
+      <div id="spinner-overlay" class="spinner-overlay">
   </div>
 
-  <div id="spinner-overlay" class="spinner-overlay">
-    <div class="gold-card">
-      <p>Your personalized ConciergeSync™ results...</p>
+    </form>
+    <div id="spinner-overlay" class="spinner-overlay">
+      <div class="gold-card">
+        <p>Your personalized ConciergeSync™ results...</p>
+      </div>
     </div>
-  </div>
 
 </div>
 
