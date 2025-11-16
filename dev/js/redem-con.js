@@ -265,6 +265,43 @@
     console.log("Fallback recheck complete.");
   }, 1500);
 
+  /* ============================================================
+   Search Button Click Handler
+  ============================================================ */
+  searchButton.addEventListener("click", (e) => {
+    e.preventDefault();
+    e.stopPropagation();
+  
+    console.log("🔎 Search button clicked — collecting form data...");
+  
+    const payload = {
+      origin: root.querySelector("#origin")?.value.trim(),
+      destination: root.querySelector("#destination")?.value.trim(),
+      departDate: root.querySelector("#departDate")?.value,
+      returnDate: root.querySelector("#returnDate")?.value,
+      passengers: root.querySelector("#passengers")?.value,
+      serviceClass: root.querySelector("#serviceClass")?.value,
+      allowBudget: root.querySelector("#allowBudget")?.checked,
+      partnerSpace: root.querySelector("#partnerSpace")?.checked,
+      program: root.querySelector("#program")?.value,
+      direct: root.querySelector("#directStop button.active")?.dataset.val,
+      multi: root.querySelector("#multiConn button.active")?.dataset.val,
+      pos: root.querySelector("#posFlight button.active")?.dataset.val,
+      mode: root.querySelector("#mode")?.value,
+      flexDays: root.querySelector("#flexDays")?.value || null
+    };
+  
+    console.log("📦 Search payload:", payload);
+  
+    const overlay = root.querySelector("#spinner-overlay");
+    if (overlay) overlay.style.display = "flex";
+  
+    setTimeout(() => {
+      console.log("🎉 Payload ready — backend call goes here.");
+      overlay.style.display = "none";
+    }, 1500);
+  });
+  
   console.log("Redemption module fully initialized");
   console.groupEnd();
 })(); // ← Correctly closes the IIFE
