@@ -198,6 +198,7 @@
      Button State Logic
   ============================================================ */
   function updateButtonState(ctx = root) {
+    const searchWarning = ctx.querySelector("#searchWarning");
     console.log("🔍 updateButtonState root:", ctx, "searchButton:", searchButton);
     
     const origin = ctx.querySelector("#origin")?.value.trim();
@@ -246,6 +247,9 @@
       (mode === "exact" || (mode === "flex" && ctx.querySelector("#flexDays")?.value));
 
     searchButton.disabled = !ready;
+      if (searchWarning) {
+      searchWarning.style.opacity = ready ? "0" : "1";
+  }
     console.log(`Search button ${ready ? "ENABLED" : "disabled"}`);
   }
 
