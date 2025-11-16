@@ -109,47 +109,49 @@
       <!-- STEP 2 -->
       <div class="step routing">
         <h3><span class="step-num">2</span> Routing Preferences</h3>
-
+      
         <label>Direct Non-stop</label>
         <div class="toggle-group" id="directStop">
           <button type="button" data-val="yes">Yes</button>
           <button type="button" data-val="no" class="active">No</button>
         </div>
-        
+      
+        <label>Multiple Connections</label>
         <div class="toggle-group" id="multiConn">
           <button type="button" data-val="yes">Yes</button>
           <button type="button" data-val="no" class="active">No</button>
         </div>
-        
+      
+        <label>Positioning Flight Allowed</label>
         <div class="toggle-group" id="posFlight">
           <button type="button" data-val="yes">Yes</button>
           <button type="button" data-val="no" class="active">No</button>
         </div>
-
+      
         <div id="posWarning" class="pos-warning" style="display:none;">
           Please select Yes or No for Positioning Flights.
         </div>
-
+      
         <div class="checkbox-row">
           <input type="checkbox" id="allowBudget" />
           <label for="allowBudget">Include budget airlines</label>
         </div>
-
+      
         <small class="budget-note">
           Covers Spirit, Frontier, Ryanair, Etc.
         </small>
-
+      
         <h3 style="margin-top: 28px;">
           <span class="step-num">3</span> Search
         </h3>
-
+      
         <button id="searchBtn" class="search-btn" type="submit" disabled>Search</button>
         <small id="searchWarning" class="step-warning">Complete Step 2 to continue.</small>
       </div>
 
-    </div> <!-- END search-panel -->
+    </div> 
 
-  </form> <!-- END FORM -->
+  </form> 
 
   <!-- Spinner overlay -->
   <div id="spinner-overlay" class="spinner-overlay">
