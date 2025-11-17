@@ -89,7 +89,8 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
- background: linear-gradient(135deg, #BFA14A, #D2C28A);
+  background: #BFA14A !important;
+  background-image: none !important;
   color: #fff;
   font-size: 0.9rem;
   display: flex;
@@ -430,4 +431,10 @@ input[type="number"] {
 .redem-con *:focus {
   outline: none !important;
   box-shadow: none !important;
+}
+
+/* === CCT Gold Unification Override === */
+.step-num {
+  background: #BFA14A !important;
+  background-image: none !important;
 }
