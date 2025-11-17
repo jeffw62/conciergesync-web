@@ -408,17 +408,19 @@ input[type="number"] {
    Removes Chromium/Edge hidden focus elements
    ------------------------------------------------------- */
 
+/* Base border stays gold width for zero movement */
 .redem-con input,
 .redem-con select {
-  border: 1.4px solid rgba(255,255,255,0.15);
+  border: 2px solid rgba(255,255,255,0.15);
   outline: none !important;
 }
 
+/* Focus highlight uses glow only — no border width change */
 .redem-con input:focus,
 .redem-con input:focus-visible,
 .redem-con select:focus,
 .redem-con select:focus-visible {
-  border: 2px solid #BFA14A !important;
+  border-color: #BFA14A !important;         /* stays 2px */
   box-shadow: 0 0 0 3px rgba(191,161,74,0.25) !important;
   background: rgba(255,255,255,0.14) !important;
   outline: none !important;
