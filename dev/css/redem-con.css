@@ -89,7 +89,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #BFA14A;
+ background: linear-gradient(135deg, #BFA14A, #D2C28A);
   color: #fff;
   font-size: 0.9rem;
   display: flex;
@@ -177,7 +177,7 @@
 }
 
 .redem-con .toggle-group button.active {
-  background: #BFA14A;
+ background: linear-gradient(135deg, #BFA14A, #D2C28A);
   color: #fff;
   box-shadow: 0 3px 10px rgba(191,161,74,0.35);
 }
@@ -220,7 +220,7 @@
 }
 
 .redem-con .option-btn.active {
-  background: #BFA14A;
+  background: linear-gradient(135deg, #BFA14A, #D2C28A);
   border-color: #BFA14A;
   color: white;
   box-shadow: 0 6px 14px rgba(191,161,74,0.32);
@@ -278,7 +278,7 @@
 }
 
 .redem-con .search-btn:enabled {
-  background: linear-gradient(135deg, #BFA14A, #DCC990);
+  background: linear-gradient(135deg, #BFA14A, #D2C28A) !important;
   opacity: 1;
   cursor: pointer;
   color: white;
@@ -318,7 +318,7 @@
   left: 50%;
   transform: translate(-50%, -50%);
   padding: 28px 36px;
-  background: #BFA14A;
+  background: linear-gradient(135deg, #BFA14A, #D2C28A);
   border-radius: 14px;
   color: white;
   font-family: 'Cormorant Garamond', serif;
