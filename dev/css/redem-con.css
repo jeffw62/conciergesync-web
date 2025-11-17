@@ -455,8 +455,8 @@ input[type="number"] {
 }
 
 input[type="number"]:focus {
-  border-color: #e2cf91;
-  box-shadow: 0 0 8px rgba(188,166,106,0.6);
+  border-color: #BFA14A;
+  box-shadow: 0 0 0 3px rgba(191,161,74,0.25);
 }
 
 /* === ConciergeSync™ Custom Select === */
@@ -485,8 +485,8 @@ select {
 
 /* When open or focused */
 select:focus {
-  border-color: #e2cf91;
-  box-shadow: 0 0 8px rgba(188,166,106,0.6);
+  border-color: #BFA14A;
+  box-shadow: 0 0 0 3px rgba(191,161,74,0.25);
 }
 
 /* Option styles inside dropdown */
