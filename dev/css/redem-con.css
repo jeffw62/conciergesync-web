@@ -145,44 +145,6 @@
   background: rgba(255,255,255,0.14);
 }
 
-/* === ConciergeSync™ Custom Select === */
-select {
-  appearance: none;
-  -webkit-appearance: none;
-  -moz-appearance: none;
-
-  background-color: #1a2332;
-  border: 2px solid #bca66a;
-  border-radius: 10px;
-
-  padding: 10px 40px 10px 12px;
-  font-size: 1rem;
-  color: #ffffff;
-  font-family: inherit;
-
-  outline: none;
-  cursor: pointer;
-
-  background-image: url("data:image/svg+xml;utf8,<svg fill='%23bca66a' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5'/></svg>");
-  background-repeat: no-repeat;
-  background-position: right 12px center;
-  background-size: 16px;
-}
-
-/* When open or focused */
-select:focus {
-  border-color: #e2cf91;
-  box-shadow: 0 0 8px rgba(188,166,106,0.6);
-}
-
-/* Option styles inside dropdown */
-select option {
-  background-color: #0f1824;
-  color: #ffffff;
-  padding: 10px;
-  font-size: 1rem;
-}
-
 /* Inline fields -------------------------------------------- */
 .redem-con .inline-fields {
   display: flex;
@@ -438,25 +400,6 @@ input[type="number"]::-webkit-outer-spin-button {
 /* Remove Firefox number spinners */
 input[type="number"] {
   -moz-appearance: textfield;
-}
-
-/* CS Luxury Number Input Styling */
-input[type="number"] {
-  background-color: #1a2332;
-  border: 2px solid #bca66a;
-  border-radius: 10px;
-  padding: 10px 14px;
-  font-size: 1rem;
-  color: #ffffff;
-  font-family: inherit;
-  width: 100%;
-  outline: none;
-  transition: 0.15s ease;
-}
-
-input[type="number"]:focus {
-  border-color: #BFA14A;
-  box-shadow: 0 0 0 3px rgba(191,161,74,0.25);
 }
 
 /* === ConciergeSync™ Custom Select === */
