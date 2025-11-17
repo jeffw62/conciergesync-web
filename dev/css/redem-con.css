@@ -129,7 +129,7 @@
 .redem-con .field select {
   width: 100%;
   padding: 16px 15px 14px;
-  border: 1.4px solid rgba(255,255,255,0.28);
+  border: 1.4px solid rgba(255,255,255,0.15);
   border-radius: 10px;
   font-size: 1rem;
   transition: all 0.25s ease;
