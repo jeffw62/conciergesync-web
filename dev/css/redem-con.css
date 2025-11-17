@@ -402,7 +402,30 @@ input[type="number"] {
   -moz-appearance: textfield;
 }
 
-input:focus,
-select:focus {
-  border: 2px solid red !important;
+/* -------------------------------------------------------
+   CCT Universal Focus Controller for Flight Deck
+   Forces gold focus on ALL interactive fields
+   Removes Chromium/Edge hidden focus elements
+   ------------------------------------------------------- */
+
+.redem-con input,
+.redem-con select {
+  border: 1.4px solid rgba(255,255,255,0.15);
+  outline: none !important;
+}
+
+.redem-con input:focus,
+.redem-con input:focus-visible,
+.redem-con select:focus,
+.redem-con select:focus-visible {
+  border: 2px solid #BFA14A !important;
+  box-shadow: 0 0 0 3px rgba(191,161,74,0.25) !important;
+  background: rgba(255,255,255,0.14) !important;
+  outline: none !important;
+}
+
+/* KILL Chromium/Edge hidden focus target element */
+.redem-con *:focus {
+  outline: none !important;
+  box-shadow: none !important;
 }
