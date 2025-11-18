@@ -177,28 +177,31 @@
   transition: all 0.25s;
 }
 
+/* ACTIVE STATE — USE CS DEEP GOLD */
 .redem-con .toggle-group button.active {
- background: linear-gradient(135deg, #BFA14A, #D2C28A);
+  background: linear-gradient(135deg, #A89242, #CBB886);
   color: #fff;
-  box-shadow: 0 3px 10px rgba(191,161,74,0.35);
+  box-shadow: 0 3px 10px rgba(168,146,66,0.32); /* matched shadow tone */
 }
 
+/* Disabled toggle wrapper */
 .redem-con .toggle-group.disabled-toggle {
   opacity: 0.35;
   pointer-events: none;
   filter: grayscale(40%);
 }
 
+/* Positioning Flight Warning stays border-gold (correct CCT) */
 .redem-con .pos-warning {
-  background: rgba(191,161,74,0.18);  /* soft gold wash */
-  border-left: 4px solid #BFA14A;      /* luxury gold accent line */
+  background: rgba(191,161,74,0.18);  /* soft wash – correct */
+  border-left: 4px solid #BFA14A;      /* border gold – DO NOT CHANGE */
   padding: 10px 14px;
   border-radius: 8px;
   margin: 10px 0 18px 0;
   font-size: 0.9rem;
   color: #E8E4D8;
   line-height: 1.4;
-  display: none; /* default hidden, JS will toggle this */
+  display: none;
 }
 
 /* Exact / Flex --------------------------------------------- */
@@ -213,23 +216,24 @@
   padding: 15px;
   background: rgba(255,255,255,0.08);
   border-radius: 14px;
-  border: 1.3px solid rgba(255,255,255,0.2);
+  border: 1.3px solid rgba(255,255,255,0.20);
   cursor: pointer;
   font-weight: 600;
   transition: all 0.25s ease;
   color: #E8E4D8;
 }
 
+/* ACTIVE Exact/Flex button — Deep Gold */
 .redem-con .option-btn.active {
-  background: linear-gradient(135deg, #BFA14A, #D2C28A);
-  border-color: #BFA14A;
+  background: linear-gradient(135deg, #A89242, #CBB886);
+  border-color: #A89242;
   color: white;
-  box-shadow: 0 6px 14px rgba(191,161,74,0.32);
+  box-shadow: 0 6px 14px rgba(168,146,66,0.32);
 }
 
 /* Flex container */
 #flexPicker {
-  display: none;          /* hidden until flex is selected */
+  display: none;
   margin-top: 16px;
   padding: 8px 0;
 }
@@ -260,7 +264,12 @@
   color: #aaa;
 }
 
-/* Search Button -------------------------------------------- */
+
+/* ===========================
+   Search Button (CCT Luxury)
+   =========================== */
+
+/* INACTIVE (disabled) — SAME GOLD, muted with opacity */
 .redem-con .search-btn {
   width: 100%;
   padding: 18px;
@@ -271,28 +280,33 @@
   font-size: 1.15rem;
   letter-spacing: 1.1px;
   font-weight: 500;
-  background: #D8C993;
-  color: rgba(0,0,0,1.25);
+
+  /* ★ Deep gold, muted */
+  background: linear-gradient(135deg, #A89242, #CBB886);
+  opacity: 0.45;                   /* <— muted, elegant */
   cursor: not-allowed;
-  opacity: 0.7;
-  transition: all 0.3s;
+  color: rgba(255,255,255,0.55);   /* slightly faded text */
+
+  transition: all 0.3s ease;
 }
 
+/* ACTIVE — full brilliance */
 .redem-con .search-btn:enabled {
-  background: linear-gradient(135deg, #BFA14A, #D2C28A) !important;
+  background: linear-gradient(135deg, #A89242, #CBB886) !important;
   opacity: 1;
   cursor: pointer;
   color: white;
-  box-shadow: 0 8px 20px rgba(191,161,74,0.33);
+  box-shadow: 0 8px 20px rgba(168,146,66,0.33);
 }
 
+/* ACTIVE Hover — gentle lift only, no color change */
 .redem-con .search-btn:enabled:hover {
   transform: translateY(-3px);
-  background: linear-gradient(135deg, #D4B862, #E8D7A6);
 }
 
+/* keep heading spacing */
 .redem-con .step h3 {
-  margin-top: 16px;   /* was lower before */
+  margin-top: 16px;
 }
 
 /* Warning --------------------------------------------------- */
