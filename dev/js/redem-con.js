@@ -250,12 +250,6 @@
     const direct = ctx.querySelector("#directStop button.active")?.dataset.val;
     const multi  = ctx.querySelector("#multiConn button.active")?.dataset.val;
     const pos    = ctx.querySelector("#posFlight button.active")?.dataset.val;
-
-    if (multi === "yes" && !pos) {
-      searchButton.disabled = true;
-      return;
-    }
-
     const mode = ctx.querySelector("#mode")?.value;
 
     if (!["exact", "flex"].includes(mode)) {
@@ -274,11 +268,6 @@
       }
     }
 
-    if (direct === "no" && multi === "no") {
-      searchButton.disabled = true;
-      return;
-    }
-    
     const ready =
       origin &&
       destination &&
