@@ -301,9 +301,9 @@
       (mode === "exact" || (mode === "flex" && ctx.querySelector("#flexDays")?.value));
 
     searchButton.disabled = !ready;
-      if (searchWarning) {
+    if (searchWarning) {
       searchWarning.style.opacity = ready ? "0" : "1";
-  }
+    }
     console.log(`Search button ${ready ? "ENABLED" : "disabled"}`);
   }
 
