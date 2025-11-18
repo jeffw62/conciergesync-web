@@ -89,7 +89,7 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #BFA14A !important;
+  background: #A89242 !important;
   background-image: none !important;
   color: #fff;
   font-size: 0.9rem;
@@ -435,6 +435,6 @@ input[type="number"] {
 
 /* === CCT Gold Unification Override === */
 .step-num {
-  background: #BFA14A !important;
+  background: #A89242 !important;
   background-image: none !important;
 }
