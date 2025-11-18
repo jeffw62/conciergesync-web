@@ -313,11 +313,11 @@ const payload = {
   program:        root.querySelector("#program")?.value,
 
   // 🔥 These three must use DOM queries, nothing else
-  direct:  root.querySelector("#directStop .active")?.dataset.val || "no",
-  multi:   root.querySelector("#multiConn .active")?.dataset.val  || "no",
-  pos:     root.querySelector("#posFlight .active")?.dataset.val  || "no",
+   direct: ctx.querySelector("#directStop .active")?.dataset.val || "no",
+   multi:  ctx.querySelector("#multiConn .active")?.dataset.val || "no",
+   pos:    ctx.querySelector("#posFlight .active")?.dataset.val || "no",
+   mode:   ctx.querySelector("#mode")?.value,
 
-  mode:    root.querySelector("#mode")?.value,
   flexDays: root.querySelector("#flexDays")?.value || null
 };
 
