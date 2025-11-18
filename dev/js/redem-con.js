@@ -121,43 +121,42 @@ async function setupIataAutocomplete(ctx) {
 }
 
 /* =========================================
-   BUTTON READINESS — CCT STANDARD
-   ========================================= */
-   function updateButtonState(ctx = document) {
-     const origin       = ctx.querySelector("#origin")?.value.trim();
-     const destination  = ctx.querySelector("#destination")?.value.trim();
-     const depart       = ctx.querySelector("#departDate")?.value.trim();
-     const serviceClass = ctx.querySelector("#serviceClass")?.value.trim();
-     const passengers   = ctx.querySelector("#passengers")?.value.trim();
-     const mode         = ctx.querySelector("#mode")?.value;
-   
-     const directVal = ctx.querySelector("#directStop .active")?.dataset.val || "no";
-     const multiVal  = ctx.querySelector("#multiConn .active")?.dataset.val  || "no";
-     const posVal    = ctx.querySelector("#posFlight .active")?.dataset.val  || "no";
-   
-     let ready =
-       origin &&
-       destination &&
-       depart &&
-       serviceClass &&
-       passengers &&
-       (directVal === "yes" || multiVal === "yes") &&
-       (multiVal !== "yes" || posVal === "yes");
-   
-     if (mode === "flex") {
-       ready =
-         ready &&
-         Boolean(ctx.querySelector("#flexDays")?.value);
-     }
-   
-     const btn = ctx.querySelector("#searchBtn");
-     if (btn) btn.disabled = !ready;
-   
-     const warn = ctx.querySelector("#searchWarning");
-     if (warn) warn.style.opacity = ready ? "0" : "1";
-   
-     console.log("Search:", ready ? "ENABLED" : "DISABLED");
-   }
+BUTTON READINESS — CCT STANDARD
+========================================= */
+  function updateButtonState(ctx) {
+  const origin       = ctx.querySelector("#origin")?.value.trim();
+  const destination  = ctx.querySelector("#destination")?.value.trim();
+  const depart       = ctx.querySelector("#departDate")?.value.trim();
+  const serviceClass = ctx.querySelector("#serviceClass")?.value.trim();
+  const passengers   = ctx.querySelector("#passengers")?.value.trim();
+  const mode         = ctx.querySelector("#mode")?.value;
+
+  // Routing toggle values
+  const directVal = ctx.querySelector("#directStop .active")?.dataset.val || "no";
+  const multiVal  = ctx.querySelector("#multiConn .active")?.dataset.val  || "no";
+  const posVal    = ctx.querySelector("#posFlight .active")?.dataset.val  || "no";
+
+  let ready =
+    origin &&
+    destination &&
+    depart &&
+    serviceClass &&
+    passengers &&
+    (directVal === "yes" || multiVal === "yes") &&
+    (multiVal !== "yes" || posVal === "yes");
+
+  if (mode === "flex") {
+    ready = ready && Boolean(ctx.querySelector("#flexDays")?.value);
+  }
+
+  const btn = ctx.querySelector("#searchBtn");
+  if (btn) btn.disabled = !ready;
+
+  const warn = ctx.querySelector("#searchWarning");
+  if (warn) warn.style.opacity = ready ? "0" : "1";
+
+  console.log("Search:", ready ? "ENABLED" : "DISABLED");
+}
 
 /* ============================================================
    2. ROUTING TOGGLE LOGIC — CCT STANDARD
