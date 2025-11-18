@@ -224,7 +224,7 @@ function applyRoutingRules(ctx, lastClickedGroup) {
    
      updateButtonState(ctx);
    }
-
+}
 /* Bind click listeners */
 function setupToggleLogic(ctx) {
   directGroup = ctx.querySelector("#directStop");
@@ -366,4 +366,3 @@ document.addEventListener("click", e => {
     console.log("Payload ready → backend");
   }, 1500);
 });
-/*This code SUCKS*/
