@@ -336,9 +336,19 @@ console.log("🔥 redem-con.js loaded, file executed");
     if (root) init(root);
   });
 
-  window.addEventListener("DOMContentLoaded", () => {
+   window.addEventListener("DOMContentLoaded", () => {
     const lateRoot = document.querySelector(".redem-con");
     if (lateRoot) init(lateRoot);
   });
+
+  // FINAL FALLBACK: auto-init when .redem-con appears
+  const mo = new MutationObserver(() => {
+    const el = document.querySelector(".redem-con");
+    if (el && !el.__redemInitialized) {
+      init(el);
+      mo.disconnect();
+    }
+  });
+  mo.observe(document.body, { childList: true, subtree: true });
 
 })();
