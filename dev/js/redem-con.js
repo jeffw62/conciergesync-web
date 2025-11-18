@@ -112,14 +112,12 @@
   // CCT: Clarity • Clean • True
   // ============================================================
   
-  // Dynamically pull fresh toggle groups (injected DOM)
-  function getToggleGroups() {
-    return {
-      directGroup: document.querySelector("#directStop"),
-      multiGroup:  document.querySelector("#multiConn"),
-      posGroup:    document.querySelector("#posFlight"),
-    };
-  }
+  // ===========================================================
+  //  TOGGLE GROUP REFERENCES
+  // ===========================================================
+  const directGroup = document.querySelector("#directStop");
+  const multiGroup  = document.querySelector("#multiConn");
+  const posGroup    = document.querySelector("#posFlight");
   
   // ============================================================
   // BASIC HELPERS
@@ -178,9 +176,7 @@
   
    // ============================================================
   //  EVENT LISTENERS (Corrected - CCT Clean Version)
-  // ============================================================
-  [ directGroup, multiGroup, posGroup ].forEach(group => {
-  
+  // ============================================================  
     group.querySelectorAll("button").forEach(btn => {
   
       btn.addEventListener("click", () => {
