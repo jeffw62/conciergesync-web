@@ -97,64 +97,107 @@
     console.log("IATA autocomplete active");
   }
 
-  /* ============================================================
-     Toggle Logic (Direct / Multi / Positioning)
-  ============================================================ */
-  function setupToggleLogic(ctx = root) {
-    let posWarningTimer = null;
-    
-    const posWarning = ctx.querySelector("#posWarning");
-    const toggles = ctx.querySelectorAll("#directStop button, #multiConn button, #posFlight button");
-    toggles.forEach(btn => {
-      btn.addEventListener("click", e => {
-        const parent = e.target.closest("div");
-        parent.querySelectorAll("button").forEach(b => b.classList.remove("active"));
-        e.target.classList.add("active");
-        
-        // --- Show/hide Positioning warning depending on state ---
-        if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
-          setToggleState("directStop", "no");
-          root.querySelector("#posFlight")?.classList.remove("disabled-toggle");
-        
-          const posActive = ctx.querySelector("#posFlight button.active")?.dataset.val;
-          if (!posActive) {
-            clearTimeout(posWarningTimer);
-            posWarningTimer = setTimeout(() => {
-              posWarning.style.display = "block";
-            }, 120);
-          }
-        }
-        
-        if (parent.id === "posFlight") {
-          clearTimeout(posWarningTimer);
-          posWarning.style.display = "none";
-        }
-        
-        if (parent.id === "multiConn" && e.target.dataset.val === "no") {
-          clearTimeout(posWarningTimer);
-          posWarning.style.display = "none";
-        }
-        
-        if (parent.id === "directStop" && e.target.dataset.val === "yes") {
-          setToggleState("multiConn", "no");
-          setToggleState("posFlight", "no");
-          clearTimeout(posWarningTimer);
-          posWarning.style.display = "none";
-        }
-        
-        if (parent.id === "directStop" && e.target.dataset.val === "no") {
-          root.querySelector("#posFlight")?.classList.remove("disabled-toggle");
-        }
-        
-        if (parent.id === "multiConn" && e.target.dataset.val === "yes") {
-          setToggleState("directStop", "no");
-        }
-        
-        updateButtonState(ctx);
-      });
-    });
-    console.log("Toggle logic active");
+  // ============================================================
+  // ConciergeSync™ Routing Logic
+  // Direct / Multi / Positioning Ruleset
+  // CCT: Clarity • Clean • True
+  // ============================================================
+  
+  // Grab toggle groups
+  const directGroup = document.getElementById("directStop");
+  const multiGroup = document.getElementById("multiConn");
+  const posGroup   = document.getElementById("posFlight");
+  
+  // Helper: set toggle state
+  function setToggle(group, value) {
+    const yesBtn = group.querySelector("button[data-val='yes']");
+    const noBtn  = group.querySelector("button[data-val='no']");
+  
+    if (value === "yes") {
+      yesBtn.classList.add("active");
+      noBtn.classList.remove("active");
+    } else {
+      noBtn.classList.add("active");
+      yesBtn.classList.remove("active");
+    }
   }
+  
+  // Helper: lock/unlock group
+  function lockToggle(group, locked) {
+    if (locked) {
+      group.classList.add("disabled-toggle");
+    } else {
+      group.classList.remove("disabled-toggle");
+    }
+  }
+  
+  // MASTER LOGIC ENGINE
+  function applyRoutingRules() {
+  
+    const directVal = directGroup.querySelector(".active").dataset.val;
+    const multiVal  = multiGroup.querySelector(".active").dataset.val;
+  
+    // ============================================================
+    // RULE 1 — Direct = YES → strongest rule in the system
+    // ============================================================
+    if (directVal === "yes") {
+      setToggle(multiGroup, "no");     // auto-set
+      setToggle(posGroup, "no");       // auto-set
+  
+      lockToggle(posGroup, true);      // locked
+      lockToggle(multiGroup, false);   // multi stays clickable
+  
+      return; // Direct mode dominates
+    }
+  
+    // ============================================================
+    // RULE 2 — Multi = YES → second strongest
+    // ============================================================
+    if (multiVal === "yes") {
+      setToggle(directGroup, "no");    // auto-set
+  
+      lockToggle(posGroup, false);     // positioning unlocked
+      return;
+    }
+  
+    // ============================================================
+    // RULE 3 — Neutral Mode (Direct=NO & Multi=NO)
+    // ============================================================
+    // Positioning must be NO and locked
+    setToggle(posGroup, "no");
+    lockToggle(posGroup, true);
+  }
+  
+  // ============================================================
+  // EVENT LISTENERS — listen for ALL button clicks in each group
+  // ============================================================
+  [directGroup, multiGroup, posGroup].forEach(group => {
+    const yesBtn = group.querySelector("button[data-val='yes']");
+    const noBtn  = group.querySelector("button[data-val='no']");
+  
+    yesBtn.addEventListener("click", () => {
+      yesBtn.classList.add("active");
+      noBtn.classList.remove("active");
+      applyRoutingRules();
+    });
+  
+    noBtn.addEventListener("click", () => {
+      noBtn.classList.add("active");
+      yesBtn.classList.remove("active");
+      applyRoutingRules();
+    });
+  });
+  
+  // ============================================================
+  // Set initial state on load (neutral mode)
+  // ============================================================
+  setToggle(directGroup, "no");
+  setToggle(multiGroup, "no");
+  setToggle(posGroup, "no");
+  lockToggle(posGroup, true);
+  
+  applyRoutingRules();
+
 
   /* ============================================================
      Flex-Day Logic
