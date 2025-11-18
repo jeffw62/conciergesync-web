@@ -145,33 +145,61 @@ function lockToggle(group, locked) {
 }
 
 /* MASTER RULE ENGINE */
-function applyRoutingRules(ctx) {
+function applyRoutingRules(ctx, lastClickedGroup) {
   const directVal = directGroup.querySelector(".active")?.dataset.val || "no";
   const multiVal  = multiGroup.querySelector(".active")?.dataset.val  || "no";
 
-  /* ---------- RULESET 1: Direct = YES ---------- */
+  /* ------------------------------------------------------------------
+     RULE: If the user clicked DIRECT
+     ------------------------------------------------------------------*/
+  if (lastClickedGroup === directGroup && directVal === "yes") {
+    // Direct YES → force Multi NO (but do NOT lock)
+    setToggle(multiGroup, "no");
+
+    // Positioning always locked when Direct is YES
+    setToggle(posGroup, "no");
+    lockToggle(posGroup, true);
+
+    updateButtonState(ctx);
+    return;
+  }
+
+  /* ------------------------------------------------------------------
+     RULE: If the user clicked MULTI
+     ------------------------------------------------------------------*/
+  if (lastClickedGroup === multiGroup && multiVal === "yes") {
+    // Multi YES → force Direct NO
+    setToggle(directGroup, "no");
+
+    // Positioning unlocked only in Multi YES
+    lockToggle(posGroup, false);
+
+    updateButtonState(ctx);
+    return;
+  }
+
+  /* ------------------------------------------------------------------
+     GENERAL STATE COMPUTATION (fallback)
+     ------------------------------------------------------------------*/
+
+  // If both are NO → neutral mode
+  if (directVal === "no" && multiVal === "no") {
+    setToggle(posGroup, "no");
+    lockToggle(posGroup, true);
+  }
+
+  // If direct somehow YES → enforce Direct mode
   if (directVal === "yes") {
     setToggle(multiGroup, "no");
-    setToggle(posGroup,   "no");
-
-    lockToggle(posGroup, true);   // pos locked
-    lockToggle(multiGroup, false); // multi clickable
-
-    updateButtonState(ctx);
-    return;
+    setToggle(posGroup, "no");
+    lockToggle(posGroup, true);
   }
 
-  /* ---------- RULESET 2: Multi = YES ---------- */
+  // If multi YES → enforce Multi mode
   if (multiVal === "yes") {
     setToggle(directGroup, "no");
-    lockToggle(posGroup, false);  // pos unlocked
-    updateButtonState(ctx);
-    return;
+    lockToggle(posGroup, false);
   }
-
-  /* ---------- RULESET 3: Neutral (both NO) ---------- */
-  setToggle(posGroup, "no");
-  lockToggle(posGroup, true);
 
   updateButtonState(ctx);
 }
@@ -191,7 +219,7 @@ function setupToggleLogic(ctx) {
     group.querySelectorAll("button").forEach(btn => {
       btn.addEventListener("click", () => {
         setToggle(group, btn.dataset.val);
-        applyRoutingRules(ctx);
+        applyRoutingRules(ctx, group); // ← THE CRITICAL FIX
       });
     });
   });
