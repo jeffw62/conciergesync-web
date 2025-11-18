@@ -307,9 +307,9 @@
   /* ============================================================
      Initialize all submodules
   ============================================================ */
-  setupIataAutocomplete(root);
-  setupFlexDaysLogic(root);
-  updateButtonState(root);
+  setupIataAutocomplete(document);
+  setupFlexDaysLogic(document);
+  updateButtonState(document);
 
   /* ============================================================
      Fallback Safety Timer (handles async injection delays)
