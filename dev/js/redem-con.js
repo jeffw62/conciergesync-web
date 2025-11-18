@@ -10,6 +10,7 @@
     console.group("Initializing Redemption Module");
   
     const root = document; // injected workspace root
+    const ROOT = root;
   
     // Bind globals
     searchButton = ROOT.querySelector("#searchBtn");
