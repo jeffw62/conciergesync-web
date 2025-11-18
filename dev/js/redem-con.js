@@ -12,10 +12,10 @@
     const root = document; // injected workspace root
   
     // Bind globals
-    searchButton = ROOT.querySelector("#searchBtn");
+    searchButton = root.querySelector("#searchBtn");
   
-    const originInput = ROOT.querySelector("#origin");
-    const destinationInput = ROOT.querySelector("#destination");
+    const originInput = root.querySelector("#origin");
+    const destinationInput = root.querySelector("#destination");
   
     // --- Ensure required elements exist ---
     if (!originInput || !destinationInput || !searchButton) {
