@@ -112,15 +112,17 @@
   // CCT: Clarity • Clean • True
   // ============================================================
   
-  // ============================================================
-  //  TOGGLE GROUP REFERENCES
-  // ============================================================
-  const directGroup = document.getElementById("directStop");
-  const multiGroup  = document.getElementById("multiConn");
-  const posGroup    = document.getElementById("posFlight");
+  // Dynamically pull fresh toggle groups (injected DOM)
+  function getToggleGroups() {
+    return {
+      directGroup: document.querySelector("#directStop"),
+      multiGroup:  document.querySelector("#multiConn"),
+      posGroup:    document.querySelector("#posFlight"),
+    };
+  }
   
   // ============================================================
-  //  BASIC HELPERS
+  // BASIC HELPERS
   // ============================================================
   function setToggle(group, value) {
     const yesBtn = group.querySelector("button[data-val='yes']");
@@ -144,82 +146,77 @@
   }
   
   // ============================================================
-  //  MASTER LOGIC ENGINE
+  // MASTER RULE ENGINE
   // ============================================================
   function applyRoutingRules() {
+    const { directGroup, multiGroup, posGroup } = getToggleGroups();
   
     const directVal = directGroup.querySelector(".active").dataset.val;
     const multiVal  = multiGroup.querySelector(".active").dataset.val;
   
-    // ------------ RULESET 1: Direct = YES ---------------
+    // ---------- RULESET 1: Direct = YES ----------
     if (directVal === "yes") {
-  
-      // Auto-set the others
       setToggle(multiGroup, "no");
       setToggle(posGroup, "no");
   
-      // Positioning locked (correct)
-      lockToggle(posGroup, true);
-  
-      // Multi must ALWAYS remain clickable (critical fix)
-      lockToggle(multiGroup, false);
+      lockToggle(posGroup, true);     // pos locked
+      lockToggle(multiGroup, false);  // multi stays clickable
   
       return;
     }
   
-    // ------------ RULESET 2: Multi = YES ----------------
+    // ---------- RULESET 2: Multi = YES ----------
     if (multiVal === "yes") {
-  
-      // Direct auto-set to NO
       setToggle(directGroup, "no");
   
-      // Positioning unlocked
-      lockToggle(posGroup, false);
+      lockToggle(posGroup, false);    // pos unlocked
       return;
     }
   
-    // ------------ RULESET 3: Neutral --------------------
-    // Direct = NO, Multi = NO
-    // Positioning must be NO + locked
+    // ---------- RULESET 3: Neutral (Direct=NO & Multi=NO) ----------
     setToggle(posGroup, "no");
     lockToggle(posGroup, true);
   }
   
   // ============================================================
-  //  EVENT LISTENERS
+  // EVENT LISTENERS
   // ============================================================
-  [directGroup, multiGroup, posGroup].forEach(group => {
+  (function bindRoutingListeners() {
+    const { directGroup, multiGroup, posGroup } = getToggleGroups();
   
-    const yesBtn = group.querySelector("button[data-val='yes']");
-    const noBtn  = group.querySelector("button[data-val='no']");
+    [directGroup, multiGroup, posGroup].forEach(group => {
+      const yesBtn = group.querySelector("button[data-val='yes']");
+      const noBtn  = group.querySelector("button[data-val='no']");
   
-    yesBtn.addEventListener("click", () => {
-      yesBtn.classList.add("active");
-      noBtn.classList.remove("active");
-      applyRoutingRules();
-      updateButtonState(document);
+      yesBtn.addEventListener("click", () => {
+        yesBtn.classList.add("active");
+        noBtn.classList.remove("active");
+        applyRoutingRules();
+        updateButtonState(document);
+      });
+  
+      noBtn.addEventListener("click", () => {
+        noBtn.classList.add("active");
+        yesBtn.classList.remove("active");
+        applyRoutingRules();
+        updateButtonState(document);
+      });
     });
-  
-    noBtn.addEventListener("click", () => {
-      noBtn.classList.add("active");
-      yesBtn.classList.remove("active");
-      applyRoutingRules();
-      updateButtonState(document);
-    });
-  
-  });
+  })();
   
   // ============================================================
-  //  INITIAL STATE
+  // INITIAL STATE
   // ============================================================
-  setToggle(directGroup, "no");
-  setToggle(multiGroup, "no");
-  setToggle(posGroup, "no");
-  lockToggle(posGroup, true);
+  (function initRoutingState() {
+    const { directGroup, multiGroup, posGroup } = getToggleGroups();
   
-  applyRoutingRules();
-
-
+    setToggle(directGroup, "no");
+    setToggle(multiGroup, "no");
+    setToggle(posGroup, "no");
+    lockToggle(posGroup, true);
+  
+    applyRoutingRules();
+  })();
 
   /* ============================================================
      Flex-Day Logic
