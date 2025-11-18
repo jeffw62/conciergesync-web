@@ -280,32 +280,25 @@ function setupFlexDaysLogic(ctx) {
 /* ============================================================
    4. SEARCH BUTTON READINESS
 ============================================================ */
-function updateButtonState(ctx) {
-  if (!searchButton) return;
+const payload = {
+  origin:         root.querySelector("#origin")?.value.trim(),
+  destination:    root.querySelector("#destination")?.value.trim(),
+  departDate:     root.querySelector("#departDate")?.value,
+  returnDate:     root.querySelector("#returnDate")?.value || null,
+  passengers:     root.querySelector("#passengers")?.value,
+  serviceClass:   root.querySelector("#serviceClass")?.value,
+  allowBudget:    root.querySelector("#allowBudget")?.checked,
+  partnerSpace:   root.querySelector("#partnerSpace")?.checked,
+  program:        root.querySelector("#program")?.value,
 
-  const origin       = ctx.querySelector("#origin")?.value.trim();
-  const destination  = ctx.querySelector("#destination")?.value.trim();
-  const depart       = ctx.querySelector("#departDate")?.value.trim();
-  const serviceClass = ctx.querySelector("#serviceClass")?.value;
-  const passengers   = ctx.querySelector("#passengers")?.value;
-  const mode         = ctx.querySelector("#mode")?.value;
+  // 🔥 These three must use DOM queries, nothing else
+  direct:  root.querySelector("#directStop .active")?.dataset.val || "no",
+  multi:   root.querySelector("#multiConn .active")?.dataset.val  || "no",
+  pos:     root.querySelector("#posFlight .active")?.dataset.val  || "no",
 
-  const directVal = ctx.querySelector("#directStop .active")?.dataset.val || "no";
-  const multiVal  = ctx.querySelector("#multiConn .active")?.dataset.val || "no";
-  const posVal    = ctx.querySelector("#posFlight .active")?.dataset.val || "no";
-
-  let ready =
-    origin &&
-    destination &&
-    depart &&
-    serviceClass &&
-    passengers &&
-    (directVal === "yes" || multiVal === "yes") &&
-    (multiVal !== "yes" || posVal === "yes"); // pos required if multi=yes
-
-  if (mode === "flex") {
-    ready = ready && Boolean(ctx.querySelector("#flexDays")?.value);
-  }
+  mode:    root.querySelector("#mode")?.value,
+  flexDays: root.querySelector("#flexDays")?.value || null
+};
 
   searchButton.disabled = !ready;
 
