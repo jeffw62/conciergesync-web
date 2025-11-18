@@ -1,19 +1,22 @@
 // ========================================================================
-//  ConciergeSync™  —  REDEMPTION MODULE (CCT CLEAN REBUILD — FAULT-TOLERANT)
-//  Works with module:ready, late-load, early-load, or missing-event injection
+//  ConciergeSync™ — REDEMPTION MODULE (FINAL — FULL IATA + ROUTING + FLEX)
+//  Fully headless, injection-safe, fault-tolerant initializer
+//  Zero globals, zero leakage, zero spaghetti
 // ========================================================================
 
 (function () {
 
-  // -----------------------------
+  // =====================================================================
   // MASTER INITIALIZER
-  // -----------------------------
+  // =====================================================================
   function init(root) {
     if (!root) return;
-    if (root.__redemInitialized) return; // avoid duplicate bootstraps
+    if (root.__redemInitialized) return; // prevent double load
     root.__redemInitialized = true;
 
-    // ------- ELEMENT GETTERS -------
+    // -----------------------------
+    // ELEMENT GETTERS
+    // -----------------------------
     const origin        = root.querySelector("#origin");
     const destination   = root.querySelector("#destination");
     const departDate    = root.querySelector("#departDate");
@@ -33,20 +36,83 @@
     const directGroup   = root.querySelector("#directStop");
     const multiGroup    = root.querySelector("#multiConn");
     const posGroup      = root.querySelector("#posFlight");
-    const posWarning    = root.querySelector("#posWarning");
 
     const searchBtn     = root.querySelector("#searchBtn");
     const searchWarning = root.querySelector("#searchWarning");
 
     const spinner       = root.querySelector("#spinner-overlay");
 
+    const originSug     = root.querySelector("#origin-suggestions");
+    const destSug       = root.querySelector("#destination-suggestions");
+
     if (!origin) return; // safety
 
     flexPicker.style.display = "none";
 
-    // ============================================================
+    // =====================================================================
+    // IATA AUTOLOAD
+    // =====================================================================
+    let iataData = null;
+
+    async function loadIATA() {
+      if (iataData) return iataData;
+      try {
+        const res = await fetch("/dev/asset/iata-icao.json");
+        iataData = await res.json();
+      } catch (e) {
+        console.error("IATA load error:", e);
+        iataData = [];
+      }
+      return iataData;
+    }
+
+    function renderSuggestions(list, box) {
+      box.innerHTML = "";
+      if (!list.length) {
+        box.style.display = "none";
+        return;
+      }
+      list.forEach(item => {
+        const div = document.createElement("div");
+        div.className = "suggestion-item";
+        div.textContent = `${item.iata} — ${item.city}, ${item.country}`;
+        div.addEventListener("click", () => {
+          if (box === originSug) origin.value = item.iata;
+          else destination.value = item.iata;
+          box.innerHTML = "";
+          box.style.display = "none";
+          validateReady();
+        });
+        box.appendChild(div);
+      });
+      box.style.display = "block";
+    }
+
+    async function attachIATA(input, box) {
+      await loadIATA();
+      input.addEventListener("input", () => {
+        const q = input.value.trim().toUpperCase();
+        if (!q || !iataData) {
+          box.style.display = "none";
+          return;
+        }
+        const filt = iataData.filter(a =>
+          a.iata.startsWith(q) ||
+          a.city.toUpperCase().includes(q)
+        ).slice(0, 12);
+        renderSuggestions(filt, box);
+      });
+      input.addEventListener("blur", () => {
+        setTimeout(() => { box.style.display = "none"; }, 150);
+      });
+    }
+
+    attachIATA(origin, originSug);
+    attachIATA(destination, destSug);
+
+    // =====================================================================
     // BUTTON GROUP HELPERS
-    // ============================================================
+    // =====================================================================
     function setActive(group, val) {
       const btns = group.querySelectorAll("button");
       btns.forEach(b => {
@@ -69,35 +135,34 @@
       group.querySelectorAll("button").forEach(b => b.disabled = false);
     }
 
-    // ============================================================
+    // =====================================================================
     // ROUTING LOGIC — FINAL MATRIX
-    // ============================================================
+    // =====================================================================
     function applyRoutingRules() {
       const direct = getVal(directGroup);
       const multi  = getVal(multiGroup);
 
-      // ---- DIRECT = YES → everything else locked NO ----
+      // ---- DIRECT = YES ----
       if (direct === "yes") {
         setActive(multiGroup, "no");
         disableGroup(multiGroup);
 
         setActive(posGroup, "no");
         disableGroup(posGroup);
-
         return;
       }
 
-      // ---- MULTI = YES → pos active, direct locked NO ----
+      // ---- MULTI = YES ----
       if (multi === "yes") {
         setActive(directGroup, "no");
         disableGroup(directGroup);
 
+        // pos active but starting NO
         enableGroup(posGroup);
-        // positioning starts NO, user may toggle to YES
         return;
       }
 
-      // ---- BOTH NO → pos locked NO ----
+      // ---- BOTH NO ----
       enableGroup(directGroup);
       enableGroup(multiGroup);
 
@@ -105,9 +170,9 @@
       disableGroup(posGroup);
     }
 
-    // ============================================================
-    // BUTTON GROUP LISTENERS
-    // ============================================================
+    // =====================================================================
+    // GROUP TOGGLE LISTENERS
+    // =====================================================================
     function attachToggleBehavior(group, onChange) {
       group.querySelectorAll("button").forEach(btn => {
         btn.addEventListener("click", () => {
@@ -132,9 +197,9 @@
       validateReady();
     });
 
-    // ============================================================
-    // EXACT / FLEX MODE
-    // ============================================================
+    // =====================================================================
+    // EXACT / FLEX
+    // =====================================================================
     exactBtn.addEventListener("click", () => {
       modeField.value = "exact";
       exactBtn.classList.add("active");
@@ -151,15 +216,16 @@
       validateReady();
     });
 
-    // ============================================================
-    // READINESS CHECK
-    // ============================================================
+    // =====================================================================
+    // READINESS VALIDATOR
+    // =====================================================================
     function validateReady() {
       const o = origin.value.trim();
       const d = destination.value.trim();
       const dd = departDate.value.trim();
       const sc = serviceClass.value.trim();
       const pax = passengers.value.trim();
+
       const direct = getVal(directGroup);
       const multi  = getVal(multiGroup);
       const mode   = modeField.value;
@@ -178,22 +244,23 @@
         return;
       }
 
-      if (multi === "yes") {
-        enableGroup(posGroup);
-      }
+      // multi=yes → pos available
+      if (multi === "yes") enableGroup(posGroup);
 
       searchBtn.disabled = false;
       searchWarning.style.display = "none";
     }
 
-    [origin, destination, departDate, passengers, serviceClass, program, flexDays]
-      .forEach(el => el?.addEventListener("input", validateReady));
+    [
+      origin, destination, departDate, passengers,
+      serviceClass, program, flexDays
+    ].forEach(el => el?.addEventListener("input", validateReady));
 
     returnDate?.addEventListener("change", validateReady);
 
-    // ============================================================
-    // PAYLOAD BUILDER
-    // ============================================================
+    // =====================================================================
+    // SEARCH PAYLOAD
+    // =====================================================================
     function buildPayload() {
       return {
         origin:        origin.value.trim(),
@@ -215,14 +282,14 @@
       };
     }
 
-    // ============================================================
-    // SEARCH HANDLER
-    // ============================================================
+    // =====================================================================
+    // SEARCH EXECUTION
+    // =====================================================================
     searchBtn.addEventListener("click", async () => {
       if (searchBtn.disabled) return;
 
       const payload = buildPayload();
-      console.log("🔍 FLIGHT SEARCH PAYLOAD:", payload);
+      console.log("🔍 SEARCH PAYLOAD:", payload);
 
       spinner.style.display = "flex";
 
@@ -248,18 +315,16 @@
       }
     });
 
-    // ============================================================
+    // =====================================================================
     // INIT
-    // ============================================================
+    // =====================================================================
     applyRoutingRules();
     validateReady();
   }
 
   // =====================================================================
-  // LISTEN FOR module:ready OR SELF-FIND ROOT IF EVENT MISSES
+  // DYNAMIC INJECTION HANDLING (HEADLESS SAFE)
   // =====================================================================
-
-  // CASE 1: console fires module:ready (normal)
   document.addEventListener("module:ready", (ev) => {
     const root =
       ev.detail?.root ||
@@ -269,7 +334,6 @@
     if (root) init(root);
   });
 
-  // CASE 2: module injected BEFORE script loaded (fallback)
   window.addEventListener("DOMContentLoaded", () => {
     const lateRoot = document.querySelector(".redem-con");
     if (lateRoot) init(lateRoot);
