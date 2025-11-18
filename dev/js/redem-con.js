@@ -312,14 +312,6 @@
   updateButtonState(document);
 
   /* ============================================================
-     Fallback Safety Timer (handles async injection delays)
-  ============================================================ */
-  setTimeout(() => {
-    updateButtonState(root);
-    console.log("Fallback recheck complete.");
-  }, 1500);
-
-  /* ============================================================
    Search Button Click Handler
   ============================================================ */
   searchButton.addEventListener("click", (e) => {
