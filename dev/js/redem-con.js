@@ -32,7 +32,7 @@
   
     // Initialize routing rules ON LOAD
     applyRoutingRules();
-    updateButtonState(root);
+    updateButtonState(ROOT);
   
     console.log("🚀 Redemption module initialized");
     console.groupEnd();
@@ -88,7 +88,7 @@
             input.value = a.iata;
             container.innerHTML = "";
             input.dispatchEvent(new Event("change"));
-            updateButtonState(root);
+            updateButtonState(ROOT);
             input.blur();
           });
   
@@ -315,7 +315,7 @@
      Fallback Safety Timer (handles async injection delays)
   ============================================================ */
   setTimeout(() => {
-    updateButtonState(root);
+    updateButtonState(ROOT);
     console.log("Fallback recheck complete.");
   }, 1500);
 
