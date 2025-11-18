@@ -161,8 +161,6 @@
   
       lockToggle(posGroup, true);     // pos locked
       lockToggle(multiGroup, false);  // multi stays clickable
-  
-      return;
     }
   
     // ---------- RULESET 2: Multi = YES ----------
