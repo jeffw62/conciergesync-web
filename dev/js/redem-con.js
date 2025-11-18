@@ -290,9 +290,9 @@ function updateButtonState(ctx) {
   const passengers   = ctx.querySelector("#passengers")?.value;
   const mode         = ctx.querySelector("#mode")?.value;
 
-  const direct = ctx.querySelector("#directStop .active")?.dataset.val;
-  const multi  = ctx.querySelector("#multiConn .active")?.dataset.val;
-  const pos    = ctx.querySelector("#posFlight .active")?.dataset.val;
+  const directVal = ctx.querySelector("#directStop .active")?.dataset.val || "no";
+  const multiVal  = ctx.querySelector("#multiConn .active")?.dataset.val || "no";
+  const posVal    = ctx.querySelector("#posFlight .active")?.dataset.val || "no";
 
   let ready =
     origin &&
@@ -300,8 +300,8 @@ function updateButtonState(ctx) {
     depart &&
     serviceClass &&
     passengers &&
-    (direct === "yes" || multi === "yes") &&
-    (multi !== "yes" || pos); // pos required if multi=yes
+    (directVal === "yes" || multiVal === "yes") &&
+    (multiVal !== "yes" || posVal === "yes"); // pos required if multi=yes
 
   if (mode === "flex") {
     ready = ready && Boolean(ctx.querySelector("#flexDays")?.value);
