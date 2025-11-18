@@ -23,24 +23,19 @@ const root = document;
     return;
   }
 
-  console.log("Core inputs loaded");
+  // Set up toggle groups
+  if (!setupToggleLogic()) {
+    console.groupEnd();
+    return; // will be called again via module:ready later
+  }
 
-  // ----- MOVE ALL CONST DECLARATIONS HERE (before any use) -----
-  const directGroup = root.querySelector("#directStop");
-  const multiGroup  = root.querySelector("#multiConn");
-  const posGroup    = root.querySelector("#posFlight");
-
-  // Make them available globally for other functions
-  window._toggleGroups = { directGroup, multiGroup, posGroup };
-
-  // Initialize everything
+  // Now safe to run:
   setupIataAutocomplete(root);
-  setupToggleLogic(root);
   setupFlexDaysLogic(root);
-  initRoutingState();
+  initRoutingState();           // works — setToggle is global now
   updateButtonState(root);
 
-  console.log("Redemption module initialized");
+  console.log("Redemption module fully initialized");
   console.groupEnd();
 })();
 
@@ -112,80 +107,91 @@ async function setupIataAutocomplete(ctx = root) {
 }
 
 // ========================================================
-// 3. Toggle Groups Logic (Direct / Multi / Positioning)
+// 3. Toggle Groups Logic – FIXED & GLOBAL SCOPE
 // ========================================================
-function setupToggleLogic(ctx = root) {
-  const { directGroup, multiGroup, posGroup } = window._toggleGroups;
+let directGroup, multiGroup, posGroup; // will be assigned once DOM is ready
+
+function setToggle(group, value) {
+  const yesBtn = group.querySelector("button[data-val='yes']");
+  const noBtn  = group.querySelector("button[data-val='no']");
+  if (!yesBtn || !noBtn) return;
+
+  if (value === "yes") {
+    yesBtn.classList.add("active");
+    noBtn.classList.remove("active");
+  } else {
+    noBtn.classList.add("active");
+    yesBtn.classList.remove("active");
+  }
+}
+
+function lockToggle(group, locked) {
+  if (locked) {
+    group.classList.add("disabled-toggle");
+  } else {
+    group.classList.remove("disabled-toggle");
+  }
+}
+
+function applyRoutingRules() {
+  if (!directGroup || !multiGroup || !posGroup) return;
+
+  const directVal = directGroup.querySelector(".active")?.dataset.val || "no";
+  const multi  = multiGroup.querySelector(".active")?.dataset.val  || "no";
+
+  if (direct === "yes") {
+    setToggle(multiGroup, "no");
+    setToggle(posGroup, "no");
+    lockToggle(posGroup, true);
+    lockToggle(multiGroup, false);
+  }
+  else if (multi === "yes") {
+    setToggle(directGroup, "no");
+    lockToggle(posGroup, false);
+  }
+  else {
+    // Both NO → neutral state
+    setToggle(posGroup, "no");
+    lockToggle(posGroup, true);
+  }
+
+  updateButtonState(root);
+}
+
+// Attach click handlers
+function setupToggleLogic() {
+  directGroup = root.querySelector("#directStop");
+  multiGroup  = root.querySelector("#multiConn");
+  posGroup    = root.querySelector("#posFlight");
 
   if (!directGroup || !multiGroup || !posGroup) {
-    console.warn("Toggle groups not found");
-    return;
+    console.warn("Toggle groups not found yet – will retry later");
+    return false;
   }
 
-  function setToggle(group, value) {
-    const yesBtn = group.querySelector("button[data-val='yes']");
-    const noBtn  = group.querySelector("button[data-val='no']");
-    if (value === "yes") {
-      yesBtn.classList.add("active");
-      noBtn.classList.remove("active");
-    } else {
-      noBtn.classList.add("active");
-      yesBtn.classList.remove("active");
-    }
-  }
-
-  function lockToggle(group, locked) {
-    group.classList.toggle("disabled-toggle", locked);
-  }
-
-  window.applyRoutingRules = function() {
-    const directVal = directGroup.querySelector(".active")?.dataset.val || "no";
-    const multiVal  = multiGroup.querySelector(".active")?.dataset.val  || "no";
-
-    if (directVal === "yes") {
-      setToggle(multiGroup, "no");
-      setToggle(posGroup, "no");
-      lockToggle(posGroup, true);
-      lockToggle(multiGroup, false);
-    }
-    else if (multiVal === "yes") {
-      setToggle(directGroup, "no");
-      lockToggle(posGroup, false);
-    }
-    else {
-      // Neutral state
-      setToggle(posGroup, "no");
-      lockToggle(posGroup, true);
-    }
-
-    updateButtonState(root);
-  };
-
-  // Attach click handlers to all toggle buttons
   [directGroup, multiGroup, posGroup].forEach(group => {
     group.querySelectorAll("button").forEach(btn => {
       btn.addEventListener("click", () => {
         setToggle(group, btn.dataset.val);
-        window.applyRoutingRules();
+        applyRoutingRules();
       });
     });
   });
 
   console.log("Toggle logic active");
+  return true;
 }
 
-// ========================================================
-// 4. Initial Routing State
-// ========================================================
+// Initial state
 function initRoutingState() {
-  const { directGroup, multiGroup, posGroup } = window._toggleGroups;
+  if (!directGroup || !multiGroup || !posGroup) return;
 
   setToggle(directGroup, "no");
   setToggle(multiGroup,  "no");
   setToggle(posGroup,    "no");
   lockToggle(posGroup, true);
 
-  window.applyRoutingRules();
+  applyRoutingRules();
 }
 
 // ========================================================
