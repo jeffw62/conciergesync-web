@@ -1,33 +1,42 @@
-/**
- * ConciergeSync™ Redemption Module Logic
- * Handles IATA autocomplete, toggle logic, flex-days, and search-button activation.
- * Designed for console injection (no <body>, no duplicate DOM roots).
- */
-
-(function initRedemptionModule() {
-  console.group("Initializing Redemption Module");
-
-  const root = document; // workspace context (injected)
-  const originInput = root.querySelector("#origin");
-  const destinationInput = root.querySelector("#destination");
-  const searchButton = root.querySelector("#searchBtn");
-
-  // --- Helper: programmatically set a toggle group to yes/no ---
-  function setToggleState(groupId, value) {
-    const group = root.getElementById(groupId) || document.getElementById(groupId);
-    if (!group) return;
-
-    group.querySelectorAll("button").forEach(btn => {
-      btn.classList.toggle("active", btn.dataset.val === value);
+  /**
+   * ConciergeSync™ Redemption Module Logic
+   * Handles IATA autocomplete, routing logic, flex-days, and search-button activation.
+   * Designed for console injection (headless workspace).
+   */
+  
+  let searchButton; // GLOBAL required by updateButtonState()
+  
+  (function initRedemptionModule() {
+    console.group("Initializing Redemption Module");
+  
+    const root = document; // injected workspace root
+  
+    // Bind globals
+    searchButton = root.querySelector("#searchBtn");
+  
+    const originInput = root.querySelector("#origin");
+    const destinationInput = root.querySelector("#destination");
+  
+    // --- Ensure required elements exist ---
+    if (!originInput || !destinationInput || !searchButton) {
+      console.warn("Redemption module: key inputs not found yet.");
+      console.groupEnd();
+      return;
+    }
+  
+    console.log("🔧 Core inputs loaded:", {
+      originInput,
+      destinationInput,
+      searchButton
     });
-  }
-
-  // --- Ensure core elements exist before continuing ---
-  if (!originInput || !destinationInput || !searchButton) {
-    console.warn("Redemption module: key inputs not found yet.");
+  
+    // Initialize routing rules ON LOAD
+    applyRoutingRules();
+    updateButtonState(root);
+  
+    console.log("🚀 Redemption module initialized");
     console.groupEnd();
-    return;
-  }
+  })();
 
   /* ============================================================
      IATA Autocomplete (local dataset, expandable)
@@ -289,7 +298,6 @@
      Initialize all submodules
   ============================================================ */
   setupIataAutocomplete(root);
-  setupToggleLogic(root);
   setupFlexDaysLogic(root);
   updateButtonState(root);
 
