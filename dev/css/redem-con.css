@@ -179,9 +179,9 @@
 
 /* ACTIVE STATE — USE CS DEEP GOLD */
 .redem-con .toggle-group button.active {
-  background: linear-gradient(135deg, #A89242, #CBB886);
+  background: #BFA14A;        /* ← pure CS gold */
   color: #fff;
-  box-shadow: 0 3px 10px rgba(168,146,66,0.32); /* matched shadow tone */
+  box-shadow: 0 3px 10px rgba(191,161,74,0.32);
 }
 
 /* Disabled toggle wrapper */
