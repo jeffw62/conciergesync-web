@@ -112,12 +112,16 @@
   // CCT: Clarity • Clean • True
   // ============================================================
   
-  // Grab toggle groups
+  // ============================================================
+  //  TOGGLE GROUP REFERENCES
+  // ============================================================
   const directGroup = document.getElementById("directStop");
-  const multiGroup = document.getElementById("multiConn");
-  const posGroup   = document.getElementById("posFlight");
+  const multiGroup  = document.getElementById("multiConn");
+  const posGroup    = document.getElementById("posFlight");
   
-  // Helper: set toggle state
+  // ============================================================
+  //  BASIC HELPERS
+  // ============================================================
   function setToggle(group, value) {
     const yesBtn = group.querySelector("button[data-val='yes']");
     const noBtn  = group.querySelector("button[data-val='no']");
@@ -131,7 +135,6 @@
     }
   }
   
-  // Helper: lock/unlock group
   function lockToggle(group, locked) {
     if (locked) {
       group.classList.add("disabled-toggle");
@@ -140,47 +143,53 @@
     }
   }
   
-  // MASTER LOGIC ENGINE
+  // ============================================================
+  //  MASTER LOGIC ENGINE
+  // ============================================================
   function applyRoutingRules() {
   
     const directVal = directGroup.querySelector(".active").dataset.val;
     const multiVal  = multiGroup.querySelector(".active").dataset.val;
   
-    // ============================================================
-    // RULE 1 — Direct = YES → strongest rule in the system
-    // ============================================================
+    // ------------ RULESET 1: Direct = YES ---------------
     if (directVal === "yes") {
-      setToggle(multiGroup, "no");     // auto-set
-      setToggle(posGroup, "no");       // auto-set
   
-      lockToggle(posGroup, true);      // locked
-      lockToggle(multiGroup, false);   // multi stays clickable
+      // Auto-set the others
+      setToggle(multiGroup, "no");
+      setToggle(posGroup, "no");
   
-      return; // Direct mode dominates
-    }
+      // Positioning locked (correct)
+      lockToggle(posGroup, true);
   
-    // ============================================================
-    // RULE 2 — Multi = YES → second strongest
-    // ============================================================
-    if (multiVal === "yes") {
-      setToggle(directGroup, "no");    // auto-set
+      // Multi must ALWAYS remain clickable (critical fix)
+      lockToggle(multiGroup, false);
   
-      lockToggle(posGroup, false);     // positioning unlocked
       return;
     }
   
-    // ============================================================
-    // RULE 3 — Neutral Mode (Direct=NO & Multi=NO)
-    // ============================================================
-    // Positioning must be NO and locked
+    // ------------ RULESET 2: Multi = YES ----------------
+    if (multiVal === "yes") {
+  
+      // Direct auto-set to NO
+      setToggle(directGroup, "no");
+  
+      // Positioning unlocked
+      lockToggle(posGroup, false);
+      return;
+    }
+  
+    // ------------ RULESET 3: Neutral --------------------
+    // Direct = NO, Multi = NO
+    // Positioning must be NO + locked
     setToggle(posGroup, "no");
     lockToggle(posGroup, true);
   }
   
   // ============================================================
-  // EVENT LISTENERS — listen for ALL button clicks in each group
+  //  EVENT LISTENERS
   // ============================================================
   [directGroup, multiGroup, posGroup].forEach(group => {
+  
     const yesBtn = group.querySelector("button[data-val='yes']");
     const noBtn  = group.querySelector("button[data-val='no']");
   
@@ -188,17 +197,20 @@
       yesBtn.classList.add("active");
       noBtn.classList.remove("active");
       applyRoutingRules();
+      updateButtonState(document);
     });
   
     noBtn.addEventListener("click", () => {
       noBtn.classList.add("active");
       yesBtn.classList.remove("active");
       applyRoutingRules();
+      updateButtonState(document);
     });
+  
   });
   
   // ============================================================
-  // Set initial state on load (neutral mode)
+  //  INITIAL STATE
   // ============================================================
   setToggle(directGroup, "no");
   setToggle(multiGroup, "no");
@@ -206,6 +218,7 @@
   lockToggle(posGroup, true);
   
   applyRoutingRules();
+
 
 
   /* ============================================================
