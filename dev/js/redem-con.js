@@ -147,7 +147,6 @@
   // MASTER RULE ENGINE
   // ============================================================
   function applyRoutingRules() {
-    const { directGroup, multiGroup, posGroup } = getToggleGroups();
   
     const directVal = directGroup.querySelector(".active").dataset.val;
     const multiVal  = multiGroup.querySelector(".active").dataset.val;
