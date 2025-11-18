@@ -361,7 +361,6 @@
   
   console.log("Redemption module fully initialized");
   console.groupEnd();
-})(); // ← Correctly closes the IIFE
 
 // === ConciergeSync™ Redem-Con Initialization Bridge ===
 (function attachRedemConHook() {
