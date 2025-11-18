@@ -164,45 +164,66 @@ function applyRoutingRules(ctx, lastClickedGroup) {
     return;
   }
 
-  /* ------------------------------------------------------------------
-     RULE: If the user clicked MULTI
-     ------------------------------------------------------------------*/
-  if (lastClickedGroup === multiGroup && multiVal === "yes") {
-    // Multi YES → force Direct NO
-    setToggle(directGroup, "no");
-
-    // Positioning unlocked only in Multi YES
-    lockToggle(posGroup, false);
-
-    updateButtonState(ctx);
-    return;
-  }
-
-  /* ------------------------------------------------------------------
-     GENERAL STATE COMPUTATION (fallback)
-     ------------------------------------------------------------------*/
-
-  // If both are NO → neutral mode
-  if (directVal === "no" && multiVal === "no") {
-    setToggle(posGroup, "no");
-    lockToggle(posGroup, true);
-  }
-
-  // If direct somehow YES → enforce Direct mode
-  if (directVal === "yes") {
-    setToggle(multiGroup, "no");
-    setToggle(posGroup, "no");
-    lockToggle(posGroup, true);
-  }
-
-  // If multi YES → enforce Multi mode
-  if (multiVal === "yes") {
-    setToggle(directGroup, "no");
-    lockToggle(posGroup, false);
-  }
-
-  updateButtonState(ctx);
-}
+  /* ============================================================
+   CCT ROUTING ENGINE (Option A — Cleanest, Most Predictable)
+   ============================================================ */
+   function applyRoutingRules(ctx, lastClickedGroup) {
+     const directVal = directGroup.querySelector(".active")?.dataset.val || "no";
+     const multiVal  = multiGroup.querySelector(".active")?.dataset.val  || "no";
+   
+     /* --------------------------------------------------------------
+        1) MULTI CLICKED
+        --------------------------------------------------------------*/
+     if (lastClickedGroup === multiGroup && multiVal === "yes") {
+       // Multi YES → Direct auto-set to NO
+       setToggle(directGroup, "no");
+   
+       // Positioning only allowed in Multi YES
+       lockToggle(posGroup, false);
+   
+       updateButtonState(ctx);
+       return;
+     }
+   
+     /* --------------------------------------------------------------
+        2) DIRECT CLICKED
+        --------------------------------------------------------------*/
+     if (lastClickedGroup === directGroup && directVal === "yes") {
+       // Direct YES → Multi forced NO
+       setToggle(multiGroup, "no");
+   
+       // Positioning locked OFF
+       setToggle(posGroup, "no");
+       lockToggle(posGroup, true);
+   
+       updateButtonState(ctx);
+       return;
+     }
+   
+     /* --------------------------------------------------------------
+        3) GENERAL STATE — SAFETY NET
+        --------------------------------------------------------------*/
+     // Both NO → Neutral
+     if (directVal === "no" && multiVal === "no") {
+       setToggle(posGroup, "no");
+       lockToggle(posGroup, true);
+     }
+   
+     // Direct YES (fallback)
+     if (directVal === "yes") {
+       setToggle(multiGroup, "no");
+       setToggle(posGroup, "no");
+       lockToggle(posGroup, true);
+     }
+   
+     // Multi YES (fallback)
+     if (multiVal === "yes") {
+       setToggle(directGroup, "no");
+       lockToggle(posGroup, false);
+     }
+   
+     updateButtonState(ctx);
+   }
 
 /* Bind click listeners */
 function setupToggleLogic(ctx) {
