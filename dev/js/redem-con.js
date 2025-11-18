@@ -230,19 +230,23 @@ function setupFlexDaysLogic(ctx = root) {
 function updateButtonState(ctx = root) {
   if (!searchButton) return;
 
-  const origin      = ctx.querySelector("#origin")?.value.trim();
-  const destination = ctx.querySelector("#destination")?.value.trim();
-  const depart      = ctx.querySelector("#departDate")?.value.trim();
-  const mode        = ctx.querySelector("#mode")?.value;
+  const origin       = ctx.querySelector("#origin")?.value.trim();
+  const destination  = ctx.querySelector("#destination")?.value.trim();
+  const depart       = ctx.querySelector("#departDate")?.value.trim();
+  const mode         = ctx.querySelector("#mode")?.value || "";
   const serviceClass = ctx.querySelector("#serviceClass")?.value;
-  const passengers  = ctx.querySelector("#passengers")?.value;
+  const passengers   = ctx.querySelector("#passengers")?.value;
 
-  const directVal   = ctx.querySelector("#directStop .active")?.dataset.val;
-  const multiVal    = ctx.querySelector("#multiConn .active")?.dataset.val;
-  const posVal      = ctx.querySelector("#posFlight .active")?.dataset.val;
+  const directVal    = ctx.querySelector("#directStop .active")?.dataset.val;
+  const multiVal     = ctx.querySelector("#multiConn .active")?.dataset.val;
+  const posVal       = ctx.querySelector("#posFlight .active")?.dataset.val;
 
   let ready = Boolean(
-    origin && destination && depart && serviceClass && passengers &&
+    origin &&
+    destination &&
+    depart &&
+    serviceClass &&
+    passengers &&
     (directVal === "yes" || multiVal === "yes") &&
     (multiVal !== "yes" || posVal)
   );
@@ -254,12 +258,13 @@ function updateButtonState(ctx = root) {
 
   searchButton.disabled = !ready;
 
-  const warning = ctx.querySelector all("#searchWarning");
-  if (warning) warning.style.opacity = ready ? "0" : "1";
+  const searchWarning = ctx.querySelector("#searchWarning");
+  if (searchWarning) {
+    searchWarning.style.opacity = ready ? "0" : "1";
+  }
 
   console.log(`Search button ${ready ? "ENABLED" : "DISABLED"}`);
 }
-
 // ========================================================
 // 7. Search Button Handler
 // ========================================================
