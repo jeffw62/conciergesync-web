@@ -306,7 +306,6 @@ const payload = {
   if (warn) warn.style.opacity = ready ? "0" : "1";
 
   console.log(`Search: ${ready ? "ENABLED" : "disabled"}`);
-}
 
 /* ============================================================
    5. SEARCH BUTTON HANDLER
