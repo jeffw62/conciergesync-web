@@ -4,6 +4,8 @@
 //  Zero globals, zero leakage, zero spaghetti
 // ========================================================================
 
+console.log("🔥 redem-con.js loaded, file executed");
+
 (function () {
 
   // =====================================================================
