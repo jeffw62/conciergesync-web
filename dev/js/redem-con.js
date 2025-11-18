@@ -190,9 +190,7 @@
         // 3) Finally update button state
         updateButtonState(document);
       });
-  
     });
-  });
 
   // ============================================================
   // INITIAL STATE
