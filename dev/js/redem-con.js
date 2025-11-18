@@ -5,7 +5,7 @@
 // ========================================================================
 
 console.log("🔥 redem-con.js loaded, file executed");
-
+ let iataData = null;
 (function () {
 
   // =====================================================================
@@ -56,9 +56,7 @@ console.log("🔥 redem-con.js loaded, file executed");
     // =====================================================================
     console.log("IATA loaded:", iataData.length);
     
-    let iataData = null;
-
-    async function loadIATA() {
+   async function loadIATA() {
       if (iataData) return iataData;
       try {
         const res = await fetch("/dev/asset/iata-icao.json");
