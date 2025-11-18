@@ -5,6 +5,7 @@
  */
 
 let searchButton = null;
+let directGroup, multiGroup, posGroup;
 
 /* ============================================================
    MAIN INITIALIZER — runs immediately for first load
@@ -122,7 +123,6 @@ async function setupIataAutocomplete(ctx) {
 /* ============================================================
    2. ROUTING TOGGLE LOGIC — CCT STANDARD
 ============================================================ */
-let directGroup, multiGroup, posGroup;
 
 /* Basic helpers */
 function setToggle(group, val) {
