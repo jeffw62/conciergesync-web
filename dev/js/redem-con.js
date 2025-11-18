@@ -10,7 +10,6 @@
     console.group("Initializing Redemption Module");
   
     const root = document; // injected workspace root
-    const ROOT = root;
   
     // Bind globals
     searchButton = ROOT.querySelector("#searchBtn");
@@ -33,7 +32,7 @@
   
     // Initialize routing rules ON LOAD
     applyRoutingRules();
-    updateButtonState(ROOT);
+    updateButtonState(root);
   
     console.log("🚀 Redemption module initialized");
     console.groupEnd();
@@ -89,7 +88,7 @@
             input.value = a.iata;
             container.innerHTML = "";
             input.dispatchEvent(new Event("change"));
-            updateButtonState(ROOT);
+            updateButtonState(root);
             input.blur();
           });
   
@@ -316,7 +315,7 @@
      Fallback Safety Timer (handles async injection delays)
   ============================================================ */
   setTimeout(() => {
-    updateButtonState(ROOT);
+    updateButtonState(root);
     console.log("Fallback recheck complete.");
   }, 1500);
 
