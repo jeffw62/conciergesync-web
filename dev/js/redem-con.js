@@ -54,6 +54,8 @@ console.log("🔥 redem-con.js loaded, file executed");
     // =====================================================================
     // IATA AUTOLOAD
     // =====================================================================
+    console.log("IATA loaded:", iataData.length);
+    
     let iataData = null;
 
     async function loadIATA() {
@@ -128,12 +130,12 @@ console.log("🔥 redem-con.js loaded, file executed");
     }
 
     function disableGroup(group) {
-      group.classList.add("disabled");
+      group.classList.add("disabled-toggle");
       group.querySelectorAll("button").forEach(b => b.disabled = true);
     }
 
     function enableGroup(group) {
-      group.classList.remove("disabled");
+      group.classList.remove("disabled-toggle");
       group.querySelectorAll("button").forEach(b => b.disabled = false);
     }
 
@@ -148,18 +150,17 @@ console.log("🔥 redem-con.js loaded, file executed");
       if (direct === "yes") {
         setActive(multiGroup, "no");
         disableGroup(multiGroup);
-
+      
         setActive(posGroup, "no");
         disableGroup(posGroup);
         return;
       }
-
-      // ---- MULTI = YES ----
+      
+      // Multi YES overrides Direct YES
       if (multi === "yes") {
         setActive(directGroup, "no");
         disableGroup(directGroup);
-
-        // pos active but starting NO
+      
         enableGroup(posGroup);
         return;
       }
