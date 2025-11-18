@@ -179,7 +179,7 @@
 
 /* ACTIVE STATE — USE CS DEEP GOLD */
 .redem-con .toggle-group button.active {
-  background: #BFA14A;        /* ← pure CS gold */
+  background: #B79B4A;        /* ← pure CS gold */
   color: #fff;
   box-shadow: 0 3px 10px rgba(191,161,74,0.32);
 }
@@ -194,7 +194,7 @@
 /* Positioning Flight Warning stays border-gold (correct CCT) */
 .redem-con .pos-warning {
   background: rgba(191,161,74,0.18);  /* soft wash – correct */
-  border-left: 4px solid #BFA14A;      /* border gold – DO NOT CHANGE */
+  border-left: 4px solid #B79B4A;      /* border gold – DO NOT CHANGE */
   padding: 10px 14px;
   border-radius: 8px;
   margin: 10px 0 18px 0;
