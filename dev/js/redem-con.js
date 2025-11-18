@@ -177,30 +177,26 @@
   }
   
   // ============================================================
-  // EVENT LISTENERS
+  //  EVENT LISTENERS (Corrected - CCT Clean Version)
   // ============================================================
-  (function bindRoutingListeners() {
-    const { directGroup, multiGroup, posGroup } = getToggleGroups();
+  [ directGroup, multiGroup, posGroup ].forEach(group => {
   
-    [directGroup, multiGroup, posGroup].forEach(group => {
-      const yesBtn = group.querySelector("button[data-val='yes']");
-      const noBtn  = group.querySelector("button[data-val='no']");
+    group.querySelectorAll("button").forEach(btn => {
   
-      yesBtn.addEventListener("click", () => {
-        yesBtn.classList.add("active");
-        noBtn.classList.remove("active");
+      btn.addEventListener("click", () => {
+  
+        // 1) First set this group's YES/NO correctly
+        setToggle(group, btn.dataset.val);
+  
+        // 2) THEN apply the routing rules (correct order)
         applyRoutingRules();
+  
+        // 3) Finally update button state
         updateButtonState(document);
       });
   
-      noBtn.addEventListener("click", () => {
-        noBtn.classList.add("active");
-        yesBtn.classList.remove("active");
-        applyRoutingRules();
-        updateButtonState(document);
-      });
     });
-  })();
+  });
   
   // ============================================================
   // INITIAL STATE
