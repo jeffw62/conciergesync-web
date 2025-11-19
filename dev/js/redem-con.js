@@ -44,6 +44,11 @@ let iataData = null;
     const spinner = root.querySelector("#spinner-overlay");
 
     // =====================================================================
+    // PRELOAD IATA ON FLIGHT DECK INIT (CCT – zero hesitation)
+    // =====================================================================
+    loadIATA();
+
+    // =====================================================================
     // DEFAULT ROUTING STATE — CORRECTED RULES
     // =====================================================================
     resetRoutingToDefaults();
@@ -146,11 +151,16 @@ let iataData = null;
     });
 
     // =====================================================================
-    // IATA AUTOCOMPLETE (FIXED)
+    // IATA AUTOCOMPLETE — FULLY CCT REBUILT
     // =====================================================================
+    
+    // PRELOAD NOW (so user never waits)
+    loadIATA();
+    
+    // Load and cache the JSON
     async function loadIATA() {
       if (iataData) return iataData;
-
+    
       try {
         console.log("🌍 Loading IATA…");
         const res = await fetch("/dev/asset/iata-icao.json");
@@ -162,36 +172,62 @@ let iataData = null;
       }
       return iataData;
     }
-
+    
+    // Autocomplete setup
     function setupIATA(input, suggestionBox) {
-    input.addEventListener("input", async () => {
-      const value = input.value.trim().toUpperCase();
-      suggestionBox.innerHTML = "";
-  
-      if (value.length < 2) return;
-  
-      const data = await loadIATA();
-  
-      const matches = data.filter(r =>
-        r.iata?.startsWith(value) ||
-        r.airport?.toUpperCase().includes(value) ||
-        r.region_name?.toUpperCase().includes(value)
-      );
-  
-      matches.slice(0, 8).forEach(r => {
-        const div = document.createElement("div");
-        div.className = "suggestion";
-        div.textContent = `${r.iata} — ${r.airport}`;
-        div.addEventListener("click", () => {
-          input.value = r.iata;
-          suggestionBox.innerHTML = "";
-          validateReady();
-        });
-        suggestionBox.appendChild(div);
+      input.addEventListener("input", async () => {
+        const value = input.value.trim().toUpperCase();
+        suggestionBox.innerHTML = "";
+    
+        if (value.length < 2) return;
+    
+        const data = await loadIATA();
+    
+        // --- PRIORITY FILTERING SYSTEM (CCT) ---
+        const exact = [];
+        const prefix = [];
+        const contains = [];
+        const nameMatch = [];
+        const regionMatch = [];
+    
+        for (const r of data) {
+          const iata = r.iata?.toUpperCase() || "";
+          const airport = r.airport?.toUpperCase() || "";
+          const region = r.region_name?.toUpperCase() || "";
+    
+          if (!iata) continue;
+    
+          if (iata === value) exact.push(r);
+          else if (iata.startsWith(value)) prefix.push(r);
+          else if (iata.includes(value)) contains.push(r);
+          else if (airport.includes(value)) nameMatch.push(r);
+          else if (region.includes(value)) regionMatch.push(r);
+        }
+    
+        const results = [
+          ...exact,
+          ...prefix,
+          ...contains,
+          ...nameMatch,
+          ...regionMatch
+        ].slice(0, 8);
+    
+        // Render
+        for (const r of results) {
+          const div = document.createElement("div");
+          div.className = "suggestion";
+          div.textContent = `${r.iata} — ${r.airport}`;
+          div.addEventListener("click", () => {
+            input.value = r.iata;
+            suggestionBox.innerHTML = "";
+            validateReady();
+          });
+          suggestionBox.appendChild(div);
+        }
       });
-    });
-  }
-
+    }
+    
+    // Attach autocomplete
     setupIATA(origin, root.querySelector("#origin-suggestions"));
     setupIATA(destination, root.querySelector("#destination-suggestions"));
 
