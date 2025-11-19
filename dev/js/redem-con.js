@@ -281,54 +281,27 @@ console.log("🔥 redem-con.js loaded");
         const stripped = value.replace(/[^A-Z]/g, "");  // removes numbers/spaces/etc
         suggestionBox.innerHTML = "";
     
-        // 🔥 SPECIAL CASE — USCA (must run BEFORE length check)
+        // ---------------------------------------------------------------
+        // SPECIAL CASE — USCA (absolute priority override)
+        // ---------------------------------------------------------------
         if (stripped === "USCA") {
-          const list = iataData || [];
-          const majorList = list.filter(a =>
+          const listNow = iataData || [];
+        
+          const majorList = listNow.filter(a =>
             isCommercial(a) && isMajorNorthAmerica(a)
           );
-    
+        
           const display = majorList
             .sort((a, b) => a.iata.localeCompare(b.iata))
             .slice(0, 14);
-    
+        
           console.log("🔥 USCA TRIGGERED — showing NA major hubs");
+        
           renderSuggestions(display, suggestionBox, input);
-          return;
+        
+          return; // 🚨 MUST STOP ALL FURTHER PROCESSING
         }
-    
-        // 🚫 Length check now AFTER USCA override
-        if (value.length < 2) return;
-    
-        clearTimeout(iataTimer);
-        iataTimer = setTimeout(async () => {
-    
-          const list = await loadIATA();
-          let results = [];
-
-    
-          //---------------------------------------------------------------
-          // SPECIAL CASE — USCA (absolute priority override)
-          //---------------------------------------------------------------
-          console.log("🧪 INPUT:", value, "STRIPPED:", value.replace(/[^A-Z]/g, ""));
-          const stripped = value.replace(/[^A-Z]/g, "");
           
-          if (stripped === "USCA") {
-            console.log("🔥 USCA TRIGGER HIT");
-          
-            const majorList = list.filter(a =>
-              isCommercial(a) && isMajorNorthAmerica(a)
-            );
-          
-            const display = majorList
-              .sort((a, b) => a.iata.localeCompare(b.iata))
-              .slice(0, 14);
-          
-            renderSuggestions(display, suggestionBox, input);
-            return;  // ← HARD STOP (no further matching ever runs)
-          }
-
-    
           // ---------------------------------------------------------------
           // EXACT 3-LETTER IATA MATCH
           // ---------------------------------------------------------------
