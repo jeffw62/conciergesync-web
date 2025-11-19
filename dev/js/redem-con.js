@@ -276,9 +276,28 @@ console.log("🔥 redem-con.js loaded");
     // ---------------------------------------------------------------------
     function setupIATA(input, suggestionBox) {
       input.addEventListener("input", () => {
-        const value = input.value.trim().toUpperCase();
+        const raw = input.value;
+        const value = raw.trim().toUpperCase();
+        const stripped = value.replace(/[^A-Z]/g, "");  // removes numbers/spaces/etc
         suggestionBox.innerHTML = "";
     
+        // 🔥 SPECIAL CASE — USCA (must run BEFORE length check)
+        if (stripped === "USCA") {
+          const list = iataData || [];
+          const majorList = list.filter(a =>
+            isCommercial(a) && isMajorNorthAmerica(a)
+          );
+    
+          const display = majorList
+            .sort((a, b) => a.iata.localeCompare(b.iata))
+            .slice(0, 14);
+    
+          console.log("🔥 USCA TRIGGERED — showing NA major hubs");
+          renderSuggestions(display, suggestionBox, input);
+          return;
+        }
+    
+        // 🚫 Length check now AFTER USCA override
         if (value.length < 2) return;
     
         clearTimeout(iataTimer);
@@ -286,22 +305,29 @@ console.log("🔥 redem-con.js loaded");
     
           const list = await loadIATA();
           let results = [];
+
     
-          // ---------------------------------------------------------------
-          // SPECIAL CASE — USCA (must run BEFORE metro cluster)
-          // ---------------------------------------------------------------
-          if (value.replace(/[^A-Z]/g, "") === "USCA") {
+          //---------------------------------------------------------------
+          // SPECIAL CASE — USCA (absolute priority override)
+          //---------------------------------------------------------------
+          console.log("🧪 INPUT:", value, "STRIPPED:", value.replace(/[^A-Z]/g, ""));
+          const stripped = value.replace(/[^A-Z]/g, "");
+          
+          if (stripped === "USCA") {
+            console.log("🔥 USCA TRIGGER HIT");
+          
             const majorList = list.filter(a =>
               isCommercial(a) && isMajorNorthAmerica(a)
             );
-    
+          
             const display = majorList
               .sort((a, b) => a.iata.localeCompare(b.iata))
               .slice(0, 14);
-    
+          
             renderSuggestions(display, suggestionBox, input);
-            return;
+            return;  // ← HARD STOP (no further matching ever runs)
           }
+
     
           // ---------------------------------------------------------------
           // EXACT 3-LETTER IATA MATCH
