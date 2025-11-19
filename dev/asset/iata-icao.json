@@ -12496,7 +12496,8 @@
     "region_name": "Alberta",
     "iata": "YYC",
     "icao": "CYYC",
-    "airport": "Calgary International Airport",
+    "airport": "Calgary International",
+    "major_north_america": true,
     "latitude": 51.1139,
     "longitude": -114.02
   },
@@ -13225,7 +13226,8 @@
     "region_name": "British Columbia",
     "iata": "YVR",
     "icao": "CYVR",
-    "airport": "Vancouver International Airport",
+    "airport": "Vancouver International",
+    "major_north_america": true,
     "latitude": 49.1939,
     "longitude": -123.184
   },
@@ -15493,7 +15495,8 @@
     "region_name": "Ontario",
     "iata": "YYZ",
     "icao": "CYYZ",
-    "airport": "Toronto Pearson International Airport",
+    "airport": "Toronto Pearson International",
+    "major_north_america": true,
     "latitude": 43.6797,
     "longitude": -79.6227
   },
@@ -16087,7 +16090,8 @@
     "region_name": "Quebec",
     "iata": "YUL",
     "icao": "CYUL",
-    "airport": "Montréal-Pierre Elliott Trudeau International Airport",
+    "airport": "Montréal-Pierre Elliott Trudeau International",
+    "major_north_america": true,
     "latitude": 45.4657,
     "longitude": -73.7455
   },
@@ -64777,7 +64781,8 @@
     "region_name": "Arizona",
     "iata": "PHX",
     "icao": "KPHX",
-    "airport": "Phoenix Sky Harbor International Airport",
+    "airport": "Phoenix Sky Harbor International",
+    "major_north_america": true,
     "latitude": 33.4343,
     "longitude": -112.012
   },
@@ -65660,6 +65665,7 @@
     "iata": "LAX",
     "icao": "KLAX",
     "airport": "Los Angeles International Airport",
+    "major_north_america": true,
     "latitude": 33.9425,
     "longitude": -118.408
   },
@@ -66227,6 +66233,7 @@
     "iata": "SFO",
     "icao": "KSFO",
     "airport": "San Francisco International Airport",
+    "major_north_america": true,
     "latitude": 37.619,
     "longitude": -122.375
   },
@@ -66668,6 +66675,7 @@
     "iata": "DEN",
     "icao": "KDEN",
     "airport": "Denver International Airport",
+    "major_north_america": true,
     "latitude": 39.8617,
     "longitude": -104.673
   },
@@ -67135,7 +67143,8 @@
     "region_name": "Florida",
     "iata": "FLL",
     "icao": "KFLL",
-    "airport": "Fort Lauderdale-Hollywood International Airport",
+    "airport": "Fort Lauderdale-Hollywood International",
+    "major_north_america": true,
     "latitude": 26.0726,
     "longitude": -80.1527
   },
@@ -67306,7 +67315,8 @@
     "region_name": "Florida",
     "iata": "MIA",
     "icao": "KMIA",
-    "airport": "Miami International Airport",
+    "airport": "Miami International",
+    "major_north_america": true,
     "latitude": 25.7932,
     "longitude": -80.2906
   },
@@ -67318,42 +67328,6 @@
     "airport": "Orlando Melbourne International Airport",
     "latitude": 28.1028,
     "longitude": -80.6453
-  },
-  {
-    "country_code": "US",
-    "region_name": "Florida",
-    "iata": "MPB",
-    "icao": "",
-    "airport": "Miami Seaplane Base",
-    "latitude": 25.7783,
-    "longitude": -80.1703
-  },
-  {
-    "country_code": "US",
-    "region_name": "Florida",
-    "iata": "MRK",
-    "icao": "KMKY",
-    "airport": "Marco Island Airport",
-    "latitude": 25.995,
-    "longitude": -81.6725
-  },
-  {
-    "country_code": "US",
-    "region_name": "Florida",
-    "iata": "MTH",
-    "icao": "KMTH",
-    "airport": "Florida Keys Marathon Airport",
-    "latitude": 24.7261,
-    "longitude": -81.0514
-  },
-  {
-    "country_code": "US",
-    "region_name": "Florida",
-    "iata": "NEN",
-    "icao": "KNEN",
-    "airport": "NOLF Whitehouse",
-    "latitude": 30.3539,
-    "longitude": -81.8719
   },
   {
     "country_code": "US",
@@ -67711,7 +67685,8 @@
     "region_name": "Georgia",
     "iata": "ATL",
     "icao": "KATL",
-    "airport": "Hartsfield-Jackson Atlanta International Airport",
+    "airport": "Hartsfield-Jackson International",
+    "major_north_america": true,
     "latitude": 33.6367,
     "longitude": -84.4281
   },
@@ -68692,7 +68667,8 @@
     "region_name": "Illinois",
     "iata": "ORD",
     "icao": "KORD",
-    "airport": "Chicago O'Hare International Airport",
+    "airport": "Chicago O'Hare International",
+    "major_north_america": true,
     "latitude": 41.9786,
     "longitude": -87.9047
   },
@@ -70591,7 +70567,8 @@
     "region_name": "Massachusetts",
     "iata": "BOS",
     "icao": "KBOS",
-    "airport": "Logan International Airport",
+    "airport": "Logan International",
+    "major_north_america": true,
     "latitude": 42.3643,
     "longitude": -71.0052
   },
@@ -70924,7 +70901,8 @@
     "region_name": "Michigan",
     "iata": "DTW",
     "icao": "KDTW",
-    "airport": "Detroit Metro Wayne County Airport",
+    "airport": "Detroit Metro Wayne County",
+    "major_north_america": true,
     "latitude": 42.2125,
     "longitude": -83.3533
   },
@@ -71473,7 +71451,8 @@
     "region_name": "Minnesota",
     "iata": "MSP",
     "icao": "KMSP",
-    "airport": "Minneapolis-Saint Paul International Airport (Wold-Chamberlain Field)",
+    "airport": "Minneapolis-St Paul International",
+    "major_north_america": true,
     "latitude": 44.882,
     "longitude": -93.2218
   },
@@ -73102,7 +73081,8 @@
     "region_name": "New Jersey",
     "iata": "EWR",
     "icao": "KEWR",
-    "airport": "Newark Liberty International Airport",
+    "airport": "Newark Liberty International",
+    "major_north_america": true,
     "latitude": 40.6925,
     "longitude": -74.1686
   },
@@ -73696,7 +73676,8 @@
     "region_name": "New York",
     "iata": "JFK",
     "icao": "KJFK",
-    "airport": "John F. Kennedy International Airport",
+    "airport": "John F. Kennedy International",
+    "major_north_america": true,
     "latitude": 40.6397,
     "longitude": -73.7789
   },
@@ -73912,7 +73893,8 @@
     "region_name": "North Carolina",
     "iata": "CLT",
     "icao": "KCLT",
-    "airport": "Charlotte Douglas International Airport",
+    "airport": "Charlotte Douglas International",
+    "major_north_america": true,
     "latitude": 35.214,
     "longitude": -80.9431
   },
@@ -76792,7 +76774,8 @@
     "region_name": "Texas",
     "iata": "DFW",
     "icao": "KDFW",
-    "airport": "Dallas/Fort Worth International Airport",
+    "airport": "Dallas/Fort Worth International",
+    "major_north_america": true,
     "latitude": 32.8968,
     "longitude": -97.038
   },
@@ -77035,7 +77018,8 @@
     "region_name": "Texas",
     "iata": "IAH",
     "icao": "KIAH",
-    "airport": "George Bush Intercontinental Airport",
+    "airport": "George Bush Intercontinental",
+    "major_north_america": true,
     "latitude": 29.9844,
     "longitude": -95.3414
   },
@@ -78007,7 +77991,8 @@
     "region_name": "Virginia",
     "iata": "DCA",
     "icao": "KDCA",
-    "airport": "Ronald Reagan Washington National Airport",
+    "airport": "Ronald Reagan Washington National",
+    "major_north_america": true,
     "latitude": 38.8522,
     "longitude": -77.0378
   },
@@ -78079,7 +78064,8 @@
     "region_name": "Virginia",
     "iata": "IAD",
     "icao": "KIAD",
-    "airport": "Washington Dulles International Airport",
+    "airport": "Washington Dulles International",
+    "major_north_america": true,
     "latitude": 38.9445,
     "longitude": -77.4558
   },
@@ -78656,6 +78642,7 @@
     "iata": "SEA",
     "icao": "KSEA",
     "airport": "Seattle-Tacoma International Airport",
+    "major_north_america": true,
     "latitude": 47.449,
     "longitude": -122.309
   },
