@@ -287,70 +287,68 @@ console.log("🔥 redem-con.js loaded");
           const list = await loadIATA();
           let results = [];
     
-          // ---------------------------------------------------------------
-          // SPECIAL CASE — User typed "USCA" (All major NA hubs)
-          // ---------------------------------------------------------------
+          //---------------------------------------------------------------
+          // SPECIAL CASE — User typed "USCA" (major NA hubs)
+          //---------------------------------------------------------------
           if (value === "USCA") {
-            input.dataset.cs_iata_mode = "USCA";
-    
-            const majorList = list.filter(
-              a => isCommercial(a) && isMajorNorthAmerica(a)
+            const majorList = list.filter(a =>
+              isCommercial(a) && isMajorNorthAmerica(a)
             );
-    
+          
             const display = majorList
               .sort((a, b) => a.iata.localeCompare(b.iata))
-              .slice(0, 12);
-    
+              .slice(0, 14);  // clean luxury cluster
+          
             renderSuggestions(display, suggestionBox, input);
             return;
           }
-    
-          // ---------------------------------------------------------------
-          // CASE 1 — User typed EXACT 3-letter IATA code
-          // ---------------------------------------------------------------
+          
+          //---------------------------------------------------------------
+          // CASE 1 — EXACT IATA CODE (3-letter match)
+          //---------------------------------------------------------------
           if (value.length === 3) {
             const exact = list.filter(a => a.iata?.toUpperCase() === value);
             if (exact.length) {
-              results = exact;
+              renderSuggestions(exact, suggestionBox, input);
+              return;
             }
-            renderSuggestions(results, suggestionBox, input);
-            return;
           }
-    
-          // ---------------------------------------------------------------
-          // CASE 2 — User typed CITY NAME (partial or full)
-          // ---------------------------------------------------------------
+          
+          
+          //---------------------------------------------------------------
+          // CASE 2 — CITY NAME → METRO CLUSTER
+          //---------------------------------------------------------------
           const matchedCluster = getMetroClusterFor(value);
           if (matchedCluster) {
             const clusterResults = list.filter(a =>
               matchedCluster.includes(a.iata?.toUpperCase())
             );
-    
+          
             if (clusterResults.length) {
               const primary = clusterResults[0];
               const rest = clusterResults.slice(1).sort((a, b) =>
                 a.iata.localeCompare(b.iata)
               );
-    
+          
               const finalList = [primary, ...rest].slice(0, 6);
-    
               renderSuggestions(finalList, suggestionBox, input);
               return;
             }
           }
-    
-          // ---------------------------------------------------------------
-          // CASE 3 — Partial alpha input (fallback luxury match)
-          // ---------------------------------------------------------------
+          
+          
+          //---------------------------------------------------------------
+          // CASE 3 — PARTIAL ALPHA INPUT (fallback luxury match)
+          //---------------------------------------------------------------
           const normValue = normalizeCityName(value);
           
-          // Priority 1 — IATA prefix match (strong signal)
+          // Priority 1 — IATA prefix
           const tier1 = list.filter(a =>
             a.iata?.toUpperCase().startsWith(value) &&
             isCommercial(a)
           );
           
-          // Priority 2 — City name match (normalized)
+          // Priority 2 — City name match
           const tier2 = list.filter(a =>
             a.city &&
             normalizeCityName(a.city)?.startsWith(normValue) &&
@@ -364,11 +362,12 @@ console.log("🔥 redem-con.js loaded");
             i === self.findIndex(b => b.iata === a.iata)
           );
           
-          // Luxury cap: top 5
+          // Luxury cap
           results = results.slice(0, 5);
           
           // Render
           renderSuggestions(results, suggestionBox, input);
+
     
         }, 120);
       });
