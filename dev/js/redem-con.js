@@ -163,33 +163,34 @@ let iataData = null;
       return iataData;
     }
 
-    function setupIATA(input, suggestions) {
-      input.addEventListener("input", async () => {
-        const value = input.value.trim().toUpperCase();
-        suggestions.innerHTML = "";
-
-        if (value.length < 2) return;
-
-        const data = await loadIATA();
-
-        const matches = data.filter(r =>
-          r.code?.toUpperCase().startsWith(value) ||
-          r.city?.toUpperCase().startsWith(value)
-        );
-
-        matches.slice(0, 8).forEach(r => {
-          const div = document.createElement("div");
-          div.className = "suggestion";
-          div.textContent = `${r.code} — ${r.city}`;
-          div.addEventListener("click", () => {
-            input.value = r.code;
-            suggestions.innerHTML = "";
-            validateReady();
-          });
-          suggestions.appendChild(div);
+    function setupIATA(input, suggestionBox) {
+    input.addEventListener("input", async () => {
+      const value = input.value.trim().toUpperCase();
+      suggestionBox.innerHTML = "";
+  
+      if (value.length < 2) return;
+  
+      const data = await loadIATA();
+  
+      const matches = data.filter(r =>
+        r.iata?.startsWith(value) ||
+        r.airport?.toUpperCase().includes(value) ||
+        r.region_name?.toUpperCase().includes(value)
+      );
+  
+      matches.slice(0, 8).forEach(r => {
+        const div = document.createElement("div");
+        div.className = "suggestion";
+        div.textContent = `${r.iata} — ${r.airport}`;
+        div.addEventListener("click", () => {
+          input.value = r.iata;
+          suggestionBox.innerHTML = "";
+          validateReady();
         });
+        suggestionBox.appendChild(div);
       });
-    }
+    });
+  }
 
     setupIATA(origin, root.querySelector("#origin-suggestions"));
     setupIATA(destination, root.querySelector("#destination-suggestions"));
