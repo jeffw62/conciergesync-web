@@ -274,58 +274,59 @@ console.log("🔥 redem-con.js loaded");
     // ---------------------------------------------------------------------
     // SETUP AUTOCOMPLETE INPUT BINDINGS
     // ---------------------------------------------------------------------
-    iataTimer = setTimeout(async () => {
-
-      const list = await loadIATA();   // ← MUST BE FIRST
-      let results = [];
-    
-      const raw = input.value;
-      const value = raw.trim().toUpperCase();
-      const stripped = value.replace(/[^A-Z]/g, "");
-      suggestionBox.innerHTML = "";
-    
-      // ---------------------------------------------------------------
-      // SPECIAL CASE — USCA
-      // ---------------------------------------------------------------
-      if (stripped === "USCA") {
-        const majorList = list.filter(a =>
-          isCommercial(a) && isMajorNorthAmerica(a)
-        );
-    
-        const display = majorList
-          .sort((a, b) => a.iata.localeCompare(b.iata))
-          .slice(0, 14);
-    
-        console.log("🔥 USCA TRIGGERED — showing NA major hubs");
-        renderSuggestions(display, suggestionBox, input);
-        return;
-      }
-
-    
-        // Anything shorter than 2 chars → stop
-        if (value.length < 2) return;
+    function setupIATA(input, suggestionBox) {
+      input.addEventListener("input", () => {
     
         clearTimeout(iataTimer);
         iataTimer = setTimeout(async () => {
+    
+          // ALWAYS load list first
           const list = await loadIATA();
-          let results = [];
-          
-          // ---------------------------------------------------------------
-          // EXACT 3-LETTER IATA MATCH
-          // ---------------------------------------------------------------
-          if (value.length === 3) {
-            const exact = list.filter(a =>
-              a.iata?.toUpperCase() === value
+    
+          const raw = input.value;
+          const value = raw.trim().toUpperCase();
+          const stripped = value.replace(/[^A-Z]/g, "");
+          suggestionBox.innerHTML = "";
+    
+          // ---------------------------------------------------
+          // SPECIAL CASE — USCA
+          // ---------------------------------------------------
+          if (stripped === "USCA") {
+    
+            const majorList = list.filter(a =>
+              isCommercial(a) && isMajorNorthAmerica(a)
             );
+    
+            const display = majorList
+              .sort((a, b) => a.iata.localeCompare(b.iata))
+              .slice(0, 14);
+    
+            console.log("🔥 USCA — showing NA major hubs");
+            renderSuggestions(display, suggestionBox, input);
+            return; // 🔥 STOP HERE
+          }
+    
+          // ---------------------------------------------------
+          // Minimum input length
+          // ---------------------------------------------------
+          if (value.length < 2) return;
+    
+          let results = [];
+    
+          // ---------------------------------------------------
+          // Exact 3-letter match
+          // ---------------------------------------------------
+          if (value.length === 3) {
+            const exact = list.filter(a => a.iata?.toUpperCase() === value);
             if (exact.length) {
               renderSuggestions(exact, suggestionBox, input);
               return;
             }
           }
     
-          // ---------------------------------------------------------------
-          // CITY NAME → METRO CLUSTER
-          // ---------------------------------------------------------------
+          // ---------------------------------------------------
+          // Metro cluster (city)
+          // ---------------------------------------------------
           const matchedCluster = getMetroClusterFor(value);
           if (matchedCluster) {
             const clusterResults = list.filter(a =>
@@ -338,16 +339,17 @@ console.log("🔥 redem-con.js loaded");
                 .sort((a, b) => a.iata.localeCompare(b.iata));
     
               const finalList = [primary, ...rest].slice(0, 6);
+    
               renderSuggestions(finalList, suggestionBox, input);
               return;
             }
           }
     
-          // ---------------------------------------------------------------
-          // PARTIAL ALPHA → fallback search
-          // ---------------------------------------------------------------
+          // ---------------------------------------------------
+          // Partial match fallback
+          // ---------------------------------------------------
           const normValue = normalizeCityName(value);
-
+    
           const tier1 = list.filter(a =>
             a.iata?.toUpperCase().startsWith(value) && isCommercial(a)
           );
@@ -367,6 +369,7 @@ console.log("🔥 redem-con.js loaded");
           results = results.slice(0, 5);
     
           renderSuggestions(results, suggestionBox, input);
+    
         }, 120);
       });
     }
