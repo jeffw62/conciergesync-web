@@ -1,24 +1,25 @@
-console.log("🔥 redem-con.js loaded, file executed");
+console.log("🔥 redem-con.js loaded (CCT Clean Build)");
 
 // =====================================================================
-// GLOBAL STATE
+// GLOBAL STATE (SAFE, NON-LEAKING)
 // =====================================================================
-let iataData = null;
-let iataReady = false;
-let iataBound = false;
 let moduleInitialized = false;
+let iataData = [];
+let iataLoaded = false;
+let iataBound = false;
 
 // =====================================================================
-// UNIVERSAL INITIALIZER
+// MAIN INITIALIZER (RUNS EXACTLY ONCE)
 // =====================================================================
 function initRedemptionModule(root) {
-  if (moduleInitialized) return;
+  if (!root || moduleInitialized) return;
   moduleInitialized = true;
 
-  if (!root) return;
-  console.log("🔧 INIT: Redemption Module Starting");
+  console.log("🔧 INIT: Redemption Module (CCT Build)");
 
-  // --- Elements ---
+  // -------------------------------------------------------------------
+  // ELEMENT HOOKS
+  // -------------------------------------------------------------------
   const originInput = root.querySelector("#origin");
   const originList = root.querySelector("#origin-suggestions");
 
@@ -36,9 +37,9 @@ function initRedemptionModule(root) {
   const flexPicker = root.querySelector("#flexPicker");
   const flexDays = root.querySelector("#flexDays");
 
+  const allowBudget = root.querySelector("#allowBudget");
   const partnerSpace = root.querySelector("#partnerSpace");
   const program = root.querySelector("#program");
-  const allowBudget = root.querySelector("#allowBudget");
 
   const directGroup = root.querySelector("#directStop");
   const multiGroup = root.querySelector("#multiConn");
@@ -50,30 +51,31 @@ function initRedemptionModule(root) {
   const spinner = root.querySelector("#spinner-overlay");
 
   // =====================================================================
-  // IATA LOAD
+  // LOAD IATA (CCT SAFE)
   // =====================================================================
   async function loadIATA() {
-    console.log("⏳ Loading IATA...");
     try {
+      console.log("⏳ Loading IATA Index…");
       const res = await fetch("/dev/asset/iata-icao.json");
       const data = await res.json();
-      iataData = data;
-      iataReady = true;
 
-      console.log(`✅ IATA Loaded: ${iataData.length} records`);
+      iataData = data || [];
+      iataLoaded = true;
 
-      if (!iataBound) bindIATA();
+      console.log(`✅ IATA Ready (${iataData.length} entries)`);
+
+      if (!iataBound) bindAllIATA();
     } catch (err) {
       console.error("❌ IATA Load Failed:", err);
     }
   }
 
   // =====================================================================
-  // IATA AUTOCOMPLETE
+  // BIND AUTOCOMPLETE TO A FIELD
   // =====================================================================
-  function bindField(input, list) {
+  function bindIATAField(input, list) {
     input.addEventListener("input", () => {
-      if (!iataReady || !Array.isArray(iataData)) return;
+      if (!iataLoaded) return;
 
       const q = input.value.trim().toUpperCase();
       if (!q) {
@@ -86,6 +88,7 @@ function initRedemptionModule(root) {
           const code = a.code?.toUpperCase() || "";
           const city = a.city?.toUpperCase() || "";
           const name = a.name?.toUpperCase() || "";
+
           return (
             code.startsWith(q) ||
             city.startsWith(q) ||
@@ -112,17 +115,20 @@ function initRedemptionModule(root) {
       });
     });
 
-    input.addEventListener("blur", () => {
-      setTimeout(() => (list.innerHTML = ""), 150);
-    });
+    input.addEventListener("blur", () =>
+      setTimeout(() => (list.innerHTML = ""), 150)
+    );
   }
 
-  function bindIATA() {
-    if (!iataReady || iataBound) return;
-    console.log("🔗 Binding IATA Autocomplete");
+  // =====================================================================
+  // BIND AUTOCOMPLETE TO BOTH FIELDS
+  // =====================================================================
+  function bindAllIATA() {
+    if (iataBound) return;
 
-    bindField(originInput, originList);
-    bindField(destInput, destList);
+    console.log("🔗 Binding IATA Autocomplete");
+    bindIATAField(originInput, originList);
+    bindIATAField(destInput, destList);
 
     iataBound = true;
   }
@@ -130,24 +136,23 @@ function initRedemptionModule(root) {
   loadIATA();
 
   // =====================================================================
-  // ROUTING TOGGLES
+  // ROUTING LOGIC (CCT CORRECT)
   // =====================================================================
   function setActive(group, val) {
-    const yesBtn = group.querySelector('[data-val="yes"]');
-    const noBtn = group.querySelector('[data-val="no"]');
+    const yes = group.querySelector('[data-val="yes"]');
+    const no = group.querySelector('[data-val="no"]');
 
     if (val === "yes") {
-      yesBtn.classList.add("active");
-      noBtn.classList.remove("active");
+      yes.classList.add("active");
+      no.classList.remove("active");
     } else {
-      noBtn.classList.add("active");
-      yesBtn.classList.remove("active");
+      no.classList.add("active");
+      yes.classList.remove("active");
     }
   }
 
   function getVal(group) {
-    const b = group.querySelector("button.active");
-    return b ? b.dataset.val : "no";
+    return group.querySelector("button.active")?.dataset.val || "no";
   }
 
   function disableGroup(group) {
@@ -164,47 +169,37 @@ function initRedemptionModule(root) {
     const direct = getVal(directGroup);
     const multi = getVal(multiGroup);
 
-    // -----------------------------------------------------------------
     // DIRECT = YES
-    // -----------------------------------------------------------------
     if (direct === "yes") {
-      // Multi must be NO but NOT disabled
+      // Multi: forced NO, but NOT dim
       setActive(multiGroup, "no");
       enableGroup(multiGroup);
 
-      // Positioning: forced NO + dimmed
+      // Positioning: forced NO + dim
       setActive(posGroup, "no");
       disableGroup(posGroup);
 
       return;
     }
 
-    // -----------------------------------------------------------------
     // MULTI = YES
-    // -----------------------------------------------------------------
     if (multi === "yes") {
-      // Direct forced to NO + dimmed
+      // Direct: forced NO + dim
       setActive(directGroup, "no");
       disableGroup(directGroup);
 
-      // Positioning enabled (default NO)
+      // Positioning: active
       enableGroup(posGroup);
 
       return;
     }
 
-    // -----------------------------------------------------------------
-    // BOTH NO
-    // -----------------------------------------------------------------
-    if (direct === "no" && multi === "no") {
-      enableGroup(directGroup);
-      enableGroup(multiGroup);
+    // BOTH = NO
+    enableGroup(directGroup);
+    enableGroup(multiGroup);
 
-      setActive(posGroup, "no");
-      disableGroup(posGroup);
-
-      return;
-    }
+    setActive(posGroup, "no");
+    disableGroup(posGroup);
   }
 
   directGroup.querySelectorAll("button").forEach((b) =>
@@ -250,7 +245,7 @@ function initRedemptionModule(root) {
   });
 
   // =====================================================================
-  // FORM READINESS
+  // READINESS CHECK
   // =====================================================================
   function validateReady() {
     const o = originInput.value.trim();
@@ -280,7 +275,7 @@ function initRedemptionModule(root) {
   flexDays.addEventListener("change", validateReady);
 
   // =====================================================================
-  // PAYLOAD BUILDER
+  // SEARCH PAYLOAD
   // =====================================================================
   function buildPayload() {
     return {
@@ -310,7 +305,7 @@ function initRedemptionModule(root) {
     if (searchBtn.disabled) return;
 
     const payload = buildPayload();
-    console.log("🔍 SEARCH PAYLOAD:", payload);
+    console.log("🔍 SEARCH:", payload);
 
     spinner.style.display = "flex";
 
@@ -340,15 +335,15 @@ function initRedemptionModule(root) {
     }
   });
 
-  // one last readiness check
   applyRoutingRules();
   validateReady();
 }
 
 // =====================================================================
-// UNIVERSAL BOOTSTRAP
+// UNIVERSAL BOOTSTRAP (CCT GUARANTEED INIT)
 // =====================================================================
 
+// A) module:ready → console injection
 document.addEventListener("module:ready", (ev) => {
   const root =
     ev.detail?.root ||
@@ -358,11 +353,13 @@ document.addEventListener("module:ready", (ev) => {
   if (root) initRedemptionModule(root);
 });
 
+// B) DOM ready → direct load
 window.addEventListener("DOMContentLoaded", () => {
   const root = document.querySelector(".redem-con");
   if (root) initRedemptionModule(root);
 });
 
+// C) MutationObserver → late injection
 const mo = new MutationObserver(() => {
   const root = document.querySelector(".redem-con");
   if (root) {
@@ -371,4 +368,3 @@ const mo = new MutationObserver(() => {
   }
 });
 mo.observe(document.body, { childList: true, subtree: true });
-
