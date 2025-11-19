@@ -16,13 +16,13 @@
         <div class="inline-fields">
           <div class="field">
             <label for="origin">Origin (e.g. DFW)</label>
-            <input type="text" id="origin" data-iata />
+            <input type="text" id="origin" data-iata="">
             <div id="origin-suggestions" class="suggestions"></div>
           </div>
 
           <div class="field">
             <label for="destination">Destination (e.g. LHR)</label>
-            <input type="text" id="destination" data-iata />
+            <input type="text" id="destination" data-iata="">
             <div id="destination-suggestions" class="suggestions"></div>
           </div>
         </div>
@@ -30,7 +30,7 @@
         <div class="inline-fields">
           <div class="field">
             <label for="passengers">Passengers</label>
-            <input type="number" id="passengers" min="1" max="9" step="1" value="1" />
+            <input type="number" id="passengers" min="1" max="9" step="1" value="1">
           </div>
 
           <div class="field">
@@ -48,12 +48,12 @@
         <div class="inline-fields">
           <div class="field">
             <label for="departDate">Departure Date</label>
-            <input type="date" id="departDate" />
+            <input type="date" id="departDate">
           </div>
 
           <div class="field">
             <label for="returnDate">Return Date (Optional)</label>
-            <input type="date" id="returnDate" />
+            <input type="date" id="returnDate">
           </div>
         </div>
 
@@ -62,7 +62,7 @@
           <button type="button" class="option-btn" id="flexBtn">Flexible ± Days</button>
         </div>
 
-        <input type="hidden" id="mode" value="exact" />
+        <input type="hidden" id="mode" value="exact">
 
         <div id="flexPicker">
           <label for="flexDays">Search within ± 14 days:</label>
@@ -77,7 +77,7 @@
         </div>
 
         <div class="checkbox-row">
-          <input type="checkbox" id="partnerSpace" />
+          <input type="checkbox" id="partnerSpace">
           <label for="partnerSpace">Include partner award space</label>
         </div>
 
@@ -111,15 +111,15 @@
         <h3><span class="step-num">2</span> Routing Preferences</h3>
       
         <label>Direct Non-stop</label>
-        <div class="toggle-group" id="directStop">
-          <button type="button" data-val="yes">Yes</button>
-          <button type="button" data-val="no" class="active">No</button>
+        <div class="toggle-group disabled-toggle" id="directStop">
+          <button type="button" data-val="yes" class="" disabled="">Yes</button>
+          <button type="button" data-val="no" class="active" disabled="">No</button>
         </div>
       
         <label>Multiple Connections</label>
         <div class="toggle-group" id="multiConn">
-          <button type="button" data-val="yes">Yes</button>
-          <button type="button" data-val="no" class="active">No</button>
+          <button type="button" data-val="yes" class="active">Yes</button>
+          <button type="button" data-val="no" class="">No</button>
         </div>
       
         <label>Positioning Flight Allowed</label>
@@ -133,7 +133,7 @@
         </div>
       
         <div class="checkbox-row">
-          <input type="checkbox" id="allowBudget" />
+          <input type="checkbox" id="allowBudget">
           <label for="allowBudget">Include budget airlines</label>
         </div>
       
@@ -145,8 +145,8 @@
           <span class="step-num">3</span> Search
         </h3>
       
-        <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
-        <small id="searchWarning" class="step-warning">Complete Step 2 to continue.</small>
+        <button id="searchBtn" class="search-btn" type="button" disabled="">Search</button>
+        <small id="searchWarning" class="step-warning" style="display: block;">Complete Step 2 to continue.</small>
       </div>
 
     </div> 
@@ -160,6 +160,4 @@
     </div>
   </div>
 
-</div> <!-- END redem-con -->
-
-<script src="/dev/js/redem-con.js"></script>
+</div>
