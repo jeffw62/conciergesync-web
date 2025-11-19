@@ -49,86 +49,104 @@ let iataData = null;
     loadIATA();
 
     // =====================================================================
-    // DEFAULT ROUTING STATE — CORRECTED RULES
+    // DEFAULT ROUTING STATE — FINAL CCT VERSION
     // =====================================================================
     resetRoutingToDefaults();
-
+    
     function resetRoutingToDefaults() {
       setToggle(directStop, "no", true);      // enabled
       setToggle(multiConn, "no", true);       // enabled
       setToggle(posFlight, "no", false);      // disabled
     }
-
-    // Helper: apply toggle state
+    
+    // Helper: set toggle state
     function setToggle(group, value, enabled) {
-      const yes = group.querySelector('[data-val="yes"]');
-      const no = group.querySelector('[data-val="no"]');
-
-      yes.classList.remove("active");
-      no.classList.remove("active");
-
-      if (value === "yes") yes.classList.add("active");
-      else no.classList.add("active");
-
+      const yesBtn = group.querySelector('[data-val="yes"]');
+      const noBtn = group.querySelector('[data-val="no"]');
+    
+      yesBtn.classList.remove("active");
+      noBtn.classList.remove("active");
+    
+      if (value === "yes") yesBtn.classList.add("active");
+      else noBtn.classList.add("active");
+    
       if (!enabled) {
         group.classList.add("disabled-toggle");
-        yes.disabled = true;
-        no.disabled = true;
+        yesBtn.disabled = true;
+        noBtn.disabled = true;
       } else {
         group.classList.remove("disabled-toggle");
-        yes.disabled = false;
-        no.disabled = false;
+        yesBtn.disabled = false;
+        noBtn.disabled = false;
       }
     }
-
-    // Helper: get current value
+    
+    // Helper: read active value
     function getToggleValue(group) {
       const btn = group.querySelector("button.active");
       return btn?.dataset.val || "no";
     }
-
+    
     // =====================================================================
-    // CORRECTED ROUTING RULES (FINAL)
+    // APPLY ROUTING RULES (FINAL SPECIFICATION)
     // =====================================================================
     function applyRoutingRules() {
       const direct = getToggleValue(directStop);
       const multi = getToggleValue(multiConn);
-
-      // DIRECT YES
+    
+      // ---------------------------------------------
+      // CASE 1 — DIRECT = YES
+      // ---------------------------------------------
       if (direct === "yes") {
-        setToggle(multiConn, "no", true);     // forced NO but enabled
-        setToggle(posFlight, "no", false);    // disabled
+        setToggle(multiConn, "no", true);   // enabled but forced NO
+        setToggle(posFlight, "no", false);  // disabled
       }
-
-      // MULTI YES
+    
+      // ---------------------------------------------
+      // CASE 2 — MULTI = YES
+      // ---------------------------------------------
       else if (multi === "yes") {
-        setToggle(directStop, "no", true);    // forced NO but enabled
-        setToggle(posFlight, "no", true);     // enabled
+        setToggle(directStop, "no", true);  // enabled but forced NO
+        setToggle(posFlight, "no", true);   // enabled
       }
-
-      // BOTH NO
+    
+      // ---------------------------------------------
+      // CASE 3 — BOTH = NO
+      // ---------------------------------------------
       else {
-        setToggle(directStop, "no", true);
-        setToggle(multiConn, "no", true);
-        setToggle(posFlight, "no", false);
+        setToggle(directStop, "no", true);   // enabled
+        setToggle(multiConn, "no", true);    // enabled
+        setToggle(posFlight, "no", false);   // disabled
       }
-
+    
       validateReady();
     }
-
+    
     // =====================================================================
-    // TOGGLE EVENT LISTENERS
+    // ROUTING TOGGLE LISTENERS
     // =====================================================================
-    ;[directStop, multiConn, posFlight].forEach(group => {
+    [directStop, multiConn].forEach(group => {
       group.addEventListener("click", (ev) => {
         const btn = ev.target.closest("button");
         if (!btn || btn.disabled) return;
-
+    
+        // set clicked btn active
         group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
-
+    
         applyRoutingRules();
       });
+    });
+    
+    // Positioning listener stays but only fires when enabled
+    posFlight.addEventListener("click", (ev) => {
+      const btn = ev.target.closest("button");
+      if (!btn || btn.disabled) return;
+    
+      posFlight.querySelectorAll("button").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+    
+      validateReady();
     });
 
     // =====================================================================
