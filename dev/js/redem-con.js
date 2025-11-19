@@ -44,75 +44,77 @@ let iataData = null;
     const spinner = root.querySelector("#spinner-overlay");
 
     // =====================================================================
-    // DEFAULT ROUTING STATE (CORRECT VERSION)
+    // DEFAULT ROUTING STATE — CORRECTED RULES
     // =====================================================================
     resetRoutingToDefaults();
 
     function resetRoutingToDefaults() {
-      setToggle(directStop, "no", true);      // enabled, default NO
-      setToggle(multiConn, "no", true);       // enabled, default NO
-      setToggle(posFlight, "no", false);      // disabled, default NO
+      setToggle(directStop, "no", true);      // enabled
+      setToggle(multiConn, "no", true);       // enabled
+      setToggle(posFlight, "no", false);      // disabled
     }
 
-    // Helper: set toggle state
+    // Helper: apply toggle state
     function setToggle(group, value, enabled) {
-      const yesBtn = group.querySelector('[data-val="yes"]');
-      const noBtn = group.querySelector('[data-val="no"]');
+      const yes = group.querySelector('[data-val="yes"]');
+      const no = group.querySelector('[data-val="no"]');
 
-      yesBtn.classList.remove("active");
-      noBtn.classList.remove("active");
+      yes.classList.remove("active");
+      no.classList.remove("active");
 
-      if (value === "yes") yesBtn.classList.add("active");
-      else noBtn.classList.add("active");
+      if (value === "yes") yes.classList.add("active");
+      else no.classList.add("active");
 
       if (!enabled) {
         group.classList.add("disabled-toggle");
-        yesBtn.disabled = true;
-        noBtn.disabled = true;
+        yes.disabled = true;
+        no.disabled = true;
       } else {
         group.classList.remove("disabled-toggle");
-        yesBtn.disabled = false;
-        noBtn.disabled = false;
+        yes.disabled = false;
+        no.disabled = false;
       }
     }
 
-    // Helper: read toggle active value
+    // Helper: get current value
     function getToggleValue(group) {
       const btn = group.querySelector("button.active");
       return btn?.dataset.val || "no";
     }
 
     // =====================================================================
-    // ROUTING RULES
+    // CORRECTED ROUTING RULES (FINAL)
     // =====================================================================
     function applyRoutingRules() {
       const direct = getToggleValue(directStop);
       const multi = getToggleValue(multiConn);
 
-      // CASE 1 — DIRECT YES
+      // DIRECT YES
       if (direct === "yes") {
-        setToggle(multiConn, "no", false);   // force NO + disable
-        setToggle(posFlight, "no", false);   // force NO + disable
+        setToggle(multiConn, "no", true);     // forced NO but enabled
+        setToggle(posFlight, "no", false);    // disabled
       }
-      // CASE 2 — MULTI YES
+
+      // MULTI YES
       else if (multi === "yes") {
-        setToggle(directStop, "no", false);  // force NO + disable
-        setToggle(posFlight, "no", true);    // enabled + NO (user may choose YES)
+        setToggle(directStop, "no", true);    // forced NO but enabled
+        setToggle(posFlight, "no", true);     // enabled
       }
-      // CASE 3 — BOTH NO
+
+      // BOTH NO
       else {
-        setToggle(directStop, "no", true);   // enabled
-        setToggle(multiConn, "no", true);    // enabled
-        setToggle(posFlight, "no", false);   // disabled + NO
+        setToggle(directStop, "no", true);
+        setToggle(multiConn, "no", true);
+        setToggle(posFlight, "no", false);
       }
 
       validateReady();
     }
 
     // =====================================================================
-    // ROUTING TOGGLE LISTENERS
+    // TOGGLE EVENT LISTENERS
     // =====================================================================
-    [directStop, multiConn, posFlight].forEach(group => {
+    ;[directStop, multiConn, posFlight].forEach(group => {
       group.addEventListener("click", (ev) => {
         const btn = ev.target.closest("button");
         if (!btn || btn.disabled) return;
@@ -125,7 +127,7 @@ let iataData = null;
     });
 
     // =====================================================================
-    // FLEX / EXACT DATE TOGGLES
+    // EXACT / FLEX MODE
     // =====================================================================
     exactBtn.addEventListener("click", () => {
       exactBtn.classList.add("active");
@@ -144,13 +146,13 @@ let iataData = null;
     });
 
     // =====================================================================
-    // IATA AUTOCOMPLETE
+    // IATA AUTOCOMPLETE (FIXED)
     // =====================================================================
     async function loadIATA() {
       if (iataData) return iataData;
 
       try {
-        console.log("🌍 Loading IATA...");
+        console.log("🌍 Loading IATA…");
         const res = await fetch("/dev/asset/iata-icao.json");
         iataData = await res.json();
         console.log("🌍 IATA loaded:", iataData.length);
@@ -161,15 +163,19 @@ let iataData = null;
       return iataData;
     }
 
-    function setupIATA(input, suggestionBox) {
+    function setupIATA(input, suggestions) {
       input.addEventListener("input", async () => {
         const value = input.value.trim().toUpperCase();
-        suggestionBox.innerHTML = "";
+        suggestions.innerHTML = "";
 
         if (value.length < 2) return;
 
         const data = await loadIATA();
-        const matches = data.filter(r => r.code.startsWith(value) || r.city.startsWith(value));
+
+        const matches = data.filter(r =>
+          r.code?.toUpperCase().startsWith(value) ||
+          r.city?.toUpperCase().startsWith(value)
+        );
 
         matches.slice(0, 8).forEach(r => {
           const div = document.createElement("div");
@@ -177,10 +183,10 @@ let iataData = null;
           div.textContent = `${r.code} — ${r.city}`;
           div.addEventListener("click", () => {
             input.value = r.code;
-            suggestionBox.innerHTML = "";
+            suggestions.innerHTML = "";
             validateReady();
           });
-          suggestionBox.appendChild(div);
+          suggestions.appendChild(div);
         });
       });
     }
@@ -189,7 +195,7 @@ let iataData = null;
     setupIATA(destination, root.querySelector("#destination-suggestions"));
 
     // =====================================================================
-    // FORM READINESS VALIDATION
+    // VALIDATION
     // =====================================================================
     function validateReady() {
       const ready =
@@ -205,10 +211,11 @@ let iataData = null;
       searchWarning.style.display = ready ? "none" : "block";
     }
 
-    [origin, destination, departDate, serviceClass, passengers, flexDays].forEach(el => {
-      el.addEventListener("input", validateReady);
-      el.addEventListener("change", validateReady);
-    });
+    [origin, destination, departDate, serviceClass, passengers, flexDays]
+      .forEach(el => {
+        el.addEventListener("input", validateReady);
+        el.addEventListener("change", validateReady);
+      });
 
     // =====================================================================
     // SEARCH EXECUTION
@@ -259,13 +266,13 @@ let iataData = null;
       }
     });
 
-    // INITIALIZE ROUTING & READINESS
+    // Initialize state
     applyRoutingRules();
     validateReady();
   }
 
   // =====================================================================
-  // DYNAMIC INJECTION HANDLING
+  // DYNAMIC MODULE LOADING
   // =====================================================================
   document.addEventListener("module:ready", (ev) => {
     const root =
@@ -277,8 +284,8 @@ let iataData = null;
   });
 
   window.addEventListener("DOMContentLoaded", () => {
-    const lateRoot = document.querySelector(".redem-con");
-    if (lateRoot) init(lateRoot);
+    const late = document.querySelector(".redem-con");
+    if (late) init(late);
   });
 
   const mo = new MutationObserver(() => {
