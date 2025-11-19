@@ -1,7 +1,7 @@
-console.log("🔥 redem-con.js loaded (CCT Clean Build)");
+console.log("🔥 redem-con.js loaded (CCT Bulletproof Build)");
 
 // =====================================================================
-// GLOBAL STATE (SAFE, NON-LEAKING)
+// GLOBAL STATE
 // =====================================================================
 let moduleInitialized = false;
 let iataData = [];
@@ -9,17 +9,14 @@ let iataLoaded = false;
 let iataBound = false;
 
 // =====================================================================
-// MAIN INITIALIZER (RUNS EXACTLY ONCE)
+// INITIALIZER
 // =====================================================================
 function initRedemptionModule(root) {
   if (!root || moduleInitialized) return;
   moduleInitialized = true;
 
-  console.log("🔧 INIT: Redemption Module (CCT Build)");
+  console.log("🔧 INIT: Redemption Module");
 
-  // -------------------------------------------------------------------
-  // ELEMENT HOOKS
-  // -------------------------------------------------------------------
   const originInput = root.querySelector("#origin");
   const originList = root.querySelector("#origin-suggestions");
 
@@ -51,18 +48,18 @@ function initRedemptionModule(root) {
   const spinner = root.querySelector("#spinner-overlay");
 
   // =====================================================================
-  // LOAD IATA (CCT SAFE)
+  // LOAD IATA
   // =====================================================================
   async function loadIATA() {
     try {
-      console.log("⏳ Loading IATA Index…");
+      console.log("⏳ Loading IATA…");
       const res = await fetch("/dev/asset/iata-icao.json");
       const data = await res.json();
 
       iataData = data || [];
       iataLoaded = true;
 
-      console.log(`✅ IATA Ready (${iataData.length} entries)`);
+      console.log(`✅ IATA Loaded (${iataData.length} entries)`);
 
       if (!iataBound) bindAllIATA();
     } catch (err) {
@@ -71,8 +68,22 @@ function initRedemptionModule(root) {
   }
 
   // =====================================================================
-  // BIND AUTOCOMPLETE TO A FIELD
+  // AUTOCOMPLETE ENGINE (100% bulletproof, no template literals)
   // =====================================================================
+  function renderSuggestion(a) {
+    return (
+      '<div class="suggestion-item" data-code="' +
+      a.code +
+      '"><strong>' +
+      a.code +
+      "</strong> — " +
+      (a.city || "") +
+      " " +
+      (a.name || "") +
+      "</div>"
+    );
+  }
+
   function bindIATAField(input, list) {
     input.addEventListener("input", () => {
       if (!iataLoaded) return;
@@ -85,10 +96,9 @@ function initRedemptionModule(root) {
 
       const matches = iataData
         .filter((a) => {
-          const code = a.code?.toUpperCase() || "";
-          const city = a.city?.toUpperCase() || "";
-          const name = a.name?.toUpperCase() || "";
-
+          const code = (a.code || "").toUpperCase();
+          const city = (a.city || "").toUpperCase();
+          const name = (a.name || "").toUpperCase();
           return (
             code.startsWith(q) ||
             city.startsWith(q) ||
@@ -97,22 +107,17 @@ function initRedemptionModule(root) {
         })
         .slice(0, 8);
 
-      list.innerHTML = matches
-        .map(
-          (a) => `
-        <div class="suggestion-item" data-code="${a.code}">
-          <strong>${a.code}</strong> — ${a.city || ""} ${a.name || ""}
-        </div>`
-        )
-        .join("");
+      let html = "";
+      matches.forEach((a) => (html += renderSuggestion(a)));
+      list.innerHTML = html;
 
-      list.querySelectorAll(".suggestion-item").forEach((item) => {
+      list.querySelectorAll(".suggestion-item").forEach((item) =>
         item.addEventListener("click", () => {
           input.value = item.dataset.code;
           list.innerHTML = "";
           validateReady();
-        });
-      });
+        })
+      );
     });
 
     input.addEventListener("blur", () =>
@@ -120,23 +125,18 @@ function initRedemptionModule(root) {
     );
   }
 
-  // =====================================================================
-  // BIND AUTOCOMPLETE TO BOTH FIELDS
-  // =====================================================================
   function bindAllIATA() {
     if (iataBound) return;
-
-    console.log("🔗 Binding IATA Autocomplete");
+    console.log("🔗 Binding Autocomplete");
     bindIATAField(originInput, originList);
     bindIATAField(destInput, destList);
-
     iataBound = true;
   }
 
   loadIATA();
 
   // =====================================================================
-  // ROUTING LOGIC (CCT CORRECT)
+  // ROUTING LOGIC (CCT-CORRECT)
   // =====================================================================
   function setActive(group, val) {
     const yes = group.querySelector('[data-val="yes"]');
@@ -165,36 +165,30 @@ function initRedemptionModule(root) {
     group.querySelectorAll("button").forEach((b) => (b.disabled = false));
   }
 
-  function applyRoutingRules() {
+  function applyRouting() {
     const direct = getVal(directGroup);
     const multi = getVal(multiGroup);
 
-    // DIRECT = YES
+    // Direct YES
     if (direct === "yes") {
-      // Multi: forced NO, but NOT dim
       setActive(multiGroup, "no");
       enableGroup(multiGroup);
 
-      // Positioning: forced NO + dim
       setActive(posGroup, "no");
       disableGroup(posGroup);
-
       return;
     }
 
-    // MULTI = YES
+    // Multi YES
     if (multi === "yes") {
-      // Direct: forced NO + dim
       setActive(directGroup, "no");
       disableGroup(directGroup);
 
-      // Positioning: active
       enableGroup(posGroup);
-
       return;
     }
 
-    // BOTH = NO
+    // Both NO
     enableGroup(directGroup);
     enableGroup(multiGroup);
 
@@ -205,7 +199,7 @@ function initRedemptionModule(root) {
   directGroup.querySelectorAll("button").forEach((b) =>
     b.addEventListener("click", () => {
       setActive(directGroup, b.dataset.val);
-      applyRoutingRules();
+      applyRouting();
       validateReady();
     })
   );
@@ -213,7 +207,7 @@ function initRedemptionModule(root) {
   multiGroup.querySelectorAll("button").forEach((b) =>
     b.addEventListener("click", () => {
       setActive(multiGroup, b.dataset.val);
-      applyRoutingRules();
+      applyRouting();
       validateReady();
     })
   );
@@ -226,7 +220,7 @@ function initRedemptionModule(root) {
   );
 
   // =====================================================================
-  // EXACT / FLEX MODE
+  // EXACT / FLEX
   // =====================================================================
   exactBtn.addEventListener("click", () => {
     modeInput.value = "exact";
@@ -245,7 +239,7 @@ function initRedemptionModule(root) {
   });
 
   // =====================================================================
-  // READINESS CHECK
+  // VALIDATION
   // =====================================================================
   function validateReady() {
     const o = originInput.value.trim();
@@ -262,7 +256,6 @@ function initRedemptionModule(root) {
     if (!o || !d || !dep || !svc) ok = false;
     if (direct !== "yes" && multi !== "yes") ok = false;
     if (multi === "yes" && pos !== "yes") ok = false;
-
     if (modeInput.value === "flex" && !flexDays.value) ok = false;
 
     searchBtn.disabled = !ok;
@@ -275,7 +268,7 @@ function initRedemptionModule(root) {
   flexDays.addEventListener("change", validateReady);
 
   // =====================================================================
-  // SEARCH PAYLOAD
+  // SEARCH
   // =====================================================================
   function buildPayload() {
     return {
@@ -298,22 +291,17 @@ function initRedemptionModule(root) {
     };
   }
 
-  // =====================================================================
-  // SEARCH EXECUTION
-  // =====================================================================
   searchBtn.addEventListener("click", async () => {
     if (searchBtn.disabled) return;
 
-    const payload = buildPayload();
-    console.log("🔍 SEARCH:", payload);
-
+    console.log("🔍 SEARCH PAYLOAD:", buildPayload());
     spinner.style.display = "flex";
 
     try {
       const res = await fetch("/api/redemption/flights", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
+        body: JSON.stringify(buildPayload()),
       });
 
       const data = await res.json();
@@ -335,31 +323,27 @@ function initRedemptionModule(root) {
     }
   });
 
-  applyRoutingRules();
+  applyRouting();
   validateReady();
 }
 
 // =====================================================================
-// UNIVERSAL BOOTSTRAP (CCT GUARANTEED INIT)
+// UNIVERSAL BOOTSTRAP
 // =====================================================================
 
-// A) module:ready → console injection
 document.addEventListener("module:ready", (ev) => {
   const root =
     ev.detail?.root ||
     ev.detail?.element ||
     document.querySelector(".redem-con");
-
   if (root) initRedemptionModule(root);
 });
 
-// B) DOM ready → direct load
 window.addEventListener("DOMContentLoaded", () => {
   const root = document.querySelector(".redem-con");
   if (root) initRedemptionModule(root);
 });
 
-// C) MutationObserver → late injection
 const mo = new MutationObserver(() => {
   const root = document.querySelector(".redem-con");
   if (root) {
