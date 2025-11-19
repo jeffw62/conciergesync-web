@@ -290,7 +290,7 @@ console.log("🔥 redem-con.js loaded");
           // ---------------------------------------------------------------
           // SPECIAL CASE — USCA (must run BEFORE metro cluster)
           // ---------------------------------------------------------------
-          if (value === "USCA") {
+          if (value.replace(/[^A-Z]/g, "") === "USCA") {
             const majorList = list.filter(a =>
               isCommercial(a) && isMajorNorthAmerica(a)
             );
