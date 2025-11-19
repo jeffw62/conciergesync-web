@@ -1,7 +1,7 @@
 console.log("🔥 redem-con.js loaded, file executed");
 
 // =====================================================================
-// GLOBAL STATE (SAFE, NON-LEAKING)
+// GLOBAL STATE
 // =====================================================================
 let iataData = null;
 let iataReady = false;
@@ -9,7 +9,7 @@ let iataBound = false;
 let moduleInitialized = false;
 
 // =====================================================================
-// UNIVERSAL INITIALIZER (Runs exactly once)
+// UNIVERSAL INITIALIZER
 // =====================================================================
 function initRedemptionModule(root) {
   if (moduleInitialized) return;
@@ -59,7 +59,8 @@ function initRedemptionModule(root) {
       const data = await res.json();
       iataData = data;
       iataReady = true;
-      console.log("✅ IATA Loaded:", iataData.length, "records");
+
+      console.log(`✅ IATA Loaded: ${iataData.length} records`);
 
       if (!iataBound) bindIATA();
     } catch (err) {
@@ -80,19 +81,25 @@ function initRedemptionModule(root) {
         return;
       }
 
-      const matches = iataData.filter(
-        (a) =>
-          a.code.startsWith(q) ||
-          (a.city && a.city.toUpperCase().startsWith(q)) ||
-          (a.name && a.name.toUpperCase().startsWith(q))
-      ).slice(0, 8);
+      const matches = iataData
+        .filter((a) => {
+          const code = a.code?.toUpperCase() || "";
+          const city = a.city?.toUpperCase() || "";
+          const name = a.name?.toUpperCase() || "";
+          return (
+            code.startsWith(q) ||
+            city.startsWith(q) ||
+            name.startsWith(q)
+          );
+        })
+        .slice(0, 8);
 
       list.innerHTML = matches
         .map(
           (a) => `
-          <div class="suggestion-item" data-code="${a.code}">
-            <strong>${a.code}</strong> — ${a.city || ""} ${a.name || ""}
-          </div>`
+        <div class="suggestion-item" data-code="${a.code}">
+          <strong>${a.code}</strong> — ${a.city || ""} ${a.name || ""}
+        </div>`
         )
         .join("");
 
@@ -113,8 +120,10 @@ function initRedemptionModule(root) {
   function bindIATA() {
     if (!iataReady || iataBound) return;
     console.log("🔗 Binding IATA Autocomplete");
+
     bindField(originInput, originList);
     bindField(destInput, destList);
+
     iataBound = true;
   }
 
@@ -155,58 +164,71 @@ function initRedemptionModule(root) {
     const direct = getVal(directGroup);
     const multi = getVal(multiGroup);
 
-    // Direct YES → Multi forced NO, Positioning disabled
+    // -----------------------------------------------------------------
+    // DIRECT = YES
+    // -----------------------------------------------------------------
     if (direct === "yes") {
+      // Multi must be NO but NOT disabled
       setActive(multiGroup, "no");
-      disableGroup(multiGroup);
+      enableGroup(multiGroup);
 
+      // Positioning: forced NO + dimmed
       setActive(posGroup, "no");
       disableGroup(posGroup);
+
       return;
     }
 
-    // Multi YES → Direct forced NO, Positioning enabled
+    // -----------------------------------------------------------------
+    // MULTI = YES
+    // -----------------------------------------------------------------
     if (multi === "yes") {
+      // Direct forced to NO + dimmed
       setActive(directGroup, "no");
       disableGroup(directGroup);
 
+      // Positioning enabled (default NO)
       enableGroup(posGroup);
+
       return;
     }
 
-    // Both NO → Positioning forced NO + disabled
+    // -----------------------------------------------------------------
+    // BOTH NO
+    // -----------------------------------------------------------------
     if (direct === "no" && multi === "no") {
       enableGroup(directGroup);
       enableGroup(multiGroup);
 
       setActive(posGroup, "no");
       disableGroup(posGroup);
+
       return;
     }
   }
 
-  directGroup.querySelectorAll("button").forEach((b) => {
+  directGroup.querySelectorAll("button").forEach((b) =>
     b.addEventListener("click", () => {
       setActive(directGroup, b.dataset.val);
       applyRoutingRules();
       validateReady();
-    });
-  });
+    })
+  );
 
-  multiGroup.querySelectorAll("button").forEach((b) => {
+  multiGroup.querySelectorAll("button").forEach((b) =>
     b.addEventListener("click", () => {
       setActive(multiGroup, b.dataset.val);
       applyRoutingRules();
       validateReady();
-    });
-  });
+    })
+  );
 
-  posGroup.querySelectorAll("button").forEach((b) => {
+  posGroup.querySelectorAll("button").forEach((b) =>
     b.addEventListener("click", () => {
       setActive(posGroup, b.dataset.val);
       validateReady();
-    });
-  });
+    })
+  );
 
   // =====================================================================
   // EXACT / FLEX MODE
@@ -277,7 +299,7 @@ function initRedemptionModule(root) {
       pos: getVal(posGroup),
 
       mode: modeInput.value,
-      flexDays: flexDays.value || null
+      flexDays: flexDays.value || null,
     };
   }
 
@@ -296,7 +318,7 @@ function initRedemptionModule(root) {
       const res = await fetch("/api/redemption/flights", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload)
+        body: JSON.stringify(payload),
       });
 
       const data = await res.json();
@@ -309,7 +331,7 @@ function initRedemptionModule(root) {
 
       document.dispatchEvent(
         new CustomEvent("workspace:navigate", {
-          detail: { target: "redemption-results" }
+          detail: { target: "redemption-results" },
         })
       );
     } catch (err) {
@@ -318,16 +340,15 @@ function initRedemptionModule(root) {
     }
   });
 
-  // Final readiness pass
+  // one last readiness check
   applyRoutingRules();
   validateReady();
 }
 
 // =====================================================================
-// UNIVERSAL BOOTSTRAP LAYER (Works in all environments)
+// UNIVERSAL BOOTSTRAP
 // =====================================================================
 
-// 1) module:ready event (console injection)
 document.addEventListener("module:ready", (ev) => {
   const root =
     ev.detail?.root ||
@@ -337,13 +358,11 @@ document.addEventListener("module:ready", (ev) => {
   if (root) initRedemptionModule(root);
 });
 
-// 2) DOMContentLoaded (direct page load)
 window.addEventListener("DOMContentLoaded", () => {
   const root = document.querySelector(".redem-con");
   if (root) initRedemptionModule(root);
 });
 
-// 3) MutationObserver fallback (headless workspace)
 const mo = new MutationObserver(() => {
   const root = document.querySelector(".redem-con");
   if (root) {
