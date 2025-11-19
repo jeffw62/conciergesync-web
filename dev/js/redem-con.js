@@ -1,9 +1,41 @@
+// -------------------------------------------------------------
+// GLOBAL IATA SPINE (must exist BEFORE module executes)
+// -------------------------------------------------------------
+let iataData = null;
 console.log("🔥 redem-con.js loaded");
 
-// GLOBAL IATA DATA (lazy-loaded once)
-let iataData = null;
-
 (function () {
+
+  // ---------------------------------------------------------------------
+  // LOAD IATA LIST (CCT-normalized, IS-prepared)
+  // ---------------------------------------------------------------------
+  async function loadIATA() {
+    if (iataData) return iataData;
+  
+    try {
+      console.log("🌍 Loading IATA…");
+      const res = await fetch("/dev/asset/iata-icao.json");
+      iataData = await res.json();
+      console.log("🌍 IATA loaded:", iataData.length);
+  
+      // Normalize NA hub flags if missing
+      const majorNASet = [
+        "LAX","SFO","SEA","JFK","EWR","BOS","IAD","DCA",
+        "ORD","DTW","ATL","CLT","MIA","FLL","IAH","DFW",
+        "DEN","PHX","MSP","YYZ","YUL","YVR","YYC"
+      ];
+  
+      iataData = iataData.map(a => ({
+        ...a,
+        major_north_america: a.major_north_america || majorNASet.includes(a.iata?.toUpperCase())
+      }));
+  
+    } catch (err) {
+      console.error("❌ IATA load error:", err);
+      iataData = [];
+    }
+    return iataData;
+  }
 
   // =====================================================================
   // MASTER INITIALIZER
@@ -195,37 +227,6 @@ let iataData = null;
     // ---------------------------------------------------------------------
     let iataTimer = null;
     let iataData  = null;
-    
-    // ---------------------------------------------------------------------
-    // LOAD IATA LIST (CCT-normalized, IS-prepared)
-    // ---------------------------------------------------------------------
-    async function loadIATA() {
-      if (iataData) return iataData;
-    
-      try {
-        console.log("🌍 Loading IATA…");
-        const res = await fetch("/dev/asset/iata-icao.json");
-        iataData = await res.json();
-        console.log("🌍 IATA loaded:", iataData.length);
-    
-        // Normalize NA hub flags if missing
-        const majorNASet = [
-          "LAX","SFO","SEA","JFK","EWR","BOS","IAD","DCA",
-          "ORD","DTW","ATL","CLT","MIA","FLL","IAH","DFW",
-          "DEN","PHX","MSP","YYZ","YUL","YVR","YYC"
-        ];
-    
-        iataData = iataData.map(a => ({
-          ...a,
-          major_north_america: a.major_north_america || majorNASet.includes(a.iata?.toUpperCase())
-        }));
-    
-      } catch (err) {
-        console.error("❌ IATA load error:", err);
-        iataData = [];
-      }
-      return iataData;
-    }
     
     // ---------------------------------------------------------------------
     // UTILITY: Is commercial airport?
