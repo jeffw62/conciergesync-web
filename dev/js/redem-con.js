@@ -169,13 +169,15 @@ let iataData = null;
     });
 
     // =====================================================================
-    // IATA AUTOCOMPLETE — FULLY CCT REBUILT
+    // IATA AUTOCOMPLETE — FINAL CCT VERSION
     // =====================================================================
     
-    // PRELOAD NOW (so user never waits)
+    // GLOBAL THROTTLE TIMER
+    let iataTimer = null;
+    
+    // Preload immediately on module init
     loadIATA();
     
-    // Load and cache the JSON
     async function loadIATA() {
       if (iataData) return iataData;
     
@@ -191,63 +193,47 @@ let iataData = null;
       return iataData;
     }
     
-    // Autocomplete setup
     function setupIATA(input, suggestionBox) {
-      input.addEventListener("input", async () => {
+      input.addEventListener("input", () => {
         const value = input.value.trim().toUpperCase();
         suggestionBox.innerHTML = "";
     
         if (value.length < 2) return;
     
-        const data = await loadIATA();
+        clearTimeout(iataTimer);
+        iataTimer = setTimeout(async () => {
+          const data = await loadIATA();
     
-        // --- PRIORITY FILTERING SYSTEM (CCT) ---
-        const exact = [];
-        const prefix = [];
-        const contains = [];
-        const nameMatch = [];
-        const regionMatch = [];
+          const matches = data.filter(r => {
+            const code = r.iata?.toUpperCase() || "";
+            const airport = r.airport?.toUpperCase() || "";
+            const region = r.region_name?.toUpperCase() || "";
     
-        for (const r of data) {
-          const iata = r.iata?.toUpperCase() || "";
-          const airport = r.airport?.toUpperCase() || "";
-          const region = r.region_name?.toUpperCase() || "";
-    
-          if (!iata) continue;
-    
-          if (iata === value) exact.push(r);
-          else if (iata.startsWith(value)) prefix.push(r);
-          else if (iata.includes(value)) contains.push(r);
-          else if (airport.includes(value)) nameMatch.push(r);
-          else if (region.includes(value)) regionMatch.push(r);
-        }
-    
-        const results = [
-          ...exact,
-          ...prefix,
-          ...contains,
-          ...nameMatch,
-          ...regionMatch
-        ].slice(0, 8);
-    
-        // Render
-        for (const r of results) {
-          const div = document.createElement("div");
-          div.className = "suggestion";
-          div.textContent = `${r.iata} — ${r.airport}`;
-          div.addEventListener("click", () => {
-            input.value = r.iata;
-            suggestionBox.innerHTML = "";
-            validateReady();
+            return (
+              code.startsWith(value) ||
+              airport.startsWith(value) ||
+              region.startsWith(value)
+            );
           });
-          suggestionBox.appendChild(div);
-        }
+    
+          matches.slice(0, 8).forEach(r => {
+            const div = document.createElement("div");
+            div.className = "suggestion";
+            div.textContent = `${r.iata} — ${r.airport}`;
+            div.addEventListener("click", () => {
+              input.value = r.iata;
+              suggestionBox.innerHTML = "";
+              validateReady();
+            });
+            suggestionBox.appendChild(div);
+          });
+        }, 120);
       });
     }
     
-    // Attach autocomplete
     setupIATA(origin, root.querySelector("#origin-suggestions"));
     setupIATA(destination, root.querySelector("#destination-suggestions"));
+
 
     // =====================================================================
     // VALIDATION
