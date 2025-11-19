@@ -510,3 +510,53 @@ input[type="number"] {
 .suggestion.fade-in {
   opacity: 1;
 }
+
+/* ===========================================================
+   USCA Tooltip (Luxury Info Bubble)
+   =========================================================== */
+
+.info-icon {
+  display: inline-block;
+  margin-left: 6px;
+  font-size: 12px;
+  font-weight: 700;
+  width: 16px;
+  height: 16px;
+  line-height: 16px;
+  text-align: center;
+  border-radius: 50%;
+  border: 1px solid rgba(255,255,255,0.4);
+  color: rgba(255,255,255,0.7);
+  cursor: default;
+  position: relative;
+  user-select: none;
+}
+
+.info-icon:hover {
+  color: #fff;
+  border-color: rgba(255,255,255,0.8);
+}
+
+/* Tooltip bubble */
+.info-icon:hover::after {
+  content: attr(data-tip);
+  position: absolute;
+  top: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  white-space: nowrap;
+  background: rgba(20,20,20,0.92);
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  color: #fff;
+  opacity: 1;
+  pointer-events: none;
+  transition: opacity 0.15s ease-out;
+  z-index: 40;
+}
+
+/* Hidden initial state */
+.info-icon::after {
+  opacity: 0;
+}
