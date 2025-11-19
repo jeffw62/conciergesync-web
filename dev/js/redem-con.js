@@ -272,7 +272,7 @@ console.log("🔥 redem-con.js loaded");
     }
     
     // ---------------------------------------------------------------------
-    // SETUP AUTOCOMPLETE INPUT BINDINGS
+    // SETUP AUTOCOMPLETE INPUT BINDINGS — FINAL CLEAN VERSION
     // ---------------------------------------------------------------------
     function setupIATA(input, suggestionBox) {
       input.addEventListener("input", () => {
@@ -280,19 +280,17 @@ console.log("🔥 redem-con.js loaded");
         clearTimeout(iataTimer);
         iataTimer = setTimeout(async () => {
     
-          // ALWAYS load list first
           const list = await loadIATA();
-    
-          const raw = input.value;
-          const value = raw.trim().toUpperCase();
+          const value = input.value.trim().toUpperCase();
           const stripped = value.replace(/[^A-Z]/g, "");
+    
+          // Always clear before rendering new results
           suggestionBox.innerHTML = "";
     
           // ---------------------------------------------------
           // SPECIAL CASE — USCA
           // ---------------------------------------------------
           if (stripped === "USCA") {
-    
             const majorList = list.filter(a =>
               isCommercial(a) && isMajorNorthAmerica(a)
             );
@@ -303,29 +301,26 @@ console.log("🔥 redem-con.js loaded");
     
             console.log("🔥 USCA — showing NA major hubs");
             renderSuggestions(display, suggestionBox, input);
-            return; // 🔥 STOP HERE
+            return; // STOP ALL OTHER LOGIC
           }
     
           // ---------------------------------------------------
-          // Minimum input length
+          // STOP if too short
           // ---------------------------------------------------
           if (value.length < 2) return;
     
-          let results = [];
     
           // ---------------------------------------------------
-          // Exact 3-letter match
+          // EXACT 3-letter IATA
           // ---------------------------------------------------
-          if (value.length === 3) {
-            const exact = list.filter(a => a.iata?.toUpperCase() === value);
-            if (exact.length) {
-              renderSuggestions(exact, suggestionBox, input);
-              return;
-            }
+          const exact = list.filter(a => a.iata?.toUpperCase() === value);
+          if (exact.length) {
+            renderSuggestions(exact, suggestionBox, input);
+            return;
           }
     
           // ---------------------------------------------------
-          // Metro cluster (city)
+          // METRO CLUSTER
           // ---------------------------------------------------
           const matchedCluster = getMetroClusterFor(value);
           if (matchedCluster) {
@@ -338,39 +333,35 @@ console.log("🔥 redem-con.js loaded");
               const rest = clusterResults.slice(1)
                 .sort((a, b) => a.iata.localeCompare(b.iata));
     
-              const finalList = [primary, ...rest].slice(0, 6);
-    
-              renderSuggestions(finalList, suggestionBox, input);
+              renderSuggestions([primary, ...rest].slice(0, 6), suggestionBox, input);
               return;
             }
           }
     
           // ---------------------------------------------------
-          // Partial match fallback
+          // FALLBACK SEARCH
           // ---------------------------------------------------
-          const normValue = normalizeCityName(value);
+          const norm = normalizeCityName(value);
     
-          const tier1 = list.filter(a =>
-            a.iata?.toUpperCase().startsWith(value) && isCommercial(a)
-          );
+          let results = [
+            ...list.filter(a =>
+              a.iata?.toUpperCase().startsWith(value) && isCommercial(a)
+            ),
+            ...list.filter(a =>
+              a.city &&
+              normalizeCityName(a.city)?.startsWith(norm) &&
+              isCommercial(a)
+            )
+          ];
     
-          const tier2 = list.filter(a =>
-            a.city &&
-            normalizeCityName(a.city)?.startsWith(normValue) &&
-            isCommercial(a)
-          );
-    
-          results = [...tier1, ...tier2];
-    
+          // Dedupe
           results = results.filter((a, i, self) =>
             i === self.findIndex(b => b.iata === a.iata)
           );
     
-          results = results.slice(0, 5);
+          renderSuggestions(results.slice(0, 5), suggestionBox, input);
     
-          renderSuggestions(results, suggestionBox, input);
-    
-        }, 120);
+        }, 150);
       });
     }
     
