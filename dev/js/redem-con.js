@@ -226,7 +226,6 @@ console.log("🔥 redem-con.js loaded");
     // GLOBAL STATE
     // ---------------------------------------------------------------------
     let iataTimer = null;
-    let iataData  = null;
     
     // ---------------------------------------------------------------------
     // UTILITY: Is commercial airport?
