@@ -1,354 +1,165 @@
-console.log("🔥 redem-con.js loaded (CCT Bulletproof Build)");
+<div class="redem-con">
 
-// =====================================================================
-// GLOBAL STATE
-// =====================================================================
-let moduleInitialized = false;
-let iataData = [];
-let iataLoaded = false;
-let iataBound = false;
+  <!-- Module Title -->
+  <div class="module-title">DISCOVERY - FLIGHT DECK</div>
 
-// =====================================================================
-// INITIALIZER
-// =====================================================================
-function initRedemptionModule(root) {
-  if (!root || moduleInitialized) return;
-  moduleInitialized = true;
+  <!-- FORM WRAPPER (only one, correct placement) -->
+  <form id="discovery-flights-form">
 
-  console.log("🔧 INIT: Redemption Module");
+    <!-- 2-Column Grid Panel -->
+    <div class="search-panel" id="searchPanel">
 
-  const originInput = root.querySelector("#origin");
-  const originList = root.querySelector("#origin-suggestions");
+      <!-- STEP 1 -->
+      <div class="step">
+        <h3><span class="step-num">1</span> Origin &amp; Destination</h3>
 
-  const destInput = root.querySelector("#destination");
-  const destList = root.querySelector("#destination-suggestions");
+        <div class="inline-fields">
+          <div class="field">
+            <label for="origin">Origin (e.g. DFW)</label>
+            <input type="text" id="origin" data-iata />
+            <div id="origin-suggestions" class="suggestions"></div>
+          </div>
 
-  const passengers = root.querySelector("#passengers");
-  const serviceClass = root.querySelector("#serviceClass");
-  const departDate = root.querySelector("#departDate");
-  const returnDate = root.querySelector("#returnDate");
+          <div class="field">
+            <label for="destination">Destination (e.g. LHR)</label>
+            <input type="text" id="destination" data-iata />
+            <div id="destination-suggestions" class="suggestions"></div>
+          </div>
+        </div>
 
-  const exactBtn = root.querySelector("#exactBtn");
-  const flexBtn = root.querySelector("#flexBtn");
-  const modeInput = root.querySelector("#mode");
-  const flexPicker = root.querySelector("#flexPicker");
-  const flexDays = root.querySelector("#flexDays");
+        <div class="inline-fields">
+          <div class="field">
+            <label for="passengers">Passengers</label>
+            <input type="number" id="passengers" min="1" max="9" step="1" value="1" />
+          </div>
 
-  const allowBudget = root.querySelector("#allowBudget");
-  const partnerSpace = root.querySelector("#partnerSpace");
-  const program = root.querySelector("#program");
+          <div class="field">
+            <label for="serviceClass">Service Class</label>
+            <select id="serviceClass">
+              <option value=""></option>
+              <option value="Economy">Economy</option>
+              <option value="Premium Economy">Premium Economy</option>
+              <option value="Business">Business</option>
+              <option value="First">First</option>
+            </select>
+          </div>
+        </div>
 
-  const directGroup = root.querySelector("#directStop");
-  const multiGroup = root.querySelector("#multiConn");
-  const posGroup = root.querySelector("#posFlight");
+        <div class="inline-fields">
+          <div class="field">
+            <label for="departDate">Departure Date</label>
+            <input type="date" id="departDate" />
+          </div>
 
-  const searchBtn = root.querySelector("#searchBtn");
-  const searchWarning = root.querySelector("#searchWarning");
+          <div class="field">
+            <label for="returnDate">Return Date (Optional)</label>
+            <input type="date" id="returnDate" />
+          </div>
+        </div>
 
-  const spinner = root.querySelector("#spinner-overlay");
+        <div class="card-options">
+          <button type="button" class="option-btn active" id="exactBtn">Exact Date</button>
+          <button type="button" class="option-btn" id="flexBtn">Flexible ± Days</button>
+        </div>
 
-  // =====================================================================
-  // LOAD IATA
-  // =====================================================================
-  async function loadIATA() {
-    try {
-      console.log("⏳ Loading IATA…");
-      const res = await fetch("/dev/asset/iata-icao.json");
-      const data = await res.json();
+        <input type="hidden" id="mode" value="exact" />
 
-      iataData = data || [];
-      iataLoaded = true;
+        <div id="flexPicker">
+          <label for="flexDays">Search within ± 14 days:</label>
+          <select id="flexDays">
+            <option value="">Select range</option>
+            <option value="1">1 day</option>
+            <option value="2">2 days</option>
+            <option value="3">3 days</option>
+            <option value="7">7 days</option>
+            <option value="14">14 days</option>
+          </select>
+        </div>
 
-      console.log(`✅ IATA Loaded (${iataData.length} entries)`);
+        <div class="checkbox-row">
+          <input type="checkbox" id="partnerSpace" />
+          <label for="partnerSpace">Include partner award space</label>
+        </div>
 
-      if (!iataBound) bindAllIATA();
-    } catch (err) {
-      console.error("❌ IATA Load Failed:", err);
-    }
-  }
+        <div class="program-row">
+          <label for="program">Airline Program</label>
+          <select id="program">
+            <option value="">All Programs</option>
+            <option value="american">American Airlines</option>
+            <option value="alaska">Alaska Airlines</option>
+            <option value="united">United Airlines</option>
+            <option value="delta">Delta Air Lines</option>
+            <option value="jetblue">JetBlue</option>
+            <option value="southwest">Southwest Airlines</option>
+            <option value="aeroplan">Air Canada Aeroplan</option>
+            <option value="avios">British Airways Avios</option>
+            <option value="flyingblue">Air France / KLM Flying Blue</option>
+            <option value="virginatlantic">Virgin Atlantic</option>
+            <option value="qantas">Qantas</option>
+            <option value="qatar">Qatar Airways Privilege Club</option>
+            <option value="ana">ANA Mileage Club</option>
+            <option value="emirates">Emirates Skywards</option>
+            <option value="etihad">Etihad Guest</option>
+            <option value="singapore">Singapore KrisFlyer</option>
+            <option value="turkish">Turkish Miles &amp; Smiles</option>
+          </select>
+        </div>
+      </div>
 
-  // =====================================================================
-  // AUTOCOMPLETE ENGINE (100% bulletproof, no template literals)
-  // =====================================================================
-  function renderSuggestion(a) {
-    return (
-      '<div class="suggestion-item" data-code="' +
-      a.code +
-      '"><strong>' +
-      a.code +
-      "</strong> — " +
-      (a.city || "") +
-      " " +
-      (a.name || "") +
-      "</div>"
-    );
-  }
+      <!-- STEP 2 -->
+      <div class="step routing">
+        <h3><span class="step-num">2</span> Routing Preferences</h3>
+      
+        <label>Direct Non-stop</label>
+        <div class="toggle-group" id="directStop">
+          <button type="button" data-val="yes">Yes</button>
+          <button type="button" data-val="no" class="active">No</button>
+        </div>
+      
+        <label>Multiple Connections</label>
+        <div class="toggle-group" id="multiConn">
+          <button type="button" data-val="yes">Yes</button>
+          <button type="button" data-val="no" class="active">No</button>
+        </div>
+      
+        <label>Positioning Flight Allowed</label>
+        <div class="toggle-group" id="posFlight">
+          <button type="button" data-val="yes">Yes</button>
+          <button type="button" data-val="no" class="active">No</button>
+        </div>
+      
+        <div id="posWarning" class="pos-warning" style="display:none;">
+          Please select Yes or No for Positioning Flights.
+        </div>
+      
+        <div class="checkbox-row">
+          <input type="checkbox" id="allowBudget" />
+          <label for="allowBudget">Include budget airlines</label>
+        </div>
+      
+        <small class="budget-note">
+          Covers Spirit, Frontier, Ryanair, Etc.
+        </small>
+      
+        <h3 style="margin-top: 28px;">
+          <span class="step-num">3</span> Search
+        </h3>
+      
+        <button id="searchBtn" class="search-btn" type="button" disabled>Search</button>
+        <small id="searchWarning" class="step-warning">Complete Step 2 to continue.</small>
+      </div>
 
-  function bindIATAField(input, list) {
-    input.addEventListener("input", () => {
-      if (!iataLoaded) return;
+    </div> 
 
-      const q = input.value.trim().toUpperCase();
-      if (!q) {
-        list.innerHTML = "";
-        return;
-      }
+  </form> 
 
-      const matches = iataData
-        .filter((a) => {
-          const code = (a.code || "").toUpperCase();
-          const city = (a.city || "").toUpperCase();
-          const name = (a.name || "").toUpperCase();
-          return (
-            code.startsWith(q) ||
-            city.startsWith(q) ||
-            name.startsWith(q)
-          );
-        })
-        .slice(0, 8);
+  <!-- Spinner overlay -->
+  <div id="spinner-overlay" class="spinner-overlay">
+    <div class="gold-card">
+      <p>Your personalized ConciergeSync™ results...</p>
+    </div>
+  </div>
 
-      let html = "";
-      matches.forEach((a) => (html += renderSuggestion(a)));
-      list.innerHTML = html;
+</div> <!-- END redem-con -->
 
-      list.querySelectorAll(".suggestion-item").forEach((item) =>
-        item.addEventListener("click", () => {
-          input.value = item.dataset.code;
-          list.innerHTML = "";
-          validateReady();
-        })
-      );
-    });
-
-    input.addEventListener("blur", () =>
-      setTimeout(() => (list.innerHTML = ""), 150)
-    );
-  }
-
-  function bindAllIATA() {
-    if (iataBound) return;
-    console.log("🔗 Binding Autocomplete");
-    bindIATAField(originInput, originList);
-    bindIATAField(destInput, destList);
-    iataBound = true;
-  }
-
-  loadIATA();
-
-  // =====================================================================
-  // ROUTING LOGIC (CCT-CORRECT)
-  // =====================================================================
-  function setActive(group, val) {
-    const yes = group.querySelector('[data-val="yes"]');
-    const no = group.querySelector('[data-val="no"]');
-
-    if (val === "yes") {
-      yes.classList.add("active");
-      no.classList.remove("active");
-    } else {
-      no.classList.add("active");
-      yes.classList.remove("active");
-    }
-  }
-
-  function getVal(group) {
-    return group.querySelector("button.active")?.dataset.val || "no";
-  }
-
-  function disableGroup(group) {
-    group.classList.add("disabled-toggle");
-    group.querySelectorAll("button").forEach((b) => (b.disabled = true));
-  }
-
-  function enableGroup(group) {
-    group.classList.remove("disabled-toggle");
-    group.querySelectorAll("button").forEach((b) => (b.disabled = false));
-  }
-
-  function applyRouting() {
-    const direct = getVal(directGroup);
-    const multi = getVal(multiGroup);
-
-    // Direct YES
-    if (direct === "yes") {
-      setActive(multiGroup, "no");
-      enableGroup(multiGroup);
-
-      setActive(posGroup, "no");
-      disableGroup(posGroup);
-      return;
-    }
-
-    // Multi YES
-    if (multi === "yes") {
-      setActive(directGroup, "no");
-      disableGroup(directGroup);
-
-      enableGroup(posGroup);
-      return;
-    }
-
-    // Both NO
-    enableGroup(directGroup);
-    enableGroup(multiGroup);
-
-    setActive(posGroup, "no");
-    disableGroup(posGroup);
-  }
-
-  directGroup.querySelectorAll("button").forEach((b) =>
-    b.addEventListener("click", () => {
-      setActive(directGroup, b.dataset.val);
-      applyRouting();
-      validateReady();
-    })
-  );
-
-  multiGroup.querySelectorAll("button").forEach((b) =>
-    b.addEventListener("click", () => {
-      setActive(multiGroup, b.dataset.val);
-      applyRouting();
-      validateReady();
-    })
-  );
-
-  posGroup.querySelectorAll("button").forEach((b) =>
-    b.addEventListener("click", () => {
-      setActive(posGroup, b.dataset.val);
-      validateReady();
-    })
-  );
-
-  // =====================================================================
-  // EXACT / FLEX
-  // =====================================================================
-  exactBtn.addEventListener("click", () => {
-    modeInput.value = "exact";
-    exactBtn.classList.add("active");
-    flexBtn.classList.remove("active");
-    flexPicker.style.display = "none";
-    validateReady();
-  });
-
-  flexBtn.addEventListener("click", () => {
-    modeInput.value = "flex";
-    flexBtn.classList.add("active");
-    exactBtn.classList.remove("active");
-    flexPicker.style.display = "block";
-    validateReady();
-  });
-
-  // =====================================================================
-  // VALIDATION
-  // =====================================================================
-  function validateReady() {
-    const o = originInput.value.trim();
-    const d = destInput.value.trim();
-    const dep = departDate.value;
-    const svc = serviceClass.value;
-
-    const direct = getVal(directGroup);
-    const multi = getVal(multiGroup);
-    const pos = getVal(posGroup);
-
-    let ok = true;
-
-    if (!o || !d || !dep || !svc) ok = false;
-    if (direct !== "yes" && multi !== "yes") ok = false;
-    if (multi === "yes" && pos !== "yes") ok = false;
-    if (modeInput.value === "flex" && !flexDays.value) ok = false;
-
-    searchBtn.disabled = !ok;
-    searchWarning.style.display = ok ? "none" : "block";
-  }
-
-  passengers.addEventListener("input", validateReady);
-  serviceClass.addEventListener("change", validateReady);
-  departDate.addEventListener("change", validateReady);
-  flexDays.addEventListener("change", validateReady);
-
-  // =====================================================================
-  // SEARCH
-  // =====================================================================
-  function buildPayload() {
-    return {
-      origin: originInput.value.trim(),
-      destination: destInput.value.trim(),
-      departDate: departDate.value,
-      returnDate: returnDate.value || null,
-      passengers: passengers.value,
-      serviceClass: serviceClass.value,
-      allowBudget: allowBudget.checked,
-      partnerSpace: partnerSpace.checked,
-      program: program.value,
-
-      direct: getVal(directGroup),
-      multi: getVal(multiGroup),
-      pos: getVal(posGroup),
-
-      mode: modeInput.value,
-      flexDays: flexDays.value || null,
-    };
-  }
-
-  searchBtn.addEventListener("click", async () => {
-    if (searchBtn.disabled) return;
-
-    console.log("🔍 SEARCH PAYLOAD:", buildPayload());
-    spinner.style.display = "flex";
-
-    try {
-      const res = await fetch("/api/redemption/flights", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(buildPayload()),
-      });
-
-      const data = await res.json();
-      spinner.style.display = "none";
-
-      sessionStorage.setItem(
-        "latestRedemptionResults",
-        JSON.stringify(data)
-      );
-
-      document.dispatchEvent(
-        new CustomEvent("workspace:navigate", {
-          detail: { target: "redemption-results" },
-        })
-      );
-    } catch (err) {
-      console.error("❌ Search Error:", err);
-      spinner.style.display = "none";
-    }
-  });
-
-  applyRouting();
-  validateReady();
-}
-
-// =====================================================================
-// UNIVERSAL BOOTSTRAP
-// =====================================================================
-
-document.addEventListener("module:ready", (ev) => {
-  const root =
-    ev.detail?.root ||
-    ev.detail?.element ||
-    document.querySelector(".redem-con");
-  if (root) initRedemptionModule(root);
-});
-
-window.addEventListener("DOMContentLoaded", () => {
-  const root = document.querySelector(".redem-con");
-  if (root) initRedemptionModule(root);
-});
-
-const mo = new MutationObserver(() => {
-  const root = document.querySelector(".redem-con");
-  if (root) {
-    initRedemptionModule(root);
-    mo.disconnect();
-  }
-});
-mo.observe(document.body, { childList: true, subtree: true });
+<script src="/dev/js/redem-con.js"></script>
