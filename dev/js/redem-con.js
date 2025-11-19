@@ -300,6 +300,7 @@ console.log("🔥 redem-con.js loaded");
               .slice(0, 14);
     
             console.log("🔥 USCA — showing NA major hubs");
+            console.log("💛 RENDER SUGGESTIONS CALLED:", list);
             renderSuggestions(display, suggestionBox, input);
             return; // STOP ALL OTHER LOGIC
           }
