@@ -274,31 +274,33 @@ console.log("🔥 redem-con.js loaded");
     // ---------------------------------------------------------------------
     // SETUP AUTOCOMPLETE INPUT BINDINGS
     // ---------------------------------------------------------------------
-    function setupIATA(input, suggestionBox) {
-      input.addEventListener("input", () => {
-        const raw = input.value;
-        const value = raw.trim().toUpperCase();
-        const stripped = value.replace(/[^A-Z]/g, "");
-        suggestionBox.innerHTML = "";
+    iataTimer = setTimeout(async () => {
+
+      const list = await loadIATA();   // ← MUST BE FIRST
+      let results = [];
     
-        // ---------------------------------------------------------------
-        // SPECIAL CASE — USCA (absolute priority override)
-        // ---------------------------------------------------------------
-        if (stripped === "USCA") {
-          const listNow = iataData || [];
+      const raw = input.value;
+      const value = raw.trim().toUpperCase();
+      const stripped = value.replace(/[^A-Z]/g, "");
+      suggestionBox.innerHTML = "";
     
-          const majorList = listNow.filter(a =>
-            isCommercial(a) && isMajorNorthAmerica(a)
-          );
+      // ---------------------------------------------------------------
+      // SPECIAL CASE — USCA
+      // ---------------------------------------------------------------
+      if (stripped === "USCA") {
+        const majorList = list.filter(a =>
+          isCommercial(a) && isMajorNorthAmerica(a)
+        );
     
-          const display = majorList
-            .sort((a, b) => a.iata.localeCompare(b.iata))
-            .slice(0, 14);
+        const display = majorList
+          .sort((a, b) => a.iata.localeCompare(b.iata))
+          .slice(0, 14);
     
-          console.log("🔥 USCA TRIGGERED — showing NA major hubs");
-          renderSuggestions(display, suggestionBox, input);
-          return;
-        }
+        console.log("🔥 USCA TRIGGERED — showing NA major hubs");
+        renderSuggestions(display, suggestionBox, input);
+        return;
+      }
+
     
         // Anything shorter than 2 chars → stop
         if (value.length < 2) return;
