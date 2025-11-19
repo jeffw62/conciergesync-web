@@ -101,7 +101,7 @@ let iataData = null;
         setToggle(multiConn, "no", true);   // enabled but forced NO
         setToggle(posFlight, "no", false);  // disabled
       }
-    
+
       // ---------------------------------------------
       // CASE 2 — MULTI = YES
       // ---------------------------------------------
@@ -172,27 +172,33 @@ let iataData = null;
     // IATA AUTOCOMPLETE — CONCIERGESYNC LUXURY ENGINE (CCT • IS-READY)
     // =====================================================================
     
-    // Metro airport clusters for commercial-only cities
+    // ---------------------------------------------------------------------
+    // METRO AIRPORT CLUSTERS (Commercial-only, IS-trainable groups)
+    // ---------------------------------------------------------------------
     const metroClusters = {
-      "MIAMI":        ["MIA", "FLL"],
+      "MIAMI":           ["MIA", "FLL"],
       "FORT LAUDERDALE": ["FLL", "MIA"],
-      "DALLAS":       ["DFW", "DAL"],
-      "LOS ANGELES":  ["LAX", "BUR", "LGB", "ONT", "SNA"],
-      "CHICAGO":      ["ORD", "MDW"],
-      "WASHINGTON":   ["DCA", "IAD"],
-      "LONDON":       ["LHR", "LGW", "LCY", "STN", "LTN"],
-      "TOKYO":        ["HND", "NRT"],
-      "NEW YORK":     ["JFK", "LGA", "EWR"],
-      "SAN FRANCISCO":["SFO", "OAK", "SJC"],
-      "BOSTON":       ["BOS", "PVD"],
-      "DENVER":       ["DEN"]
+      "DALLAS":          ["DFW", "DAL"],
+      "LOS ANGELES":     ["LAX", "BUR", "LGB", "ONT", "SNA"],
+      "CHICAGO":         ["ORD", "MDW"],
+      "WASHINGTON":      ["DCA", "IAD"],
+      "LONDON":          ["LHR", "LGW", "LCY", "STN", "LTN"],
+      "TOKYO":           ["HND", "NRT"],
+      "NEW YORK":        ["JFK", "LGA", "EWR"],
+      "SAN FRANCISCO":   ["SFO", "OAK", "SJC"],
+      "BOSTON":          ["BOS", "PVD"],
+      "DENVER":          ["DEN"]
     };
     
-    // Global throttle
+    // ---------------------------------------------------------------------
+    // GLOBAL STATE
+    // ---------------------------------------------------------------------
     let iataTimer = null;
-    let iataData = null;
+    let iataData  = null;
     
-    // Load IATA list
+    // ---------------------------------------------------------------------
+    // LOAD IATA LIST (CCT-normalized, IS-prepared)
+    // ---------------------------------------------------------------------
     async function loadIATA() {
       if (iataData) return iataData;
     
@@ -201,6 +207,19 @@ let iataData = null;
         const res = await fetch("/dev/asset/iata-icao.json");
         iataData = await res.json();
         console.log("🌍 IATA loaded:", iataData.length);
+    
+        // Normalize NA hub flags if missing
+        const majorNASet = [
+          "LAX","SFO","SEA","JFK","EWR","BOS","IAD","DCA",
+          "ORD","DTW","ATL","CLT","MIA","FLL","IAH","DFW",
+          "DEN","PHX","MSP","YYZ","YUL","YVR","YYC"
+        ];
+    
+        iataData = iataData.map(a => ({
+          ...a,
+          major_north_america: a.major_north_america || majorNASet.includes(a.iata?.toUpperCase())
+        }));
+    
       } catch (err) {
         console.error("❌ IATA load error:", err);
         iataData = [];
@@ -208,17 +227,53 @@ let iataData = null;
       return iataData;
     }
     
-    // Utility: is commercial airport?
-    function isCommercial(airport) {
-      return airport.commercial === true || airport.type === "large_airport" || airport.type === "medium_airport";
+    // ---------------------------------------------------------------------
+    // UTILITY: Is commercial airport?
+    // ---------------------------------------------------------------------
+    function isCommercial(a) {
+      return (
+        a.commercial === true ||
+        a.type === "large_airport" ||
+        a.type === "medium_airport"
+      );
     }
-
-    // Identify major North America long-haul hubs
+    
+    // ---------------------------------------------------------------------
+    // UTILITY: Is major North America long-haul hub?
+    // ---------------------------------------------------------------------
     function isMajorNorthAmerica(a) {
       return a.major_north_america === true;
     }
     
-    // Main setup
+    // ---------------------------------------------------------------------
+    // UTILITY: Normalize city names for metro matching
+    // ---------------------------------------------------------------------
+    function normalizeCityName(str) {
+      return str
+        ?.toUpperCase()
+        .replace(/[^A-Z]/g, "")
+        .trim();
+    }
+    
+    // ---------------------------------------------------------------------
+    // UTILITY: Determine metro cluster for a city name
+    // ---------------------------------------------------------------------
+    function getMetroClusterFor(cityName) {
+      const norm = normalizeCityName(cityName);
+      if (!norm) return null;
+    
+      for (const metro in metroClusters) {
+        const metroNorm = normalizeCityName(metro);
+        if (norm.startsWith(metroNorm) || metroNorm.startsWith(norm)) {
+          return metroClusters[metro];
+        }
+      }
+      return null;
+    }
+    
+    // ---------------------------------------------------------------------
+    // SETUP AUTOCOMPLETE INPUT BINDINGS
+    // ---------------------------------------------------------------------
     function setupIATA(input, suggestionBox) {
       input.addEventListener("input", () => {
         const value = input.value.trim().toUpperCase();
@@ -232,30 +287,30 @@ let iataData = null;
           let results = [];
     
           // ---------------------------------------------------------------
-          // SPECIAL CASE — User typed "USCA" to load all major NA hubs
+          // SPECIAL CASE — User typed "USCA" (All major NA hubs)
           // ---------------------------------------------------------------
           if (value === "USCA") {
-
-            // CCT truth marker for IS ingestion
             input.dataset.cs_iata_mode = "USCA";
-          
-            const majorList = iataData.filter(a => isCommercial(a) && isMajorNorthAmerica(a));
-          
+    
+            const majorList = list.filter(
+              a => isCommercial(a) && isMajorNorthAmerica(a)
+            );
+    
             const display = majorList
               .sort((a, b) => a.iata.localeCompare(b.iata))
               .slice(0, 12);
-          
+    
             renderSuggestions(display, suggestionBox, input);
             return;
           }
-          
+    
           // ---------------------------------------------------------------
           // CASE 1 — User typed EXACT 3-letter IATA code
           // ---------------------------------------------------------------
           if (value.length === 3) {
             const exact = list.filter(a => a.iata?.toUpperCase() === value);
             if (exact.length) {
-              results = exact; // ONLY show this one
+              results = exact;
             }
             renderSuggestions(results, suggestionBox, input);
             return;
@@ -264,70 +319,122 @@ let iataData = null;
           // ---------------------------------------------------------------
           // CASE 2 — User typed CITY NAME (partial or full)
           // ---------------------------------------------------------------
-          const cityMatches = list.filter(a =>
-            a.city?.toUpperCase().startsWith(value)
-          );
-    
-          if (cityMatches.length) {
-            const cityName = cityMatches[0].city.toUpperCase();
-            const cluster = metroClusters[cityName] || [];
-    
-            // Show only the commercial cluster
+          const matchedCluster = getMetroClusterFor(value);
+          if (matchedCluster) {
             const clusterResults = list.filter(a =>
-              cluster.includes(a.iata?.toUpperCase())
+              matchedCluster.includes(a.iata?.toUpperCase())
             );
     
             if (clusterResults.length) {
-              results = clusterResults;
-              renderSuggestions(results, suggestionBox, input);
+              const primary = clusterResults[0];
+              const rest = clusterResults.slice(1).sort((a, b) =>
+                a.iata.localeCompare(b.iata)
+              );
+    
+              const finalList = [primary, ...rest].slice(0, 6);
+    
+              renderSuggestions(finalList, suggestionBox, input);
               return;
             }
           }
     
           // ---------------------------------------------------------------
-          // CASE 3 — Partial alpha input (ex: "mia" but not exact code yet)
+          // CASE 3 — Partial alpha input (fallback luxury match)
           // ---------------------------------------------------------------
+          const normValue = normalizeCityName(value);
+          
+          // Priority 1 — IATA prefix match (strong signal)
           const tier1 = list.filter(a =>
             a.iata?.toUpperCase().startsWith(value) &&
             isCommercial(a)
           );
-    
+          
+          // Priority 2 — City name match (normalized)
           const tier2 = list.filter(a =>
-            a.city?.toUpperCase().startsWith(value) &&
+            a.city &&
+            normalizeCityName(a.city)?.startsWith(normValue) &&
             isCommercial(a)
           );
-    
+          
           results = [...tier1, ...tier2];
-    
-          // Remove duplicates
+          
+          // Deduplicate on IATA
           results = results.filter((a, i, self) =>
             i === self.findIndex(b => b.iata === a.iata)
           );
-    
-          // Limit to luxury top 5
+          
+          // Luxury cap: top 5
           results = results.slice(0, 5);
-    
+          
+          // Render
           renderSuggestions(results, suggestionBox, input);
+    
         }, 120);
       });
     }
     
-    // Render suggestions
+    // ---------------------------------------------------------------------
+    // LUXURY RENDER ENGINE — Renders the dropdown suggestions
+    // ---------------------------------------------------------------------
     function renderSuggestions(results, box, input) {
       box.innerHTML = "";
     
       results.forEach(a => {
         const div = document.createElement("div");
         div.className = "suggestion";
-        div.textContent = `${a.iata} — ${a.airport}`;
+    
+        // Luxury text structure (IATA bold, airport name soft)
+        div.innerHTML = `
+          <span style="
+            font-weight: 700;
+            font-size: 15px;
+            letter-spacing: 0.5px;
+            color: #ffffff;
+            display: inline-block;
+            width: 50px;
+          ">
+            ${a.iata}
+          </span>
+    
+          <span style="
+            opacity: 0.7;
+            font-size: 14px;
+            margin-left: 4px;
+            color: #dcdcdc;
+          ">
+            ${a.airport}
+          </span>
+        `;
+    
+        // Luxury hover motion
+        div.style.transition = "background 0.14s ease-out, opacity 0.14s ease-out";
+        div.addEventListener("mouseover", () => {
+          div.style.background = "rgba(255,255,255,0.08)";
+        });
+        div.addEventListener("mouseout", () => {
+          div.style.background = "transparent";
+        });
+    
+        // Click behavior
         div.addEventListener("click", () => {
           input.value = a.iata;
+    
+          // CCT provenance tag — supplier of the data
+          input.dataset.cs_iata_source = "AUTOCOMPLETE";
+    
           box.innerHTML = "";
           validateReady();
         });
+    
+        // Initial fade-in (luxury touch)
+        div.style.opacity = "0";
         box.appendChild(div);
+        requestAnimationFrame(() => {
+          div.style.opacity = "1";
+        });
       });
     }
+
     
     // Hook to DOM
     setupIATA(origin, root.querySelector("#origin-suggestions"));
