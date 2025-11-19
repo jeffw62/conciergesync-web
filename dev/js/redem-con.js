@@ -278,7 +278,7 @@ console.log("🔥 redem-con.js loaded");
       input.addEventListener("input", () => {
         const raw = input.value;
         const value = raw.trim().toUpperCase();
-        const stripped = value.replace(/[^A-Z]/g, "");  // removes numbers/spaces/etc
+        const stripped = value.replace(/[^A-Z]/g, "");
         suggestionBox.innerHTML = "";
     
         // ---------------------------------------------------------------
@@ -286,27 +286,35 @@ console.log("🔥 redem-con.js loaded");
         // ---------------------------------------------------------------
         if (stripped === "USCA") {
           const listNow = iataData || [];
-        
+    
           const majorList = listNow.filter(a =>
             isCommercial(a) && isMajorNorthAmerica(a)
           );
-        
+    
           const display = majorList
             .sort((a, b) => a.iata.localeCompare(b.iata))
             .slice(0, 14);
-        
+    
           console.log("🔥 USCA TRIGGERED — showing NA major hubs");
-        
           renderSuggestions(display, suggestionBox, input);
-        
-          return; // 🚨 MUST STOP ALL FURTHER PROCESSING
+          return;
         }
+    
+        // Anything shorter than 2 chars → stop
+        if (value.length < 2) return;
+    
+        clearTimeout(iataTimer);
+        iataTimer = setTimeout(async () => {
+          const list = await loadIATA();
+          let results = [];
           
           // ---------------------------------------------------------------
           // EXACT 3-LETTER IATA MATCH
           // ---------------------------------------------------------------
           if (value.length === 3) {
-            const exact = list.filter(a => a.iata?.toUpperCase() === value);
+            const exact = list.filter(a =>
+              a.iata?.toUpperCase() === value
+            );
             if (exact.length) {
               renderSuggestions(exact, suggestionBox, input);
               return;
@@ -328,7 +336,6 @@ console.log("🔥 redem-con.js loaded");
                 .sort((a, b) => a.iata.localeCompare(b.iata));
     
               const finalList = [primary, ...rest].slice(0, 6);
-    
               renderSuggestions(finalList, suggestionBox, input);
               return;
             }
@@ -338,7 +345,7 @@ console.log("🔥 redem-con.js loaded");
           // PARTIAL ALPHA → fallback search
           // ---------------------------------------------------------------
           const normValue = normalizeCityName(value);
-    
+
           const tier1 = list.filter(a =>
             a.iata?.toUpperCase().startsWith(value) && isCommercial(a)
           );
@@ -358,7 +365,6 @@ console.log("🔥 redem-con.js loaded");
           results = results.slice(0, 5);
     
           renderSuggestions(results, suggestionBox, input);
-    
         }, 120);
       });
     }
