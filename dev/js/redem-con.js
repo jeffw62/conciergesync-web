@@ -169,15 +169,30 @@ let iataData = null;
     });
 
     // =====================================================================
-    // IATA AUTOCOMPLETE — FINAL CCT VERSION
+    // IATA AUTOCOMPLETE — CONCIERGESYNC LUXURY ENGINE (CCT • IS-READY)
     // =====================================================================
     
-    // GLOBAL THROTTLE TIMER
+    // Metro airport clusters for commercial-only cities
+    const metroClusters = {
+      "MIAMI":        ["MIA", "FLL"],
+      "FORT LAUDERDALE": ["FLL", "MIA"],
+      "DALLAS":       ["DFW", "DAL"],
+      "LOS ANGELES":  ["LAX", "BUR", "LGB", "ONT", "SNA"],
+      "CHICAGO":      ["ORD", "MDW"],
+      "WASHINGTON":   ["DCA", "IAD"],
+      "LONDON":       ["LHR", "LGW", "LCY", "STN", "LTN"],
+      "TOKYO":        ["HND", "NRT"],
+      "NEW YORK":     ["JFK", "LGA", "EWR"],
+      "SAN FRANCISCO":["SFO", "OAK", "SJC"],
+      "BOSTON":       ["BOS", "PVD"],
+      "DENVER":       ["DEN"]
+    };
+    
+    // Global throttle
     let iataTimer = null;
+    let iataData = null;
     
-    // Preload immediately on module init
-    loadIATA();
-    
+    // Load IATA list
     async function loadIATA() {
       if (iataData) return iataData;
     
@@ -193,6 +208,17 @@ let iataData = null;
       return iataData;
     }
     
+    // Utility: is commercial airport?
+    function isCommercial(airport) {
+      return airport.commercial === true || airport.type === "large_airport" || airport.type === "medium_airport";
+    }
+
+    // Identify major North America long-haul hubs
+    function isMajorNorthAmerica(a) {
+      return a.major_north_america === true;
+    }
+    
+    // Main setup
     function setupIATA(input, suggestionBox) {
       input.addEventListener("input", () => {
         const value = input.value.trim().toUpperCase();
@@ -202,37 +228,111 @@ let iataData = null;
     
         clearTimeout(iataTimer);
         iataTimer = setTimeout(async () => {
-          const data = await loadIATA();
+          const list = await loadIATA();
+          let results = [];
     
-          const matches = data.filter(r => {
-            const code = r.iata?.toUpperCase() || "";
-            const airport = r.airport?.toUpperCase() || "";
-            const region = r.region_name?.toUpperCase() || "";
+          // ---------------------------------------------------------------
+          // SPECIAL CASE — User typed "USCA" to load all major NA hubs
+          // ---------------------------------------------------------------
+          if (value === "USCA") {
+
+            // CCT truth marker for IS ingestion
+            input.dataset.cs_iata_mode = "USCA";
+          
+            const majorList = iataData.filter(a => isCommercial(a) && isMajorNorthAmerica(a));
+          
+            const display = majorList
+              .sort((a, b) => a.iata.localeCompare(b.iata))
+              .slice(0, 12);
+          
+            renderSuggestions(display, suggestionBox, input);
+            return;
+          }
+          
+          // ---------------------------------------------------------------
+          // CASE 1 — User typed EXACT 3-letter IATA code
+          // ---------------------------------------------------------------
+          if (value.length === 3) {
+            const exact = list.filter(a => a.iata?.toUpperCase() === value);
+            if (exact.length) {
+              results = exact; // ONLY show this one
+            }
+            renderSuggestions(results, suggestionBox, input);
+            return;
+          }
     
-            return (
-              code.startsWith(value) ||
-              airport.startsWith(value) ||
-              region.startsWith(value)
+          // ---------------------------------------------------------------
+          // CASE 2 — User typed CITY NAME (partial or full)
+          // ---------------------------------------------------------------
+          const cityMatches = list.filter(a =>
+            a.city?.toUpperCase().startsWith(value)
+          );
+    
+          if (cityMatches.length) {
+            const cityName = cityMatches[0].city.toUpperCase();
+            const cluster = metroClusters[cityName] || [];
+    
+            // Show only the commercial cluster
+            const clusterResults = list.filter(a =>
+              cluster.includes(a.iata?.toUpperCase())
             );
-          });
     
-          matches.slice(0, 8).forEach(r => {
-            const div = document.createElement("div");
-            div.className = "suggestion";
-            div.textContent = `${r.iata} — ${r.airport}`;
-            div.addEventListener("click", () => {
-              input.value = r.iata;
-              suggestionBox.innerHTML = "";
-              validateReady();
-            });
-            suggestionBox.appendChild(div);
-          });
+            if (clusterResults.length) {
+              results = clusterResults;
+              renderSuggestions(results, suggestionBox, input);
+              return;
+            }
+          }
+    
+          // ---------------------------------------------------------------
+          // CASE 3 — Partial alpha input (ex: "mia" but not exact code yet)
+          // ---------------------------------------------------------------
+          const tier1 = list.filter(a =>
+            a.iata?.toUpperCase().startsWith(value) &&
+            isCommercial(a)
+          );
+    
+          const tier2 = list.filter(a =>
+            a.city?.toUpperCase().startsWith(value) &&
+            isCommercial(a)
+          );
+    
+          results = [...tier1, ...tier2];
+    
+          // Remove duplicates
+          results = results.filter((a, i, self) =>
+            i === self.findIndex(b => b.iata === a.iata)
+          );
+    
+          // Limit to luxury top 5
+          results = results.slice(0, 5);
+    
+          renderSuggestions(results, suggestionBox, input);
         }, 120);
       });
     }
     
+    // Render suggestions
+    function renderSuggestions(results, box, input) {
+      box.innerHTML = "";
+    
+      results.forEach(a => {
+        const div = document.createElement("div");
+        div.className = "suggestion";
+        div.textContent = `${a.iata} — ${a.airport}`;
+        div.addEventListener("click", () => {
+          input.value = a.iata;
+          box.innerHTML = "";
+          validateReady();
+        });
+        box.appendChild(div);
+      });
+    }
+    
+    // Hook to DOM
     setupIATA(origin, root.querySelector("#origin-suggestions"));
     setupIATA(destination, root.querySelector("#destination-suggestions"));
+
 
 
     // =====================================================================
