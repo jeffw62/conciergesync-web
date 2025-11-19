@@ -452,3 +452,61 @@ input[type="number"] {
   background: #A89242 !important;
   background-image: none !important;
 }
+
+/* ===========================================================
+   LUXURY AUTOCOMPLETE DROPDOWN (CCT – ConciergeSync Standard)
+   =========================================================== */
+
+.suggestions {
+  position: absolute;
+  width: 100%;
+  background: rgba(20, 20, 20, 0.92);
+  backdrop-filter: blur(6px);
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  margin-top: 4px;
+  max-height: 180px;
+  overflow-y: auto;
+  z-index: 9999;
+  padding: 4px 0;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+}
+
+/* scrollbar (luxury thin) */
+.suggestions::-webkit-scrollbar {
+  width: 6px;
+}
+.suggestions::-webkit-scrollbar-thumb {
+  background: rgba(255,255,255,0.15);
+  border-radius: 10px;
+}
+.suggestions::-webkit-scrollbar-track {
+  background: rgba(0,0,0,0.1);
+}
+
+/* Each suggestion row */
+.suggestion {
+  padding: 8px 12px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+  opacity: 0;
+  transition: background 0.15s ease-out, opacity 0.15s ease-out;
+}
+
+/* Remove last border */
+.suggestion:last-child {
+  border-bottom: none;
+}
+
+/* Hover state (CCT soft glow) */
+.suggestion:hover {
+  background: rgba(255,255,255,0.08);
+}
+
+/* Fade-in animation applied per JS appending */
+.suggestion.fade-in {
+  opacity: 1;
+}
