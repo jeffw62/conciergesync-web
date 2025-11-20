@@ -218,17 +218,16 @@ console.log("🔥 redem-con.js loaded");
     setupPassengerSelector();
 
     // =====================================================================
-    // EXACT / FLEX MODE — CCT-CORRECT WITH DISABLE LOGIC
+    // EXACT / FLEX MODE — Clean + Correct (2025-11 Fix)
     // =====================================================================
     exactBtn.addEventListener("click", () => {
       exactBtn.classList.add("active");
       flexBtn.classList.remove("active");
       modeInput.value = "exact";
     
-      // NEW — disable flex picker
+      // hide + disable the flex picker
+      flexPicker.style.display = "none";
       flexPicker.classList.add("disabled");
-      flexPicker.style.opacity = "0.35";
-      flexPicker.style.pointerEvents = "none";
     
       validateReady();
     });
@@ -238,10 +237,9 @@ console.log("🔥 redem-con.js loaded");
       flexBtn.classList.add("active");
       modeInput.value = "flex";
     
-      // NEW — enable flex picker
+      // show + enable the flex picker
+      flexPicker.style.display = "block";
       flexPicker.classList.remove("disabled");
-      flexPicker.style.opacity = "1";
-      flexPicker.style.pointerEvents = "auto";
     
       validateReady();
     });
