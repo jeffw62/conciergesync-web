@@ -397,7 +397,7 @@
   position: absolute;
   cursor: pointer;
   inset: 0;
-  background: #A89242;      /* deep navy */
+  background: #1A2B43;      /* deep navy */
   border-radius: 24px;
   transition: 0.3s;
   border: 1px solid rgba(255,255,255,0.15);
@@ -418,7 +418,7 @@
 
 /* Checked state (gold) */
 .redem-con .toggle input:checked + .toggle-slider {
-  background: #C5A64D;        /* ConciergeSync Gold */
+  background: #A89242;   /* ON gold */
   border-color: #C5A64D;
 }
 
