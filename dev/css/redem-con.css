@@ -308,6 +308,11 @@
   cursor: not-allowed;
 }
 
+.disabled-ui {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
 /* ===========================
    Search Button (CCT Luxury)
    =========================== */
