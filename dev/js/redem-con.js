@@ -288,26 +288,6 @@ console.log("🔥 redem-con.js loaded");
           suggestionBox.innerHTML = "";
           
           // ---------------------------------------------------
-          // SYNTHETIC IATA: UCA (North American Hub Group)
-          // ---------------------------------------------------
-          if (stripped === "UCA") {
-          
-            if (syn) {
-              renderSuggestions(
-                [
-                  {
-                    iata: "UCA",
-                    airport: syn.label
-                  }
-                ],
-                suggestionBox,
-                input
-              );
-              return; // STOP: Don't run real IATA logic
-            }
-          }
-
-          // ---------------------------------------------------
           // SPECIAL CASE — USCA
           // ---------------------------------------------------
           if (stripped === "USCA") {
