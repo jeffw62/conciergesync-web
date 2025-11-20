@@ -179,7 +179,7 @@
 
 /* ACTIVE STATE — USE CS DEEP GOLD */
 .redem-con .toggle-group button.active {
-  background: #B79B4A;        /* ← pure CS gold */
+  background: #7E6A36;        /* ← pure CS gold */
   color: #fff;
   box-shadow: 0 3px 10px rgba(191,161,74,0.32);
 }
@@ -225,7 +225,7 @@
 
 /* ACTIVE Exact/Flex button — Deep Gold */
 .redem-con .option-btn.active {
-  background: linear-gradient(135deg, #A89242, #CBB886);
+  background: #7E6A36;
   border-color: #A89242;
   color: white;
   box-shadow: 0 6px 14px rgba(168,146,66,0.32);
@@ -292,7 +292,7 @@
 
 /* ACTIVE — full brilliance */
 .redem-con .search-btn:enabled {
-  background: linear-gradient(135deg, #A89242, #CBB886) !important;
+  background: linear-gradient(135deg, #7E6A36, #A89242) !important;
   opacity: 1;
   cursor: pointer;
   color: white;
