@@ -65,24 +65,28 @@
           </div>
         </div>
 
-        <div class="card-options">
-          <button type="button" class="option-btn active" id="exactBtn">Exact Date</button>
-          <button type="button" class="option-btn" id="flexBtn">Flexible ± Days</button>
+        <div class="date-mode-row">
+          <div class="card-options">
+            <button type="button" class="option-btn active" id="exactBtn">Exact Date</button>
+            <button type="button" class="option-btn" id="flexBtn">Flexible ± Days</button>
+          </div>
+        
+          <div id="flexPicker">
+            <label for="flexDays">Search within ± 14 days:</label>
+            <select id="flexDays">
+              <option value="">Select range</option>
+              <option value="1">1 day</option>
+              <option value="2">2 days</option>
+              <option value="3">3 days</option>
+              <option value="7">7 days</option>
+              <option value="14">14 days</option>
+            </select>
+          </div>
+        
         </div>
-
+        
         <input type="hidden" id="mode" value="exact">
 
-        <div id="flexPicker">
-          <label for="flexDays">Search within ± 14 days:</label>
-          <select id="flexDays">
-            <option value="">Select range</option>
-            <option value="1">1 day</option>
-            <option value="2">2 days</option>
-            <option value="3">3 days</option>
-            <option value="7">7 days</option>
-            <option value="14">14 days</option>
-          </select>
-        </div>
 
         <div class="checkbox-row">
           <input type="checkbox" id="partnerSpace">
