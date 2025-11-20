@@ -23,32 +23,6 @@
 }
 
 /* ===========================================================
-   Step Number (Gold Circle)
-   =========================================================== */
-.redem-con .step > div {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: #A89242; /* Deep luxury gold */
-  color: #fff;
-  font-size: 0.9rem;
-  font-weight: 600;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  /* Subtle premium glow */
-  box-shadow: 0 2px 6px rgba(191,161,74,0.28);
-
-  /* Ensure circles do not get clipped */
-  overflow: visible !important;
-
-  /* Prevent weird shrinking */
-  flex-shrink: 0;
-}
-
-/* ===========================================================
    Module Title
    =========================================================== */
 
@@ -109,21 +83,6 @@
   align-items: center;
   gap: 10px;
   color: #F4F2EC; /* Soft cream for contrast on navy */
-}
-
-.redem-con .-num {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  background: #7E6A36 !important; /* Darker, luxury gold */
-  background-image: none !important;
-  color: #fff; /* Keep the number white */
-  font-size: 0.9rem;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-weight: 600;
-  box-shadow: 0 2px 6px rgba(0,0,0,0.25); /* Slightly deeper shadow */
 }
 
 /* Layout ---------------------------------------------------- */
@@ -584,10 +543,26 @@ input[type="number"] {
   box-shadow: none !important;
 }
 
-/* === CCT Gold Unification Override === */
+/* ===========================================================
+   STEP NUMBER — GOLD CIRCLE (CCT Correct)
+   =========================================================== */
 .step-num {
-  background: #A89242 !important;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #A89242 !important;   /* Deep CS Gold */
   background-image: none !important;
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  box-shadow: 0 2px 6px rgba(191,161,74,0.28);
+  flex-shrink: 0;
+  overflow: visible !important;
 }
 
 /* ===========================================================
