@@ -228,7 +228,16 @@ console.log("🔥 redem-con.js loaded");
       "NEW YORK":        ["JFK", "LGA", "EWR"],
       "SAN FRANCISCO":   ["SFO", "OAK", "SJC"],
       "BOSTON":          ["BOS", "PVD"],
-      "DENVER":          ["DEN"]
+      "DENVER":          ["DEN"],
+    
+      // 🔥 NEW CLUSTERS
+      "PARIS":           ["CDG", "ORY"],
+      "FRANKFURT":       ["FRA", "HHN"],
+      "SEOUL":           ["ICN", "GMP"],
+      "RIO":             ["GIG", "SDU"],
+      "HOUSTON":         ["IAH", "HOU"],
+      "TORONTO":         ["YYZ", "YTZ"],
+      "MONTREAL":        ["YUL", "YMX"]
     };
     
     // ---------------------------------------------------------------------
