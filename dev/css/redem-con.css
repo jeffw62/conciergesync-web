@@ -474,8 +474,8 @@ input[type="number"] {
   padding: 4px 0;
   box-shadow: 0 4px 14px rgba(0,0,0,0.45);
 
-  /* CRITICAL PART */
-  display: none;            /* hidden by default */
+  /* FIXED */
+  display: block !important;            /* hidden by default */
 }
 
 .suggestions.active {
