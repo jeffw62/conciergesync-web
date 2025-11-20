@@ -226,15 +226,28 @@ console.log("🔥 redem-con.js loaded");
       modeInput.value = "exact";
       flexPicker.style.display = "none";
       validateReady();
+    
+      // NEW — disable dropdown in EXACT mode
+      flexDays.disabled = true;
+      flexDays.classList.add("disabled-ui");
     });
-
+    
     flexBtn.addEventListener("click", () => {
       exactBtn.classList.remove("active");
       flexBtn.classList.add("active");
       modeInput.value = "flex";
       flexPicker.style.display = "block";
       validateReady();
+    
+      // NEW — enable dropdown in FLEX mode
+      flexDays.disabled = false;
+      flexDays.classList.remove("disabled-ui");
     });
+    
+    // =====================================================================
+    // IATA AUTOCOMPLETE — CONCIERGESYNC LUXURY ENGINE (CCT • IS-READY)
+    // =====================================================================
+
 
     // =====================================================================
     // IATA AUTOCOMPLETE — CONCIERGESYNC LUXURY ENGINE (CCT • IS-READY)
