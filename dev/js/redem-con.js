@@ -218,32 +218,34 @@ console.log("🔥 redem-con.js loaded");
     setupPassengerSelector();
 
     // =====================================================================
-    // EXACT / FLEX MODE
+    // EXACT / FLEX MODE — CCT-CORRECT WITH DISABLE LOGIC
     // =====================================================================
     exactBtn.addEventListener("click", () => {
       exactBtn.classList.add("active");
       flexBtn.classList.remove("active");
       modeInput.value = "exact";
-      flexPicker.style.display = "none";
-      validateReady();
     
-      // NEW — disable dropdown in EXACT mode
-      flexDays.disabled = true;
-      flexDays.classList.add("disabled-ui");
+      // NEW — disable flex picker
+      flexPicker.classList.add("disabled");
+      flexPicker.style.opacity = "0.35";
+      flexPicker.style.pointerEvents = "none";
+    
+      validateReady();
     });
     
     flexBtn.addEventListener("click", () => {
       exactBtn.classList.remove("active");
       flexBtn.classList.add("active");
       modeInput.value = "flex";
-      flexPicker.style.display = "block";
+    
+      // NEW — enable flex picker
+      flexPicker.classList.remove("disabled");
+      flexPicker.style.opacity = "1";
+      flexPicker.style.pointerEvents = "auto";
+    
       validateReady();
-    
-      // NEW — enable dropdown in FLEX mode
-      flexDays.disabled = false;
-      flexDays.classList.remove("disabled-ui");
     });
-    
+
     // =====================================================================
     // IATA AUTOCOMPLETE — CONCIERGESYNC LUXURY ENGINE (CCT • IS-READY)
     // =====================================================================
