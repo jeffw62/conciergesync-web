@@ -23,6 +23,32 @@
 }
 
 /* ===========================================================
+   Step Number (Gold Circle)
+   =========================================================== */
+.redem-con .step > div {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #A89242; /* Deep luxury gold */
+  color: #fff;
+  font-size: 0.9rem;
+  font-weight: 600;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Subtle premium glow */
+  box-shadow: 0 2px 6px rgba(191,161,74,0.28);
+
+  /* Ensure circles do not get clipped */
+  overflow: visible !important;
+
+  /* Prevent weird shrinking */
+  flex-shrink: 0;
+}
+
+/* ===========================================================
    Module Title
    =========================================================== */
 
