@@ -89,15 +89,19 @@
   width: 34px;
   height: 34px;
   border-radius: 50%;
-  background: #A89242 !important;
+  background: #C8A64C !important;                      /* Correct CS Gold */
   background-image: none !important;
-  color: #fff;
+  color: #0D1B2A;                                       /* Deep navy text */
   font-size: 0.9rem;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 600;
-  box-shadow: 0 2px 6px rgba(191,161,74,0.28);
+  
+  /* Subtle premium glow — NOT brightening the circle */
+  box-shadow:
+    0 1px 4px rgba(0, 0, 0, 0.35),                      /* soft shadow */
+    inset 0 0 1px rgba(255, 255, 255, 0.18);            /* metallic inner sheen */
 }
 
 /* Layout ---------------------------------------------------- */
