@@ -288,21 +288,20 @@ console.log("🔥 redem-con.js loaded");
           suggestionBox.innerHTML = "";
           
           // ---------------------------------------------------
-          // SPECIAL CASE — USCA
+          // SYNTHETIC IATA: UCA (North American Hub Group)
           // ---------------------------------------------------
-          if (stripped === "USCA") {
-            const majorList = list.filter(a =>
-              isCommercial(a) && isMajorNorthAmerica(a)
+          if (stripped === "UCA") {
+            renderSuggestions(
+              [
+                {
+                  iata: "UCA",
+                  airport: "North American Hub Group Airports"
+                }
+              ],
+              suggestionBox,
+              input
             );
-    
-            const display = majorList
-              .sort((a, b) => a.iata.localeCompare(b.iata))
-              .slice(0, 14);
-    
-            console.log("🔥 USCA — showing NA major hubs");
-            console.log("💛 RENDER SUGGESTIONS CALLED:", list);
-            renderSuggestions(display, suggestionBox, input);
-            return; // STOP ALL OTHER LOGIC
+            return; // STOP: do not fall through to normal logic
           }
     
           // ---------------------------------------------------
