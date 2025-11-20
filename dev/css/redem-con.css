@@ -85,7 +85,7 @@
   color: #F4F2EC; /* Soft cream for contrast on navy */
 }
 
-.redem-con .step-num {
+.redem-con .-num {
   width: 34px;
   height: 34px;
   border-radius: 50%;
@@ -307,6 +307,72 @@
 /* keep heading spacing */
 .redem-con .step h3 {
   margin-top: 16px;
+}
+
+/* ===========================================================
+   CCT Toggle Switches (Partner Space / Budget Airlines)
+   =========================================================== */
+
+.redem-con .toggle-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin: 14px 0;
+}
+
+.redem-con .toggle-label {
+  color: rgba(255,255,255,0.9);
+  font-size: 0.92rem;
+  white-space: nowrap;
+}
+
+/* Base container */
+.redem-con .toggle {
+  position: relative;
+  display: inline-block;
+  width: 48px;
+  height: 24px;
+}
+
+/* Hide native checkbox */
+.redem-con .toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* Slider track */
+.redem-con .toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  inset: 0;
+  background: #1A2B43;      /* deep navy */
+  border-radius: 24px;
+  transition: 0.3s;
+  border: 1px solid rgba(255,255,255,0.15);
+}
+
+/* Knob */
+.redem-con .toggle-slider:before {
+  content: "";
+  position: absolute;
+  height: 18px;
+  width: 18px;
+  left: 3px;
+  bottom: 3px;
+  background-color: #fff;
+  border-radius: 50%;
+  transition: 0.3s;
+}
+
+/* Checked state (gold) */
+.redem-con .toggle input:checked + .toggle-slider {
+  background: #C5A64D;        /* ConciergeSync Gold */
+  border-color: #C5A64D;
+}
+
+.redem-con .toggle input:checked + .toggle-slider:before {
+  transform: translateX(24px);
 }
 
 /* Warning --------------------------------------------------- */
