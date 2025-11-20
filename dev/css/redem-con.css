@@ -538,6 +538,40 @@ input[type="number"] {
     box-shadow: none !important;
 }
 
+/* ============================
+   Airline Program Dropdown
+   ============================ */
+.redem-con select#program,
+.redem-con select#flexDays, 
+.redem-con select#serviceClass {
+  background: #131F33;
+  color: rgba(255,255,255,0.88);
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 0.95rem;
+  font-family: 'Inter', sans-serif;
+  appearance: none;
+  -webkit-appearance: none;
+  cursor: pointer;
+  height: 45px;
+  transition: border 0.2s ease, background 0.2s ease;
+}
+
+/* Focus / active style */
+.redem-con select#program:focus,
+.redem-con select#flexDays:focus,
+.redem-con select#serviceClass:focus {
+  outline: none;
+  border-color: #C5A64D; /* soft gold */
+  background: #18263C;
+}
+
+/* Down-arrow styling */
+.redem-con select#program::-ms-expand {
+  display: none;
+}
+
 /* ===========================================================
    USCA Tooltip (Luxury Info Bubble)
    =========================================================== */
