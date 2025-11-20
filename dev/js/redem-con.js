@@ -190,6 +190,33 @@ console.log("🔥 redem-con.js loaded");
       validateReady();
     });
 
+    // ======================================================
+    // PASSENGER SELECTOR LOGIC
+    // ======================================================
+    function setupPassengerSelector() {
+      const countDisplay = root.querySelector("#passengerCount");
+      const hiddenInput  = root.querySelector("#passengers");
+      const buttons = root.querySelectorAll(".psg-btn");
+    
+      let count = 1;
+    
+      buttons.forEach(btn => {
+        btn.addEventListener("click", () => {
+          const action = btn.dataset.action;
+    
+          if (action === "increase" && count < 9) count++;
+          if (action === "decrease" && count > 1) count--;
+    
+          countDisplay.textContent = count;
+          hiddenInput.value = count;
+    
+          validateReady(); // your existing logic
+        });
+      });
+    }
+    
+    setupPassengerSelector();
+
     // =====================================================================
     // EXACT / FLEX MODE
     // =====================================================================
