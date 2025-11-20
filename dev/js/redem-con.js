@@ -120,57 +120,66 @@ console.log("🔥 redem-con.js loaded");
     }
     
     // =====================================================================
-    // APPLY ROUTING RULES (FINAL SPECIFICATION)
+    // APPLY ROUTING RULES (FINAL — Correct Override Behavior)
     // =====================================================================
     function applyRoutingRules() {
       const direct = getToggleValue(directStop);
       const multi = getToggleValue(multiConn);
     
-      // ---------------------------------------------
-      // CASE 1 — DIRECT = YES
-      // ---------------------------------------------
+      // DIRECT = YES  → Multi forced NO, Positioning disabled
       if (direct === "yes") {
-        setToggle(multiConn, "no", true);   // enabled but forced NO
+        setToggle(multiConn, "no", true);   // enabled, forced NO
         setToggle(posFlight, "no", false);  // disabled
       }
-
-      // ---------------------------------------------
-      // CASE 2 — MULTI = YES
-      // ---------------------------------------------
+    
+      // MULTI = YES → Direct forced NO, Positioning enabled
       else if (multi === "yes") {
-        setToggle(directStop, "no", true);  // enabled but forced NO
+        setToggle(directStop, "no", true);  // enabled, forced NO
         setToggle(posFlight, "no", true);   // enabled
       }
     
-      // ---------------------------------------------
-      // CASE 3 — BOTH = NO
-      // ---------------------------------------------
+      // BOTH = NO → free state, Positioning disabled
       else {
-        setToggle(directStop, "no", true);   // enabled
-        setToggle(multiConn, "no", true);    // enabled
-        setToggle(posFlight, "no", false);   // disabled
+        setToggle(directStop, "no", true);
+        setToggle(multiConn, "no", true);
+        setToggle(posFlight, "no", false);
       }
     
       validateReady();
     }
     
     // =====================================================================
-    // ROUTING TOGGLE LISTENERS
+    // DIRECT / MULTI CLICK HANDLING (FINAL — CORE BEHAVIOR)
     // =====================================================================
     [directStop, multiConn].forEach(group => {
       group.addEventListener("click", (ev) => {
         const btn = ev.target.closest("button");
-        if (!btn || btn.disabled) return;
+        if (!btn) return;
     
-        // set clicked btn active
+        // Clear active state and set clicked one
         group.querySelectorAll("button").forEach(b => b.classList.remove("active"));
         btn.classList.add("active");
+    
+        // 🔥 OVERRIDE LOGIC (THIS is what fixes everything)
+        const value = btn.dataset.val;
+    
+        if (group === directStop && value === "yes") {
+          // User chose Direct YES → Multi forced NO
+          setToggle(multiConn, "no", true);
+        }
+    
+        if (group === multiConn && value === "yes") {
+          // User chose Multi YES → Direct forced NO
+          setToggle(directStop, "no", true);
+        }
     
         applyRoutingRules();
       });
     });
     
-    // Positioning listener stays but only fires when enabled
+    // =====================================================================
+    // POSITIONING LISTENER (unchanged, only active under Multi YES)
+    // =====================================================================
     posFlight.addEventListener("click", (ev) => {
       const btn = ev.target.closest("button");
       if (!btn || btn.disabled) return;
