@@ -453,10 +453,9 @@ input[type="number"] {
   background-image: none !important;
 }
 
-/* ===========================================================
+//* ===========================================================
    LUXURY AUTOCOMPLETE DROPDOWN (CCT – ConciergeSync Standard)
    =========================================================== */
-
 .suggestions {
   position: absolute;
   width: 100%;
@@ -465,11 +464,23 @@ input[type="number"] {
   border: 1px solid rgba(255,255,255,0.08);
   border-radius: 10px;
   margin-top: 4px;
-  max-height: 180px;
-  overflow-y: auto;
+
+  /* UPDATED VALUES — ensures USCA cluster fully renders */
+  max-height: 260px;            /* luxury size */
+  overflow-y: auto;             /* scrolling */
+  overflow-x: visible;          /* prevents horizontal clipping */
+  display: block;               /* FORCES dropdown to appear */
+
   z-index: 9999;
   padding: 4px 0;
   box-shadow: 0 4px 14px rgba(0,0,0,0.45);
+}
+
+/* Fix parent containers so dropdown never gets clipped */
+.origin-container,
+.destination-container {
+  position: relative !important;
+  overflow: visible !important;
 }
 
 /* scrollbar (luxury thin) */
