@@ -236,18 +236,6 @@ console.log("🔥 redem-con.js loaded");
       validateReady();
     });
 
-    const exactBtn = document.getElementById("exactBtn");
-    const flexBtn = document.getElementById("flexBtn");
-    const flexPicker = document.getElementById("flexPicker");
-    
-    exactBtn.addEventListener("click", () => {
-      flexPicker.classList.add("disabled");
-    });
-    
-    flexBtn.addEventListener("click", () => {
-      flexPicker.classList.remove("disabled");
-    });
-
     // =====================================================================
     // IATA AUTOCOMPLETE — CONCIERGESYNC LUXURY ENGINE (CCT • IS-READY)
     // =====================================================================
