@@ -261,13 +261,6 @@
   box-shadow: 0 6px 14px rgba(168,146,66,0.32);
 }
 
-/* Flex container */
-#flexPicker {
-  display: none;
-  margin-top: 16px;
-  padding: 8px 0;
-}
-
 /* Label above dropdown */
 #flexPicker label {
   font-size: 14px;
@@ -295,22 +288,31 @@
 }
 
 /* ===========================================================
-   FLEX RANGE — DISABLED LOOK WHEN EXACT DATE IS ACTIVE
+   FLEX RANGE — ALWAYS VISIBLE, DISABLED BY DEFAULT
    =========================================================== */
 
-#flexPicker.disabled {
-  opacity: 0.35;
-  pointer-events: none;
+#flexPicker {
+  display: flex;           
+  flex-direction: column;
+  gap: 6px;
+  opacity: 0.38;            /* muted when exact date */
   filter: grayscale(35%);
+  pointer-events: none;     /* cannot interact */
+  transition: opacity 0.25s ease, filter 0.25s ease;
 }
 
-#flexPicker.disabled select {
+#flexPicker.active {
+  opacity: 1;
+  filter: none;
+  pointer-events: auto;     /* enabled */
+}
+
+#flexPicker select {
   cursor: not-allowed;
 }
 
-.disabled-ui {
-  opacity: 0.45;
-  cursor: not-allowed;
+#flexPicker.active select {
+  cursor: pointer;
 }
 
 /* ===========================
