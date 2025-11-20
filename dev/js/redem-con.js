@@ -291,6 +291,8 @@ console.log("🔥 redem-con.js loaded");
     
           const list = await loadIATA();
           const value = input.value.trim().toUpperCase();
+          console.log("🔍 Input:", value);
+
           const stripped = value.replace(/[^A-Z]/g, "");
     
           // Always clear before rendering new results
