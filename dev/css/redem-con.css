@@ -191,6 +191,51 @@
   filter: grayscale(40%);
 }
 
+/* ===========================================================
+   CCT Passenger Selector (Luxury Quantity Control)
+   =========================================================== */
+.redem-con .passenger-selector {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 10px 16px;
+  background: #131F33;
+  border: 1px solid rgba(255,255,255,0.12);
+  border-radius: 12px;
+  width: 180px;
+  margin-top: 6px;
+}
+
+.redem-con .passenger-selector #passengerCount {
+  color: rgba(255,255,255,0.95);
+  font-size: 1.1rem;
+  font-weight: 600;
+  min-width: 24px;
+  text-align: center;
+}
+
+.redem-con .passenger-selector .psg-btn {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: #18263C;
+  color: #C5A64D;
+  border: 1px solid rgba(255,255,255,0.1);
+  font-size: 1.2rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.redem-con .passenger-selector .psg-btn:hover {
+  background: #22324C;
+  border-color: #C5A64D;
+}
+
+.redem-con .passenger-selector .psg-btn:active {
+  transform: scale(0.92);
+}
+
 /* Positioning Flight Warning stays border-gold (correct CCT) */
 .redem-con .pos-warning {
   background: rgba(191,161,74,0.18);  /* soft wash – correct */
