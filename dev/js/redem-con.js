@@ -348,17 +348,27 @@ console.log("🔥 redem-con.js loaded");
           }
     
           // ---------------------------------------------------
-          // FALLBACK SEARCH
+          // FALLBACK SEARCH (IATA + city names + airport names)
           // ---------------------------------------------------
-          const norm = normalizeCityName(value);
-    
           let results = [
+          
+            // 1️⃣ IATA prefix match
             ...list.filter(a =>
-              a.iata?.toUpperCase().startsWith(value) && isCommercial(a)
+              a.iata?.toUpperCase().startsWith(value) &&
+              isCommercial(a)
             ),
+          
+            // 2️⃣ City name prefix match (if dataset has cities)
             ...list.filter(a =>
               a.city &&
               normalizeCityName(a.city)?.startsWith(norm) &&
+              isCommercial(a)
+            ),
+          
+            // 3️⃣ ⭐ NEW — Airport name contains search
+            ...list.filter(a =>
+              a.airport &&
+              a.airport.toUpperCase().includes(value) &&
               isCommercial(a)
             )
           ];
