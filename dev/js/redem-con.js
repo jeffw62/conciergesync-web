@@ -225,9 +225,7 @@ console.log("🔥 redem-con.js loaded");
       flexBtn.classList.remove("active");
       modeInput.value = "exact";
     
-      // hide + disable the flex picker
-      flexPicker.style.display = "none";
-      flexPicker.classList.add("disabled");
+      flexPicker.classList.remove("active");
     
       validateReady();
     });
@@ -237,9 +235,7 @@ console.log("🔥 redem-con.js loaded");
       flexBtn.classList.add("active");
       modeInput.value = "flex";
     
-      // show + enable the flex picker
-      flexPicker.style.display = "block";
-      flexPicker.classList.remove("disabled");
+      flexPicker.classList.add("active");
     
       validateReady();
     });
