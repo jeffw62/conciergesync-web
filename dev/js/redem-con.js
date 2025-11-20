@@ -291,7 +291,6 @@ console.log("🔥 redem-con.js loaded");
           // SYNTHETIC IATA: UCA (North American Hub Group)
           // ---------------------------------------------------
           if (stripped === "UCA") {
-            const syn = SYN_IATA?.UCA;
           
             if (syn) {
               renderSuggestions(
