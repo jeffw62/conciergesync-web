@@ -565,6 +565,19 @@ input[type="number"] {
   overflow: visible !important;
 }
 
+/* Align Exact/Flex + FlexPicker horizontally */
+.redem-con .date-mode-row {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 22px;
+  margin-top: 6px;
+}
+
+.redem-con .date-mode-row #flexPicker {
+  margin-top: 0 !important;
+}
+
 /* ===========================================================
    LUXURY AUTOCOMPLETE DROPDOWN (CCT – ConciergeSync Standard)
    =========================================================== */
