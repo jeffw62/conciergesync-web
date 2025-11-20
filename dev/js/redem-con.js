@@ -350,37 +350,42 @@ console.log("🔥 redem-con.js loaded");
           }
     
           // ---------------------------------------------------
-          // FALLBACK SEARCH (IATA + city names + airport names)
+          // FALLBACK SEARCH (IATA + city + airport)
           // ---------------------------------------------------
-          let results = [
+          const norm = normalizeCityName(value);
           
-            // 1️⃣ IATA prefix match
+          let results = [
+            // IATA code starts with letters typed
             ...list.filter(a =>
-              a.iata?.toUpperCase().startsWith(value) &&
-              isCommercial(a)
+              a.iata?.toUpperCase().startsWith(value) && isCommercial(a)
             ),
           
-            // 2️⃣ City name prefix match (if dataset has cities)
+            // City name starts with typed letters
             ...list.filter(a =>
               a.city &&
               normalizeCityName(a.city)?.startsWith(norm) &&
               isCommercial(a)
             ),
           
-            // 3️⃣ ⭐ NEW — Airport name contains search
+            // Airport name contains the letters typed
             ...list.filter(a =>
               a.airport &&
               a.airport.toUpperCase().includes(value) &&
               isCommercial(a)
             )
           ];
-    
+          
           // Dedupe
           results = results.filter((a, i, self) =>
             i === self.findIndex(b => b.iata === a.iata)
           );
-    
-          renderSuggestions(results.slice(0, 5), suggestionBox, input);
+          
+          // Sort by IATA to keep results clean
+          results = results.sort((a, b) =>
+            a.iata.localeCompare(b.iata)
+          );
+          
+          renderSuggestions(results.slice(0, 6), suggestionBox, input);
     
         }, 150);
       });
