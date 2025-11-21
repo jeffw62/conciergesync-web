@@ -20,7 +20,7 @@ console.log("🔥 redem-con.js loaded");
   
       // Normalize NA hub flags if missing
       const majorNASet = [
-        "LAX","SFO","SEA","JFK","EWR","BOS","IAD","DCA",
+        "LAX","SFO","SEA","JFK","EWR","BOS","IAD","BWI",
         "ORD","DTW","ATL","CLT","MIA","FLL","IAH","DFW",
         "DEN","PHX","MSP","YYZ","YUL","YVR","YYC"
       ];
