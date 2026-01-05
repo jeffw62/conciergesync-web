@@ -5,6 +5,7 @@ import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
+import plaidRouter from "./dev/server/plaid.routes.js";
 
 // --- Fix __dirname and __filename (since they're not built-in under ESM)
 const __filename = fileURLToPath(import.meta.url);
@@ -34,6 +35,11 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 3000;
+
+// ===============================================
+// Plaid API (isolated router)
+// ===============================================
+app.use("/api/plaid", plaidRouter);
 
 // ===============================================
 // Seats.Aero Partner Service Class
