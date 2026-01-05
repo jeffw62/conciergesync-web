@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ConciergeSync – Internal Plaid Link</title>
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+</head>
+<body>
+  <h2>ConciergeSync Internal Plaid Test</h2>
+  <button id="link-button">Connect Account</button>
+
+  <pre id="output"></pre>
+
+  <script>
+    async function initPlaid() {
+      const res = await fetch("/api/plaid/link-token", {
+        method: "POST"
+      });
+
+      const data = await res.json();
+      const linkToken = data.link_token;
+
+      const handler = Plaid.create({
+        token: linkToken,
+        onSuccess: async (public_token, metadata) => {
+          document.getElementById("output").textContent =
+            "PUBLIC TOKEN RECEIVED:\n" +
+            public_token + "\n\nMETADATA:\n" +
+            JSON.stringify(metadata, null, 2);
+
+          await fetch("/api/plaid/exchange", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ public_token })
+          });
+        },
+        onExit: (err, metadata) => {
+          console.log("Exited Plaid Link", err, metadata);
+        }
+      });
+
+      document
+        .getElementById("link-button")
+        .addEventListener("click", () => handler.open());
+    }
+
+    initPlaid();
+  </script>
+</body>
+</html>
