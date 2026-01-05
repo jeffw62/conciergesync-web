@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8" />
+    <title>Plaid Link Test</title>
+    <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  </head>
+  <body>
+    <button id="link-button">Connect Account</button>
+
+    <script>
+      const handler = Plaid.create({
+        token: "link-production-e05fe690-2dd1-43b8-b576-720b6814980f",
+        onSuccess: function(public_token, metadata) {
+          alert("Success! Public token received.");
+          console.log(public_token, metadata);
+        },
+        onExit: function(err, metadata) {
+          console.log("Exited", err, metadata);
+        }
+      });
+
+      document
+        .getElementById("link-button")
+        .addEventListener("click", function () {
+          handler.open();
+        });
+    </script>
+  </body>
+</html>
