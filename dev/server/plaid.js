@@ -57,3 +57,33 @@ export async function exchangePublicToken(req, res) {
     res.status(500).json({ error: "exchange_failed" });
   }
 }
+export async function getAccounts(req, res) {
+  try {
+    const tokens = globalThis.PLAID_ACCESS_TOKENS || {};
+    const itemIds = Object.keys(tokens);
+
+    if (itemIds.length === 0) {
+      return res.status(400).json({ error: "no_access_tokens" });
+    }
+
+    // Use the most recently stored token
+    const itemId = itemIds[itemIds.length - 1];
+    const access_token = tokens[itemId];
+
+    const response = await fetch("https://production.plaid.com/accounts/get", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_id: process.env.PLAID_CLIENT_ID,
+        secret: process.env.PLAID_SECRET,
+        access_token
+      })
+    });
+
+    const data = await response.json();
+    res.json(data);
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "accounts_failed" });
+  }
+}
