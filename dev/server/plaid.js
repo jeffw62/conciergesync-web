@@ -45,8 +45,11 @@ export async function exchangePublicToken(req, res) {
 
     const data = await response.json();
 
-    // TEMP: log only, do not store yet
-    console.log("ACCESS TOKEN:", data.access_token);
+    globalThis.PLAID_ACCESS_TOKENS = globalThis.PLAID_ACCESS_TOKENS || {};
+    globalThis.PLAID_ACCESS_TOKENS[data.item_id] = data.access_token;
+    
+    console.log("PLAID ACCESS TOKEN STORED");
+    console.log("Item ID:", data.item_id);
 
     res.json({ ok: true });
   } catch (err) {
