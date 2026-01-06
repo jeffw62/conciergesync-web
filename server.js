@@ -32,6 +32,7 @@ const app = express();
 app.use('/dev', express.static(path.join(__dirname, 'dev')));
 
 app.use(express.json());
+app.use("/api/plaid", plaidRouter);
 app.use(express.urlencoded({ extended: true }));
 
 const PORT = process.env.PORT || 3000;
