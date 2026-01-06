@@ -1,4 +1,5 @@
 <script>
+document.addEventListener("DOMContentLoaded", () => {
   async function openPlaid() {
     try {
       // 1️⃣ Ask YOUR server for a fresh link_token
@@ -15,7 +16,7 @@
           console.log("Plaid success:", public_token, metadata);
 
           // 3️⃣ Send public_token back to your server
-          await fetch("/api/plaid/exchange-token", {
+          await fetch("/api/plaid/exchange", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ public_token })
@@ -36,7 +37,12 @@
     }
   }
 
-  document
-    .getElementById("link-button")
-    .addEventListener("click", openPlaid);
+  const button = document.getElementById("link-button");
+  if (!button) {
+    console.error("❌ link-button not found in DOM");
+    return;
+  }
+
+  button.addEventListener("click", openPlaid);
+});
 </script>
