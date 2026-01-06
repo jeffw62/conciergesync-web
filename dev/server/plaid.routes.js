@@ -8,7 +8,7 @@ const router = express.Router();
 // ==============================
 
 // Create Plaid Link token
-router.get("/link-token", createLinkToken);
+router.post("/link-token", createLinkToken);
 
 // Exchange public_token for access_token
 router.post("/exchange", exchangePublicToken);
