@@ -121,4 +121,12 @@ router.get("/debug/items", (req, res) => {
   });
 });
 
+// List stored Plaid item_ids (debug / verification only)
+router.get("/stored-items", (req, res) => {
+  const store = globalThis.PLAID_ACCESS_TOKENS || {};
+  res.json({
+    stored_items: Object.keys(store)
+  });
+});
+
 export default router;
