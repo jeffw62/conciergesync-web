@@ -1,48 +1,42 @@
-<script>
-document.addEventListener("DOMContentLoaded", () => {
-  async function openPlaid() {
-    try {
-      // 1️⃣ Ask YOUR server for a fresh link_token
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>ConciergeSync Plaid Test</title>
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+</head>
+
+<body>
+  <h1>ConciergeSync Internal Plaid Test</h1>
+
+  <button id="link-button">Connect Account</button>
+
+  <script>
+    async function openPlaid() {
       const response = await fetch("/api/plaid/link-token");
       const data = await response.json();
 
-      console.log("Link token received:", data);
-
-      // 2️⃣ Create Plaid Link using the server-issued token
       const handler = Plaid.create({
         token: data.link_token,
-
-        onSuccess: async function (public_token, metadata) {
-          console.log("Plaid success:", public_token, metadata);
-
-          // 3️⃣ Send public_token back to your server
+        onSuccess: async (public_token) => {
           await fetch("/api/plaid/exchange", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ public_token })
           });
-
-          alert("Bank connected successfully.");
+          alert("Bank connected successfully");
         },
-
-        onExit: function (err, metadata) {
-          console.log("Plaid exited:", err, metadata);
-        }
+        onExit: (err) => console.log("Exited", err)
       });
 
       handler.open();
-
-    } catch (err) {
-      console.error("Plaid failed to initialize:", err);
     }
-  }
 
-  const button = document.getElementById("link-button");
-  if (!button) {
-    console.error("❌ link-button not found in DOM");
-    return;
-  }
-
-  button.addEventListener("click", openPlaid);
-});
-</script>
+    document.addEventListener("DOMContentLoaded", () => {
+      document
+        .getElementById("link-button")
+        .addEventListener("click", openPlaid);
+    });
+  </script>
+</body>
+</html>
