@@ -95,4 +95,10 @@ router.post("/transactions", async (req, res) => {
   }
 });
 
+router.get("/debug/items", (req, res) => {
+  res.json({
+    stored_items: Object.keys(globalThis.PLAID_ACCESS_TOKENS || {})
+  });
+});
+
 export default router;
