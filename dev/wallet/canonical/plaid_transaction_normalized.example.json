@@ -1,0 +1,16 @@
+{
+  "transaction_id": "MXgb7A69PVIR3ooaJ46EuZvLA1r8RgFpvRpkr",
+  "account_id": "5vdNDE4qJPUx5jjmYvEyF5ORPMEPNwCbXnzmb",
+  "date": "2026-01-05",
+  "amount": 10.79,
+  "currency": "USD",
+  "merchant_name": "At Home",
+  "merchant_entity_id": "nNWaYKAbEepLX3ajXYeemj1RBDRYyBv0MWb0O",
+  "payment_channel": "in store",
+  "primary_category": "HOME_IMPROVEMENT",
+  "detailed_category": "HOME_IMPROVEMENT_FURNITURE",
+  "confidence_level": "HIGH",
+  "logo_url": "https://plaid-merchant-logos.plaid.com/at_home_74.png",
+  "pending": false,
+  "source": "plaid"
+}
