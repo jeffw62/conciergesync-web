@@ -39,6 +39,15 @@ app.use(express.urlencoded({ extended: true }));
 // ===============================================
 app.use("/api/plaid", plaidRouter);
 
+// ===============================================
+// Plaid Debug (TEMP – memory inspection only)
+// ===============================================
+app.get("/api/plaid/debug/items", (req, res) => {
+  res.json({
+    stored_items: globalThis.PLAID_ACCESS_TOKENS || {}
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 
 // ===============================================
