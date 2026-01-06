@@ -29,18 +29,17 @@ console.log("SerpApi key detected:", !!process.env.SERP_API_KEY);
 const app = express();
 
 // Serve all static assets from /dev
-app.use('/dev', express.static(path.join(__dirname, 'dev')));
+app.use("/dev", express.static(path.join(__dirname, "dev")));
 
 app.use(express.json());
-app.use("/api/plaid", plaidRouter);
 app.use(express.urlencoded({ extended: true }));
-
-const PORT = process.env.PORT || 3000;
 
 // ===============================================
 // Plaid API (isolated router)
 // ===============================================
 app.use("/api/plaid", plaidRouter);
+
+const PORT = process.env.PORT || 3000;
 
 // ===============================================
 // Seats.Aero Partner Service Class
