@@ -63,4 +63,36 @@ router.get("/transactions", async (req, res) => {
   }
 });
 
+router.post("/transactions", async (req, res) => {
+  try {
+    const { start_date, end_date } = req.body;
+
+    if (!start_date || !end_date) {
+      return res.status(400).json({
+        error: "missing_dates",
+        message: "start_date and end_date are required"
+      });
+    }
+
+    const response = await fetch("https://production.plaid.com/transactions/get", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_id: process.env.PLAID_CLIENT_ID,
+        secret: process.env.PLAID_SECRET,
+        access_token: process.env.PLAID_ACCESS_TOKEN,
+        start_date,
+        end_date
+      })
+    });
+
+    const data = await response.json();
+    res.json(data);
+
+  } catch (err) {
+    console.error("❌ transactions error:", err);
+    res.status(500).json({ error: "transactions_failed" });
+  }
+});
+
 export default router;
