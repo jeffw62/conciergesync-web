@@ -23,7 +23,7 @@ router.get("/accounts", async (req, res) => {
       body: JSON.stringify({
         client_id: process.env.PLAID_CLIENT_ID,
         secret: process.env.PLAID_SECRET,
-        access_token: process.env.PLAID_TEST_ACCESS_TOKEN
+        access_token: "access-production-365cb84c-c5ce-40b2-85d8-3919804e19a4"
       })
     });
 
