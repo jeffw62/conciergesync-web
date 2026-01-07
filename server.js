@@ -17,7 +17,10 @@ if (!admin.apps.length) {
   });
 }
 
-console.log("🔥 Firebase Admin initialized with project:", admin.app().options.projectId);
+console.log(
+  "🔥 Firebase Admin initialized with project:",
+  admin.app().options.projectId
+);
 
 // --- Fix __dirname and __filename (since they're not built-in under ESM)
 const __filename = fileURLToPath(import.meta.url);
