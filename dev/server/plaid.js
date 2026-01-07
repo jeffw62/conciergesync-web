@@ -1,6 +1,13 @@
 import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
+import admin from "firebase-admin";
+
+if (!admin.apps.length) {
+  admin.initializeApp();
+}
+
+const db = admin.firestore();
 
 const PLAID_BASE = "https://production.plaid.com";
 const TOKENS_PATH = path.join(process.cwd(), "dev/server/plaid.tokens.json");
@@ -50,6 +57,18 @@ export async function exchangePublicToken(req, res) {
     });
 
     const data = await response.json();
+
+    // Firestore write — canonical persistence
+    const db = admin.firestore();
+    
+    await db.collection("plaid_items").doc(data.item_id).set({
+      access_token: data.access_token,
+      institution: data.institution_id || null,
+      created_at: admin.firestore.FieldValue.serverTimestamp()
+    });
+    
+    console.log("🔥 PLAID TOKEN STORED IN FIRESTORE");
+    console.log("Item ID:", data.item_id);
 
     let tokens = {};
     try {
