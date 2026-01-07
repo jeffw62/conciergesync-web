@@ -22,6 +22,8 @@ function saveTokens(tokens) {
   fs.writeFileSync(TOKENS_PATH, JSON.stringify(tokens, null, 2));
 }
 
+router.get("/firestore-test", firestoreTest);
+
 // --------------------------------
 // Create Link Token
 // --------------------------------
