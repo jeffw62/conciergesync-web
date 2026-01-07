@@ -27,7 +27,10 @@ if (true) {
     credential: admin.credential.cert({
       projectId: serviceAccount.project_id,
       clientEmail: serviceAccount.client_email,
-      privateKey: serviceAccount.private_key.replace(/\\n/g, "\n"),
+      privateKey: serviceAccount.private_key
+        .replace(/\\\\n/g, "\n")
+        .replace(/\\n/g, "\n")
+        .trim(),
     }),
     projectId: serviceAccount.project_id,
   });
