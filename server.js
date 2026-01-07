@@ -12,7 +12,14 @@ import plaidRouter from "./dev/server/plaid.routes.js";
 import admin from "firebase-admin";
 
 if (!admin.apps.length) {
-  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+  console.log("🔥 ENTERING FIREBASE INIT BLOCK");
+
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+  console.log("🔥 RAW FIREBASE ENV TYPE:", typeof raw);
+  console.log("🔥 RAW FIREBASE ENV LENGTH:", raw ? raw.length : "null");
+
+  const serviceAccount = JSON.parse(raw);
+  console.log("🔥 PARSED PROJECT ID:", serviceAccount.project_id);
 
   admin.initializeApp({
     credential: admin.credential.cert({
