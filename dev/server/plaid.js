@@ -52,36 +52,46 @@ export async function createLinkToken(req, res) {
    Exchange Public Token
 --------------------------------*/
 
-   export async function exchangePublicToken(req, res) {
-     const { public_token } = req.body;
-   
-     try {
-       const response = await fetch(`${PLAID_BASE}/item/public_token/exchange`, {
-         method: "POST",
-         headers: { "Content-Type": "application/json" },
-         body: JSON.stringify({
-           client_id: process.env.PLAID_CLIENT_ID,
-           secret: process.env.PLAID_SECRET,
-           public_token
-         })
-       });
-   
-       const data = await response.json();
-   
-       console.log("🔑 PLAID TOKEN EXCHANGE RESULT:");
-       console.log(JSON.stringify(data, null, 2));
-   
-       res.json({
-         ok: true,
-         item_id: data.item_id,
-         access_token_present: !!data.access_token
-       });
-   
-     } catch (err) {
-       console.error("❌ EXCHANGE FAILED:", err);
-       res.status(500).json({ error: "exchange_failed" });
-     }
-   }
+export async function exchangePublicToken(req, res) {
+  const { public_token } = req.body;
+
+  try {
+    const response = await fetch(`${PLAID_BASE}/item/public_token/exchange`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        client_id: process.env.PLAID_CLIENT_ID,
+        secret: process.env.PLAID_SECRET,
+        public_token
+      })
+    });
+
+    const data = await response.json();
+
+    // ================================
+    // Persist Plaid access token to disk
+    // ================================
+    let tokens = {};
+    try {
+      const file = fs.readFileSync(TOKENS_PATH, "utf8");
+      tokens = JSON.parse(file || "{}");
+    } catch {
+      tokens = {};
+    }
+
+    tokens[data.item_id] = data.access_token;
+    fs.writeFileSync(TOKENS_PATH, JSON.stringify(tokens, null, 2));
+
+    console.log("PLAID ACCESS TOKEN WRITTEN TO FILE");
+    console.log("Item ID:", data.item_id);
+
+    res.json({ ok: true, item_id: data.item_id });
+
+  } catch (err) {
+    console.error("❌ EXCHANGE FAILED:", err);
+    res.status(500).json({ error: "exchange_failed" });
+  }
+}
 
    // ================================
    // Persist Plaid access token to disk
