@@ -3,6 +3,7 @@ import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
 import { createLinkToken, exchangePublicToken, firestoreTest } from "./plaid.js";
+import admin from "firebase-admin";
 
 if (!admin.apps.length) {
   admin.initializeApp({
