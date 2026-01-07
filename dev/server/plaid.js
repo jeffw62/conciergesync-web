@@ -3,7 +3,7 @@ import fs from "fs";
 import path from "path";
 
 const PLAID_BASE = "https://production.plaid.com";
-const TOKENS_PATH = path.resolve("dev/server/plaid.tokens.json");
+const TOKENS_PATH = path.join(process.cwd(), "dev/server/plaid.tokens.json");
 
 // ==============================
 // Create Plaid Link Token
