@@ -124,21 +124,4 @@ router.get("/accounts", async (req, res) => {
   }
 });
 
-import fs from "fs";
-import path from "path";
-
-const TOKENS_PATH = path.join(process.cwd(), "dev/server/plaid.tokens.json");
-
-router.get("/debug-tokens", (req, res) => {
-  try {
-    const raw = fs.readFileSync(TOKENS_PATH, "utf8");
-    res.type("json").send(raw || "{}");
-  } catch (err) {
-    res.status(500).json({
-      error: "failed_to_read_tokens_file",
-      message: err.message
-    });
-  }
-});
-
 export default router;
