@@ -11,6 +11,11 @@ import admin from "firebase-admin";
 if (!admin.apps.length) {
   const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
 
+  console.log(
+    "🔥 FIREBASE_SERVICE_ACCOUNT keys:",
+    Object.keys(JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT || "{}"))
+  );
+  
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount),
     projectId: serviceAccount.project_id
