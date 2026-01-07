@@ -122,3 +122,16 @@ export async function getAccounts(req, res) {
     res.status(500).json({ error: "accounts_failed" });
   }
 }
+export async function firestoreTest(req, res) {
+  try {
+    await db.collection("plaid_items").add({
+      test_from_server: true,
+      created_at: admin.firestore.FieldValue.serverTimestamp()
+    });
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ error: "firestore_write_failed" });
+  }
+}
