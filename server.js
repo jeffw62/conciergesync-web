@@ -9,7 +9,6 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import plaidRouter from "./dev/server/plaid.routes.js";
-import admin from "./dev/server/firebase.js";
 
 const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
 
