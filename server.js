@@ -4,37 +4,35 @@ console.log("🧠 FIREBASE ENV PRESENT:", Boolean(process.env.FIREBASE_SERVICE_A
 // ===============================================
 // ConciergeSync Web Service (Seats.Aero Integration)
 // ===============================================
-import admin from "firebase-admin";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import plaidRouter from "./dev/server/plaid.routes.js";
-
-const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
-
-if (!raw) {
-  throw new Error("FIREBASE_SERVICE_ACCOUNT env var missing");
-}
-
-const serviceAccount = JSON.parse(raw);
+import admin from "firebase-admin";
 
 if (!admin.apps.length) {
+  const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+
+  if (!raw) {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT env var missing");
+  }
+
+  const serviceAccount = JSON.parse(raw);
+
   admin.initializeApp({
     credential: admin.credential.cert({
       projectId: serviceAccount.project_id,
       clientEmail: serviceAccount.client_email,
-      privateKey: serviceAccount.private_key,
+      privateKey: serviceAccount.private_key.replace(/\\n/g, "\n"),
     }),
   });
 
   console.log(
-    "🔥 Firebase Admin initialized with project:",
+    "🔥 Firebase initialized for project:",
     serviceAccount.project_id
   );
 }
-
-export default admin;
 
 // --- Fix __dirname and __filename (since they're not built-in under ESM)
 const __filename = fileURLToPath(import.meta.url);
