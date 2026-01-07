@@ -4,6 +4,7 @@ console.log("🧠 FIREBASE ENV PRESENT:", Boolean(process.env.FIREBASE_SERVICE_A
 // ===============================================
 // ConciergeSync Web Service (Seats.Aero Integration)
 // ===============================================
+import admin from "firebase-admin";
 import express from "express";
 import path from "path";
 import { fileURLToPath } from "url";
