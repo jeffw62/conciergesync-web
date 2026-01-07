@@ -9,17 +9,17 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import plaidRouter from "./dev/server/plaid.routes.js";
-import admin from "firebase-admin";
+import admin from "./dev/server/firebase.js";
+
+const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
+
+if (!raw) {
+  throw new Error("FIREBASE_SERVICE_ACCOUNT env var missing");
+}
+
+const serviceAccount = JSON.parse(raw);
 
 if (!admin.apps.length) {
-  const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
-
-  if (!raw) {
-    throw new Error("FIREBASE_SERVICE_ACCOUNT env var missing");
-  }
-
-  const serviceAccount = JSON.parse(raw);
-
   admin.initializeApp({
     credential: admin.credential.cert({
       projectId: serviceAccount.project_id,
@@ -33,6 +33,8 @@ if (!admin.apps.length) {
     serviceAccount.project_id
   );
 }
+
+export default admin;
 
 // --- Fix __dirname and __filename (since they're not built-in under ESM)
 const __filename = fileURLToPath(import.meta.url);
