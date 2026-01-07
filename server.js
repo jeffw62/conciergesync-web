@@ -11,28 +11,21 @@ import { dirname } from "path";
 import plaidRouter from "./dev/server/plaid.routes.js";
 import admin from "firebase-admin";
 
-console.log("🔥 FIREBASE admin.apps.length =", admin.apps.length);
-
-if (true) {
-  console.log("🔥 ENTERING FIREBASE INIT BLOCK");
-
+if (!admin.apps.length) {
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
-  console.log("🔥 RAW FIREBASE ENV TYPE:", typeof raw);
-  console.log("🔥 RAW FIREBASE ENV LENGTH:", raw ? raw.length : "null");
+
+  if (!raw) {
+    throw new Error("FIREBASE_SERVICE_ACCOUNT env var missing");
+  }
 
   const serviceAccount = JSON.parse(raw);
-  console.log("🔥 PARSED PROJECT ID:", serviceAccount.project_id);
 
   admin.initializeApp({
     credential: admin.credential.cert({
       projectId: serviceAccount.project_id,
       clientEmail: serviceAccount.client_email,
-      privateKey: serviceAccount.private_key
-        .replace(/\\\\n/g, "\n")
-        .replace(/\\n/g, "\n")
-        .trim(),
+      privateKey: serviceAccount.private_key,
     }),
-    projectId: serviceAccount.project_id,
   });
 
   console.log(
