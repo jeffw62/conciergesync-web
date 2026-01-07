@@ -1,3 +1,6 @@
+console.log("🧠 SERVER BOOT FILE:", import.meta.url);
+console.log("🧠 FIREBASE ENV PRESENT:", Boolean(process.env.FIREBASE_SERVICE_ACCOUNT));
+
 // ===============================================
 // ConciergeSync Web Service (Seats.Aero Integration)
 // ===============================================
