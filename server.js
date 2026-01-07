@@ -29,6 +29,11 @@ if (!admin.apps.length) {
   });
 
   console.log(
+  "🔥 Firebase credential type:",
+  admin.app().options.credential?.constructor?.name
+);
+
+  console.log(
     "🔥 Firebase initialized for project:",
     serviceAccount.project_id
   );
