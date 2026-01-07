@@ -49,6 +49,14 @@ import { Duffel } from "./dev/server/partners.js";
 // ===========================================
 const serpCache = new Map();
 
+// helper: builds a unique key
+function serpKey(origin, destination, date, travelClass) {
+  return `${origin}-${destination}-${date}-${travelClass}`;
+}
+
+console.log("SerpApi key detected:", !!process.env.SERP_API_KEY);
+const app = express();
+
 app.get("/__firebase_ping", async (req, res) => {
   try {
     const db = admin.firestore();
@@ -64,14 +72,6 @@ app.get("/__firebase_ping", async (req, res) => {
     res.status(500).json({ error: "firebase_ping_failed" });
   }
 });
-
-// helper: builds a unique key
-function serpKey(origin, destination, date, travelClass) {
-  return `${origin}-${destination}-${date}-${travelClass}`;
-}
-
-console.log("SerpApi key detected:", !!process.env.SERP_API_KEY);
-const app = express();
 
 // Serve all static assets from /dev
 app.use("/dev", express.static(path.join(__dirname, "dev")));
