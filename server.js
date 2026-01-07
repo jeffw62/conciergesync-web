@@ -44,6 +44,22 @@ const __dirname = dirname(__filename);
 import { SeatsAeroService, applySanityFilter, fetchCashFare } from "./dev/server/partners.js";
 import { Duffel } from "./dev/server/partners.js";
 
+app.get("/__firebase_ping", async (req, res) => {
+  try {
+    const db = admin.firestore();
+
+    await db.collection("_debug").doc("ping").set({
+      ok: true,
+      at: new Date().toISOString()
+    });
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("FIREBASE PING FAILED:", err);
+    res.status(500).json({ error: "firebase_ping_failed" });
+  }
+});
+
 // ===========================================
 // Simple in-memory cache for SerpApi results
 // ===========================================
