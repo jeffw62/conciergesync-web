@@ -1,6 +1,7 @@
 import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
+import admin from "firebase-admin";
 
 if (!admin.apps.length) {
   admin.initializeApp();
