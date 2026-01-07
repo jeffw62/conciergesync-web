@@ -87,17 +87,6 @@ export async function createLinkToken(req, res) {
    // Persist Plaid access token to disk
    // ================================
    
-   const TOKENS_PATH = path.resolve("dev/server/plaid.tokens.json");
-   
-   // Load existing tokens
-   let tokens = {};
-   try {
-     const file = fs.readFileSync(TOKENS_PATH, "utf8");
-     tokens = JSON.parse(file || "{}");
-   } catch (err) {
-     console.log("No existing token file, creating new one");
-   }
-   
    // Store token by item_id
    tokens[data.item_id] = data.access_token;
    
