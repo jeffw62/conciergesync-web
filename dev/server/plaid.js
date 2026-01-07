@@ -68,12 +68,29 @@ export async function exchangePublicToken(req, res) {
 
     const data = await response.json();
 
-    const tokens = readTokens();
-    tokens[data.item_id] = data.access_token;
-    writeTokens(tokens);
-
-    console.log("PLAID ACCESS TOKEN STORED");
-    console.log("Item ID:", data.item_id);
+   // ================================
+   // Persist Plaid access token to disk
+   // ================================
+   
+   const TOKENS_PATH = path.resolve("dev/server/plaid.tokens.json");
+   
+   // Load existing tokens
+   let tokens = {};
+   try {
+     const file = fs.readFileSync(TOKENS_PATH, "utf8");
+     tokens = JSON.parse(file || "{}");
+   } catch (err) {
+     console.log("No existing token file, creating new one");
+   }
+   
+   // Store token by item_id
+   tokens[data.item_id] = data.access_token;
+   
+   // Write back to disk
+   fs.writeFileSync(TOKENS_PATH, JSON.stringify(tokens, null, 2));
+   
+   console.log("PLAID ACCESS TOKEN WRITTEN TO FILE");
+   console.log("Item ID:", data.item_id);
 
     res.json({ ok: true, item_id: data.item_id });
   } catch (err) {
