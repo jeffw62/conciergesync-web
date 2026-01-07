@@ -83,8 +83,17 @@ export async function exchangePublicToken(req, res) {
 
     res.json({ ok: true, item_id: data.item_id });
   } catch (err) {
+    console.error("🔥 FIRESTORE WRITE ERROR:");
     console.error(err);
-    res.status(500).json({ error: "exchange_failed" });
+    console.error("message:", err?.message);
+    console.error("code:", err?.code);
+    console.error("stack:", err?.stack);
+  
+    res.status(500).json({
+      error: "firestore_write_failed",
+      message: err?.message || null,
+      code: err?.code || null
+    });
   }
 }
 
