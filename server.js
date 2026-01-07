@@ -6,6 +6,17 @@ import path from "path";
 import { fileURLToPath } from "url";
 import { dirname } from "path";
 import plaidRouter from "./dev/server/plaid.routes.js";
+import admin from "firebase-admin";
+
+if (!admin.apps.length) {
+  admin.initializeApp({
+    credential: admin.credential.cert(
+      JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
+    )
+  });
+}
+
+console.log("🔥 Firebase Admin initialized");
 
 // --- Fix __dirname and __filename (since they're not built-in under ESM)
 const __filename = fileURLToPath(import.meta.url);
