@@ -9,14 +9,15 @@ import plaidRouter from "./dev/server/plaid.routes.js";
 import admin from "firebase-admin";
 
 if (!admin.apps.length) {
+  const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT);
+
   admin.initializeApp({
-    credential: admin.credential.cert(
-      JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
-    )
+    credential: admin.credential.cert(serviceAccount),
+    projectId: serviceAccount.project_id
   });
 }
 
-console.log("🔥 Firebase Admin initialized");
+console.log("🔥 Firebase Admin initialized with project:", admin.app().options.projectId);
 
 // --- Fix __dirname and __filename (since they're not built-in under ESM)
 const __filename = fileURLToPath(import.meta.url);
