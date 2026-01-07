@@ -44,6 +44,11 @@ const __dirname = dirname(__filename);
 import { SeatsAeroService, applySanityFilter, fetchCashFare } from "./dev/server/partners.js";
 import { Duffel } from "./dev/server/partners.js";
 
+// ===========================================
+// Simple in-memory cache for SerpApi results
+// ===========================================
+const serpCache = new Map();
+
 app.get("/__firebase_ping", async (req, res) => {
   try {
     const db = admin.firestore();
@@ -59,11 +64,6 @@ app.get("/__firebase_ping", async (req, res) => {
     res.status(500).json({ error: "firebase_ping_failed" });
   }
 });
-
-// ===========================================
-// Simple in-memory cache for SerpApi results
-// ===========================================
-const serpCache = new Map();
 
 // helper: builds a unique key
 function serpKey(origin, destination, date, travelClass) {
