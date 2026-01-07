@@ -11,7 +11,9 @@ import { dirname } from "path";
 import plaidRouter from "./dev/server/plaid.routes.js";
 import admin from "firebase-admin";
 
-if (!admin.apps.length) {
+console.log("🔥 FIREBASE admin.apps.length =", admin.apps.length);
+
+if (true) {
   console.log("🔥 ENTERING FIREBASE INIT BLOCK");
 
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
