@@ -20,6 +20,7 @@
         token: data.link_token,
         onSuccess: async (public_token, metadata) => {
           console.log("🏦 PLAID METADATA:", metadata);
+          console.log("🏦 INSTITUTION:", metadata?.institution);
           
           await fetch("/api/plaid/exchange", {
             method: "POST",
