@@ -25,7 +25,25 @@ export async function createLinkToken(req, res) {
     });
 
     const data = await response.json();
+
+    // 🔌 WIRING STEP — Firestore persistence (non-canonical)
+    try {
+      const db = admin.firestore();
+    
+      await db.collection("plaid_items").doc(data.item_id).set({
+        access_token: data.access_token,
+        institution_id: data.institution_id || null,
+        created_at: admin.firestore.FieldValue.serverTimestamp(),
+        source: "plaid_exchange"
+      });
+    
+      console.log("🔥 PLAID TOKEN WIRED TO FIRESTORE");
+      console.log("Item ID:", data.item_id);
+    } catch (err) {
+      console.error("❌ FIRESTORE WRITE FAILED (non-fatal):", err);
+    }
     res.json(data);
+    
   } catch (err) {
     console.error(err);
     res.status(500).json({ error: "link_token_failed" });
