@@ -95,43 +95,6 @@ router.post("/exchange", async (req, res) => {
       return res.status(400).json({ error: "invalid_exchange_response", data });
     }
 
-    // 🔍 Fetch institution metadata for labeling
-    let institution_id = null;
-    let institution_name = null;
-    
-    try {
-      const itemResp = await fetch(`${PLAID_BASE}/item/get`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          client_id: process.env.PLAID_CLIENT_ID,
-          secret: process.env.PLAID_SECRET,
-          access_token: data.access_token
-        })
-      });
-    
-      const itemData = await itemResp.json();
-      institution_id = itemData?.item?.institution_id || null;
-    
-      if (institution_id) {
-        const instResp = await fetch(`${PLAID_BASE}/institutions/get_by_id`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            client_id: process.env.PLAID_CLIENT_ID,
-            secret: process.env.PLAID_SECRET,
-            institution_id,
-            country_codes: ["US"]
-          })
-        });
-    
-        const instData = await instResp.json();
-        institution_name = instData?.institution?.name || null;
-      }
-    } catch (err) {
-      console.warn("⚠️ Institution lookup failed (non-fatal):", err.message);
-    }
-
     const tokens = loadTokens();
     tokens[data.item_id] = data.access_token;
     saveTokens(tokens);
