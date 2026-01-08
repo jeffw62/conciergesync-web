@@ -1,13 +1,6 @@
 import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
-import admin from "firebase-admin";
-
-if (!admin.apps.length) {
-  admin.initializeApp();
-}
-
-const db = admin.firestore();
 
 const PLAID_BASE = "https://production.plaid.com";
 const TOKENS_PATH = path.join(process.cwd(), "dev/server/plaid.tokens.json");
