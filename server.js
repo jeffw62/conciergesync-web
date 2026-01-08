@@ -11,11 +11,13 @@ import { dirname } from "path";
 import plaidRouter from "./dev/server/plaid.routes.js";
 import admin from "firebase-admin";
 
+const app = express();
+
 if (!admin.apps.length) {
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
 
   if (!raw) {
-    throw new Error("FIREBASE_SERVICE_ACCOUNT env var missing");
+    throw new Error("FIREBASE_SERVICE_ACCOUNT env var missing");when
   }
 
   const serviceAccount = JSON.parse(raw);
@@ -58,7 +60,6 @@ function serpKey(origin, destination, date, travelClass) {
 }
 
 console.log("SerpApi key detected:", !!process.env.SERP_API_KEY);
-const app = express();
 
 app.get("/__firebase_ping", async (req, res) => {
   try {
