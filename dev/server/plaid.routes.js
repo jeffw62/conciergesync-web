@@ -8,6 +8,22 @@ const router = express.Router();
 const PLAID_BASE = "https://production.plaid.com";
 const TOKENS_PATH = path.resolve("dev/server/plaid.tokens.json");
 
+// 🔍 DEBUG — list stored Plaid items from Firestore
+router.get("/firestore-items", async (req, res) => {
+  try {
+    const admin = (await import("firebase-admin")).default;
+    const db = admin.firestore();
+
+    const snap = await db.collection("plaid_items").get();
+    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
+
+    res.json({ count: items.length, items });
+  } catch (err) {
+    console.error("❌ FIRESTORE READ FAILED:", err);
+    res.status(500).json({ error: "firestore_read_failed" });
+  }
+});
+
 // --------------------------------
 // Ensure token file exists
 // --------------------------------
