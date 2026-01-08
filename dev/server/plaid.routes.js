@@ -68,6 +68,7 @@ router.get("/link-token", async (req, res) => {
   }
 });
 
+console.log("🧭 ROUTE REGISTERED: /exchange");
 // --------------------------------
 // Exchange public_token → access_token
 // --------------------------------
