@@ -75,9 +75,9 @@ console.log("🧭 ROUTE REGISTERED: /exchange");
 // --------------------------------
 router.post("/exchange", async (req, res) => {
   console.log("🚪 /exchange handler ENTERED");
-    
+  console.log("📦 RAW EXCHANGE REQUEST BODY:", req.body);
+  
   const { public_token } = req.body;
-  console.log("🏦 INSTITUTION FROM CLIENT:", institution);
 
   try {
     const response = await fetch(`${PLAID_BASE}/item/public_token/exchange`, {
