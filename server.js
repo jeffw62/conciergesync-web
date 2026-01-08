@@ -41,6 +41,22 @@ if (!admin.apps.length) {
   );
 }
 
+app.get("/__firebase_ping", async (req, res) => {
+  try {
+    const db = admin.firestore();
+
+    await db.collection("_debug").doc("ping").set({
+      ok: true,
+      at: new Date().toISOString(),
+    });
+
+    res.json({ ok: true });
+  } catch (err) {
+    console.error("FIREBASE PING FAILED:", err);
+    res.status(500).json({ error: "firebase_ping_failed" });
+  }
+});
+
 // --- Fix __dirname and __filename (since they're not built-in under ESM)
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
