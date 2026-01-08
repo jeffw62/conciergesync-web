@@ -3,15 +3,6 @@ import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
 import { createLinkToken, exchangePublicToken, firestoreTest } from "./plaid.js";
-import admin from "firebase-admin";
-
-if (!admin.apps.length) {
-  admin.initializeApp({
-    credential: admin.credential.cert(
-      JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT)
-    )
-  });
-}
 
 const router = express.Router();
 const PLAID_BASE = "https://production.plaid.com";
