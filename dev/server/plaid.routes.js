@@ -75,21 +75,7 @@ console.log("🧭 ROUTE REGISTERED: /exchange");
 // --------------------------------
 router.post("/exchange", async (req, res) => {
   console.log("🚪 /exchange handler ENTERED");
-    try {
-      const db = admin.firestore();
     
-      await db.collection("plaid_items").doc(data.item_id).set({
-        access_token: data.access_token,
-        institution_id: data.institution_id || null,
-        created_at: admin.firestore.FieldValue.serverTimestamp(),
-        source: "plaid_exchange"
-      });
-    
-      console.log("🔥 PLAID TOKEN STORED IN FIRESTORE");
-      console.log("Item ID:", data.item_id);
-    } catch (err) {
-      console.error("❌ FIRESTORE TOKEN WRITE FAILED:", err);
-    }
   const { public_token } = req.body;
 
   try {
