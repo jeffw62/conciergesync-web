@@ -77,7 +77,8 @@ router.post("/exchange", async (req, res) => {
   console.log("🚪 /exchange handler ENTERED");
   console.log("📦 RAW EXCHANGE REQUEST BODY:", req.body);
   
-  const { public_token } = req.body;
+  const { public_token, institution } = req.body;
+  console.log("🏦 INSTITUTION FROM CLIENT:", institution);
 
   try {
     const response = await fetch(`${PLAID_BASE}/item/public_token/exchange`, {
@@ -108,10 +109,14 @@ router.post("/exchange", async (req, res) => {
       const db = admin.firestore();
     
       await db.collection("plaid_items").doc(data.item_id).set({
+        plaid_item_id: data.item_id,
         access_token: data.access_token,
-        institution_id: data.institution_id || null,
-        created_at: admin.firestore.FieldValue.serverTimestamp(),
-        source: "plaid_exchange"
+      
+        institution_id: institution?.institution_id || null,
+        institution_name: institution?.name || null,
+      
+        linked_at: admin.firestore.FieldValue.serverTimestamp(),
+        status: "active"
       });
     
       console.log("🔥 PLAID TOKEN WRITTEN TO FIRESTORE");
