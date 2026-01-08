@@ -18,18 +18,23 @@
 
       const handler = Plaid.create({
         token: data.link_token,
+      
         onSuccess: async (public_token, metadata) => {
           console.log("🏦 PLAID METADATA:", metadata);
           console.log("🏦 INSTITUTION:", metadata?.institution);
-          
+      
           await fetch("/api/plaid/exchange", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ public_token })
+            body: JSON.stringify({
+              public_token,
+              institution: metadata.institution
+            })
           });
-          
+      
           alert("Bank connected successfully");
         },
+      
         onExit: (err) => console.log("Exited", err)
       });
 
