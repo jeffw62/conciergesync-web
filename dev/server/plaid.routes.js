@@ -115,7 +115,24 @@ router.post("/exchange", async (req, res) => {
 
     console.log("PLAID ACCESS TOKEN WRITTEN TO FILE");
     console.log("Item ID:", data.item_id);
-
+    
+    // 🔌 WIRING STEP — Firestore persistence
+    try {
+      const db = admin.firestore();
+    
+      await db.collection("plaid_items").doc(data.item_id).set({
+        access_token: data.access_token,
+        institution_id: data.institution_id || null,
+        created_at: admin.firestore.FieldValue.serverTimestamp(),
+        source: "plaid_exchange"
+      });
+    
+      console.log("🔥 PLAID TOKEN WRITTEN TO FIRESTORE");
+      console.log("Item ID:", data.item_id);
+    } catch (err) {
+      console.error("❌ FIRESTORE TOKEN WRITE FAILED:", err);
+    }
+    
     res.json({ ok: true, item_id: data.item_id });
 
   } catch (err) {
