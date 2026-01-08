@@ -93,6 +93,47 @@ router.post("/exchange", async (req, res) => {
 
     const data = await response.json();
 
+    // ==============================
+    // Resolve institution via Plaid (server-truth)
+    // ==============================
+    let institution_id = null;
+    let institution_name = null;
+    
+    try {
+      const itemResp = await fetch(`${PLAID_BASE}/item/get`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          client_id: process.env.PLAID_CLIENT_ID,
+          secret: process.env.PLAID_SECRET,
+          access_token: data.access_token
+        })
+      });
+    
+      const itemData = await itemResp.json();
+      institution_id = itemData?.item?.institution_id || null;
+    
+      if (institution_id) {
+        const instResp = await fetch(`${PLAID_BASE}/institutions/get_by_id`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            client_id: process.env.PLAID_CLIENT_ID,
+            secret: process.env.PLAID_SECRET,
+            institution_id,
+            country_codes: ["US"]
+          })
+        });
+    
+        const instData = await instResp.json();
+        institution_name = instData?.institution?.name || null;
+      }
+    
+      console.log("🏦 INSTITUTION (server):", institution_id, institution_name);
+    } catch (err) {
+      console.error("❌ INSTITUTION RESOLUTION FAILED:", err);
+    }
+
     if (!data.item_id || !data.access_token) {
       return res.status(400).json({ error: "invalid_exchange_response", data });
     }
