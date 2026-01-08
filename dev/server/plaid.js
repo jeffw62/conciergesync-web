@@ -26,6 +26,10 @@ export async function createLinkToken(req, res) {
 
     const data = await response.json();
 
+    console.log("🧪 EXCHANGE HANDLER REACHED");
+    console.log("🧪 ITEM ID:", data.item_id);
+    console.log("🧪 ACCESS TOKEN PRESENT:", !!data.access_token);
+
     // 🔌 WIRING STEP — Firestore persistence (non-canonical)
     try {
       const db = admin.firestore();
