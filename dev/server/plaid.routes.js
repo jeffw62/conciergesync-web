@@ -74,6 +74,18 @@ console.log("🧭 ROUTE REGISTERED: /exchange");
 // --------------------------------
 router.post("/exchange", async (req, res) => {
   console.log("🚪 /exchange handler ENTERED");
+    try {
+    const db = admin.firestore();
+  
+    await db.collection("_firestore_probe").add({
+      probe: true,
+      at: new Date().toISOString()
+    });
+  
+    console.log("🔥 FIRESTORE PROBE WRITE SUCCESS");
+  } catch (err) {
+    console.error("❌ FIRESTORE PROBE WRITE FAILED:", err);
+  }
   const { public_token } = req.body;
 
   try {
