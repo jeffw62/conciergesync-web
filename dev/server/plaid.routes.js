@@ -73,6 +73,7 @@ console.log("🧭 ROUTE REGISTERED: /exchange");
 // Exchange public_token → access_token
 // --------------------------------
 router.post("/exchange", async (req, res) => {
+  console.log("🚪 /exchange handler ENTERED");
   const { public_token } = req.body;
 
   try {
