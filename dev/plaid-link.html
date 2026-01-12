@@ -25,7 +25,8 @@
           console.log("👤 CS USER ID (client):", cs_user_id);
           console.log("🏦 PLAID METADATA:", metadata);
           console.log("🏦 INSTITUTION:", metadata?.institution);
-      
+          console.log("👤 CS USER ID (client):", cs_user_id);
+
           await fetch("/api/plaid/exchange", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
