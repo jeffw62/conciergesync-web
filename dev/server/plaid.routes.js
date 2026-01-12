@@ -2,32 +2,15 @@ import express from "express";
 import fetch from "node-fetch";
 import fs from "fs";
 import path from "path";
-import { createLinkToken, exchangePublicToken, firestoreTest } from "./plaid.js";
 import admin from "./firebase.js";
 
 const router = express.Router();
 const PLAID_BASE = "https://production.plaid.com";
 const TOKENS_PATH = path.resolve("dev/server/plaid.tokens.json");
 
-// 🔍 DEBUG — list stored Plaid items from Firestore
-router.get("/firestore-items", async (req, res) => {
-  try {
-    const admin = (await import("firebase-admin")).default;
-    const db = admin.firestore();
-
-    const snap = await db.collection("plaid_items").get();
-    const items = snap.docs.map(d => ({ id: d.id, ...d.data() }));
-
-    res.json({ count: items.length, items });
-  } catch (err) {
-    console.error("❌ FIRESTORE READ FAILED:", err);
-    res.status(500).json({ error: "firestore_read_failed" });
-  }
-});
-
-// --------------------------------
-// Ensure token file exists
-// --------------------------------
+/* --------------------------------------------------
+   Local token file helpers (dev-only)
+-------------------------------------------------- */
 function loadTokens() {
   try {
     return JSON.parse(fs.readFileSync(TOKENS_PATH, "utf8"));
@@ -40,11 +23,9 @@ function saveTokens(tokens) {
   fs.writeFileSync(TOKENS_PATH, JSON.stringify(tokens, null, 2));
 }
 
-router.get("/firestore-test", firestoreTest);
-
-// --------------------------------
-// Create Link Token
-// --------------------------------
+/* --------------------------------------------------
+   Create Plaid Link Token
+-------------------------------------------------- */
 router.get("/link-token", async (req, res) => {
   try {
     const response = await fetch(`${PLAID_BASE}/link/token/create`, {
@@ -54,7 +35,7 @@ router.get("/link-token", async (req, res) => {
         client_id: process.env.PLAID_CLIENT_ID,
         secret: process.env.PLAID_SECRET,
         client_name: "ConciergeSync",
-        user: { client_user_id: "internal-test-user" },
+        user: { client_user_id: "cs-session-user" },
         products: ["transactions"],
         country_codes: ["US"],
         language: "en"
@@ -64,25 +45,34 @@ router.get("/link-token", async (req, res) => {
     const data = await response.json();
     res.json(data);
   } catch (err) {
-    console.error(err);
+    console.error("❌ LINK TOKEN FAILED:", err);
     res.status(500).json({ error: "link_token_failed" });
   }
 });
 
 console.log("🧭 ROUTE REGISTERED: /exchange");
-// --------------------------------
-// Exchange public_token → access_token
-// --------------------------------
+
+/* --------------------------------------------------
+   Exchange public_token → access_token
+-------------------------------------------------- */
 router.post("/exchange", async (req, res) => {
   console.log("🚪 /exchange handler ENTERED");
   console.log("📦 RAW EXCHANGE REQUEST BODY:", req.body);
-  
-  const { public_token, cs_user_id, institution } = req.body;
-  
-  console.log("👤 CS USER ID (server):", cs_user_id);
-  console.log("🏦 INSTITUTION FROM CLIENT:", institution);
+
+  const { public_token, cs_user_id } = req.body;
+
+  /* ----------------------------------------------
+     HARD REQUIREMENT — USER CONTEXT
+  ---------------------------------------------- */
+  if (!cs_user_id) {
+    console.error("❌ MISSING cs_user_id — ABORTING");
+    return res.status(400).json({ error: "missing_cs_user_id" });
+  }
 
   try {
+    /* ------------------------------------------
+       Exchange public token
+    ------------------------------------------ */
     const response = await fetch(`${PLAID_BASE}/item/public_token/exchange`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -95,12 +85,19 @@ router.post("/exchange", async (req, res) => {
 
     const data = await response.json();
 
-    // ==============================
-    // Resolve institution via Plaid (server-truth)
-    // ==============================
+    if (!data.item_id || !data.access_token) {
+      return res.status(400).json({
+        error: "invalid_exchange_response",
+        data
+      });
+    }
+
+    /* ------------------------------------------
+       Resolve institution (server truth)
+    ------------------------------------------ */
     let institution_id = null;
     let institution_name = null;
-    
+
     try {
       const itemResp = await fetch(`${PLAID_BASE}/item/get`, {
         method: "POST",
@@ -111,104 +108,87 @@ router.post("/exchange", async (req, res) => {
           access_token: data.access_token
         })
       });
-    
+
       const itemData = await itemResp.json();
       institution_id = itemData?.item?.institution_id || null;
-    
+
       if (institution_id) {
-        const instResp = await fetch(`${PLAID_BASE}/institutions/get_by_id`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            client_id: process.env.PLAID_CLIENT_ID,
-            secret: process.env.PLAID_SECRET,
-            institution_id,
-            country_codes: ["US"]
-          })
-        });
-    
+        const instResp = await fetch(
+          `${PLAID_BASE}/institutions/get_by_id`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+              client_id: process.env.PLAID_CLIENT_ID,
+              secret: process.env.PLAID_SECRET,
+              institution_id,
+              country_codes: ["US"]
+            })
+          }
+        );
+
         const instData = await instResp.json();
         institution_name = instData?.institution?.name || null;
       }
-    
-      console.log("🏦 INSTITUTION (server):", institution_id, institution_name);
+
+      console.log(
+        "🏦 INSTITUTION (server):",
+        institution_id,
+        institution_name
+      );
     } catch (err) {
       console.error("❌ INSTITUTION RESOLUTION FAILED:", err);
     }
 
-    if (!data.item_id || !data.access_token) {
-      return res.status(400).json({ error: "invalid_exchange_response", data });
-    }
-
-    console.log("🧪 REACHED CS PLAID WRAPPER BLOCK");
-
+    /* ------------------------------------------
+       Firestore — ConciergeSync Identity Wrapper
+    ------------------------------------------ */
     const db = admin.firestore();
 
-    // ============================================
-    // ConciergeSync™ identity wrapper (WIRING)
-    // ============================================
     await db.collection("plaid_items").doc(data.item_id).set({
-      cs_user_id,                 // from req.body
+      cs_user_id,
       plaid_item_id: data.item_id,
       institution_id,
       institution_name,
       linked_at: admin.firestore.FieldValue.serverTimestamp(),
       status: "active"
     });
-    
-    // Token storage (separate concern)
+
     await db.collection("plaid_tokens").doc(data.item_id).set({
+      plaid_item_id: data.item_id,
       access_token: data.access_token,
       created_at: admin.firestore.FieldValue.serverTimestamp(),
       status: "active"
     });
-    
+
     console.log(
       "🔐 CS PLAID ITEM WIRED:",
       cs_user_id,
       institution_name,
       data.item_id
     );
-    
+
+    /* ------------------------------------------
+       Local dev token file (non-canonical)
+    ------------------------------------------ */
     const tokens = loadTokens();
     tokens[data.item_id] = data.access_token;
     saveTokens(tokens);
 
-    console.log("PLAID ACCESS TOKEN WRITTEN TO FILE");
+    console.log("🧪 PLAID ACCESS TOKEN WRITTEN TO FILE");
     console.log("Item ID:", data.item_id);
-    
-    // 🔌 WIRING STEP — Firestore persistence
-    try {
-      const db = admin.firestore();
-    
-      await db.collection("plaid_items").doc(data.item_id).set({
-        plaid_item_id: data.item_id,
-        access_token: data.access_token,
-      
-        institution_id: institution?.institution_id || null,
-        institution_name: institution?.name || null,
-      
-        linked_at: admin.firestore.FieldValue.serverTimestamp(),
-        status: "active"
-      });
-    
-      console.log("🔥 PLAID TOKEN WRITTEN TO FIRESTORE");
-      console.log("Item ID:", data.item_id);
-    } catch (err) {
-      console.error("❌ FIRESTORE TOKEN WRITE FAILED:", err);
-    }
-    
+
     res.json({ ok: true, item_id: data.item_id });
 
   } catch (err) {
-    console.error(err);
+    console.error("❌ EXCHANGE FAILED:", err);
     res.status(500).json({ error: "exchange_failed" });
   }
 });
 
-// --------------------------------
-// Get Accounts for Item
-// --------------------------------
+/* --------------------------------------------------
+   Get Accounts
+-------------------------------------------------- */
 router.get("/accounts", async (req, res) => {
   const { item_id } = req.query;
 
@@ -236,9 +216,8 @@ router.get("/accounts", async (req, res) => {
 
     const data = await response.json();
     res.json(data);
-
   } catch (err) {
-    console.error(err);
+    console.error("❌ ACCOUNTS FAILED:", err);
     res.status(500).json({ error: "accounts_failed" });
   }
 });
