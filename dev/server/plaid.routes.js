@@ -140,6 +140,8 @@ router.post("/exchange", async (req, res) => {
       return res.status(400).json({ error: "invalid_exchange_response", data });
     }
 
+    console.log("🧪 REACHED CS PLAID WRAPPER BLOCK");
+
     const db = admin.firestore();
 
     // ============================================
