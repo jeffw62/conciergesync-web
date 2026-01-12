@@ -35,12 +35,11 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            cs_user_id,
+            cs_user_id: "cs_e9e66863d68388548ba1", // 🔥 HARD WIRED
             public_token,
             institution: metadata?.institution || null
           })
         });
-      };
 
         alert("Bank connected successfully");
       },
