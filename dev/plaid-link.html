@@ -20,15 +20,24 @@
         token: data.link_token,
       
         onSuccess: async (public_token, metadata) => {
-          console.log("🏦 PLAID METADATA:", metadata);
-          console.log("🏦 INSTITUTION:", metadata?.institution);
+          const user = firebase.auth().currentUser;
+      
+          if (!user) {
+            alert("User not authenticated");
+            return;
+          }
+      
+          const cs_user_id = user.uid;
+      
+          console.log("👤 CS USER ID:", cs_user_id);
+          console.log("🏦 PLAID METADATA (non-canonical):", metadata);
       
           await fetch("/api/plaid/exchange", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
               public_token,
-              institution: metadata?.institution || null
+              cs_user_id
             })
           });
       
