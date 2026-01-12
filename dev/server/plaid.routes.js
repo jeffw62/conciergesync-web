@@ -77,7 +77,9 @@ router.post("/exchange", async (req, res) => {
   console.log("🚪 /exchange handler ENTERED");
   console.log("📦 RAW EXCHANGE REQUEST BODY:", req.body);
   
-  const { public_token, institution } = req.body;
+  const { public_token, cs_user_id, institution } = req.body;
+  
+  console.log("👤 CS USER ID (server):", cs_user_id);
   console.log("🏦 INSTITUTION FROM CLIENT:", institution);
 
   try {
@@ -138,6 +140,32 @@ router.post("/exchange", async (req, res) => {
       return res.status(400).json({ error: "invalid_exchange_response", data });
     }
 
+    // ============================================
+    // ConciergeSync™ identity wrapper (WIRING)
+    // ============================================
+    await db.collection("plaid_items").doc(data.item_id).set({
+      cs_user_id,                 // from req.body
+      plaid_item_id: data.item_id,
+      institution_id,
+      institution_name,
+      linked_at: admin.firestore.FieldValue.serverTimestamp(),
+      status: "active"
+    });
+    
+    // Token storage (separate concern)
+    await db.collection("plaid_tokens").doc(data.item_id).set({
+      access_token: data.access_token,
+      created_at: admin.firestore.FieldValue.serverTimestamp(),
+      status: "active"
+    });
+    
+    console.log(
+      "🔐 CS PLAID ITEM WIRED:",
+      cs_user_id,
+      institution_name,
+      data.item_id
+    );
+    
     const tokens = loadTokens();
     tokens[data.item_id] = data.access_token;
     saveTokens(tokens);
