@@ -105,9 +105,11 @@ router.post("/exchange", async (req, res) => {
    const db = admin.firestore();
    
    await db.collection("plaid_items").doc(data.item_id).set({
-     plaid_item_id: data.item_id,
-     access_token: data.access_token,
-     created_at: admin.firestore.FieldValue.serverTimestamp()
+      plaid_item_id: data.item_id,
+      access_token: data.access_token,
+      institution_id: req.body.institution?.institution_id || null,
+      institution_name: req.body.institution?.name || null,
+      created_at: admin.firestore.FieldValue.serverTimestamp()
    });
    
    console.log("🔥 PLAID ITEM WRITTEN TO FIRESTORE:", data.item_id);
