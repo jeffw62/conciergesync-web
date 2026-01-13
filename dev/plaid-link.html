@@ -11,47 +11,43 @@
 
   <button id="link-button">Connect Account</button>
 
+  <script src="https://cdn.plaid.com/link/v2/stable/link-initialize.js"></script>
+  
   <script>
-    window.CS_USER_ID = "cs_e9e6863d68388548ba1";
-  </script>
-
-  <script>
+    // 🔑 TEMP HARD-WIRED USER ID FOR TESTING
+    const CS_USER_ID = "cs_e9e66863d68388548ba1";
+  
     async function openPlaid() {
       const response = await fetch("/api/plaid/link-token");
       const data = await response.json();
-    
+  
       const handler = Plaid.create({
         token: data.link_token,
-    
+  
         onSuccess: async (public_token, metadata) => {
-          const cs_user_id = window.CS_USER_ID;
-    
-          console.log("👤 CS USER ID (client):", cs_user_id);
-          console.log("🏦 PLAID METADATA:", metadata);
-    
+          console.log("👤 CS USER ID (client):", CS_USER_ID);
+  
           await fetch("/api/plaid/exchange", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-              cs_user_id,                      // ✅ THIS MUST BE HERE
+              cs_user_id: CS_USER_ID,
               public_token,
               institution: metadata?.institution || null
             })
           });
-    
+  
           alert("Bank connected successfully");
-        },
-    
-        onExit: (err) => console.log("Exited", err)
+        }
       });
-    
+  
       handler.open();
     }
-    
+  
     document
       .getElementById("link-button")
       .addEventListener("click", openPlaid);
-    </script>
+  </script>
   
 </body>
 </html>
