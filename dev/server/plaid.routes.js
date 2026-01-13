@@ -122,66 +122,6 @@ router.post("/exchange", async (req, res) => {
      plaid_item_id: data.item_id
    });
 
-    /* ------------------------------------------
-       Resolve institution (server truth)
-    ------------------------------------------ */
-    let institution_id = null;
-    let institution_name = null;
-
-    try {
-      const itemResp = await fetch(`${PLAID_BASE}/item/get`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          client_id: process.env.PLAID_CLIENT_ID,
-          secret: process.env.PLAID_SECRET,
-          access_token: data.access_token
-        })
-      });
-
-      const itemData = await itemResp.json();
-      institution_id = itemData?.item?.institution_id || null;
-
-      if (institution_id) {
-        const instResp = await fetch(
-          `${PLAID_BASE}/institutions/get_by_id`,
-          {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              client_id: process.env.PLAID_CLIENT_ID,
-              secret: process.env.PLAID_SECRET,
-              institution_id,
-              country_codes: ["US"]
-            })
-          }
-        );
-
-        const instData = await instResp.json();
-        institution_name = instData?.institution?.name || null;
-      }
-
-      console.log(
-        "🏦 INSTITUTION (server):",
-        institution_id,
-        institution_name
-      );
-    } catch (err) {
-      console.error("❌ INSTITUTION RESOLUTION FAILED:", err);
-    }
-
-    /* ------------------------------------------
-       Local dev token file (non-canonical)
-    ------------------------------------------ */
-    const tokens = loadTokens();
-    tokens[data.item_id] = data.access_token;
-    saveTokens(tokens);
-
-    console.log("🧪 PLAID ACCESS TOKEN WRITTEN TO FILE");
-    console.log("Item ID:", data.item_id);
-
-    return res.json({ ok: true, item_id: data.item_id });
-
   } catch (err) {
     console.error("❌ EXCHANGE FAILED:", err);
     res.status(500).json({ error: "exchange_failed" });
