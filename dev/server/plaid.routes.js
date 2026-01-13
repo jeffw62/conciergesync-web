@@ -95,7 +95,6 @@ router.post("/exchange", async (req, res) => {
       const db = admin.firestore();
       
       await db.collection("_plaid_baseline_test").add({
-        cs_user_id: "cs_e9e66863d68388548ba1", // hard-wired on purpose
         plaid_item_id: data.item_id || null,
         has_access_token: !!data.access_token,
         created_at: admin.firestore.FieldValue.serverTimestamp()
