@@ -159,33 +159,6 @@ router.post("/exchange", async (req, res) => {
     }
 
     /* ------------------------------------------
-       Firestore — ConciergeSync Identity Wrapper
-    ------------------------------------------ */
-    const db = admin.firestore();
-
-    await db.collection("plaid_items").doc(data.item_id).set({
-      plaid_item_id: data.item_id,
-      institution_id,
-      institution_name,
-      linked_at: admin.firestore.FieldValue.serverTimestamp(),
-      status: "active"
-    });
-
-    await db.collection("plaid_tokens").doc(data.item_id).set({
-      plaid_item_id: data.item_id,
-      access_token: data.access_token,
-      created_at: admin.firestore.FieldValue.serverTimestamp(),
-      status: "active"
-    });
-
-    console.log(
-      "🔐 CS PLAID ITEM WIRED:",
-      cs_user_id,
-      institution_name,
-      data.item_id
-    );
-
-    /* ------------------------------------------
        Local dev token file (non-canonical)
     ------------------------------------------ */
     const tokens = loadTokens();
