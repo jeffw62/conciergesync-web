@@ -60,8 +60,9 @@ console.log("🧭 ROUTE REGISTERED: /exchange");
    Exchange public_token → access_token
 -------------------------------------------------- */
 router.post("/exchange", async (req, res) => {
-  console.log("🚪 /exchange handler ENTERED");
-  console.log("📦 RAW EXCHANGE REQUEST BODY:", req.body);
+   const { public_token } = req.body;
+     console.log("🚪 /exchange handler ENTERED");
+     console.log("📦 RAW EXCHANGE REQUEST BODY:", req.body);
 
  // 🔒 TEMPORARY HARD-WIRED CS USER (REMOVE WHEN AUTH IS LIVE)
    const cs_user_id = "cs_e9e66863d68388548ba1";
@@ -163,7 +164,6 @@ router.post("/exchange", async (req, res) => {
     const db = admin.firestore();
 
     await db.collection("plaid_items").doc(data.item_id).set({
-      cs_user_id,
       plaid_item_id: data.item_id,
       institution_id,
       institution_name,
