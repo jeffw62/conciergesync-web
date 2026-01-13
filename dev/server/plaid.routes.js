@@ -180,7 +180,7 @@ router.post("/exchange", async (req, res) => {
     console.log("🧪 PLAID ACCESS TOKEN WRITTEN TO FILE");
     console.log("Item ID:", data.item_id);
 
-    res.json({ ok: true, item_id: data.item_id });
+    return res.json({ ok: true, item_id: data.item_id });
 
   } catch (err) {
     console.error("❌ EXCHANGE FAILED:", err);
