@@ -27,6 +27,10 @@ function saveTokens(tokens) {
    Create Plaid Link Token
 -------------------------------------------------- */
 router.get("/link-token", async (req, res) => {
+   console.log("🧭 /exchange HIT");
+   console.log("📦 RAW BODY:", req.body);
+   console.log("👤 CS USER ID (server):", req.body?.cs_user_id);
+   
   try {
     const response = await fetch(`${PLAID_BASE}/link/token/create`, {
       method: "POST",
