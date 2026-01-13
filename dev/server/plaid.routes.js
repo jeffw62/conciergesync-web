@@ -63,7 +63,8 @@ router.post("/exchange", async (req, res) => {
   console.log("🚪 /exchange handler ENTERED");
   console.log("📦 RAW EXCHANGE REQUEST BODY:", req.body);
 
-  const { public_token, cs_user_id } = req.body;
+ const { public_token, cs_user_id } = req.body; 
+   console.log("👤 CS USER ID (server):", cs_user_id);
 
   /* ----------------------------------------------
      HARD REQUIREMENT — USER CONTEXT
