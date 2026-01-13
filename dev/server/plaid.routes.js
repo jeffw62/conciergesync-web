@@ -88,6 +88,7 @@ router.post("/exchange", async (req, res) => {
       })
     });
 
+   const data = await response.json();
    // ==============================
    // Validate Plaid exchange
    // ==============================
