@@ -63,8 +63,8 @@ router.post("/exchange", async (req, res) => {
   console.log("🚪 /exchange handler ENTERED");
   console.log("📦 RAW EXCHANGE REQUEST BODY:", req.body);
 
- const { public_token, cs_user_id } = req.body; 
-   console.log("👤 CS USER ID (server):", cs_user_id);
+ // 🔒 TEMPORARY HARD-WIRED CS USER (REMOVE WHEN AUTH IS LIVE)
+   const cs_user_id = "cs_e9e66863d68388548ba1";
 
   /* ----------------------------------------------
      HARD REQUIREMENT — USER CONTEXT
@@ -89,12 +89,26 @@ router.post("/exchange", async (req, res) => {
 
     const data = await response.json();
 
-    if (!data.item_id || !data.access_token) {
-      return res.status(400).json({
-        error: "invalid_exchange_response",
-        data
+      // ==============================
+      // STEP 2 — Firestore baseline write
+      // ==============================
+      const db = admin.firestore();
+      
+      await db.collection("_plaid_baseline_test").add({
+        cs_user_id: "cs_e9e66863d68388548ba1", // hard-wired on purpose
+        plaid_item_id: data.item_id || null,
+        has_access_token: !!data.access_token,
+        created_at: admin.firestore.FieldValue.serverTimestamp()
       });
-    }
+      
+      console.log("🔥 BASELINE FIRESTORE WRITE SUCCESS");
+      
+      if (!data.item_id || !data.access_token) {
+        return res.status(400).json({
+          error: "invalid_exchange_response",
+          data
+        });
+      }
 
     /* ------------------------------------------
        Resolve institution (server truth)
