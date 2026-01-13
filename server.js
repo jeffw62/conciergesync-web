@@ -12,6 +12,7 @@ import plaidRouter from "./dev/server/plaid.routes.js";
 import admin from "firebase-admin";
 
 const app = express();
+app.use(express.json());
 
 if (!admin.apps.length) {
   const raw = process.env.FIREBASE_SERVICE_ACCOUNT;
