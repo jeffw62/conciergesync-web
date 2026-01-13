@@ -70,7 +70,8 @@ router.post("/exchange", async (req, res) => {
      HARD REQUIREMENT — USER CONTEXT
   ---------------------------------------------- */
   if (!cs_user_id) {
-    console.error("❌ MISSING cs_user_id — ABORTING");
+     console.warn("⚠️ cs_user_id missing — proceeding without user binding");
+   }
     return res.status(400).json({ error: "missing_cs_user_id" });
   }
 
