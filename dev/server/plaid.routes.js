@@ -88,27 +88,36 @@ router.post("/exchange", async (req, res) => {
       })
     });
 
-    const data = await response.json();
-
-      // ==============================
-      // STEP 2 — Firestore baseline write
-      // ==============================
-      const db = admin.firestore();
-      
-      await db.collection("_plaid_baseline_test").add({
-        plaid_item_id: data.item_id || null,
-        has_access_token: !!data.access_token,
-        created_at: admin.firestore.FieldValue.serverTimestamp()
-      });
-      
-      console.log("🔥 BASELINE FIRESTORE WRITE SUCCESS");
-      
-      if (!data.item_id || !data.access_token) {
-        return res.status(400).json({
-          error: "invalid_exchange_response",
-          data
-        });
-      }
+   // ==============================
+   // Validate Plaid exchange
+   // ==============================
+   if (!data.item_id || !data.access_token) {
+     return res.status(400).json({
+       error: "invalid_exchange_response",
+       data
+     });
+   }
+   
+   // ==============================
+   // Firestore — baseline write (known-good)
+   // ==============================
+   const db = admin.firestore();
+   
+   await db.collection("plaid_items").doc(data.item_id).set({
+     plaid_item_id: data.item_id,
+     access_token: data.access_token,
+     created_at: admin.firestore.FieldValue.serverTimestamp()
+   });
+   
+   console.log("🔥 PLAID ITEM WRITTEN TO FIRESTORE:", data.item_id);
+   
+   // ==============================
+   // Respond success
+   // ==============================
+   res.json({
+     ok: true,
+     plaid_item_id: data.item_id
+   });
 
     /* ------------------------------------------
        Resolve institution (server truth)
