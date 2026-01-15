@@ -304,17 +304,6 @@
       }
     };
 
-    const navLinks = document.querySelectorAll(".nav-link, #sideNav a[data-page]");
-    window._navHandler = async e => {
-      e.preventDefault();
-      const page = e.currentTarget.dataset.page;
-      if (!page) return;
-      console.log(`🪄 Nav → ${page}`);
-      await loadPage(page);
-      document.getElementById("sideNav")?.classList.remove("open");
-    };
-    navLinks.forEach(link => link.addEventListener("click", window._navHandler));
-
     console.log("✅ Global module loader initialized.");
   }
 
@@ -370,6 +359,30 @@
     document.addEventListener("click", window._drawerOutsideHandler);
     document.addEventListener("keydown", window._drawerEscHandler);
 
+      // 🔗 Nav link routing (single source of truth)
+      const navLinks = document.querySelectorAll("#sideNav a[data-page], .nav-link");
+    
+      navLinks.forEach(link => {
+        link.removeEventListener("click", window._navRouteHandler || (() => {}));
+      });
+    
+      window._navRouteHandler = async e => {
+        e.preventDefault();
+        const page = e.currentTarget.dataset.page;
+        if (!page) return;
+    
+        console.log(`🧭 Nav → ${page}`);
+        await window.loadPage(page);
+    
+        // close drawer after navigation
+        sideNav.classList.remove("open");
+        document.body.style.overflow = "";
+      };
+    
+      navLinks.forEach(link =>
+        link.addEventListener("click", window._navRouteHandler)
+      );
+    
     console.log("✅ Drawer logic initialized");
   }
 
