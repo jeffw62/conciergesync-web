@@ -1,0 +1,55 @@
+/* ===============================
+   HORIZON — WALLET RAIL (FRAME)
+   =============================== */
+
+.horizon-rail {
+  margin-top: 36px;        /* breathing room under title */
+  margin-bottom: 48px;     /* space before data trays */
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.horizon-track {
+  width: 100%;
+  max-width: 1100px;
+  height: 140px;           /* key vertical decision */
+  position: relative;
+
+  border-radius: 14px;
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  background: radial-gradient(
+    ellipse at center,
+    rgba(255, 255, 255, 0.03),
+    rgba(0, 0, 0, 0)
+  );
+}
+
+/* Slot scaffolding */
+.horizon-slot {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 180px;
+  height: 112px;           /* proportional to card size */
+  border-radius: 10px;
+}
+
+/* Logical positions (do not move) */
+.slot-center {
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.slot-left {
+  left: calc(50% - 220px);
+}
+
+.slot-right {
+  left: calc(50% + 40px);
+}
+
+/* Center-stage identity */
+.horizon-logo-slot {
+  pointer-events: none;    /* not interactive (yet) */
+}
