@@ -206,6 +206,8 @@
         const parser = new DOMParser();
         const doc = parser.parseFromString(html, "text/html");
 
+        try {
+
         document.dispatchEvent(new CustomEvent("module:unload", { detail: { previous: page } }));
 
         const _moduleScripts = Array.from(doc.querySelectorAll('script'));
@@ -214,7 +216,6 @@
         // Re-execute captured scripts (robust, cache-bust safe)
         // Uses the scripts snapshot taken from `doc` before we moved nodes into workspace.
         // -----------------------------
-        {
           for (const oldScript of _moduleScripts) {
             if (oldScript.src) {
               try {
@@ -258,7 +259,6 @@
               }
             }
           }
-        }
 
         workspace.scrollTop = 0;
 
@@ -300,7 +300,6 @@
         workspace.style.opacity = "1";
       } finally {
         window._loadingInProgress = false;
-        console.groupEnd();
       }
     };
 
