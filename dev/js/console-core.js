@@ -173,20 +173,26 @@
     }
 
     window.loadPage = async function (page) {
-      if (!page) return console.warn("⚠️ loadPage called without target page");
-      const path = routes[page];
-      if (!path) {
-        workspace.innerHTML = `<p class="missing">Unknown section: ${page}</p>`;
-        return;
-      }
-
-      console.group(`🧭 Loading module: ${page}`);
-      try {
+      if (!page) return;
+        const path = routes[page];
+        if (!path) {
+          workspace.innerHTML = `<p class="missing">Unknown section: ${page}</p>`;
+          return;
+        }
+        
+        // 🔒 Prevent double-load
         if (window._loadingInProgress) return;
         window._loadingInProgress = true;
-
-        workspace.style.transition = "opacity 0.3s ease";
-        workspace.style.opacity = "0.25";
+        
+        // 🧹 HARD CLEAR — prevents old module flash
+        workspace.replaceChildren();
+        workspace.style.transition = "none";
+        workspace.style.opacity = "0";
+        
+        // Allow transition again on next frame
+        requestAnimationFrame(() => {
+          workspace.style.transition = "opacity 0.3s ease";
+        });
 
         // --- Load CSS for redemption console BEFORE fetching HTML ---
         if (page === "redem-con") {
