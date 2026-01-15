@@ -386,9 +386,10 @@
     console.log("✅ Drawer logic initialized");
   }
 
-  document.addEventListener("module:ready", e => {
-    if (e.detail?.workspace) initDrawer();
+  document.addEventListener("module:ready", () => {
+    initDrawer();
   });
-
+  
+  // initial load
   initDrawer();
 })();
