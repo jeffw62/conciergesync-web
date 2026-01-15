@@ -305,17 +305,7 @@
 
     console.log("✅ Global module loader initialized.");
   }
-  // 🔧 Normalize workspace BEFORE first module load (prevents cold-start layout shift)
-  const workspace = document.getElementById("workspace");
-  if (workspace) {
-    workspace.style.opacity = "0";
-    workspace.style.transition = "none";
-    workspace.scrollTop = 0;
-  
-    // Force layout calculation so first render matches subsequent renders
-    workspace.getBoundingClientRect();
-  }
-  
+
   initializeModuleLoader();
 
   /**
