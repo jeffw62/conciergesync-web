@@ -195,12 +195,13 @@
         });
 
         // --- Load module CSS BEFORE fetching HTML ---
-        if (page === "redem-con") {
-          loadCSS("/dev/css/redem-con.css");
-        }
+        const moduleCSS = {
+          "redem-con": "/dev/css/redem-con.css",
+          "wallet-con": "/dev/css/wallet-con.css",
+        };
         
-        if (page === "wallet-con") {
-          loadCSS("/dev/css/wallet-con.css");
+        if (moduleCSS[page]) {
+          loadCSS(moduleCSS[page]);
         }
 
         const res = await fetch(path, { cache: "no-store" });
