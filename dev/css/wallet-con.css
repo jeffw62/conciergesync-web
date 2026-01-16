@@ -25,10 +25,16 @@
    HORIZON — WALLET RAIL (FRAME)
    =============================== */
 
+.wallet-stage {
+  position: relative;
+}
+
 .horizon-rail {
-  margin-top: 36px;        /* breathing room under title */
-  margin-bottom: 48px;     /* space before data trays */
-  width: 100%;
+  position: absolute;
+  top: 96px;               /* ← key control knob */
+  left: 0;
+  right: 0;
+
   display: flex;
   justify-content: center;
 }
