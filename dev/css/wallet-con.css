@@ -46,7 +46,13 @@
 }
 
 .horizon-slot {
-  flex-shrink: 0;
+  overflow: hidden;   /* 🔒 stops visual widening */
+  border-radius: 12px;
+  padding: 10px;
+}
+
+.horizon-slot.slot-left {
+  padding-right: 14px;
 }
 
 .horizon-logo-slot {
@@ -100,10 +106,11 @@
   width: 180px;
   height: 110px;
   object-fit: contain;
-
-  border-radius: 8px;
-
-  transition: transform 0.35s ease;
+  opacity: 0.85;
+  border-radius: 8px;          /* soft card edge */
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease;
 }
 
 /* Optional hover lift (safe, subtle) */
