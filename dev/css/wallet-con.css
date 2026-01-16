@@ -45,18 +45,14 @@
 }
 
 .horizon-slot {
-  width: 200px;          /* fixed interaction box */
+  width: 200px;
   height: 132px;
-  padding: 10px;
-  overflow: hidden;      /* MUST be here */
-  border-radius: 14px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  flex: 0 0 auto;        /* 🔒 prevents flex resizing */
-  transform: translateZ(0); /* 🔒 prevents layout jitter */
+  overflow: visible;
 }
 
 .horizon-slot:hover .horizon-card {
@@ -75,17 +71,15 @@
 }
 
 .horizon-logo-slot {
-  width: 96px;
-  height: 96px;
-
-  border-radius: 14px;
+  width: 132px;          /* matches rail height */
+  height: 132px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  overflow: hidden;
-  pointer-events: none;
+  border-radius: 14px;
+  /* NO border for now, per your request */
 }
 
 /* Slot scaffolding */
@@ -101,14 +95,12 @@
 }
 
 .horizon-logo {
-  width: 100%;
-  height: 100%;
-  object-fit: contain;     /* 🔑 THIS is the missing piece */
-
-  display: block;
+  max-height: 96px;     /* slightly smaller than cards */
+  width: auto;
+  height: auto;
 
   opacity: 0.75;
-  filter: saturate(0.85);
+  display: block;
 }
 
 .horizon-card {
