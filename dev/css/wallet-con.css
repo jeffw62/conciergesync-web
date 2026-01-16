@@ -85,3 +85,25 @@
 .horizon-logo-slot {
   pointer-events: none;    /* not interactive (yet) */
 }
+
+/* ===========================================================
+   Horizon Card – OffLoad State
+   =========================================================== */
+
+.horizon-card.offload {
+  width: 180px;
+  height: 110px;
+  object-fit: contain;
+  opacity: 0.85;
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease,
+    filter 0.35s ease;
+}
+
+/* Optional hover lift (safe, subtle) */
+.horizon-card.offload:hover {
+  transform: scale(1.1);
+  opacity: 1;
+  filter: brightness(1.08);
+}
