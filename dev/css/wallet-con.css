@@ -68,9 +68,6 @@
   width: 96px;
   height: 96px;                /* 🔑 NOT 132 */
 
-  border: 1px solid rgba(191,161,74,0.35);
-  border-radius: 14px;
-
   display: flex;
   align-items: center;
   justify-content: center;
@@ -79,12 +76,18 @@
   pointer-events: none;
 }
 
-.horizon-logo-slot img {
-  max-width: 72px;
-  max-height: 72px;
-  width: auto;
-  height: auto;
-  display: block;
+.horizon-logo-slot {
+  width: 96px;
+  height: 96px;
+
+  border-radius: 14px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+  pointer-events: none;
 }
 
 /* Slot scaffolding */
@@ -100,9 +103,10 @@
 }
 
 .horizon-center-logo {
-  width: 56px;
+  width: 90px;
   height: auto;
-  opacity: 0.9;
+  opacity: 0.75;                 /* subtle dim */
+  filter: saturate(0.85);        /* removes harsh gold pop */
   display: block;
   pointer-events: none;
 }
