@@ -30,34 +30,37 @@
 }
 
 .horizon-rail {
-  position: absolute;
-  top: 84px;               /* ← key control knob */
-  left: 0;
-  right: 0;
-
+  position: relative;
+  width: 100%;
   display: flex;
   justify-content: center;
+  pointer-events: none; /* rail itself is inert */
 }
 
 .horizon-track {
+  position: relative;
+  width: 680px;          /* TEMP: tuned later */
+  height: 160px;
   display: flex;
   align-items: center;
-  gap: 48px;
+  justify-content: space-between;
+  overflow: hidden;     /* 🔒 THIS is critical */
 }
 
 .horizon-slot {
   width: 200px;
   height: 132px;
-  overflow: hidden;
-  border-radius: 14px;
-
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
+  border-radius: 14px;
+  pointer-events: auto; /* interaction starts here */
 }
 
-.horizon-slot.slot-left {
-  padding-right: 14px;
+.horizon-slot:hover .horizon-card {
+  transform: scale(1.08);
+  opacity: 1;
 }
 
 .horizon-logo-slot {
@@ -80,22 +83,18 @@
   justify-content: center;
 }
 
-.horizon-slot:hover .horizon-card {
-  transform: scale(1.08);
-  opacity: 1;
-}
-
 .horizon-card {
   width: 180px;
   height: auto;
   display: block;
-
   opacity: 0.85;
-  transform: translateZ(0);              /* anchor for GPU + center */
-  transform-origin: center center;       /* THIS is the key */
-  transition:
-    transform 0.35s ease,
-    opacity 0.35s ease;
+  transition: transform 0.35s ease, opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.horizon-slot:hover .horizon-card {
+  transform: scale(1.08);
+  opacity: 1;
 }
 
 /* Logical positions (do not move) */
@@ -121,13 +120,6 @@
 /* Center-stage identity */
 .horizon-logo-slot {
   pointer-events: none;    /* not interactive (yet) */
-}
-
-.horizon-card {
-  width: 180px;
-  height: auto;
-  display: block;
-  pointer-events: none; /* hover handled by slot */
 }
 
 /* ===========================================================
