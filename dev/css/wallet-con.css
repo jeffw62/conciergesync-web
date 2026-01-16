@@ -38,13 +38,10 @@
 }
 
 .horizon-track {
-  position: relative;
-  width: 680px;          /* TEMP: tuned later */
-  height: 160px;
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  overflow: hidden;     /* 🔒 THIS is critical */
+  align-items: center;   /* 🔑 THIS locks vertical alignment */
+  justify-content: center;
+  gap: 32px;             /* spacing between slots */
 }
 
 .horizon-slot {
@@ -101,6 +98,14 @@
 .slot-center {
   left: 50%;
   transform: translate(-50%, -50%);
+}
+
+.horizon-slot.slot-center {
+  width: 260px;
+  height: 140px;
+  border: 1px solid rgba(191,161,74,0.45);
+  border-radius: 16px;
+  pointer-events: none;
 }
 
 .slot-left {
