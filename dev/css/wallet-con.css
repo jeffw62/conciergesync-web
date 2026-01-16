@@ -80,6 +80,13 @@
   justify-content: center;
 }
 
+.horizon-center-logo {
+  width: 96px;          /* tune later */
+  height: auto;
+  opacity: 0.9;
+  transform: translateZ(0); /* GPU stability */
+}
+
 .horizon-card {
   width: 180px;
   height: auto;
@@ -100,12 +107,13 @@
   transform: translate(-50%, -50%);
 }
 
-.horizon-slot.slot-center {
-  width: 260px;
-  height: 140px;
-  border: 1px solid rgba(191,161,74,0.45);
-  border-radius: 16px;
-  pointer-events: none;
+.horizon-slot.slot-center { /* Center slot = fixed anchor */
+  width: 200px;
+  height: 132px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none; /* purely visual */
 }
 
 .slot-left {
