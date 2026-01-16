@@ -48,7 +48,7 @@
   width: 156px;
   height: auto;
 
-  border-radius: 12px;   /* ← THIS WAS MISSING */
+  border-radius: 4px;   /* ← THIS WAS MISSING */
   overflow: hidden;
 
   opacity: 0.85;
