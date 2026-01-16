@@ -34,18 +34,21 @@
 }
 
 .horizon-track {
-  width: 100%;
-  max-width: 1100px;
-  height: 140px;           /* key vertical decision */
-  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 48px;
+}
 
+.horizon-slot {
+  flex-shrink: 0;
+}
+
+.horizon-logo-slot {
+  width: 120px;
+  height: 120px;
+
+  border: 1px solid rgba(191,161,74,0.45);
   border-radius: 14px;
-  border: 1px solid rgba(212, 175, 55, 0.35);
-  background: radial-gradient(
-    ellipse at center,
-    rgba(255, 255, 255, 0.03),
-    rgba(0, 0, 0, 0)
-  );
 }
 
 /* Slot scaffolding */
