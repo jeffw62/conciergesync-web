@@ -65,16 +65,18 @@
 }
 
 .horizon-logo-slot {
-  width: 120px;
-  height: 132px;
+  width: 96px;
+  height: 96px;                /* 🔑 NOT 132 */
 
-  border: 1px solid rgba(191,161,74,0.45);
+  border: 1px solid rgba(191,161,74,0.35);
   border-radius: 14px;
 
-  display: flex;              /* ← THIS */
-  align-items: center;        /* ← THIS */
-  justify-content: center;    /* ← THIS */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
   overflow: hidden;
+  pointer-events: none;
 }
 
 .horizon-logo-slot img {
@@ -98,17 +100,10 @@
 }
 
 .horizon-center-logo {
-  width: 96px;          /* tune later */
+  width: 56px;
   height: auto;
   opacity: 0.9;
-  transform: translateZ(0); /* GPU stability */
-}
-
-.horizon-center-logo {
-  width: 120px;
-  height: auto;
-  opacity: 0.85;
-  transform: translateY(-2px); /* optional optical correction */
+  display: block;
   pointer-events: none;
 }
 
@@ -117,7 +112,7 @@
   height: auto;
   display: block;
   opacity: 0.85;
-  border-radius: 8px;
+  border-radius: 6px;
   background-clip: padding-box;
   transition: transform 0.35s ease, opacity 0.35s ease;
   pointer-events: none;
