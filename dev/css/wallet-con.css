@@ -87,6 +87,14 @@
   transform: translateZ(0); /* GPU stability */
 }
 
+.horizon-center-logo {
+  width: 120px;
+  height: auto;
+  opacity: 0.85;
+  transform: translateY(-2px); /* optional optical correction */
+  pointer-events: none;
+}
+
 .horizon-card {
   width: 180px;
   height: auto;
@@ -107,13 +115,13 @@
   transform: translate(-50%, -50%);
 }
 
-.horizon-slot.slot-center { /* Center slot = fixed anchor */
-  width: 200px;
-  height: 132px;
+.horizon-slot.slot-center {
+  width: 220px;          /* fixed authority */
+  height: 132px;         /* same vertical as other slots */
   display: flex;
   align-items: center;
   justify-content: center;
-  pointer-events: none; /* purely visual */
+  pointer-events: none;  /* center is not interactive */
 }
 
 .slot-left {
