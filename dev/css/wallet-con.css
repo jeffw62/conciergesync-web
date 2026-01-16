@@ -140,11 +140,10 @@
    =========================================================== */
 
 .horizon-card.offload {
-  width: 180px;
-  height: 110px;
+  width: 156px;          /* ⬅️ reduced from 180 */
+  height: auto;
   object-fit: contain;
-  opacity: 0.85;
-  border-radius: 8px;          /* soft card edge */
+  opacity: 0.75;         /* slightly quieter */
   transition:
     transform 0.35s ease,
     opacity 0.35s ease;
