@@ -194,9 +194,13 @@
           workspace.style.transition = "opacity 0.3s ease";
         });
 
-        // --- Load CSS for redemption console BEFORE fetching HTML ---
+        // --- Load module CSS BEFORE fetching HTML ---
         if (page === "redem-con") {
-            loadCSS("/dev/css/redem-con.css");
+          loadCSS("/dev/css/redem-con.css");
+        }
+        
+        if (page === "wallet-con") {
+          loadCSS("/dev/css/wallet-con.css");
         }
 
         const res = await fetch(path, { cache: "no-store" });
