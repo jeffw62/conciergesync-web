@@ -44,17 +44,6 @@
   gap: 32px;             /* spacing between slots */
 }
 
-.horizon-slot {
-  width: 200px;
-  height: 132px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: visible;
-}
-
 .horizon-slot:hover .horizon-card {
   transform: scale(1.06);
   opacity: 1;
@@ -71,31 +60,11 @@
 }
 
 .horizon-logo-slot {
-  width: 132px;          /* matches rail height */
-  height: 132px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 14px;
-  /* NO border for now, per your request */
-}
-
-/* Slot scaffolding */
-.horizon-slot {
-  width: 200px;          /* fixed interaction box */
-  height: 132px;
-  padding: 10px;
-  overflow: hidden;      /* MUST be here */
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  pointer-events: none;   /* center is inert */
 }
 
 .horizon-logo {
-  max-height: 96px;     /* slightly smaller than cards */
+  max-height: 92px;       /* slightly smaller than cards */
   width: auto;
   height: auto;
 
@@ -103,19 +72,29 @@
   display: block;
 }
 
-.horizon-card {
-  width: 160px;             /* reduced offload size */
+.horizon-logo-slot {
+  pointer-events: none;   /* center is inert */
+}
+
+.horizon-logo {
+  max-height: 92px;       /* slightly smaller than cards */
+  width: auto;
   height: auto;
 
+  opacity: 0.75;
   display: block;
+}
 
-  opacity: 0.85;
-  transform: translateY(0) scale(1);
-  transition:
-    transform 0.35s ease,
-    opacity 0.35s ease;
+.horizon-slot {
+  width: 200px;
+  height: 132px;
 
-  pointer-events: none;     /* hover stays on slot */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: visible;      /* allows hover rise */
+  pointer-events: auto;
 }
 
 .horizon-slot:hover .horizon-card {
@@ -144,19 +123,6 @@
   align-items: center;
   justify-content: flex-start; /* ← FIX */
   padding-left: 16px;
-}
-
-/* Center-stage identity */
-.horizon-slot {
-  width: 200px;
-  height: 132px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: visible;        /* IMPORTANT for rise */
-  pointer-events: auto;
 }
 
 /* ===========================================================
