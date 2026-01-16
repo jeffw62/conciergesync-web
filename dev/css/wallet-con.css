@@ -74,11 +74,17 @@
 }
 
 .slot-left {
-  left: calc(50% - 220px);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 16px;
 }
 
 .slot-right {
-  left: calc(50% + 40px);
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 16px;
 }
 
 /* Center-stage identity */
@@ -94,11 +100,10 @@
   width: 180px;
   height: 110px;
   object-fit: contain;
-  opacity: 0.85;
-  transition:
-    transform 0.35s ease,
-    opacity 0.35s ease,
-    filter 0.35s ease;
+
+  border-radius: 8px;
+
+  transition: transform 0.35s ease;
 }
 
 /* Optional hover lift (safe, subtle) */
