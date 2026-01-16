@@ -45,18 +45,22 @@
 }
 
 .horizon-slot {
-  width: 200px;
+  width: 200px;          /* fixed interaction box */
   height: 132px;
+  padding: 10px;
+  overflow: hidden;      /* MUST be here */
+  border-radius: 14px;
+
   display: flex;
   align-items: center;
   justify-content: center;
-  overflow: hidden;
-  border-radius: 14px;
-  pointer-events: auto; /* interaction starts here */
+
+  flex: 0 0 auto;        /* 🔒 prevents flex resizing */
+  transform: translateZ(0); /* 🔒 prevents layout jitter */
 }
 
 .horizon-slot:hover .horizon-card {
-  transform: scale(1.08);
+  transform: scale(1.06);
   opacity: 1;
 }
 
@@ -66,6 +70,19 @@
 
   border: 1px solid rgba(191,161,74,0.45);
   border-radius: 14px;
+
+  display: flex;              /* ← THIS */
+  align-items: center;        /* ← THIS */
+  justify-content: center;    /* ← THIS */
+  overflow: hidden;
+}
+
+.horizon-logo-slot img {
+  max-width: 72px;
+  max-height: 72px;
+  width: auto;
+  height: auto;
+  display: block;
 }
 
 /* Slot scaffolding */
@@ -107,6 +124,10 @@
 .horizon-slot:hover .horizon-card {
   transform: scale(1.08);
   opacity: 1;
+}
+
+.horizon-logo-slot:hover {
+  transform: none;
 }
 
 /* Logical positions (do not move) */
