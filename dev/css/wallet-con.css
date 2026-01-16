@@ -123,16 +123,6 @@
   opacity: 1;
 }
 
-.horizon-logo-slot:hover {
-  transform: none;
-}
-
-/* Logical positions (do not move) */
-.slot-center {
-  left: 50%;
-  transform: translate(-50%, -50%);
-}
-
 .horizon-slot.slot-center {
   width: 220px;          /* fixed authority */
   height: 132px;         /* same vertical as other slots */
