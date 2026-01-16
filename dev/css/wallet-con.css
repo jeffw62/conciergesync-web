@@ -64,6 +64,16 @@
   opacity: 1;
 }
 
+.horizon-logo-slot img {
+  max-width: 80px;
+  max-height: 80px;
+  width: auto;
+  height: auto;
+  display: block;
+
+  opacity: 0.75;        /* softer than cards */
+}
+
 .horizon-logo-slot {
   width: 96px;
   height: 96px;
@@ -102,14 +112,18 @@
 }
 
 .horizon-card {
-  width: 180px;
+  width: 160px;             /* reduced offload size */
   height: auto;
+
   display: block;
+
   opacity: 0.85;
-  border-radius: 6px;
-  background-clip: padding-box;
-  transition: transform 0.35s ease, opacity 0.35s ease;
-  pointer-events: none;
+  transform: translateY(0) scale(1);
+  transition:
+    transform 0.35s ease,
+    opacity 0.35s ease;
+
+  pointer-events: none;     /* hover stays on slot */
 }
 
 .horizon-slot:hover .horizon-card {
@@ -141,16 +155,16 @@
 }
 
 /* Center-stage identity */
-.horizon-logo-slot {
-  width: 96px;
-  height: 96px;
+.horizon-slot {
+  width: 200px;
+  height: 132px;
 
   display: flex;
   align-items: center;
   justify-content: center;
 
-  overflow: hidden;        /* critical for SVGs */
-  pointer-events: none;
+  overflow: visible;        /* IMPORTANT for rise */
+  pointer-events: auto;
 }
 
 /* ===========================================================
