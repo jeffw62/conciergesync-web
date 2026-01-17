@@ -40,7 +40,7 @@
 .wallet-cards-column {
   display: flex;
   flex-direction: column;
-  gap: 18px;
+  gap: 10px;
   align-items: flex-start;
 }
 
