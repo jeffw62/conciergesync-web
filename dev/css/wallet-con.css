@@ -35,10 +35,12 @@
    ================================ */
 
 .wallet-layout {
-  width: 100%;
   display: grid;
   grid-template-columns: 180px 1fr;
   gap: 32px;
+
+  width: 100%;          /* 🔑 THIS IS THE FIX */
+  max-width: 100%;      /* 🔑 ENSURES NO SHRINK-TO-FIT */
 }
 
 /* ================================
