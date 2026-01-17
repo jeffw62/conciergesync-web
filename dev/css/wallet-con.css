@@ -1,158 +1,71 @@
-/* ===========================================================
-   Module Title
-   =========================================================== */
+/* ================================
+   WALLET LAYOUT
+   ================================ */
 
-.module-title {
-  position: absolute;
-  top: 10px;
-  left: 32px;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 17px;
-  font-weight: 500;
-  letter-spacing: 1px;              /* ← refined spacing */
-  color: rgba(191,161,74,0.48);      /* soft gold */
-  transition: color 0.45s ease;      /* match border glow timing */
-  pointer-events: none;
-  user-select: none;
+.wallet-layout {
+  display: grid;
+  grid-template-columns: 1fr 2fr; /* 1/3 | 2/3 */
+  gap: 48px;
+  margin-top: 84px; /* aligned with your chosen vertical rhythm */
 }
 
-/* When frame glows */
-#workspace:hover .module-title {
-  color: rgba(191,161,74,0.72);      /* just slightly brighter */
-}
+/* ================================
+   LEFT: CARD COLUMN
+   ================================ */
 
-/* ===============================
-   HORIZON — WALLET RAIL (FRAME)
-   =============================== */
-
-.wallet-stage {
-  position: relative;
-}
-
-.horizon-rail {
-  position: relative;
-  width: 100%;
+.wallet-cards-column {
   display: flex;
-  justify-content: center;
-  pointer-events: none; /* rail itself is inert */
+  flex-direction: column;
+  gap: 18px;
+  align-items: center;
 }
 
-.horizon-track {
+/* Base card */
+.wallet-card {
+  width: 180px;
+  height: 112px;
   display: flex;
-  align-items: center;   /* 🔑 THIS locks vertical alignment */
+  align-items: center;
   justify-content: center;
-  gap: 32px;             /* spacing between slots */
-}
 
-.horizon-card {
-  width: 156px;
-  height: auto;
-
-  border-radius: 4px;   /* ← THIS WAS MISSING */
-  overflow: hidden;
-
+  border-radius: 6px;
   opacity: 0.85;
-  transform: translateY(0) scale(1);
-  transition:
-    transform 0.35s ease,
-    opacity 0.35s ease;
 
-  pointer-events: none;
+  transition:
+    transform 0.25s ease,
+    opacity 0.25s ease;
 }
 
-.horizon-slot:hover .horizon-card {
-  transform: scale(1.06);
+/* Active (selected / onLoad) */
+.wallet-card.is-active {
   opacity: 1;
 }
 
-.horizon-logo-slot img {
-  max-width: 80px;
-  max-height: 80px;
-  width: auto;
-  height: auto;
-  display: block;
-
-  opacity: 0.75;        /* softer than cards */
-}
-
-.horizon-logo-slot {
-  pointer-events: none;   /* center is inert */
-}
-
-/* CENTER LOGO — FINAL */
-.horizon-logo {
-  max-height: 92px;
-  width: auto;
-  height: auto;
-  opacity: 0.75;
+/* Card image */
+.wallet-card img {
+  max-width: 100%;
+  max-height: 100%;
   display: block;
   pointer-events: none;
 }
 
-.horizon-logo-slot {
-  pointer-events: none;   /* center is inert */
+/* ConciergeSync™ Card */
+.cs-card {
+  margin-bottom: 8px;
 }
 
-.horizon-logo {
-  max-height: 92px;       /* slightly smaller than cards */
-  width: auto;
-  height: auto;
+/* ================================
+   RIGHT: DATA STAGE
+   ================================ */
 
-  opacity: 0.75;
-  display: block;
-}
-
-.horizon-slot {
-  width: 200px;
-  height: 132px;
-
+.wallet-data-stage {
+  min-height: 360px;
   display: flex;
-  align-items: center;
-  justify-content: center;
-
-  overflow: visible;      /* allows hover rise */
-  pointer-events: auto;
+  align-items: flex-start;
 }
 
-.horizon-slot:hover .horizon-card {
-  transform: scale(1.08);
-  opacity: 1;
+/* Placeholder only */
+.wallet-data-placeholder {
+  max-width: 640px;
+  color: rgba(255,255,255,0.85);
 }
-
-.horizon-slot.slot-center {
-  width: 220px;          /* fixed authority */
-  height: 132px;         /* same vertical as other slots */
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  pointer-events: none;  /* center is not interactive */
-}
-
-.slot-left {
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
-  padding-right: 16px;
-}
-
-.slot-right {
-  display: flex;
-  align-items: center;
-  justify-content: flex-start; /* ← FIX */
-  padding-left: 16px;
-}
-
-/* ===========================================================
-   Horizon Card – OffLoad State
-   =========================================================== */
-
-.horizon-card.offload {
-  width: 156px;          /* ⬅️ reduced from 180 */
-  height: auto;
-  object-fit: contain;
-  opacity: 0.75;         /* slightly quieter */
-  transition:
-    transform 0.35s ease,
-    opacity 0.35s ease;
-}
-
