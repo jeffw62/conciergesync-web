@@ -71,8 +71,8 @@
 
 /* Card image */
 .wallet-card img {
-  width: 180;
-  height: 110%;
+  width: 180px;
+  height: 110px;
   display: block;
   pointer-events: none;
 }
