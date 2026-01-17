@@ -27,9 +27,10 @@
 
 .wallet-layout {
   display: grid;
-  grid-template-columns: 180px 1fr;
+  grid-template-columns: max-content 1fr;
   gap: 32px;
   margin-top: 1px; /* aligned with your chosen vertical rhythm */
+  justify-items: start; /* 🔑 THIS IS THE FIX */
   /* 🔒 HARD ANCHOR */
   margin-left: 0;
   padding-left: 0;
