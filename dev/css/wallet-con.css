@@ -25,7 +25,8 @@
    WALLET WORKSPACE FRAME & RAIL 
    ================================ */
 .wallet-frame {
-  padding-left: 0;   /* only this */
+  display: flex;
+  align-items: flex-start;
   padding-right: 52px;
 }
 
