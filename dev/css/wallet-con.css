@@ -27,7 +27,7 @@
 
 .wallet-layout {
   display: grid;
-  grid-template-columns: max-content 1fr;
+  grid-template-columns: 180px 1fr;
   gap: 32px;
   margin-top: 1px; /* aligned with your chosen vertical rhythm */
   justify-items: start; /* 🔑 THIS IS THE FIX */
@@ -47,6 +47,10 @@
   gap: 5px;
   align-items: flex-start;
   justify-self: start;
+}
+
+.wallet-panel {
+  padding-left: 24px; /* start here */
 }
 
 /* Base card surface */
