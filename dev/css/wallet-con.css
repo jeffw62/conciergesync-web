@@ -25,8 +25,8 @@
    WALLET WORKSPACE FRAME & RAIL 
    ================================ */
 .wallet-frame {
-  display: flex;
-  gap: 32px;
+  padding-left: 0;   /* only this */
+  padding-right: 52px;
 }
 
 /* LEFT RAIL */
@@ -47,12 +47,10 @@
    ================================ */
 
 .wallet-layout {
-  display: grid;
-  grid-template-columns: 180px 1fr;
+  display: flex;
+  align-items: flex-start;
   gap: 32px;
-
-  width: 100%;          /* 🔑 THIS IS THE FIX */
-  max-width: 100%;      /* 🔑 ENSURES NO SHRINK-TO-FIT */
+  width: 100%;
 }
 
 /* ================================
@@ -60,11 +58,16 @@
    ================================ */
 
 .wallet-cards-column {
+  width: 180px;          /* fixed card rail */
+  flex-shrink: 0;        /* 🔑 do not collapse */
   display: flex;
   flex-direction: column;
   gap: 5px;
-  align-items: flex-start;
-  justify-self: start;
+}
+
+.wallet-data-stage {
+  flex: 1;               /* absorbs ALL remaining width */
+  min-width: 0;          /* prevents overflow weirdness */
 }
 
 .wallet-panel {
