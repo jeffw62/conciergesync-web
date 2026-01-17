@@ -35,15 +35,10 @@
    ================================ */
 
 .wallet-layout {
+  width: 100%;
   display: grid;
   grid-template-columns: 180px 1fr;
   gap: 32px;
-  margin-top: 1px; /* aligned with your chosen vertical rhythm */
-  justify-items: start; /* 🔑 THIS IS THE FIX */
-  /* 🔒 HARD ANCHOR */
-  margin-left: 0;
-  padding-left: 0;
-  padding-left: 0px; /* ← NEW: pull grid toward gold rail */
 }
 
 /* ================================
