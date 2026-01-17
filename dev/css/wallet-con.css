@@ -29,8 +29,8 @@
   display: grid;
   grid-template-columns: 1fr 2fr; /* 1/3 | 2/3 */
   gap: 48px;
-  margin-top: 42px; /* aligned with your chosen vertical rhythm */
-  padding-left: 24px; /* ← NEW: pull grid toward gold rail */
+  margin-top: 21px; /* aligned with your chosen vertical rhythm */
+  padding-left: 12px; /* ← NEW: pull grid toward gold rail */
 }
 
 /* ================================
