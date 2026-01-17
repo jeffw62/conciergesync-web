@@ -26,21 +26,20 @@
    ================================ */
 .wallet-frame {
   display: flex;
-  align-items: flex-start;
-  padding-right: 52px;
+  gap: 32px;
+  width: 100%;
 }
 
-/* LEFT RAIL */
 .wallet-left-rail {
-  width: 180px;          /* 🔒 fixed card rail */
+  width: 180px;
+  min-width: 180px;
   display: flex;
   flex-direction: column;
-  gap: 12px;
 }
 
-/* RIGHT STAGE */
 .wallet-data-stage {
-  flex: 1;               /* ← absorbs all extra width */
+  flex: 1;
+  min-width: 0;
 }
 
 /* ================================
