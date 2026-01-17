@@ -46,8 +46,8 @@
 
 /* Base card surface */
 .wallet-card {
-  width: 150px;
-  height: 90px;
+  width: 180px;
+  height: 110px;
 
   display: flex;
   align-items: center;
@@ -71,8 +71,8 @@
 
 /* Card image */
 .wallet-card img {
-  width: 100%;
-  height: 100%;
+  width: 180;
+  height: 110%;
   display: block;
   pointer-events: none;
 }
