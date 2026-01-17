@@ -22,12 +22,24 @@
 }
 
 /* ================================
-   WALLET WORKSPACE FRAMWORK 
+   WALLET WORKSPACE FRAME & RAIL 
    ================================ */
 .wallet-frame {
-  width: 100%;
-  padding: 40px 52px;
-  box-sizing: border-box;
+  display: flex;
+  gap: 32px;
+}
+
+/* LEFT RAIL */
+.wallet-left-rail {
+  width: 180px;          /* 🔒 fixed card rail */
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* RIGHT STAGE */
+.wallet-data-stage {
+  flex: 1;               /* ← absorbs all extra width */
 }
 
 /* ================================
