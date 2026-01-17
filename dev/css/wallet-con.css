@@ -44,15 +44,19 @@
   align-items: flex-start;
 }
 
-/* Base card */
+/* Base card surface */
 .wallet-card {
   width: 180px;
-  height: 112px;
+  height: 110px;
+
   display: flex;
   align-items: center;
   justify-content: center;
 
-  border-radius: 50px;
+  border-radius: 4px;
+  background: rgba(255,255,255,0.92); /* explicit surface */
+  overflow: hidden;                   /* 🔑 locks rounding */
+
   opacity: 0.85;
 
   transition:
