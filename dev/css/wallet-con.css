@@ -27,9 +27,12 @@
 
 .wallet-layout {
   display: grid;
-  grid-template-columns: 350px 1fr;
+  grid-template-columns: max-content 1fr;
   gap: 32px;
   margin-top: 1px; /* aligned with your chosen vertical rhythm */
+  /* 🔒 HARD ANCHOR */
+  margin-left: 0;
+  padding-left: 0;
   padding-left: 0px; /* ← NEW: pull grid toward gold rail */
 }
 
