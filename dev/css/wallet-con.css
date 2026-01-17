@@ -38,8 +38,7 @@
 }
 
 .wallet-data-stage {
-  flex: 1;
-  min-width: 0;
+  padding-top: 48px;
 }
 
 /* ================================
@@ -62,7 +61,7 @@
   flex-shrink: 0;        /* 🔑 do not collapse */
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 0px;
 }
 
 .wallet-data-stage {
