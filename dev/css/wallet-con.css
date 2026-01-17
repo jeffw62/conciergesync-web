@@ -30,7 +30,7 @@
   grid-template-columns: 220px 1fr;
   gap: 32px;
   margin-top: 1px; /* aligned with your chosen vertical rhythm */
-  padding-left: 42px; /* ← NEW: pull grid toward gold rail */
+  padding-left: 0px; /* ← NEW: pull grid toward gold rail */
 }
 
 /* ================================
