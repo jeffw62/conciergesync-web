@@ -40,7 +40,7 @@
 .wallet-cards-column {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 5px;
   align-items: flex-start;
 }
 
@@ -74,7 +74,7 @@
   width: 180px;
   height: 110px;
   display: block;
-  transform: translateY(1px); /* or 2px max */
+  transform: translateY(2px); /* or 2px max */
 }
 
 /* ConciergeSync™ Card */
