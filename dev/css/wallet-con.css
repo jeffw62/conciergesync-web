@@ -65,11 +65,11 @@
 }
 
 .wallet-cards-column > .wallet-card:first-child {
-  margin-bottom: 14px; /* space below ConciergeSync™ card */
+  margin-bottom: 0px; /* space below ConciergeSync™ card */
 }
 
 .wallet-cards-column > .wallet-card:not(:first-child) {
-  margin-bottom: 6px; /* tighter stack */
+  margin-bottom: 4px; /* tighter stack */
 }
 
 .wallet-data-stage {
