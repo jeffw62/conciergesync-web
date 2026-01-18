@@ -69,7 +69,7 @@
 }
 
 .wallet-cards-column > .wallet-card:not(:first-child) {
-  margin-bottom: 4px; /* tighter stack */
+  margin-bottom: 0px; /* tighter stack */
 }
 
 .wallet-data-stage {
