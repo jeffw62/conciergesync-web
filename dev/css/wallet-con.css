@@ -127,5 +127,6 @@
 /* Placeholder only */
 .wallet-data-placeholder {
   max-width: 640px;
+  padding-left: 40px;
   color: rgba(255,255,255,0.85);
 }
