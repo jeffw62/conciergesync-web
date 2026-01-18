@@ -57,11 +57,19 @@
    ================================ */
 
 .wallet-cards-column {
-  width: 180px;          /* fixed card rail */
-  flex-shrink: 0;        /* 🔑 do not collapse */
+  width: 180px;
+  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 0px;
+  gap: 0; /* 🔑 disable uniform spacing */
+}
+
+.wallet-cards-column > .wallet-card:first-child {
+  margin-bottom: 14px; /* space below ConciergeSync™ card */
+}
+
+.wallet-cards-column > .wallet-card:not(:first-child) {
+  margin-bottom: 6px; /* tighter stack */
 }
 
 .wallet-data-stage {
