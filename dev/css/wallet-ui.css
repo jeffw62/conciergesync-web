@@ -219,6 +219,13 @@
   display: flex;
   justify-content: space-between;
   align-items: baseline;
+  padding: 14px 0;
+  border-bottom: 1px solid rgba(191,161,74,0.18);
+}
+
+/* remove divider from last row items */
+.summary-row:last-of-type .summary-item {
+  border-bottom: none;
 }
 
 .summary-item .label {
@@ -231,11 +238,6 @@
   color: #ffffff;
   font-size: 16px;
   font-weight: 500;
-}
-
-/* subtle gold divider between rows */
-.summary-row + .summary-row {
-  border-top: 1px solid rgba(191,161,74,0.25);
 }
 
 /* footer */
