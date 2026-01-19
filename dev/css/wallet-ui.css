@@ -6,3 +6,30 @@
   padding-left: 96px; /* deliberate visual separation from card rail */
 }
 
+/* =========================================================
+   ZONE A — OVERVIEW IDENTITY
+   Purpose: Context + Orientation ONLY
+   No metrics, no timing, no guarantees
+   ========================================================= */
+
+.wallet-zone-a {
+  padding: 36px 0 28px 0;
+}
+
+.zone-a-inner {
+  max-width: 640px;
+}
+
+.zone-a-title {
+  font-size: 28px;
+  font-weight: 600;
+  letter-spacing: 0.3px;
+  color: #ffffff;
+}
+
+.zone-a-subtitle {
+  margin-top: 8px;
+  font-size: 14px;
+  letter-spacing: 0.4px;
+  color: rgba(255, 255, 255, 0.65);
+}
