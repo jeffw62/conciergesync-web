@@ -67,6 +67,12 @@
   overflow-x: hidden;
 }
 
+/* --- Scroll containment (prevent page scroll bleed) --- */
+.wallet-left-rail,
+.wallet-data-stage {
+  overscroll-behavior: contain;
+}
+
 /* ================================
    WALLET LAYOUT
    ================================ */
