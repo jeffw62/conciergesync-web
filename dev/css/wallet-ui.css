@@ -216,10 +216,14 @@
 }
 
 .summary-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
   padding: 14px 0;
+}
+
+.summary-content {
+  display: inline-flex;
+  justify-content: space-between;
+  gap: 28px;
+  padding-bottom: 10px;
   border-bottom: 1px solid rgba(191,161,74,0.18);
 }
 
