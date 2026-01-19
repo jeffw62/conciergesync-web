@@ -205,14 +205,26 @@
    ================================ */
 
 .wallet-summary-grid {
-  max-width: 520px;
+  max-width: 620px;
 }
 
 .summary-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  column-gap: 48px;
-  padding: 14px 0;
+  column-gap: 64px;
+  margin-bottom: 22px;
+}
+
+.summary-item .label {
+  font-size: 15px;
+  letter-spacing: 0.3px;
+  opacity: 0.75;
+}
+
+.summary-item .value {
+  font-size: 18px;
+  font-weight: 500;
+  color: #ffffff;
 }
 
 .summary-item {
@@ -221,8 +233,8 @@
 
 .summary-content {
   display: inline-flex;
-  justify-content: space-between;
-  gap: 28px;
+  align-items: baseline;
+  gap: 24px;
   padding-bottom: 10px;
   border-bottom: 1px solid rgba(191,161,74,0.18);
 }
@@ -246,15 +258,12 @@
 
 /* footer */
 .summary-footer {
-  margin-top: 18px;
-  padding-top: 12px;
-  border-top: 1px solid rgba(191,161,74,0.35);
-
-  display: flex;
-  justify-content: space-between;
-  max-width: 260px;
+  margin-top: 28px;
 }
 
+.summary-footer .summary-content {
+  border-bottom-color: rgba(191,161,74,0.15);
+}
 .summary-footer .label {
   color: rgba(255,255,255,0.55);
   font-size: 13px;
