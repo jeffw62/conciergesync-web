@@ -90,12 +90,13 @@
 }
 
 .summary-item {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(191,161,74,0.22);
+}
+
+/* remove divider from last summary row */
+.summary-row:last-of-type .summary-item {
+  border-bottom: none;
 }
 
 .summary-item .label {
@@ -105,6 +106,7 @@
 }
 
 .summary-item .value {
+  margin-left: 12px;
   font-size: 18px;
   font-weight: 500;
   color: #ffffff;
