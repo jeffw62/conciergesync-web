@@ -115,11 +115,10 @@
 
 /* --- Footer (Data as of) --- */
 
+/* --- Footer (Data as of) --- */
+
 .summary-footer {
   margin-top: 18px;
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(191,161,74,0.18);
-
   display: flex;
   gap: 16px;
 }
@@ -132,8 +131,9 @@
 .summary-footer .value {
   font-size: 13px;
   color: rgba(255,255,255,0.85);
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(191,161,74,0.18);
 }
-
 
 /* =========================================================
    ZONE D — TRANSACTIONS
