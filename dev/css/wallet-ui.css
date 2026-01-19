@@ -89,11 +89,6 @@
   column-gap: 64px;
 }
 
-.summary-item {
-  padding-bottom: 12px;
-  border-bottom: 1px solid rgba(191,161,74,0.22);
-}
-
 /* remove divider from last summary row */
 .summary-row:last-of-type .summary-item {
   border-bottom: none;
@@ -116,6 +111,8 @@
 
 .summary-footer {
   margin-top: 18px;
+  padding-bottom: 12px;   /* was padding-top */
+  border-bottom: 1px solid rgba(191,161,74,0.18); /* was border-top */
   display: flex;
   gap: 16px;
 }
