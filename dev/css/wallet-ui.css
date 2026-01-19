@@ -63,3 +63,36 @@
 .zone-b-placeholder {
   height: 84px; /* intentional empty presence */
 }
+
+/* ================================
+   ZONE B — PRIMARY METRICS (SCAFFOLD)
+   ================================ */
+
+.wallet-zone-b {
+  margin-top: 24px;
+}
+
+.wallet-primary-metrics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 28px;
+  max-width: 640px;
+}
+
+/* Temporary visual placeholders */
+.metric-slot {
+  height: 140px;
+  border-radius: 10px;
+
+  background: rgba(255,255,255,0.04);
+  border: 1px dashed rgba(191,161,74,0.25);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  color: rgba(255,255,255,0.45);
+  font-size: 13px;
+  letter-spacing: 0.4px;
+}
+
