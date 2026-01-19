@@ -154,3 +154,48 @@
   font-size: 13px;
   opacity: 0.6;
 }
+
+/* ================================
+   ZONE C — SUPPORTING DETAILS
+   ================================ */
+
+.wallet-zone-c {
+  margin-top: 48px;
+  max-width: 520px;
+}
+
+.wallet-details-grid {
+  display: grid;
+  row-gap: 18px;
+}
+
+/* Row layout */
+.detail-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(191,161,74,0.18); /* quiet gold */
+}
+
+.detail-row:last-child {
+  border-bottom: none;
+}
+
+/* Typography */
+.detail-label {
+  font-size: 14px;
+  opacity: 0.75;
+}
+
+.detail-value {
+  font-size: 18px;
+  font-weight: 500;
+}
+
+/* Muted row for disclaimers */
+.detail-row-muted .detail-label,
+.detail-row-muted .detail-value {
+  opacity: 0.55;
+  font-size: 13px;
+}
