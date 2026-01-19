@@ -58,6 +58,9 @@
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
+
+  /* scroll runway so last card can fully surface */
+  padding-bottom: 120px;
 }
 
 .wallet-data-stage {
