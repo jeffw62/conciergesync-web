@@ -196,12 +196,17 @@
 
         // --- Load module CSS BEFORE fetching HTML ---
         const moduleCSS = {
-          "redem-con": "/dev/css/redem-con.css",
-          "wallet-con": "/dev/css/wallet-con.css",
+          "redem-con": [
+            "/dev/css/redem-con.css",
+          ],
+          "wallet-con": [
+            "/dev/css/wallet-con.css",
+            "/dev/css/wallet-ui.css",
+          ],
         };
         
         if (moduleCSS[page]) {
-          loadCSS(moduleCSS[page]);
+          moduleCSS[page].forEach(loadCSS);
         }
 
         const res = await fetch(path, { cache: "no-store" });
