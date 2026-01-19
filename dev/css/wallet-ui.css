@@ -65,6 +65,28 @@
   background: rgba(255,255,255,0.03);
 }
 
+/* === Zone B metric hierarchy (inner content only) === */
+
+.metric-slot .metric-title {
+  font-size: 15px;
+  letter-spacing: 0.4px;
+  color: rgba(255,255,255,0.75);
+  margin-bottom: 14px;
+}
+
+.metric-slot .metric-value {
+  font-size: 34px;
+  font-weight: 500;
+  color: #ffffff;
+  line-height: 1;
+  margin-bottom: 12px;
+}
+
+.metric-slot .metric-subtext {
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
+}
+
 
 /* =========================================================
    ZONE C — SUPPORTING SUMMARY LEDGER
@@ -89,7 +111,12 @@
   column-gap: 64px;
 }
 
-/* remove divider from last summary row */
+.summary-item {
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(191,161,74,0.22);
+}
+
+/* remove divider from last summary row ONLY */
 .summary-row:last-of-type .summary-item {
   border-bottom: none;
 }
@@ -111,8 +138,6 @@
 
 .summary-footer {
   margin-top: 18px;
-  padding-bottom: 12px;   /* was padding-top */
-  border-bottom: 1px solid rgba(191,161,74,0.18); /* was border-top */
   display: flex;
   gap: 16px;
 }
@@ -125,7 +150,8 @@
 .summary-footer .value {
   font-size: 13px;
   color: rgba(255,255,255,0.85);
-  padding-bottom: 8px;
+  display: inline-block;                 /* 🔑 limits line width */
+  padding-bottom: 6px;
   border-bottom: 1px solid rgba(191,161,74,0.18);
 }
 
