@@ -7,6 +7,15 @@
 }
 
 /* ================================
+   RIGHT TRAY — ZONE STACK
+   ================================ */
+
+.wallet-data-stage {
+  display: flex;
+  flex-direction: column; /* 🔑 THIS is the fix */
+}
+
+/* ================================
    ZONE A — OVERVIEW IDENTITY
    ================================ */
 
