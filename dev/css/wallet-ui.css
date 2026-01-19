@@ -42,6 +42,22 @@
   color: rgba(255,255,255,0.65);
 }
 
+.zone-a-meta {
+  margin-top: 14px;
+  display: flex;
+  gap: 10px;
+  font-size: 13px;
+}
+
+.zone-a-meta .label {
+  color: rgba(255,255,255,0.55);
+}
+
+.zone-a-meta .value {
+  color: rgba(255,255,255,0.85);
+  border-bottom: 1px solid rgba(191,161,74,0.35);
+  padding-bottom: 2px;
+}
 
 /* =========================================================
    ZONE B — PRIMARY METRICS (PORTFOLIO SIGNALS)
