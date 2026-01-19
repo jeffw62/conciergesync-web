@@ -84,6 +84,40 @@
 }
 
 /* ================================
+   LEFT RAIL CARD — HOVER INTERACTION
+   ================================ */
+
+.wallet-left-rail .card {
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    filter 0.25s ease;
+}
+
+.wallet-left-rail .card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
+  filter: brightness(1.05);
+}
+
+/* ================================
+   LEFT RAIL CARD — ACTIVE / SELECTED
+   ================================ */
+
+.wallet-left-rail .card.is-active {
+  transform: translateY(-6px) scale(1.02);
+  box-shadow: 0 18px 42px rgba(0,0,0,0.45);
+  filter: brightness(1.08);
+  z-index: 3;
+}
+
+/* De-emphasize non-active cards */
+.wallet-left-rail.has-active .card:not(.is-active) {
+  opacity: 0.6;
+  filter: saturate(0.85);
+}
+
+/* ================================
    WALLET LAYOUT
    ================================ */
 
