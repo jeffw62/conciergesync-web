@@ -1,1 +1,8 @@
-.placeholder-home
+/* =====================================
+   RIGHT STAGE – GLOBAL LEFT GUTTER
+   ===================================== */
+
+.wallet-data-stage {
+  padding-left: 96px; /* deliberate visual separation from card rail */
+}
+
