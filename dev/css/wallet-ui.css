@@ -21,7 +21,7 @@
    ========================================================= */
 
 .wallet-zone-a {
-  padding: 36px 0 24px 0;
+  padding: 40px 0 24px 0;
 }
 
 .zone-a-inner {
@@ -48,7 +48,7 @@
    ========================================================= */
 
 .wallet-zone-b {
-  padding: 20px 0 28px 0;
+  padding: 40px 0 24px 0;
 }
 
 .wallet-primary-metrics {
@@ -71,7 +71,7 @@
    ========================================================= */
 
 .wallet-zone-c {
-  margin-top: 12px;
+  margin-top: 40px;
   max-width: 640px;
 }
 
@@ -111,9 +111,6 @@
   font-weight: 500;
   color: #ffffff;
 }
-
-
-/* --- Footer (Data as of) --- */
 
 /* --- Footer (Data as of) --- */
 
