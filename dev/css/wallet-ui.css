@@ -199,3 +199,62 @@
   opacity: 0.55;
   font-size: 13px;
 }
+
+/* ================================
+   ZONE C — SUMMARY LEDGER
+   ================================ */
+
+.wallet-summary-grid {
+  max-width: 520px;
+}
+
+.summary-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 48px;
+  padding: 14px 0;
+}
+
+.summary-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+}
+
+.summary-item .label {
+  color: rgba(255,255,255,0.65);
+  font-size: 14px;
+  letter-spacing: 0.02em;
+}
+
+.summary-item .value {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+/* subtle gold divider between rows */
+.summary-row + .summary-row {
+  border-top: 1px solid rgba(191,161,74,0.25);
+}
+
+/* footer */
+.summary-footer {
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(191,161,74,0.35);
+
+  display: flex;
+  justify-content: space-between;
+  max-width: 260px;
+}
+
+.summary-footer .label {
+  color: rgba(255,255,255,0.55);
+  font-size: 13px;
+}
+
+.summary-footer .value {
+  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+}
