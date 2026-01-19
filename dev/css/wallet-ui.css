@@ -1,36 +1,27 @@
-/* =====================================
-   RIGHT STAGE – GLOBAL LEFT GUTTER
-   ===================================== */
+/* =========================================================
+   WALLET UI — SUBORDINATE STYLESHEET
+   Purpose: Right-side wallet presentation only
+   Depends on: wallet-con.css
+   ========================================================= */
 
-.wallet-data-stage {
-  padding-left: 96px; /* deliberate visual separation from card rail */
-}
 
-/* ================================
-   RIGHT TRAY — ZONE STACK
-   ================================ */
+/* =========================================================
+   RIGHT TRAY — STAGE CONTAINER
+   ========================================================= */
 
 .wallet-data-stage {
   display: flex;
-  flex-direction: column; /* 🔑 THIS is the fix */
+  flex-direction: column;
+  padding-left: 96px; /* intentional breathing room from card rail */
 }
 
-/* ================================
-   ZONE A — OVERVIEW IDENTITY
-   ================================ */
-
-.wallet-zone-a {
-  margin-bottom: 0px;
-}
 
 /* =========================================================
    ZONE A — OVERVIEW IDENTITY
-   Purpose: Context + Orientation ONLY
-   No metrics, no timing, no guarantees
    ========================================================= */
 
 .wallet-zone-a {
-  padding: 36px 0 28px 0;
+  padding: 36px 0 24px 0;
 }
 
 .zone-a-inner {
@@ -48,228 +39,102 @@
   margin-top: 8px;
   font-size: 14px;
   letter-spacing: 0.4px;
-  color: rgba(255, 255, 255, 0.65);
+  color: rgba(255,255,255,0.65);
 }
 
+
 /* =========================================================
-   ZONE B — PRIMARY METRICS FRAME
-   Purpose: Visual gravity + containment
+   ZONE B — PRIMARY METRICS (PORTFOLIO SIGNALS)
    ========================================================= */
 
 .wallet-zone-b {
-  padding: 24px 0 32px 0;
-}
-
-.zone-b-frame {
-  max-width: 640px;
-  padding: 24px 28px;
-
-  border-radius: 14px;
-  border: 1px solid rgba(212, 175, 55, 0.25); /* soft gold */
-  background: linear-gradient(
-    180deg,
-    rgba(255, 255, 255, 0.03),
-    rgba(255, 255, 255, 0.01)
-  );
-
-  box-shadow:
-    inset 0 0 0 1px rgba(255, 255, 255, 0.02),
-    0 10px 30px rgba(0, 0, 0, 0.25);
-}
-
-.zone-b-placeholder {
-  height: 84px; /* intentional empty presence */
-}
-
-/* ================================
-   ZONE B — PRIMARY METRICS (SCAFFOLD)
-   ================================ */
-
-.wallet-zone-b {
-  margin-top: 24px;
+  padding: 20px 0 28px 0;
 }
 
 .wallet-primary-metrics {
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 28px;
-  max-width: 640px;
-}
-
-/* Temporary visual placeholders */
-.metric-slot {
-  height: 140px;
-  border-radius: 10px;
-
-  background: rgba(255,255,255,0.04);
-  border: 1px dashed rgba(191,161,74,0.25);
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  color: rgba(255,255,255,0.45);
-  font-size: 13px;
-  letter-spacing: 0.4px;
-}
-
-/* ================================
-   ZONE B — PRIMARY METRICS
-   ================================ */
-
-.wallet-zone-b {
-  margin-bottom: 24px;
-}
-
-.wallet-primary-metrics {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  grid-template-columns: repeat(2, minmax(240px, 1fr));
   gap: 32px;
-  max-width: 520px; /* keeps it elegant on wide screens */
+  max-width: 640px;
 }
 
-/* Metric shell */
 .metric-slot {
   padding: 24px 22px;
+  border-radius: 12px;
   border: 1px dashed rgba(191,161,74,0.35);
-  border-radius: 10px;
+  background: rgba(255,255,255,0.03);
 }
 
-/* Text hierarchy */
-.metric-label {
-  font-size: 13px;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  opacity: 0.75;
-  margin-bottom: 10px;
-}
 
-.metric-value {
-  font-size: 36px;
-  font-weight: 600;
-  margin-bottom: 6px;
-}
-
-.metric-meta {
-  font-size: 13px;
-  opacity: 0.6;
-}
-
-/* ================================
-   ZONE C — SUPPORTING DETAILS
-   ================================ */
+/* =========================================================
+   ZONE C — SUPPORTING SUMMARY LEDGER
+   ========================================================= */
 
 .wallet-zone-c {
-  margin-top: 8px;
-  max-width: 520px;
+  margin-top: 12px;
+  max-width: 640px;
 }
-
-.wallet-details-grid {
-  display: grid;
-  row-gap: 18px;
-}
-
-/* Row layout */
-.detail-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  padding-bottom: 8px;
-  border-bottom: 1px solid rgba(191,161,74,0.18); /* quiet gold */
-}
-
-.detail-row:last-child {
-  border-bottom: none;
-}
-
-/* Typography */
-.detail-label {
-  font-size: 14px;
-  opacity: 0.75;
-}
-
-.detail-value {
-  font-size: 18px;
-  font-weight: 500;
-}
-
-/* Muted row for disclaimers */
-.detail-row-muted .detail-label,
-.detail-row-muted .detail-value {
-  opacity: 0.55;
-  font-size: 13px;
-}
-
-/* ================================
-   ZONE C — SUMMARY LEDGER
-   ================================ */
 
 .wallet-summary-grid {
-  max-width: 620px;
+  display: grid;
+  row-gap: 22px;
 }
+
+
+/* --- Two-column summary rows --- */
 
 .summary-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 64px;
-  margin-bottom: 22px;
+}
+
+.summary-item {
+  padding-bottom: 12px;
+  border-bottom: 1px solid rgba(191,161,74,0.22);
 }
 
 .summary-item .label {
-  font-size: 15px;
+  font-size: 14px;
   letter-spacing: 0.3px;
-  opacity: 0.75;
+  color: rgba(255,255,255,0.65);
 }
 
 .summary-item .value {
+  margin-left: 12px;
   font-size: 18px;
   font-weight: 500;
   color: #ffffff;
 }
 
-.summary-item {
-  padding: 14px 0;
-}
 
-.summary-content {
-  display: inline-flex;
-  align-items: baseline;
-  gap: 24px;
-  padding-bottom: 10px;
-  border-bottom: 1px solid rgba(191,161,74,0.18);
-}
+/* --- Footer (Data as of) --- */
 
-/* remove divider from last row items */
-.summary-row:last-of-type .summary-item {
-  border-bottom: none;
-}
-
-.summary-item .label {
-  color: rgba(255,255,255,0.65);
-  font-size: 14px;
-  letter-spacing: 0.02em;
-}
-
-.summary-item .value {
-  color: #ffffff;
-  font-size: 16px;
-  font-weight: 500;
-}
-
-/* footer */
 .summary-footer {
-  margin-top: 28px;
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid rgba(191,161,74,0.18);
+  display: flex;
+  gap: 16px;
 }
 
-.summary-footer .summary-content {
-  border-bottom-color: rgba(191,161,74,0.15);
-}
 .summary-footer .label {
-  color: rgba(255,255,255,0.55);
   font-size: 13px;
+  color: rgba(255,255,255,0.55);
 }
 
 .summary-footer .value {
-  color: rgba(255,255,255,0.85);
   font-size: 13px;
+  color: rgba(255,255,255,0.85);
+}
+
+
+/* =========================================================
+   ZONE D — TRANSACTIONS
+   (INTENTIONALLY EMPTY — TO BE BUILT NEXT)
+   ========================================================= */
+
+/* Placeholder only — do not implement yet */
+.wallet-zone-d {
+  margin-top: 28px;
 }
