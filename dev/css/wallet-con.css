@@ -58,9 +58,16 @@
   height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-
-  /* scroll runway so last card can fully surface */
   padding-bottom: 120px;
+
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.wallet-left-rail::-webkit-scrollbar {
+  width: 0;
+  height: 0;
+  display: none;
 }
 
 .wallet-data-stage {
