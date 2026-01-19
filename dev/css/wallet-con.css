@@ -16,6 +16,19 @@
   user-select: none;
 }
 
+/* ================================
+   WALLET LAYOUT
+   ================================ */
+
+/* 🔒 Establish vertical ownership for the wallet module */
+.wallet-frame {
+  height: 100%;
+}
+
+.wallet-layout {
+  height: 100%;
+}
+
 /* When frame glows */
 #workspace:hover .module-title {
   color: rgba(191,161,74,0.72);      /* just slightly brighter */
