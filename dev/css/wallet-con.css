@@ -16,6 +16,11 @@
   user-select: none;
 }
 
+/* When frame glows */
+#workspace:hover .module-title {
+  color: rgba(191,161,74,0.72);      /* just slightly brighter */
+}
+
 /* ================================
    WALLET LAYOUT
    ================================ */
@@ -29,9 +34,9 @@
   height: 100%;
 }
 
-/* When frame glows */
-#workspace:hover .module-title {
-  color: rgba(191,161,74,0.72);      /* just slightly brighter */
+#workspace {
+  height: calc(100vh - var(--console-header-height, 0px));
+  overflow: hidden; /* 🔑 prevents page scroll */
 }
 
 /* ================================
@@ -41,6 +46,8 @@
   display: flex;
   gap: 32px;
   width: 100%;
+  height: 100%;
+  overflow: hidden;
 }
 
 .wallet-left-rail {
@@ -48,10 +55,16 @@
   min-width: 180px;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 .wallet-data-stage {
   padding-top: 48px;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
 }
 
 /* ================================
