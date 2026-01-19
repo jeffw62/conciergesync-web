@@ -113,3 +113,44 @@
   letter-spacing: 0.4px;
 }
 
+/* ================================
+   ZONE B — PRIMARY METRICS
+   ================================ */
+
+.wallet-zone-b {
+  margin-bottom: 40px;
+}
+
+.wallet-primary-metrics {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(220px, 1fr));
+  gap: 32px;
+  max-width: 520px; /* keeps it elegant on wide screens */
+}
+
+/* Metric shell */
+.metric-slot {
+  padding: 24px 22px;
+  border: 1px dashed rgba(191,161,74,0.35);
+  border-radius: 10px;
+}
+
+/* Text hierarchy */
+.metric-label {
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  opacity: 0.75;
+  margin-bottom: 10px;
+}
+
+.metric-value {
+  font-size: 36px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.metric-meta {
+  font-size: 13px;
+  opacity: 0.6;
+}
