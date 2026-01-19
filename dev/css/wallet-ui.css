@@ -150,27 +150,6 @@
   color: #ffffff;
 }
 
-/* --- Footer (Data as of) --- */
-
-.summary-footer {
-  margin-top: 18px;
-  display: flex;
-  gap: 16px;
-}
-
-.summary-footer .label {
-  font-size: 13px;
-  color: rgba(255,255,255,0.55);
-}
-
-.summary-footer .value {
-  font-size: 13px;
-  color: rgba(255,255,255,0.85);
-  display: inline-block;                 /* 🔑 limits line width */
-  padding-bottom: 6px;
-  border-bottom: 1px solid rgba(191,161,74,0.18);
-}
-
 /* =========================================================
    ZONE D — TRANSACTIONS
    (INTENTIONALLY EMPTY — TO BE BUILT NEXT)
