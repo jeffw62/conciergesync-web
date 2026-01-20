@@ -183,7 +183,7 @@
 
 /* Hover lift — VISUAL ONLY */
 .wallet-card.hovered {
-  transform: translateY(-6px);
+  /* transform: translateY(-6px); */
   box-shadow:
     0 14px 28px rgba(0,0,0,0.35),
     0 0 0 1px rgba(191,161,74,0.35);
