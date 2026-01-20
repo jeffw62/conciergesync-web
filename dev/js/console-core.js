@@ -317,7 +317,7 @@
   }
 
   initializeModuleLoader();
-
+  
   /* ================================
      Wallet Card Animations
      ================================ */
@@ -327,22 +327,31 @@
     if (!cards.length) return;
   
     cards.forEach(card => {
-      // ⛔️ GUARD: prevent duplicate listeners
+      // Guard: ensure listeners bind only once per card
       if (card.dataset.walletBound === "true") return;
       card.dataset.walletBound = "true";
   
+      // Hover = attention (illumination ON)
       card.addEventListener("pointerenter", () => {
+        // Clear hover from all cards first
+        cards.forEach(c => c.classList.remove("hovered"));
         card.classList.add("hovered");
       });
   
-      card.addEventListener("pointerleave", () => {
-        // TEMP: disabled for isolation
-      });
-        
+      // NOTE:
+      // We intentionally DO NOT remove hover on pointerleave.
+      // Hover is released only when another card receives attention
+      // or when a new card is clicked.
+  
+      // Click = selection (lift + stage presence)
       card.addEventListener("click", () => {
-        cards.forEach(c => c.classList.remove("active"));
+        cards.forEach(c => {
+          c.classList.remove("active");
+          c.classList.remove("hovered");
+        });
+  
         card.classList.add("active");
-        card.classList.add("hovered"); // ensure illumination holds
+        card.classList.add("hovered"); // active card remains illuminated
       });
     });
   
