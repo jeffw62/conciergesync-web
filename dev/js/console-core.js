@@ -293,7 +293,7 @@
         }
         document.body.appendChild(newScript);
         });
-        
+        o
         console.log("⚙️ Re-executed script tags for module:", page);
 
         requestAnimationFrame(() => {
@@ -317,6 +317,42 @@
   }
 
   initializeModuleLoader();
+
+  /* ================================
+     Wallet Card Animations
+     ================================ */
+  
+  function initializeWalletAnimations(workspace) {
+    const cards = workspace.querySelectorAll(".wallet-card");
+    if (!cards.length) return;
+  
+    cards.forEach(card => {
+      card.addEventListener("mouseenter", () => {
+        card.classList.add("hovered");
+      });
+  
+      card.addEventListener("mouseleave", () => {
+        card.classList.remove("hovered");
+      });
+  
+      card.addEventListener("click", () => {
+        cards.forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+      });
+    });
+  
+    console.log("💳 Wallet card animations initialized");
+  }
+  
+  /* =========================================================
+     Wallet Animations Hook (wallet-con only)
+     ========================================================= */
+  
+  document.addEventListener("module:ready", (e) => {
+    if (e.detail?.page === "wallet-con") {
+      initializeWalletAnimations(e.detail.workspace);
+    }
+  });
 
   /**
    * 🍔 5. Hamburger Drawer Logic
