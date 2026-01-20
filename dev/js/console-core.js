@@ -349,9 +349,11 @@
      ========================================================= */
   
   document.addEventListener("module:ready", (e) => {
-    if (e.detail?.page === "wallet-con") {
-      initializeWalletAnimations(e.detail.workspace);
-    }
+    if (!e.detail) return;
+    if (e.detail.page !== "wallet-con") return;
+    if (!e.detail.workspace) return;
+  
+    initializeWalletAnimations(e.detail.workspace);
   });
 
   /**
