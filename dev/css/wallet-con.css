@@ -84,23 +84,6 @@
 }
 
 /* ================================
-   LEFT RAIL CARD — HOVER INTERACTION
-   ================================ */
-
-.wallet-left-rail .card {
-  transition:
-    transform 0.25s ease,
-    box-shadow 0.25s ease,
-    filter 0.25s ease;
-}
-
-.wallet-left-rail .card:hover {
-  transform: translateY(-4px);
-  box-shadow: 0 12px 30px rgba(0,0,0,0.35);
-  filter: brightness(1.05);
-}
-
-/* ================================
    LEFT RAIL CARD — ACTIVE / SELECTED
    ================================ */
 
