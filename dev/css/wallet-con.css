@@ -177,6 +177,19 @@
     opacity 0.25s ease;
 }
 
+/* Hover lift */
+.wallet-card.hovered {
+  transform: translateY(-6px) scale(1.04);
+  opacity: 1;
+}
+
+/* Selected (clicked) state */
+.wallet-card.active {
+  transform: translateY(-8px) scale(1.06);
+  opacity: 1;
+  z-index: 2;
+}
+
 /* Active (selected / onLoad) */
 .wallet-card.is-active {
   opacity: 1;
