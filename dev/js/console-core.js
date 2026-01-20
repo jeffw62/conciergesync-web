@@ -327,11 +327,12 @@
     if (!cards.length) return;
   
     cards.forEach(card => {
-      card.addEventListener("mouseenter", () => {
-        card.classList.add("hovered");
-      });
-  
-      card.addEventListener("mouseleave", () => {
+      card.addEventListener("pointerenter", () => {
+          card.classList.add("hovered");
+        });
+        
+      card.addEventListener("pointerleave", () => {
+        if (card.classList.contains("active")) return;
         card.classList.remove("hovered");
       });
   
