@@ -356,7 +356,6 @@
       if (e.target.closest(".wallet-card")) return;
       clearHover();
     });
-  }
   
     console.log("💳 Wallet card hover + attention model initialized");
   }
