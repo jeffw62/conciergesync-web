@@ -327,35 +327,36 @@
     const rail  = workspace.querySelector(".wallet-left-rail");
     if (!cards.length || !rail) return;
   
-    // prevent duplicate binding
-    if (rail.dataset.walletHoverBound === "true") return;
-    rail.dataset.walletHoverBound = "true";
+    // prevent duplicate binding (once per workspace)
+    if (workspace.dataset.walletHoverBound === "true") return;
+    workspace.dataset.walletHoverBound = "true";
   
     function clearHover() {
-      cards.forEach(c => {
-        if (!c.classList.contains("active")) {
-          c.classList.remove("hovered");
+      cards.forEach(card => {
+        if (!card.classList.contains("active")) {
+          card.classList.remove("hovered");
         }
       });
     }
-  
+
     cards.forEach(card => {
       card.addEventListener("pointerenter", () => {
         clearHover();
         card.classList.add("hovered");
       });
-  
+    
       card.addEventListener("click", () => {
         cards.forEach(c => c.classList.remove("active"));
         card.classList.add("active");
-        card.classList.add("hovered"); // lock illumination
+        card.classList.add("hovered");
       });
     });
-  
-    // 🔑 THIS is what you were missing
-    rail.addEventListener("pointerleave", () => {
+
+    document.addEventListener("pointermove", (e) => {
+      if (e.target.closest(".wallet-card")) return;
       clearHover();
     });
+  }
   
     console.log("💳 Wallet card hover + attention model initialized");
   }
