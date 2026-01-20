@@ -166,7 +166,7 @@
   align-items: center;
   justify-content: center;
 
-  border-radius: 12px; /* slightly softer than 4px */
+  border-radius: 4px; 
   background: rgba(255,255,255,0.92);
   overflow: hidden; /* locks rounding */
 
