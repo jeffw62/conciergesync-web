@@ -327,10 +327,14 @@
     if (!cards.length) return;
   
     cards.forEach(card => {
+      // ⛔️ GUARD: prevent duplicate listeners
+      if (card.dataset.walletBound === "true") return;
+      card.dataset.walletBound = "true";
+  
       card.addEventListener("pointerenter", () => {
-          card.classList.add("hovered");
-        });
-        
+        card.classList.add("hovered");
+      });
+  
       card.addEventListener("pointerleave", () => {
         if (card.classList.contains("active")) return;
         card.classList.remove("hovered");
@@ -339,6 +343,7 @@
       card.addEventListener("click", () => {
         cards.forEach(c => c.classList.remove("active"));
         card.classList.add("active");
+        card.classList.add("hovered"); // ensure illumination holds
       });
     });
   
