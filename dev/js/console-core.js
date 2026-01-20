@@ -322,39 +322,15 @@
      Wallet Card Animations
      ================================ */
   
-  function initializeWalletAnimations(workspace) {
+    function initializeWalletAnimations(workspace) {
     const cards = workspace.querySelectorAll(".wallet-card");
-    const rail  = workspace.querySelector(".wallet-left-rail");
-    if (!cards.length || !rail) return;
+    if (!cards.length) return;
   
-    // prevent duplicate binding (once per workspace)
-    if (workspace.dataset.walletHoverBound === "true") return;
-    workspace.dataset.walletHoverBound = "true";
-  
-    function clearHover() {
-      cards.forEach(card => {
-        if (!card.classList.contains("active")) {
-          card.classList.remove("hovered");
-        }
-      });
-    }
-
     cards.forEach(card => {
-      card.addEventListener("pointerenter", () => {
-        clearHover();
-        card.classList.add("hovered");
-      });
-    
       card.addEventListener("click", () => {
         cards.forEach(c => c.classList.remove("active"));
         card.classList.add("active");
-        card.classList.add("hovered");
       });
-    });
-
-    card.addEventListener("pointerleave", (e) => {
-      if (card.classList.contains("active")) return;
-      card.classList.remove("hovered");
     });
   
     console.log("💳 Wallet card hover + attention model initialized");
