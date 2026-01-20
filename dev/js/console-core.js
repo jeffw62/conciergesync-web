@@ -324,38 +324,40 @@
   
   function initializeWalletAnimations(workspace) {
     const cards = workspace.querySelectorAll(".wallet-card");
-    if (!cards.length) return;
+    const rail  = workspace.querySelector(".wallet-left-rail");
+    if (!cards.length || !rail) return;
+  
+    // prevent duplicate binding
+    if (rail.dataset.walletHoverBound === "true") return;
+    rail.dataset.walletHoverBound = "true";
+  
+    function clearHover() {
+      cards.forEach(c => {
+        if (!c.classList.contains("active")) {
+          c.classList.remove("hovered");
+        }
+      });
+    }
   
     cards.forEach(card => {
-      // Guard: ensure listeners bind only once per card
-      if (card.dataset.walletBound === "true") return;
-      card.dataset.walletBound = "true";
-  
-      // Hover = attention (illumination ON)
       card.addEventListener("pointerenter", () => {
-        // Clear hover from all cards first
-        cards.forEach(c => c.classList.remove("hovered"));
+        clearHover();
         card.classList.add("hovered");
       });
   
-      // NOTE:
-      // We intentionally DO NOT remove hover on pointerleave.
-      // Hover is released only when another card receives attention
-      // or when a new card is clicked.
-  
-      // Click = selection (lift + stage presence)
       card.addEventListener("click", () => {
-        cards.forEach(c => {
-          c.classList.remove("active");
-          c.classList.remove("hovered");
-        });
-  
+        cards.forEach(c => c.classList.remove("active"));
         card.classList.add("active");
-        card.classList.add("hovered"); // active card remains illuminated
+        card.classList.add("hovered"); // lock illumination
       });
     });
   
-    console.log("💳 Wallet card animations initialized");
+    // 🔑 THIS is what you were missing
+    rail.addEventListener("pointerleave", () => {
+      clearHover();
+    });
+  
+    console.log("💳 Wallet card hover + attention model initialized");
   }
   
   /* =========================================================
