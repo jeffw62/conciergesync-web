@@ -352,9 +352,9 @@
       });
     });
 
-    document.addEventListener("pointermove", (e) => {
-      if (e.target.closest(".wallet-card")) return;
-      clearHover();
+    card.addEventListener("pointerleave", (e) => {
+      if (card.classList.contains("active")) return;
+      card.classList.remove("hovered");
     });
   
     console.log("💳 Wallet card hover + attention model initialized");
