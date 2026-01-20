@@ -187,23 +187,22 @@
   position: absolute;
   inset: 1px;
   border-radius: 3px;
+
   background: linear-gradient(
     to bottom,
-    rgba(255,255,255,0.06),
-    rgba(255,255,255,0.015)
+    rgba(255,255,255,0.16),
+    rgba(255,255,255,0.05)
   );
+
   opacity: 0;
   pointer-events: none;
-  transition: opacity 180ms ease;
+
+  transition: opacity 180ms ease; /* clean on/off */
 }
 
 /* Hover lift — VISUAL ONLY */
 .wallet-card.hovered {
-  /* transform: translateY(-6px); */
-  box-shadow:
-    0 14px 28px rgba(0,0,0,0.35),
-    - 0 0 0 1px rgba(191,161,74,0.35);
-  filter: brightness(1.02);
+  box-shadow: 0 14px 28px rgba(0,0,0,0.35);
 }
 
 .wallet-card.hovered::before {
