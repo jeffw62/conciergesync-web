@@ -336,10 +336,9 @@
       });
   
       card.addEventListener("pointerleave", () => {
-        if (card.classList.contains("active")) return;
-        card.classList.remove("hovered");
+        // TEMP: disabled for isolation
       });
-  
+        
       card.addEventListener("click", () => {
         cards.forEach(c => c.classList.remove("active"));
         card.classList.add("active");
