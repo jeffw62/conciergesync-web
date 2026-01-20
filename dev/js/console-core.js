@@ -293,7 +293,7 @@
         }
         document.body.appendChild(newScript);
         });
-        o
+          
         console.log("⚙️ Re-executed script tags for module:", page);
 
         requestAnimationFrame(() => {
