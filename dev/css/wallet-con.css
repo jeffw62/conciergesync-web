@@ -84,23 +84,6 @@
 }
 
 /* ================================
-   LEFT RAIL CARD — ACTIVE / SELECTED
-   ================================ */
-
-.wallet-left-rail .card.is-active {
-  transform: translateY(-6px) scale(1.02);
-  box-shadow: 0 18px 42px rgba(0,0,0,0.45);
-  filter: brightness(1.08);
-  z-index: 3;
-}
-
-/* De-emphasize non-active cards */
-.wallet-left-rail.has-active .card:not(.is-active) {
-  opacity: 0.6;
-  filter: saturate(0.85);
-}
-
-/* ================================
    WALLET LAYOUT
    ================================ */
 
@@ -121,14 +104,6 @@
   display: flex;
   flex-direction: column;
   gap: 0; /* 🔑 disable uniform spacing */
-}
-
-.wallet-cards-column > .wallet-card:first-child {
-  margin-bottom: 0px; /* space below ConciergeSync™ card */
-}
-
-.wallet-cards-column > .wallet-card:not(:first-child) {
-  margin-bottom: 0px; /* tighter stack */
 }
 
 .wallet-data-stage {
@@ -154,55 +129,6 @@
   background: rgba(255,255,255,0.92);
   overflow: hidden; /* locks rounding */
 
-  opacity: 0.88;
-
-  transition:
-    transform 0.35s ease,
-    box-shadow 0.35s ease,
-    opacity 0.35s ease,
-    - filter 0.35s ease;
-
-}
-
-/* Contained hover illumination layer */
-.wallet-card::before {
-  content: '';
-  position: absolute;
-  inset: 1px;
-  border-radius: 3px;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(255,255,255,0.16),
-    rgba(255,255,255,0.05)
-  );
-
-  opacity: 0;
-  pointer-events: none;
-
-  transition: opacity 180ms ease; /* clean on/off */
-}
-
-/* Hover illumination — VISUAL ONLY */
-.wallet-card:hover {
-  box-shadow: 0 14px 28px rgba(0,0,0,0.35);
-}
-
-.wallet-card:hover::before {
-  opacity: 1;
-}
-
-/* Active (clicked / selected) */
-.wallet-card.active {
-  transform: translateY(-4px);
-  box-shadow:
-    0 18px 36px rgba(0,0,0,0.45),
-    0 0 0 1px rgba(191,161,74,0.55);
-}
-
-/* Active (selected / onLoad) */
-.wallet-card.is-active {
-  opacity: 1;
 }
 
 /* Card image */
