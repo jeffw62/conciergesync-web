@@ -317,37 +317,7 @@
   }
 
   initializeModuleLoader();
-  
-  /* ================================
-     Wallet Card Animations
-     ================================ */
-  
-    function initializeWalletAnimations(workspace) {
-    const cards = workspace.querySelectorAll(".wallet-card");
-    if (!cards.length) return;
-  
-    cards.forEach(card => {
-      card.addEventListener("click", () => {
-        cards.forEach(c => c.classList.remove("active"));
-        card.classList.add("active");
-      });
-    });
-  
-    console.log("💳 Wallet card hover + attention model initialized");
-  }
-  
-  /* =========================================================
-     Wallet Animations Hook (wallet-con only)
-     ========================================================= */
-  
-  document.addEventListener("module:ready", (e) => {
-    if (!e.detail) return;
-    if (e.detail.page !== "wallet-con") return;
-    if (!e.detail.workspace) return;
-  
-    initializeWalletAnimations(e.detail.workspace);
-  });
-
+   
   /**
    * 🍔 5. Hamburger Drawer Logic
    * -----------------------------------------------------------
