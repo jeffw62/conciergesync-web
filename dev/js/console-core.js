@@ -54,6 +54,28 @@
   initializeFooterAndNav();
 
   /**
+   * 💳 Wallet — Active Card State (FOUNDATIONAL)
+   * -----------------------------------------------------------
+   * Establishes which card is currently in focus.
+   * No UI mutations yet. Truth-awareness only.
+   */
+  document.addEventListener("module:ready", e => {
+    const { page, workspace } = e.detail || {};
+    if (page !== "wallet-con" || !workspace) return;
+  
+    let activeCardId = null;
+  
+    const cards = workspace.querySelectorAll(".wallet-card");
+  
+    cards.forEach(card => {
+      card.addEventListener("click", () => {
+        activeCardId = card.dataset.cardId || null;
+        console.log("💳 Active card:", activeCardId);
+      });
+    });
+  });
+  
+  /**
    * 💹 2. Avg Cost per Mile Ticker
    * -----------------------------------------------------------
    * Displays subtle randomized motion of CPM ticker.
