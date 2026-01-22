@@ -65,15 +65,16 @@
   
     let activeCardId = null;
   
-    const cards = workspace.querySelectorAll(".wallet-card");
-  
-    cards.forEach(card => {
-      card.addEventListener("click", () => {
-        activeCardId = card.dataset.cardId || null;
-        console.log("💳 Active card:", activeCardId);
+    requestAnimationFrame(() => {
+      const cards = workspace.querySelectorAll(".wallet-card");
+    
+      cards.forEach(card => {
+        card.addEventListener("click", () => {
+          activeCardId = card.dataset.cardId || null;
+          console.log("💳 Active card:", activeCardId);
+        });
       });
     });
-  });
   
   /**
    * 💹 2. Avg Cost per Mile Ticker
