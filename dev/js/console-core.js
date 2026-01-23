@@ -88,6 +88,10 @@
       const cardView = workspace.querySelector(".wallet-zone-c");      // Card details (already exists)
 
       function syncWalletView() {
+        console.log("🧭 syncWalletView fired");
+        console.log("portfolioView:", portfolioView);
+        console.log("cardView:", cardView);
+        
         if (!portfolioView || !cardView) return;
       
         if (walletContext.mode === "portfolio") {
