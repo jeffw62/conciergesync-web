@@ -48,12 +48,12 @@
   }
 
   document.addEventListener("module:ready", e => {
-    const { page } = e.detail || {};
-    if (!page) return;
-  
-    initializeFooterAndNav();
-    initDrawer(); // 👈 THIS is the missing piece
-  });
+  const { page } = e.detail || {};
+  if (!page) return;
+
+  initializeFooterAndNav();
+  initDrawer(); // 👈 THIS is the missing piece
+});
 
   /**
    * 💳 Wallet — Active Card State (FOUNDATIONAL)
@@ -460,8 +460,5 @@
 
   document.addEventListener("module:ready", () => {
     initDrawer();
+  });
 
-  
-  // initial load
-  initDrawer();
-})();
