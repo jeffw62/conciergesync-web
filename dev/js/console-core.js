@@ -4,6 +4,46 @@
   console.log("🧱 console-core.js loaded");
 
   // ==================================================
+  // GLOBAL PAGE ROUTER (SINGLE SOURCE OF TRUTH)
+  // ==================================================
+  window.loadPage = async function (page) {
+    if (!page) {
+      console.warn("⚠️ loadPage called without page");
+      return;
+    }
+  
+    console.log("🚦 loadPage →", page);
+  
+    // Find workspace container
+    const workspace = document.querySelector("#workspace");
+    if (!workspace) {
+      console.error("❌ Workspace container not found");
+      return;
+    }
+  
+    try {
+      // Fetch page HTML
+      const res = await fetch(`/dev/${page}.html`);
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  
+      const html = await res.text();
+      workspace.innerHTML = html;
+  
+      // Notify system that workspace is ready
+      document.dispatchEvent(
+        new CustomEvent("module:ready", {
+          detail: { page, workspace }
+        })
+      );
+  
+      console.log("🧭 Workspace ready →", page);
+  
+    } catch (err) {
+      console.error("❌ loadPage failed:", err);
+    }
+  };
+  
+  // ==================================================
   // GLOBAL DRAWER / NAV (ALWAYS ON — CONSOLE-LEVEL)
   // ==================================================
 
