@@ -55,8 +55,6 @@
     initDrawer(); // 👈 THIS is the missing piece
   });
 
-  initializeFooterAndNav();
-
   /**
    * 💳 Wallet — Active Card State (FOUNDATIONAL)
    * --------------------------------------------------
@@ -462,7 +460,7 @@
 
   document.addEventListener("module:ready", () => {
     initDrawer();
-  });
+
   
   // initial load
   initDrawer();
