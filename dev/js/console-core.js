@@ -61,9 +61,10 @@
    * No UI mutation tied to card selection.
    * Zone D visibility is user-intent driven only.
    */
-      document.addEventListener("module:ready", e => {
-      const { page, workspace } = e.detail || {};
-      if (page !== "wallet-con" || !workspace) return;
+      function initWallet(workspace) {
+      if (!workspace) return;
+    
+      console.log("🧭 Wallet init");
 
         // 🔁 First-entry bootstrap (direct load into wallet)
         if (!workspace.dataset.walletInitialized) {
