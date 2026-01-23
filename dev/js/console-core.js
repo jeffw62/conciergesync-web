@@ -72,16 +72,12 @@
       }
     
       // ensure correct initial state
-      updateZoneDVisibility();
-    
       workspace.addEventListener("click", e => {
         const card = e.target.closest(".wallet-card");
         if (!card) return;
-    
+      
         activeCardId = card.dataset.cardId || null;
         console.log("💳 Active card:", activeCardId);
-    
-        updateZoneDVisibility();
       });
     });
   
