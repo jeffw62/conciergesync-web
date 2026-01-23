@@ -65,6 +65,14 @@
       if (!workspace) return;
     
       console.log("🧭 Wallet init");
+      }
+    
+      document.addEventListener("module:ready", e => {
+        const { page, workspace } = e.detail || {};
+        if (page !== "wallet-con" || !workspace) return;
+      
+        initWallet(workspace);
+      });
 
         // 🔁 First-entry bootstrap (direct load into wallet)
         if (!workspace.dataset.walletInitialized) {
