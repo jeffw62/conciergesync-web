@@ -52,8 +52,7 @@
   if (!page) return;
 
   initializeFooterAndNav();
-  initDrawer(); // 👈 THIS is the missing piece
-});
+
 
   /**
    * 💳 Wallet — Active Card State (FOUNDATIONAL)
