@@ -48,10 +48,13 @@
   }
 
   document.addEventListener("module:ready", e => {
-  const { page } = e.detail || {};
-  if (!page) return;
-
-  initializeFooterAndNav();
+    const { page, workspace } = e.detail || {};
+    if (!page) return;
+  
+    initializeFooterAndNav();
+  
+    if (page === "wallet-con") initWallet(workspace);
+  });
 
 
   /**
@@ -67,12 +70,6 @@
       console.log("🧭 Wallet init");
       }
     
-      document.addEventListener("module:ready", e => {
-        const { page, workspace } = e.detail || {};
-        if (page !== "wallet-con" || !workspace) return;
-      
-        initWallet(workspace);
-      });
 
         // 🔁 First-entry bootstrap (direct load into wallet)
         if (!workspace.dataset.walletInitialized) {
