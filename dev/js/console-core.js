@@ -10,7 +10,11 @@ function initDrawer() {
   const hamburger = document.querySelector("#hamburger");
   const drawer = document.querySelector("#drawer");
 
-  if (!hamburger || !drawer) return;
+  if (!hamburger || !drawer) {
+    console.warn("🍔 Drawer not ready — retrying");
+    requestAnimationFrame(initDrawer);
+    return;
+  }
 
   hamburger.addEventListener("click", () => {
     drawer.classList.toggle("open");
