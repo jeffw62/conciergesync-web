@@ -6,36 +6,23 @@
   // --------------------------------------------------
   // GLOBAL HAMBURGER / DRAWER (ALWAYS-ON)
   // --------------------------------------------------
-  function waitForDrawer() {
-    const hamburger = document.querySelector("#hamburger");
-    const drawer = document.querySelector("#drawer");
-  
-    if (hamburger && drawer) {
-      console.log("🍔 Drawer DOM detected");
-      initDrawer();
-      return;
-    }
-  
-    const observer = new MutationObserver(() => {
-      const h = document.querySelector("#hamburger");
-      const d = document.querySelector("#drawer");
-  
-      if (h && d) {
-        console.log("🍔 Drawer DOM detected (observer)");
-        observer.disconnect();
-        initDrawer();
-      }
-  });
+  document.addEventListener("click", e => {
+  const hamburger = e.target.closest("#hamburger");
+  if (!hamburger) return;
 
-  observer.observe(document.body, {
-    childList: true,
-    subtree: true
-  });
-}
+  const drawer = document.querySelector("#drawer");
+  if (!drawer) {
+    console.warn("⚠️ Drawer not found at click time");
+    return;
+  }
 
-  // --------------------------------------------------
-  // BOOTSTRAP — RUN ONCE, IMMEDIATELY
-  // --------------------------------------------------
-  waitForDrawer();
+  drawer.classList.toggle("open");
+
+  console.log(
+    drawer.classList.contains("open")
+      ? "🍔 Drawer opened"
+      : "🍔 Drawer closed"
+  );
+});
 
 })();
