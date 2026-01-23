@@ -90,7 +90,10 @@ document.addEventListener("module:ready", e => {
   }
 });
 
-  console.log("🧭 Wallet init");
+  function initWallet(workspace) {
+  if (!workspace) return;
+
+  console.log("⏱ Wallet init");
 
   const cards = workspace.querySelectorAll(".wallet-card");
   const seeTxBtn = workspace.querySelector("#see-transactions-btn");
