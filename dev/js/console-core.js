@@ -65,7 +65,10 @@
       const { page, workspace } = e.detail || {};
       if (page !== "wallet-con" || !workspace) return;
     
-      let activeCardId = null;
+      const walletContext = {
+        mode: "portfolio", // "portfolio" | "card"
+        activeCardId: null
+      };
     
       const zoneD = workspace.querySelector("#wallet-zone-d");
       const seeTransactionsBtn = workspace.querySelector("#see-transactions-btn");
@@ -75,6 +78,28 @@
       // ─────────────────────────────────────────────
       if (zoneD) zoneD.hidden = true;
       if (seeTransactionsBtn) seeTransactionsBtn.hidden = true;
+
+      syncWalletView();
+
+      // ------------------------------------------------------------------
+      // View references
+      // ------------------------------------------------------------------
+      const portfolioView = workspace.querySelector(".wallet-zone-a"); // Portfolio Overview
+      const cardView = workspace.querySelector(".wallet-zone-c");      // Card details (already exists)
+
+      function syncWalletView() {
+        if (!portfolioView || !cardView) return;
+      
+        if (walletContext.mode === "portfolio") {
+          portfolioView.hidden = false;
+          cardView.hidden = true;
+        }
+      
+        if (walletContext.mode === "card") {
+          portfolioView.hidden = true;
+          cardView.hidden = false;
+        }
+      }
     
       // ─────────────────────────────────────────────
       // Card selection → set state + reveal button
@@ -83,13 +108,18 @@
         const card = e.target.closest(".wallet-card");
         if (!card) return;
       
-        activeCardId = card.dataset.cardId || null;
-        console.log("💳 Active card:", activeCardId);
+        walletContext.mode = "card";
+        walletContext.activeCardId = card.dataset.cardId || null;
+        
+        console.log("🧭 Wallet mode:", walletContext.mode);
+        console.log("💳 Active card:", walletContext.activeCardId);
       
         // Explicit reveal — HTML was hidden by default
         if (seeTransactionsBtn) {
           seeTransactionsBtn.hidden = false;
         }
+
+        syncWalletView();
       });
     
       // ─────────────────────────────────────────────
