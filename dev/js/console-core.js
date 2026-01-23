@@ -64,6 +64,14 @@
       document.addEventListener("module:ready", e => {
       const { page, workspace } = e.detail || {};
       if (page !== "wallet-con" || !workspace) return;
+
+        // 🔎 VERIFICATION HOOK — SAFE / READ-ONLY
+        console.groupCollapsed("🧪 Wallet Init Verification");
+        console.log("Page:", page);
+        console.log("Workspace:", workspace);
+        console.log("Timestamp:", performance.now().toFixed(2));
+        console.trace("Init trace");
+        console.groupEnd();
     
       let activeCardId = null;
     
