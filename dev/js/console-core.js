@@ -61,83 +61,56 @@
    * No UI mutation tied to card selection.
    * Zone D visibility is user-intent driven only.
    */
-  document.addEventListener("module:ready", e => {
-    const { page, workspace } = e.detail || {};
-    if (page !== "wallet-con" || !workspace) return;
-  
-    // --------------------------------------------------
-    // Wallet context (single source of truth)
-    // --------------------------------------------------
-    const walletContext = {
-      mode: "portfolio", // "portfolio" | "card"
-      activeCardId: null
-    };
-  
-    // --------------------------------------------------
-    // DOM references
-    // --------------------------------------------------
-    const zoneD = workspace.querySelector("#wallet-zone-d");
-    const seeTransactionsBtn = workspace.querySelector("#see-transactions-btn");
-  
-    const portfolioView = workspace.querySelector(".wallet-zone-a"); // Portfolio Overview
-    const cardView = workspace.querySelector(".wallet-zone-c");      // Card details
-  
-    // --------------------------------------------------
-    // View sync (pure, deterministic)
-    // --------------------------------------------------
-    function syncWalletView() {
-      console.log("🧭 syncWalletView fired");
-      console.log("portfolioView:", portfolioView);
-      console.log("cardView:", cardView);
-  
-      if (!portfolioView || !cardView) return;
-  
-      if (walletContext.mode === "portfolio") {
-        portfolioView.hidden = false;
-        cardView.hidden = true;
-      }
-  
-      if (walletContext.mode === "card") {
-        portfolioView.hidden = true;
-        cardView.hidden = false;
-      }
-    }
-  
-    // --------------------------------------------------
-    // Initial state (ON LOAD)
-    // --------------------------------------------------
-    if (zoneD) zoneD.hidden = true;
-    if (seeTransactionsBtn) seeTransactionsBtn.hidden = true;
-  
-    syncWalletView();
-  
-    // --------------------------------------------------
-    // Card selection → set state + reveal button
-    // --------------------------------------------------
-    workspace.addEventListener("click", e => {
-      const card = e.target.closest(".wallet-card");
-      if (!card) return;
-  
-      walletContext.mode = "card";
-      walletContext.activeCardId = card.dataset.cardId || null;
-  
-      console.log("🧭 Wallet mode:", walletContext.mode);
-      console.log("💳 Active card:", walletContext.activeCardId);
-  
+      document.addEventListener("module:ready", e => {
+      const { page, workspace } = e.detail || {};
+      if (page !== "wallet-con" || !workspace) return;
+    
+      let activeCardId = null;
+    
+      const zoneD = workspace.querySelector("#wallet-zone-d");
+      const seeTransactionsBtn = workspace.querySelector("#see-transactions-btn");
+    
+      // ─────────────────────────────────────────────
+      // Initial state (ON LOAD)
+      // ─────────────────────────────────────────────
+      if (zoneD) zoneD.hidden = true;
+      if (seeTransactionsBtn) seeTransactionsBtn.hidden = true;
+    
+      // ─────────────────────────────────────────────
+      // Card selection → set state + reveal button
+      // ─────────────────────────────────────────────
+      workspace.addEventListener("click", e => {
+        const card = e.target.closest(".wallet-card");
+        if (!card) return;
+      
+        activeCardId = card.dataset.cardId || null;
+        console.log("💳 Active card:", activeCardId);
+      
+        // Explicit reveal — HTML was hidden by default
+        if (seeTransactionsBtn) {
+          seeTransactionsBtn.hidden = false;
+        }
+      });
+    
+      // ─────────────────────────────────────────────
+      // Explicit user intent → show transactions
+      // ─────────────────────────────────────────────
       if (seeTransactionsBtn) {
-        seeTransactionsBtn.hidden = false;
+        seeTransactionsBtn.addEventListener("click", () => {
+          console.log("📂 See Transactions clicked for:", activeCardId);
+          if (!zoneD || !activeCardId) return;
+          zoneD.hidden = false;
+        });
       }
-  
-      syncWalletView();
     });
   
-    // --------------------------------------------------
-    // Explicit user intent → show transactions
-    // --------------------------------------------------
+    // 👇 Explicit user intent: reveal transactions
     if (seeTransactionsBtn) {
       seeTransactionsBtn.addEventListener("click", () => {
-        console.log("📂 See Transactions clicked for:", walletContext.activeCardId);
-        if (!zoneD || !walletContext.activeCardId) return;
+        console.log("🧪 See Transactions button clicked");
+    
+        if (!zoneD) return;
+    
         zoneD.hidden = false;
       });
     }
