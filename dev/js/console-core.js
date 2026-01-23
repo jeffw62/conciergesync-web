@@ -7,12 +7,12 @@
   // GLOBAL HAMBURGER / DRAWER (ALWAYS-ON)
   // --------------------------------------------------
   document.addEventListener("click", e => {
-  const hamburger = e.target.closest("#hamburger");
+  const hamburger = e.target.closest("#navToggle");
   if (!hamburger) return;
 
-  const drawer = document.querySelector("#drawer");
+  const drawer = document.querySelector("#sideNav");
   if (!drawer) {
-    console.warn("⚠️ Drawer not found at click time");
+    console.warn("⚠️ sideNav not found");
     return;
   }
 
