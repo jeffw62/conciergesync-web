@@ -89,8 +89,7 @@
     // 👇 Explicit user intent: reveal transactions
     if (seeTransactionsBtn) {
       seeTransactionsBtn.addEventListener("click", () => {
-        if (!activeCardId) return;
-        setZoneDVisible(true);
+        console.log("🧪 See Transactions button clicked");
       });
     }
   });
