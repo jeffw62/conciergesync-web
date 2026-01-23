@@ -60,30 +60,46 @@
    * No UI mutation tied to card selection.
    * Zone D visibility is user-intent driven only.
    */
-  document.addEventListener("module:ready", e => {
-    const { page, workspace } = e.detail || {};
-    if (page !== "wallet-con" || !workspace) return;
-  
-    let activeCardId = null;
-  
-    const zoneD = workspace.querySelector("#wallet-zone-d");
-    const seeTransactionsBtn = workspace.querySelector("#see-transactions-btn");
-  
-    function setZoneDVisible(visible) {
-      if (!zoneD) return;
-      zoneD.hidden = !visible;
-    }
-  
-    // 🔒 Always hidden on initial load
-    setZoneDVisible(false);
-  
-    // 🧠 Card selection = state only (no UI mutation)
-    workspace.addEventListener("click", e => {
-      const card = e.target.closest(".wallet-card");
-      if (!card) return;
-  
-      activeCardId = card.dataset.cardId || null;
-      console.log("💳 Active card:", activeCardId);
+      document.addEventListener("module:ready", e => {
+      const { page, workspace } = e.detail || {};
+      if (page !== "wallet-con" || !workspace) return;
+    
+      let activeCardId = null;
+    
+      const zoneD = workspace.querySelector("#wallet-zone-d");
+      const seeTransactionsBtn = workspace.querySelector("#see-transactions-btn");
+    
+      // ─────────────────────────────────────────────
+      // Initial state (ON LOAD)
+      // ─────────────────────────────────────────────
+      if (zoneD) zoneD.hidden = true;
+      if (seeTransactionsBtn) seeTransactionsBtn.hidden = true;
+    
+      // ─────────────────────────────────────────────
+      // Card selection → set state + reveal button
+      // ─────────────────────────────────────────────
+      workspace.addEventListener("click", e => {
+        const card = e.target.closest(".wallet-card");
+        if (!card) return;
+    
+        activeCardId = card.dataset.cardId || null;
+        console.log("💳 Active card:", activeCardId);
+    
+        if (seeTransactionsBtn) {
+          seeTransactionsBtn.hidden = false;
+        }
+      });
+    
+      // ─────────────────────────────────────────────
+      // Explicit user intent → show transactions
+      // ─────────────────────────────────────────────
+      if (seeTransactionsBtn) {
+        seeTransactionsBtn.addEventListener("click", () => {
+          console.log("📂 See Transactions clicked for:", activeCardId);
+          if (!zoneD || !activeCardId) return;
+          zoneD.hidden = false;
+        });
+      }
     });
   
     // 👇 Explicit user intent: reveal transactions
