@@ -7,6 +7,7 @@
 -------------------------- */
 
 function initDrawer() {
+   console.error("🔥 initDrawer CALLED");
   const hamburger = document.querySelector("#hamburger");
   const drawer = document.querySelector("#drawer");
 
