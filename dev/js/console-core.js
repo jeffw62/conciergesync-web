@@ -90,6 +90,10 @@
     if (seeTransactionsBtn) {
       seeTransactionsBtn.addEventListener("click", () => {
         console.log("🧪 See Transactions button clicked");
+    
+        if (!zoneD) return;
+    
+        zoneD.hidden = false;
       });
     }
   });
