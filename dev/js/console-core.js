@@ -6,23 +6,36 @@
   // --------------------------------------------------
   // GLOBAL HAMBURGER / DRAWER (ALWAYS-ON)
   // --------------------------------------------------
+
   document.addEventListener("click", e => {
-  const hamburger = e.target.closest("#navToggle");
-  if (!hamburger) return;
+    // Open via hamburger
+    const hamburger = e.target.closest("#navToggle");
+    if (hamburger) {
+      const drawer = document.querySelector("#sideNav");
+      if (!drawer) {
+        console.warn("⚠️ sideNav not found");
+        return;
+      }
 
-  const drawer = document.querySelector("#sideNav");
-  if (!drawer) {
-    console.warn("⚠️ sideNav not found");
-    return;
-  }
+      drawer.classList.toggle("open");
+      console.log(
+        drawer.classList.contains("open")
+          ? "🍔 Drawer opened"
+          : "🍔 Drawer closed"
+      );
+      return;
+    }
 
-  drawer.classList.toggle("open");
+    // Close via X button
+    const closeBtn = e.target.closest("#closeToggle");
+    if (closeBtn) {
+      const drawer = document.querySelector("#sideNav");
+      if (!drawer) return;
 
-  console.log(
-    drawer.classList.contains("open")
-      ? "🍔 Drawer opened"
-      : "🍔 Drawer closed"
-  );
-});
+      drawer.classList.remove("open");
+      console.log("❌ Drawer closed via X");
+      return;
+    }
+  });
 
 })();
