@@ -22,6 +22,8 @@ function initDrawer() {
   });
 }
 
+initDrawer();
+
 function initializeFooterAndNav() {
   // Placeholder for future global UI hooks
 }
