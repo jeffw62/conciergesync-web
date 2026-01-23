@@ -48,13 +48,10 @@
   }
 
   document.addEventListener("module:ready", e => {
-    const { page, workspace } = e.detail || {};
-    if (!page) return;
-  
-    initializeFooterAndNav();
-  
-    if (page === "wallet-con") initWallet(workspace);
-  });
+  const { page } = e.detail || {};
+  if (!page) return;
+
+  initializeFooterAndNav();
 
 
   /**
@@ -64,26 +61,9 @@
    * No UI mutation tied to card selection.
    * Zone D visibility is user-intent driven only.
    */
-      function initWallet(workspace) {
-      if (!workspace) return;
-    
-      console.log("🧭 Wallet init");
-      }
-    
-
-        // 🔁 First-entry bootstrap (direct load into wallet)
-        if (!workspace.dataset.walletInitialized) {
-          workspace.dataset.walletInitialized = "true";
-          console.log("🧭 Wallet first-entry bootstrap");
-        }
-
-        // 🔎 VERIFICATION HOOK — SAFE / READ-ONLY
-        console.groupCollapsed("🧪 Wallet Init Verification");
-        console.log("Page:", page);
-        console.log("Workspace:", workspace);
-        console.log("Timestamp:", performance.now().toFixed(2));
-        console.trace("Init trace");
-        console.groupEnd();
+      document.addEventListener("module:ready", e => {
+      const { page, workspace } = e.detail || {};
+      if (page !== "wallet-con" || !workspace) return;
     
       let activeCardId = null;
     
@@ -118,25 +98,6 @@
       if (seeTransactionsBtn) {
         seeTransactionsBtn.addEventListener("click", () => {
           console.log("📂 See Transactions clicked for:", activeCardId);
-
-          // 🔎 TEMP ROUTER (no data yet)
-          switch (activeCardId) {
-            case "amex-gold":
-              console.log("➡️ Routing to Amex Gold transactions");
-              break;
-          
-            case "venture-x":
-              console.log("➡️ Routing to Venture X transactions");
-              break;
-          
-            case "chase-ink":
-              console.log("➡️ Routing to Chase Ink transactions");
-              break;
-          
-            default:
-              console.warn("⚠️ No transaction handler for:", activeCardId);
-          }
-          
           if (!zoneD || !activeCardId) return;
           zoneD.hidden = false;
         });
