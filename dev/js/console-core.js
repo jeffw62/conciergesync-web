@@ -55,31 +55,45 @@
 
   /**
    * 💳 Wallet — Active Card State (FOUNDATIONAL)
-   * -----------------------------------------------------------
+   * --------------------------------------------------
    * Establishes which card is currently in focus.
-   * No UI mutations yet. Truth-awareness only.
+   * No UI mutation tied to card selection.
+   * Zone D visibility is user-intent driven only.
    */
-    document.addEventListener("module:ready", e => {
-      const { page, workspace } = e.detail || {};
-      if (page !== "wallet-con" || !workspace) return;
-    
-      let activeCardId = null;
-      const zoneD = workspace.querySelector("#wallet-zone-d");
-    
-      function updateZoneDVisibility() {
-        if (!zoneD) return;
-        zoneD.hidden = !activeCardId;
-      }
-    
-      // ensure correct initial state
-      workspace.addEventListener("click", e => {
-        const card = e.target.closest(".wallet-card");
-        if (!card) return;
-      
-        activeCardId = card.dataset.cardId || null;
-        console.log("💳 Active card:", activeCardId);
-      });
+  document.addEventListener("module:ready", e => {
+    const { page, workspace } = e.detail || {};
+    if (page !== "wallet-con" || !workspace) return;
+  
+    let activeCardId = null;
+  
+    const zoneD = workspace.querySelector("#wallet-zone-d");
+    const seeTransactionsBtn = workspace.querySelector("#see-transactions-btn");
+  
+    function setZoneDVisible(visible) {
+      if (!zoneD) return;
+      zoneD.hidden = !visible;
+    }
+  
+    // 🔒 Always hidden on initial load
+    setZoneDVisible(false);
+  
+    // 🧠 Card selection = state only (no UI mutation)
+    workspace.addEventListener("click", e => {
+      const card = e.target.closest(".wallet-card");
+      if (!card) return;
+  
+      activeCardId = card.dataset.cardId || null;
+      console.log("💳 Active card:", activeCardId);
     });
+  
+    // 👇 Explicit user intent: reveal transactions
+    if (seeTransactionsBtn) {
+      seeTransactionsBtn.addEventListener("click", () => {
+        if (!activeCardId) return;
+        setZoneDVisible(true);
+      });
+    }
+  });
   
   /**
    * 💹 2. Avg Cost per Mile Ticker
