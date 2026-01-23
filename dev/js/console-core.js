@@ -66,11 +66,12 @@ function initDiscovery(workspace) {
 
 document.addEventListener("module:ready", e => {
   const { page, workspace } = e.detail || {};
-  if (!page) return;
 
   // Always-on UI
   initDrawer();
   initializeFooterAndNav();
+
+  if (!page) return;
 
   // Page-specific
   if (page === "wallet-con") {
