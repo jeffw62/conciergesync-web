@@ -53,4 +53,32 @@
     console.log("💳 Wallet initialized");
   }
 
+  // --------------------------------------------------
+  // WORKSPACE LIFECYCLE — SINGLE SOURCE OF TRUTH
+  // --------------------------------------------------
+  document.addEventListener("module:ready", e => {
+    const { page, workspace } = e.detail || {};
+  
+    if (!workspace || !page) {
+      console.warn("⚠️ module:ready fired without page/workspace");
+      return;
+    }
+  
+    console.log("🧭 Workspace ready →", page);
+  
+    // Page-specific wiring ONLY
+    switch (page) {
+      case "wallet-con":
+        initWallet(workspace);
+        break;
+  
+      case "redem-con":
+        initDiscovery(workspace);
+        break;
+  
+      default:
+        console.log("ℹ️ No initializer for page:", page);
+    }
+  });
+
 })();
