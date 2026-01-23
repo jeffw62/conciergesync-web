@@ -3,13 +3,14 @@
 
   console.log("🧱 console-core.js loaded");
 
-  // --------------------------------------------------
-  // GLOBAL DRAWER (ALWAYS-ON)
-  // --------------------------------------------------
+  /* =========================================================
+     GLOBAL NAV DRAWER — ALWAYS ON, NEVER REBOUND
+     ========================================================= */
+
   document.addEventListener("click", e => {
-    // Open via hamburger
-    const hamburger = e.target.closest("#navToggle");
-    if (hamburger) {
+    // OPEN via hamburger
+    const openBtn = e.target.closest("#navToggle");
+    if (openBtn) {
       const drawer = document.querySelector("#sideNav");
       if (!drawer) {
         console.warn("⚠️ sideNav not found");
@@ -20,7 +21,7 @@
       return;
     }
 
-    // Close via X
+    // CLOSE via X
     const closeBtn = e.target.closest("#closeNav");
     if (closeBtn) {
       const drawer = document.querySelector("#sideNav");
@@ -31,54 +32,49 @@
     }
   });
 
-  // --------------------------------------------------
-  // SINGLE LIFECYCLE ENTRY (PAGE LOGIC ONLY)
-  // --------------------------------------------------
-  document.addEventListener("module:ready", e => {
-    console.log("🚨 module:ready FIRED", e.detail);
-    const { page, workspace } = e.detail || {};
-    if (!page || !workspace) return;
+  /* =========================================================
+     WORKSPACE LIFECYCLE — PAGE LOGIC ONLY
+     ========================================================= */
 
-    console.log(`🧭 module:ready → ${page}`);
-
-    if (page === "wallet-con") {
-      initWallet(workspace);
-    }
-  });
-
-  // --------------------------------------------------
-  // WALLET INIT (VERIFICATION ONLY — NO FEATURES YET)
-  // --------------------------------------------------
-  function initWallet(workspace) {
-    console.log("💳 Wallet initialized");
-  }
-
-  // --------------------------------------------------
-  // WORKSPACE LIFECYCLE — SINGLE SOURCE OF TRUTH
-  // --------------------------------------------------
   document.addEventListener("module:ready", e => {
     const { page, workspace } = e.detail || {};
-  
-    if (!workspace || !page) {
+
+    if (!page || !workspace) {
       console.warn("⚠️ module:ready fired without page/workspace");
       return;
     }
-  
-    console.log("🧭 Workspace ready →", page);
-  
-    // Page-specific wiring ONLY
+
+    console.log(`🧭 Workspace ready → ${page}`);
+
     switch (page) {
       case "wallet-con":
         initWallet(workspace);
         break;
-  
+
       case "redem-con":
         initDiscovery(workspace);
         break;
-  
+
       default:
         console.log("ℹ️ No initializer for page:", page);
     }
   });
+
+  /* =========================================================
+     WALLET (SAFE / VERIFICATION ONLY)
+     ========================================================= */
+
+  function initWallet(workspace) {
+    console.log("💳 Wallet initialized");
+    // features intentionally minimal for now
+  }
+
+  /* =========================================================
+     DISCOVERY (PLACEHOLDER)
+     ========================================================= */
+
+  function initDiscovery(workspace) {
+    console.log("🧭 Discovery initialized");
+  }
 
 })();
