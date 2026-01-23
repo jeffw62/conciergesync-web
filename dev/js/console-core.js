@@ -30,10 +30,8 @@
   // --------------------------------------------------
   // BOOTSTRAP — RUN ONCE, IMMEDIATELY
   // --------------------------------------------------
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initDrawer);
-  } else {
+  document.addEventListener("module:ready", () => {
     initDrawer();
-  }
+  });
 
 })();
