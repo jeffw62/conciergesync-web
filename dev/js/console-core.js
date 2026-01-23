@@ -48,7 +48,11 @@
   }
 
   document.addEventListener("module:ready", e => {
-    if (e.detail?.workspace) initializeFooterAndNav();
+    const { page } = e.detail || {};
+    if (!page) return;
+  
+    initializeFooterAndNav();
+    initDrawer(); // 👈 THIS is the missing piece
   });
 
   initializeFooterAndNav();
