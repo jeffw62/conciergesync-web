@@ -462,3 +462,6 @@
     initDrawer();
   });
 
+  // initial load
+  initDrawer();
+
