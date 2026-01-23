@@ -148,6 +148,10 @@
   color: #ffffff;
 }
 
+[hidden] {
+  display: none !important;
+}
+
 /* =========================================================
    ZONE D — TRANSACTIONS
    (INTENTIONALLY EMPTY — TO BE BUILT NEXT)
