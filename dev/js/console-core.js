@@ -106,6 +106,25 @@
       if (seeTransactionsBtn) {
         seeTransactionsBtn.addEventListener("click", () => {
           console.log("📂 See Transactions clicked for:", activeCardId);
+
+          // 🔎 TEMP ROUTER (no data yet)
+          switch (activeCardId) {
+            case "amex-gold":
+              console.log("➡️ Routing to Amex Gold transactions");
+              break;
+          
+            case "venture-x":
+              console.log("➡️ Routing to Venture X transactions");
+              break;
+          
+            case "chase-ink":
+              console.log("➡️ Routing to Chase Ink transactions");
+              break;
+          
+            default:
+              console.warn("⚠️ No transaction handler for:", activeCardId);
+          }
+          
           if (!zoneD || !activeCardId) return;
           zoneD.hidden = false;
         });
