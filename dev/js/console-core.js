@@ -1,126 +1,39 @@
-/* =========================================================
-   Console Core — Clean Canonical Build
-   ========================================================= */
+(() => {
+  "use strict";
 
-/* -------------------------
-   Global UI
--------------------------- */
+  console.log("🧱 console-core.js loaded");
 
-function initDrawer() {
-   console.error("🔥 initDrawer CALLED");
-  const hamburger = document.querySelector("#hamburger");
-  const drawer = document.querySelector("#drawer");
+  // --------------------------------------------------
+  // GLOBAL HAMBURGER / DRAWER (ALWAYS-ON)
+  // --------------------------------------------------
+  function initDrawer() {
+    const hamburger = document.querySelector("#hamburger");
+    const drawer = document.querySelector("#drawer");
 
-  if (!hamburger || !drawer) {
-    console.warn("🍔 Drawer not ready — retrying");
-    requestAnimationFrame(initDrawer);
-    return;
-  }
+    if (!hamburger || !drawer) {
+      console.warn("⚠️ Hamburger or drawer not found in DOM");
+      return;
+    }
 
-  hamburger.addEventListener("click", () => {
-    drawer.classList.toggle("open");
-  });
-}
+    console.log("🍔 Hamburger bound");
 
-initDrawer();
-
-function initializeFooterAndNav() {
-  // Placeholder for future global UI hooks
-}
-
-/* -------------------------
-   Wallet
--------------------------- */
-
-function initWallet(workspace) {
-  if (!workspace) return;
-
-  const cards = workspace.querySelectorAll(".wallet-card");
-  const seeTxBtn = workspace.querySelector("#see-transactions-btn");
-  const transactions = workspace.querySelector("#transactions");
-
-  if (seeTxBtn) seeTxBtn.hidden = true;
-  if (transactions) transactions.hidden = true;
-
-  cards.forEach(card => {
-    card.addEventListener("click", () => {
-      cards.forEach(c => c.classList.remove("active"));
-      card.classList.add("active");
-
-      if (seeTxBtn) seeTxBtn.hidden = false;
-    });
-  });
-
-  if (seeTxBtn && transactions) {
-    seeTxBtn.addEventListener("click", () => {
-      transactions.hidden = false;
-    });
-  }
-}
-
-/* -------------------------
-   Discovery (redem-con)
--------------------------- */
-
-function initDiscovery(workspace) {
-  if (!workspace) return;
-  // Discovery logic lives here
-}
-
-/* -------------------------
-   Lifecycle (SINGLE SOURCE)
--------------------------- */
-
-document.addEventListener("module:ready", e => {
-  const { page, workspace } = e.detail || {};
-
-  // Always-on UI
-  initDrawer();
-  initializeFooterAndNav();
-
-  if (!page) return;
-
-  // Page-specific
-  if (page === "wallet-con") {
-    initWallet(workspace);
-  }
-
-  if (page === "redem-con") {
-    initDiscovery(workspace);
-  }
-});
-
-  function initWallet(workspace) {
-  if (!workspace) return;
-
-  console.log("⏱ Wallet init");
-
-  const cards = workspace.querySelectorAll(".wallet-card");
-  const seeTxBtn = workspace.querySelector("#see-transactions-btn");
-  const transactions = workspace.querySelector("#transactions");
-
-  if (seeTxBtn) seeTxBtn.hidden = true;
-  if (transactions) transactions.hidden = true;
-
-  cards.forEach(card => {
-    card.addEventListener("click", () => {
-      // clear previous state
-      cards.forEach(c => c.classList.remove("active"));
-
-      // set active
-      card.classList.add("active");
-
-      // reveal CTA
-      if (seeTxBtn) seeTxBtn.hidden = false;
-
-      console.log("🪪 Active card:", card.dataset.cardId || "unknown");
-    });
-  });
-
-  if (seeTxBtn && transactions) {
-    seeTxBtn.addEventListener("click", () => {
-      transactions.hidden = false;
-      console.log("📄 Transactions revealed");
+    hamburger.addEventListener("click", () => {
+      drawer.classList.toggle("open");
+      console.log(
+        drawer.classList.contains("open")
+          ? "🍔 Drawer opened"
+          : "🍔 Drawer closed"
+      );
     });
   }
 
+  // --------------------------------------------------
+  // BOOTSTRAP — RUN ONCE, IMMEDIATELY
+  // --------------------------------------------------
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", initDrawer);
+  } else {
+    initDrawer();
+  }
+
+})();
