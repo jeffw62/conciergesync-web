@@ -65,6 +65,12 @@
       const { page, workspace } = e.detail || {};
       if (page !== "wallet-con" || !workspace) return;
 
+        // 🔁 First-entry bootstrap (direct load into wallet)
+        if (!workspace.dataset.walletInitialized) {
+          workspace.dataset.walletInitialized = "true";
+          console.log("🧭 Wallet first-entry bootstrap");
+        }
+
         // 🔎 VERIFICATION HOOK — SAFE / READ-ONLY
         console.groupCollapsed("🧪 Wallet Init Verification");
         console.log("Page:", page);
