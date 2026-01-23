@@ -35,6 +35,7 @@
   // SINGLE LIFECYCLE ENTRY (PAGE LOGIC ONLY)
   // --------------------------------------------------
   document.addEventListener("module:ready", e => {
+    console.log("🚨 module:ready FIRED", e.detail);
     const { page, workspace } = e.detail || {};
     if (!page || !workspace) return;
 
