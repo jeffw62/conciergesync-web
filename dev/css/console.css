@@ -136,6 +136,21 @@ header nav a:hover {
     0 0 48px rgba(191,161,74,0.12);
 }
 
+/* ================================
+   WORKSPACE HEADER (PAGE TITLE ZONE)
+   ================================ */
+
+.workspace-header {
+  height: 35px;
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 15px;
+}
+
+.page-title-slot {
+  width: 100%;
+}
+
 /* ============================================================
    CPM Ticker
    ============================================================ */
