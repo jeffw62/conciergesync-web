@@ -1,8 +1,3 @@
-.wallet-frame {
-  position: relative;
-  padding-top: 32px; /* space for module title under gold border */
-}
-
 .wallet-left-rail {
   position: relative;
 }
@@ -13,14 +8,14 @@
 
 .module-title {
   position: absolute;
-  top: 0px;
-  left: 20px;
-
+  top: 10px;
+  left: 32px;
   font-family: "Cormorant Garamond", serif;
   font-size: 17px;
   font-weight: 500;
-  letter-spacing: 1px;
-  color: rgba(191,161,74,0.48);
+  letter-spacing: 1px;              /* ← refined spacing */
+  color: rgba(191,161,74,0.48);      /* soft gold */
+  transition: color 0.45s ease;      /* match border glow timing */
   pointer-events: none;
   user-select: none;
 }
