@@ -172,5 +172,46 @@
     }
   </script>
 
+  <script>
+  /* =========================================================
+     CONSOLE ROUTER (SINGLE SOURCE OF TRUTH)
+     ========================================================= */
+  
+  (function () {
+    "use strict";
+  
+    const workspace = document.getElementById("workspace");
+  
+    if (!workspace) {
+      console.error("❌ Router: #workspace not found");
+      return;
+    }
+  
+    window.loadPage = async function loadPage(pageId) {
+      console.log("📦 loadPage →", pageId);
+  
+      const url = `/dev/${pageId}.html`;
+  
+      try {
+        const res = await fetch(url, { cache: "no-store" });
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  
+        const html = await res.text();
+        workspace.innerHTML = html;
+  
+        document.dispatchEvent(
+          new CustomEvent("workspace:ready", {
+            detail: { page: pageId, workspace }
+          })
+        );
+  
+        console.log("✅ Workspace ready →", pageId);
+      } catch (err) {
+        console.error("❌ loadPage failed:", pageId, err);
+      }
+    };
+  })();
+  </script>
+
 </body>
 </html>
