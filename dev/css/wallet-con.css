@@ -1,5 +1,5 @@
 .wallet-frame {
-  position: ansolute;
+  position: absolute;
   --frame-top-offset: 40px;
 }
 
