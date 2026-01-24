@@ -213,7 +213,24 @@
         if (!res.ok) throw new Error(`HTTP ${res.status}`);
   
         const html = await res.text();
-        workspace.innerHTML = html;
+        const temp = document.createElement("div");
+        temp.innerHTML = html;
+        
+        // PAGE TITLE EXTRACTION (console-owned)
+        const titleSlot = document.querySelector(".page-title-slot");
+        const pageTitle = temp.querySelector("[data-page-title]");
+        
+        if (titleSlot && pageTitle) {
+          titleSlot.innerHTML = "";
+          titleSlot.appendChild(pageTitle);
+          console.log("🟡 Page title injected into slot");
+        } else {
+          if (!titleSlot) console.warn("⚠️ .page-title-slot not found");
+          if (!pageTitle) console.warn("⚠️ data-page-title not found in page");
+        }
+        
+        // INJECT CLEANED PAGE CONTENT
+        workspace.innerHTML = temp.innerHTML;
   
         document.dispatchEvent(
           new CustomEvent("workspace:ready", {
