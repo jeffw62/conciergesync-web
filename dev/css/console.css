@@ -145,25 +145,16 @@ header nav a:hover {
    ================================ */
 
 .workspace-header {
+  flex: 0 0 35px;      /* ← FORCE height reservation */
   height: 35px;
   display: flex;
-  align-items: flex-end;
+  align-items: center;
   margin-bottom: 15px;
 }
 
 .page-title-slot {
   display: flex;
   justify-content: flex-start;
-}
-
-.page-title-slot {
-  position: absolute;
-  top: 0;
-  left: 50px;             /* aligns with gold inner padding */
-  height: 35px;
-
-  display: flex;
-  align-items: center;
 }
 
 .page-title-slot .module-title {
