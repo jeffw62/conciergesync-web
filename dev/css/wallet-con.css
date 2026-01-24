@@ -9,14 +9,14 @@
 
 .module-title {
   position: absolute;
-  top: var(--frame-top-offset);
-  left: 25px;
+  top: 10px;
+  left: 32px;
   font-family: "Cormorant Garamond", serif;
   font-size: 17px;
   font-weight: 500;
-  letter-spacing: 1px;              /* ← refined spacing */
-  color: rgba(191,161,74,0.48);      /* soft gold */
-  transition: color 0.45s ease;      /* match border glow timing */
+  letter-spacing: 1px;
+  color: rgba(191,161,74,0.48);
+  transition: color 0.45s ease;
   pointer-events: none;
   user-select: none;
 }
