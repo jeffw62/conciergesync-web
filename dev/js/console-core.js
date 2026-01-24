@@ -22,7 +22,7 @@ Any modification requires:
 - Jeff Wynn approval
 
 Violation of this boundary WILL break the console and will
-be grounds for immediately termination or your employment.
+result in immediate termination of your employment!
 ========================================================================
 */
 
