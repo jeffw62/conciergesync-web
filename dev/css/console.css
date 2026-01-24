@@ -141,9 +141,15 @@ header nav a:hover {
    ================================ */
 
 .workspace-header {
-  position: relative;     /* anchor for slot */
-  height: 35px;           /* fixed title band */
-  margin-bottom: 15px;    /* space before page content */
+  height: 35px;
+  display: flex;
+  align-items: flex-end;
+  margin-bottom: 15px;
+}
+
+.page-title-slot {
+  display: flex;
+  justify-content: flex-start;
 }
 
 .page-title-slot {
