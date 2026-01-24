@@ -4,26 +4,22 @@
   console.log("🧱 console-core.js loaded");
 
   // ==================================================
-  // GLOBAL DRAWER / NAV — ALWAYS ON (CONSOLE LEVEL)
+  // GLOBAL UI — CONSOLE SHELL (RUNS ONCE)
   // ==================================================
 
   document.addEventListener("click", e => {
-    // Open via hamburger
-    const navToggle = e.target.closest("#navToggle");
-    if (navToggle) {
+
+    // --- HAMBURGER OPEN ---
+    if (e.target.closest("#navToggle")) {
       const drawer = document.querySelector("#sideNav");
-      if (!drawer) {
-        console.warn("⚠️ sideNav not found");
-        return;
-      }
+      if (!drawer) return console.warn("⚠️ sideNav not found");
       drawer.classList.add("open");
       console.log("🍔 Drawer opened");
       return;
     }
 
-    // Close via X
-    const closeBtn = e.target.closest("#closeNav");
-    if (closeBtn) {
+    // --- HAMBURGER CLOSE ---
+    if (e.target.closest("#closeNav")) {
       const drawer = document.querySelector("#sideNav");
       if (!drawer) return;
       drawer.classList.remove("open");
@@ -31,74 +27,59 @@
       return;
     }
 
-    // Nav link click
+    // --- NAVIGATION CLICK ---
     const navLink = e.target.closest("[data-page]");
     if (navLink) {
       e.preventDefault();
+
       const page = navLink.dataset.page;
-      console.log(`🧭 Nav click → "${page}"`);
+      console.log("🧭 Nav click →", page);
 
       const drawer = document.querySelector("#sideNav");
       if (drawer) drawer.classList.remove("open");
 
-      window.loadPage(page);
+      loadPage(page);
     }
   });
 
   // ==================================================
-  // PAGE LOADER — SINGLE SOURCE OF TRUTH
+  // WORKSPACE LOADER (REPLACES CONTENT ONLY)
   // ==================================================
 
-  window.loadPage = async function loadPage(page) {
+  async function loadPage(page) {
+    console.log("📦 loadPage →", page);
+
     const workspace = document.querySelector("#workspace");
     if (!workspace) {
       console.error("❌ #workspace not found");
       return;
     }
 
-    console.log(`🚦 loadPage → "${page}"`);
+    const res = await fetch(`/dev/${page}.html`);
+    const html = await res.text();
 
-    try {
-      const res = await fetch(`/dev/${page}.html`, { cache: "no-store" });
-      if (!res.ok) {
-        throw new Error(`Failed to load ${page}.html`);
-      }
+    workspace.innerHTML = html;
 
-      const html = await res.text();
-      workspace.innerHTML = html;
-
-      // Fire lifecycle event AFTER DOM injection
-      requestAnimationFrame(() => {
-        document.dispatchEvent(
-          new CustomEvent("module:ready", {
-            detail: { page, workspace }
-          })
-        );
-      });
-
-    } catch (err) {
-      console.error("❌ loadPage error:", err);
-      workspace.innerHTML = `
-        <div style="padding:40px;color:white;">
-          <h2>Failed to load ${page}</h2>
-          <p>${err.message}</p>
-        </div>
-      `;
-    }
-  };
+    document.dispatchEvent(
+      new CustomEvent("module:ready", {
+        detail: { page, workspace }
+      })
+    );
+  }
 
   // ==================================================
-  // MODULE LIFECYCLE — PAGE LOGIC ONLY
+  // PAGE LIFECYCLE — SINGLE SOURCE OF TRUTH
   // ==================================================
 
   document.addEventListener("module:ready", e => {
     const { page, workspace } = e.detail || {};
+
     if (!page || !workspace) {
-      console.warn("⚠️ module:ready missing data");
+      console.warn("⚠️ module:ready without context");
       return;
     }
 
-    console.log(`⏱️ Workspace ready → "${page}"`);
+    console.log("⚙️ Workspace ready →", page);
 
     switch (page) {
       case "wallet-con":
@@ -110,26 +91,48 @@
         break;
 
       default:
-        console.log("ℹ️ No initializer for page:", page);
+        console.log("ℹ️ No initializer for", page);
     }
   });
 
   // ==================================================
-  // WALLET INIT (VERIFICATION ONLY — SAFE)
+  // WALLET INIT (SCOPED ONLY)
   // ==================================================
 
   function initWallet(workspace) {
     console.log("💳 Wallet initialized");
-    // Wallet logic goes here
+
+    const cards = workspace.querySelectorAll(".wallet-card");
+    const txBtn = workspace.querySelector("#see-transactions-btn");
+    const txZone = workspace.querySelector("#transactions");
+
+    if (txBtn) txBtn.hidden = true;
+    if (txZone) txZone.hidden = true;
+
+    cards.forEach(card => {
+      card.addEventListener("click", () => {
+        cards.forEach(c => c.classList.remove("active"));
+        card.classList.add("active");
+        if (txBtn) txBtn.hidden = false;
+        console.log("🪪 Active card:", card.dataset.cardId || "unknown");
+      });
+    });
+
+    if (txBtn && txZone) {
+      txBtn.addEventListener("click", () => {
+        txZone.hidden = false;
+        console.log("📄 Transactions revealed");
+      });
+    }
   }
 
   // ==================================================
-  // DISCOVERY INIT (VERIFICATION ONLY — SAFE)
+  // DISCOVERY INIT (SCOPED ONLY)
   // ==================================================
 
   function initDiscovery(workspace) {
     console.log("✈️ Discovery initialized");
-    // Discovery logic goes here
+    // Existing discovery logic goes here
   }
 
 })();
