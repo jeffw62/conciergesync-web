@@ -148,13 +148,15 @@ header nav a:hover {
   flex: 0 0 35px;      /* ← FORCE height reservation */
   height: 35px;
   display: flex;
-  align-items: center;
+  align-items: left;
   margin-bottom: 15px;
 }
 
 .page-title-slot {
   display: flex;
   justify-content: flex-start;
+  width: 100%;
+  /* NO position, NO top, NO left */
 }
 
 .page-title-slot .module-title {
