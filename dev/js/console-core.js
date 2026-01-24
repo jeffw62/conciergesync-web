@@ -1,43 +1,20 @@
-(() => {
-  "use strict";
+// --------------------------------------------------
+// GLOBAL HAMBURGER / DRAWER (DELEGATED — UNBREAKABLE)
+// --------------------------------------------------
+document.addEventListener("click", (e) => {
+  const hamburger = e.target.closest("#hamburger");
+  const closeBtn = e.target.closest("#closeNav");
+  const drawer = document.querySelector("#drawer");
 
-  console.log("🧱 console-core.js loaded");
+  if (!drawer) return;
 
-  // --------------------------------------------------
-  // GLOBAL HAMBURGER / DRAWER (CONSOLE-LEVEL ONLY)
-  // --------------------------------------------------
-  function initDrawer() {
-    const hamburger = document.getElementById("hamburger");
-    const drawer = document.getElementById("drawer");
-    const closeBtn = document.getElementById("closeNav");
-
-    if (!hamburger || !drawer) {
-      console.warn("⚠️ Hamburger or drawer not found");
-      return;
-    }
-
-    console.log("🍔 Drawer initialized");
-
-    hamburger.addEventListener("click", () => {
-      drawer.classList.add("open");
-      console.log("🍔 Drawer opened");
-    });
-
-    if (closeBtn) {
-      closeBtn.addEventListener("click", () => {
-        drawer.classList.remove("open");
-        console.log("🍔 Drawer closed");
-      });
-    }
+  if (hamburger) {
+    drawer.classList.toggle("open");
+    console.log("🍔 Drawer toggled");
   }
 
-  // --------------------------------------------------
-  // BOOTSTRAP — RUN ONCE, NEVER AGAIN
-  // --------------------------------------------------
-  if (document.readyState === "loading") {
-    document.addEventListener("DOMContentLoaded", initDrawer, { once: true });
-  } else {
-    initDrawer();
+  if (closeBtn) {
+    drawer.classList.remove("open");
+    console.log("❌ Drawer closed");
   }
-
-})();
+});
