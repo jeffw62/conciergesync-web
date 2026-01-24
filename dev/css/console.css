@@ -90,31 +90,6 @@ header nav a:hover {
 }
 
 /* ============================================================
-   WORKSPACE (INJECTED CONTENT HOST)
-   ============================================================ */
-
-#workspace {
-  flex: 1 1 auto;
-  width: 100%;
-
-  overflow-y: auto;
-  overflow-x: hidden;
-
-  display: block;
-}
-
-.workspace-content {
-  width: 100%;
-  min-height: 100%;
-  box-sizing: border-box;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(8px); }
-  to   { opacity: 1; transform: translateY(0); }
-}
-
-/* ============================================================
    MODULE VISIBILITY CONTROL
    ============================================================ */
 
