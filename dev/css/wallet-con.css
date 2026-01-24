@@ -1,5 +1,6 @@
-.wallet-left-rail {
+.wallet-frame {
   position: relative;
+  --frame-top-offset: 56px;
 }
 
 /* ===========================================================
@@ -8,7 +9,7 @@
 
 .module-title {
   position: absolute;
-  top: 60px;
+  top: var(--frame-top-offset);
   left: 32px;
   font-family: "Cormorant Garamond", serif;
   font-size: 17px;
