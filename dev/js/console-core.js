@@ -34,44 +34,61 @@ result in immediate termination of your employment!
   document.addEventListener("DOMContentLoaded", () => {
     console.log("🧱 console-core.js DOM ready");
 
-    const sideNav    = document.getElementById("sideNav");
-    const closeNav   = document.getElementById("closeNav");
-    const navToggle  = document.getElementById("navToggle");
-    const accountBtn = document.getElementById("accountBtn");
+    /* -------------------------------------------------
+       GLOBAL ELEMENTS (CONSOLE-LEVEL ONLY)
+    ------------------------------------------------- */
 
-    if (!sideNav) {
-      console.warn("⚠️ sideNav not found");
-      return;
-    }
+    const sideNav        = document.getElementById("sideNav");
+    const navToggle      = document.getElementById("navToggle");
+    const closeNav       = document.getElementById("closeNav");
 
-    /* -------------------------------
-       OPEN / CLOSE DRAWER
-    -------------------------------- */
+    const accountBtn     = document.getElementById("accountBtn");
+    const accountMenu    = document.querySelector(".account-menu");
+
+    /* -------------------------------------------------
+       SAFETY CHECKS
+    ------------------------------------------------- */
+
+    if (!sideNav)   console.warn("⚠️ sideNav not found");
+    if (!navToggle) console.warn("⚠️ navToggle not found");
+    if (!closeNav)  console.warn("⚠️ closeNav not found");
+    if (!accountBtn) console.warn("⚠️ accountBtn not found");
+    if (!accountMenu) console.warn("⚠️ accountMenu not found");
+
+    /* -------------------------------------------------
+       HAMBURGER / SIDE NAV (ONLY)
+    ------------------------------------------------- */
 
     function openDrawer() {
-      sideNav.classList.add("open");
+      sideNav?.classList.add("open");
       console.log("🍔 Drawer opened");
     }
 
     function closeDrawer() {
-      sideNav.classList.remove("open");
+      sideNav?.classList.remove("open");
       console.log("❌ Drawer closed");
     }
 
-    navToggle?.addEventListener("click", openDrawer);
-    accountBtn?.addEventListener("click", openDrawer);
-    closeNav?.addEventListener("click", closeDrawer);
+    navToggle?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      openDrawer();
+    });
 
-    /* -------------------------------
-       NAVIGATION INSIDE DRAWER
-       (THIS WAS THE MISSING PIECE)
-    -------------------------------- */
+    closeNav?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      closeDrawer();
+    });
 
-    sideNav.addEventListener("click", (e) => {
+    /* -------------------------------------------------
+       SIDE NAV LINK ROUTING
+    ------------------------------------------------- */
+
+    sideNav?.addEventListener("click", (e) => {
       const link = e.target.closest("a[data-page]");
       if (!link) return;
 
       e.preventDefault();
+      e.stopPropagation();
 
       const page = link.dataset.page;
       console.log(`🧭 Nav click → "${page}"`);
@@ -81,7 +98,28 @@ result in immediate termination of your employment!
       if (typeof window.loadPage === "function") {
         window.loadPage(page);
       } else {
-        console.warn("⚠️ loadPage() not found");
+        console.warn("⚠️ loadPage() not defined");
+      }
+    });
+
+    /* -------------------------------------------------
+       ACCOUNT DROPDOWN (SEPARATE CONTROL)
+    ------------------------------------------------- */
+
+    accountBtn?.addEventListener("click", (e) => {
+      e.stopPropagation();
+      accountMenu?.classList.toggle("active");
+      console.log("👤 accountBtn clicked");
+    });
+
+    /* -------------------------------------------------
+       CLICK OUTSIDE TO CLOSE ACCOUNT DROPDOWN
+    ------------------------------------------------- */
+
+    document.addEventListener("click", () => {
+      if (accountMenu?.classList.contains("active")) {
+        accountMenu.classList.remove("active");
+        console.log("👤 account menu closed (outside click)");
       }
     });
 
