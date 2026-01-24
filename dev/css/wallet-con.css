@@ -1,3 +1,8 @@
+.wallet-frame {
+  position: relative;
+  padding-top: 32px; /* space for module title under gold border */
+}
+
 .wallet-left-rail {
   position: relative;
 }
