@@ -3,39 +3,42 @@
 
   console.log("🧱 console-core.js loaded");
 
-  // --------------------------------------------------
-  // GLOBAL CONSOLE NAV (ALWAYS ON)
-  // --------------------------------------------------
+  // ==================================================
+  // GLOBAL DRAWER (CONSOLE-LEVEL, NEVER REBUILT)
+  // ==================================================
 
   const accountBtn = document.getElementById("accountBtn");
-  const sideNav = document.getElementById("sideNav");
-  const closeNavBtn = document.getElementById("closeNav");
-
-  if (!accountBtn) {
-    console.error("❌ accountBtn not found");
-    return;
-  }
+  const navToggle  = document.getElementById("navToggle");
+  const sideNav    = document.getElementById("sideNav");
+  const closeNav   = document.getElementById("closeNav");
 
   if (!sideNav) {
-    console.error("❌ sideNav not found");
+    console.error("❌ sideNav not found — drawer disabled");
     return;
   }
 
-  if (!closeNavBtn) {
-    console.error("❌ closeNav not found");
-    return;
-  }
-
-  // --- Open nav via account button ---
-  accountBtn.addEventListener("click", () => {
+  function openDrawer() {
     sideNav.classList.add("open");
-    console.log("🍔 Nav opened");
-  });
+    console.log("🍔 Drawer opened");
+  }
 
-  // --- Close nav via X button ---
-  closeNavBtn.addEventListener("click", () => {
+  function closeDrawer() {
     sideNav.classList.remove("open");
-    console.log("❌ Nav closed");
+    console.log("❌ Drawer closed");
+  }
+
+  // Open triggers
+  if (accountBtn) accountBtn.addEventListener("click", openDrawer);
+  if (navToggle)  navToggle.addEventListener("click", openDrawer);
+
+  // Close triggers
+  if (closeNav) closeNav.addEventListener("click", closeDrawer);
+
+  // Close drawer when clicking any nav link
+  sideNav.addEventListener("click", e => {
+    const link = e.target.closest("a[data-page]");
+    if (!link) return;
+    closeDrawer();
   });
 
 })();
