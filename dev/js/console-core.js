@@ -1,44 +1,59 @@
+/* ============================================================
+   ConciergeSync™ Console Core (LOCKED)
+   Purpose: Global chrome only (nav + account)
+   ============================================================ */
+
 (() => {
   "use strict";
 
-  console.log("🧱 console-core.js loaded");
-
-  // ==================================================
-  // GLOBAL DRAWER (CONSOLE-LEVEL, NEVER REBUILT)
-  // ==================================================
-
+  // ---- Element refs (explicit, no guessing) ----
   const accountBtn = document.getElementById("accountBtn");
-  const navToggle  = document.getElementById("navToggle");
-  const sideNav    = document.getElementById("sideNav");
-  const closeNav   = document.getElementById("closeNav");
+  const accountDropdown = document.querySelector(".account-dropdown");
 
-  if (!sideNav) {
-    console.error("❌ sideNav not found — drawer disabled");
+  const navToggle = document.getElementById("navToggle");
+  const sideNav = document.getElementById("sideNav");
+  const closeNav = document.getElementById("closeNav");
+
+  if (!accountBtn || !accountDropdown || !navToggle || !sideNav || !closeNav) {
+    console.error("Console core: missing required elements");
     return;
   }
 
-  function openDrawer() {
+  // ---- Account dropdown logic ----
+  function closeAccountDropdown() {
+    accountDropdown.classList.remove("open");
+  }
+
+  function toggleAccountDropdown(e) {
+    e.stopPropagation();
+    accountDropdown.classList.toggle("open");
+  }
+
+  accountBtn.addEventListener("click", toggleAccountDropdown);
+
+  document.addEventListener("click", (e) => {
+    if (!accountDropdown.contains(e.target) && e.target !== accountBtn) {
+      closeAccountDropdown();
+    }
+  });
+
+  // ---- Side navigation logic ----
+  function openSideNav() {
     sideNav.classList.add("open");
-    console.log("🍔 Drawer opened");
   }
 
-  function closeDrawer() {
+  function closeSideNav() {
     sideNav.classList.remove("open");
-    console.log("❌ Drawer closed");
   }
 
-  // Open triggers
-  if (accountBtn) accountBtn.addEventListener("click", openDrawer);
-  if (navToggle)  navToggle.addEventListener("click", openDrawer);
+  navToggle.addEventListener("click", (e) => {
+    e.stopPropagation();
+    openSideNav();
+  });
 
-  // Close triggers
-  if (closeNav) closeNav.addEventListener("click", closeDrawer);
-
-  // Close drawer when clicking any nav link
-  sideNav.addEventListener("click", e => {
-    const link = e.target.closest("a[data-page]");
-    if (!link) return;
-    closeDrawer();
+  closeNav.addEventListener("click", (e) => {
+    e.stopPropagation();
+    closeSideNav();
   });
 
 })();
