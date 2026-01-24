@@ -1,5 +1,5 @@
 .wallet-frame {
-  position: relative;
+  position: ansolute;
   --frame-top-offset: 40px;
 }
 
@@ -10,7 +10,7 @@
 .module-title {
   position: absolute;
   top: var(--frame-top-offset);
-  left: 32px;
+  left: 25px;
   font-family: "Cormorant Garamond", serif;
   font-size: 17px;
   font-weight: 500;
