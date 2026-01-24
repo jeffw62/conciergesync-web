@@ -31,75 +31,45 @@ result in immediate termination of your employment!
 
   console.log("🧱 console-core.js loaded");
 
-  // --------------------------------------------------
-  // DOM READY GATE (REQUIRED)
-  // --------------------------------------------------
   document.addEventListener("DOMContentLoaded", () => {
-    console.log("🧱 console-core.js DOM ready");
 
-    // ----------------------------
-    // REQUIRED ELEMENTS
-    // ----------------------------
-    const accountBtn = document.getElementById("accountBtn");
-    const accountDropdown = document.querySelector(".account-dropdown");
+    const accountBtn   = document.getElementById("accountBtn");
+    const accountMenu  = document.querySelector(".account-menu");
+    const navToggle    = document.getElementById("navToggle");
+    const sideNav      = document.getElementById("sideNav");
+    const closeNav     = document.getElementById("closeNav");
 
-    const navToggle = document.getElementById("navToggle");
-    const sideNav = document.getElementById("sideNav");
-    const closeNav = document.getElementById("closeNav");
-
-    console.table({
-      accountBtn,
-      accountDropdown,
-      navToggle,
-      sideNav,
-      closeNav
-    });
-
-    if (
-      !accountBtn ||
-      !accountDropdown ||
-      !navToggle ||
-      !sideNav ||
-      !closeNav
-    ) {
+    if (!accountBtn || !accountMenu || !navToggle || !sideNav || !closeNav) {
       console.error("❌ console-core missing required elements");
       return;
     }
 
-    // --------------------------------------------------
-    // ACCOUNT MENU (👤)
-    // --------------------------------------------------
-    accountBtn.addEventListener("click", (e) => {
+    // -------------------------------
+    // Account dropdown (user icon)
+    // -------------------------------
+    accountBtn.addEventListener("click", e => {
       e.stopPropagation();
-      console.log("👤 accountBtn clicked");
-      accountDropdown.classList.toggle("open");
+      accountMenu.classList.toggle("active");
+      console.log("👤 accountBtn toggled");
     });
 
-    document.addEventListener("click", (e) => {
-      if (
-        accountDropdown.classList.contains("open") &&
-        !accountDropdown.contains(e.target) &&
-        e.target !== accountBtn
-      ) {
-        accountDropdown.classList.remove("open");
-      }
+    // Close account menu when clicking elsewhere
+    document.addEventListener("click", () => {
+      accountMenu.classList.remove("active");
     });
 
-    // --------------------------------------------------
-    // SIDE NAV (☰)
-    // --------------------------------------------------
-    navToggle.addEventListener("click", (e) => {
-      e.stopPropagation();
-      console.log("☰ navToggle clicked");
+    // -------------------------------
+    // Side navigation (hamburger)
+    // -------------------------------
+    navToggle.addEventListener("click", () => {
       sideNav.classList.add("open");
+      console.log("🍔 sideNav opened");
     });
 
-    closeNav.addEventListener("click", (e) => {
-      e.stopPropagation();
-      console.log("❌ closeNav clicked");
+    closeNav.addEventListener("click", () => {
       sideNav.classList.remove("open");
+      console.log("❌ sideNav closed");
     });
 
   });
-
 })();
