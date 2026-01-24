@@ -1,59 +1,105 @@
-/* ============================================================
-   ConciergeSync™ Console Core (LOCKED)
-   Purpose: Global chrome only (nav + account)
-   ============================================================ */
+/*
+========================================================================
+⚠️  WARNING — DO NOT MODIFY
+========================================================================
+This file is LOCKED.
+
+Purpose:
+- Global console chrome ONLY
+- Header navigation
+- Account menu
+- Hamburger / side navigation
+
+Explicitly NOT allowed in this file:
+- Page logic
+- Workspace logic
+- Module initialization
+- Data fetching
+- UI state for sub-pages
+
+Any modification requires:
+- Senior engineer review
+- Jeff Wynn approval
+
+Violation of this boundary WILL break the console and will
+be grounds for immediately termination or your employment.
+========================================================================
+*/
 
 (() => {
   "use strict";
 
-  // ---- Element refs (explicit, no guessing) ----
-  const accountBtn = document.getElementById("accountBtn");
-  const accountDropdown = document.querySelector(".account-dropdown");
+  console.log("🧱 console-core.js loaded");
 
-  const navToggle = document.getElementById("navToggle");
-  const sideNav = document.getElementById("sideNav");
-  const closeNav = document.getElementById("closeNav");
+  // --------------------------------------------------
+  // DOM READY GATE (REQUIRED)
+  // --------------------------------------------------
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("🧱 console-core.js DOM ready");
 
-  if (!accountBtn || !accountDropdown || !navToggle || !sideNav || !closeNav) {
-    console.error("Console core: missing required elements");
-    return;
-  }
+    // ----------------------------
+    // REQUIRED ELEMENTS
+    // ----------------------------
+    const accountBtn = document.getElementById("accountBtn");
+    const accountDropdown = document.querySelector(".account-dropdown");
 
-  // ---- Account dropdown logic ----
-  function closeAccountDropdown() {
-    accountDropdown.classList.remove("open");
-  }
+    const navToggle = document.getElementById("navToggle");
+    const sideNav = document.getElementById("sideNav");
+    const closeNav = document.getElementById("closeNav");
 
-  function toggleAccountDropdown(e) {
-    e.stopPropagation();
-    accountDropdown.classList.toggle("open");
-  }
+    console.table({
+      accountBtn,
+      accountDropdown,
+      navToggle,
+      sideNav,
+      closeNav
+    });
 
-  accountBtn.addEventListener("click", toggleAccountDropdown);
-
-  document.addEventListener("click", (e) => {
-    if (!accountDropdown.contains(e.target) && e.target !== accountBtn) {
-      closeAccountDropdown();
+    if (
+      !accountBtn ||
+      !accountDropdown ||
+      !navToggle ||
+      !sideNav ||
+      !closeNav
+    ) {
+      console.error("❌ console-core missing required elements");
+      return;
     }
-  });
 
-  // ---- Side navigation logic ----
-  function openSideNav() {
-    sideNav.classList.add("open");
-  }
+    // --------------------------------------------------
+    // ACCOUNT MENU (👤)
+    // --------------------------------------------------
+    accountBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      console.log("👤 accountBtn clicked");
+      accountDropdown.classList.toggle("open");
+    });
 
-  function closeSideNav() {
-    sideNav.classList.remove("open");
-  }
+    document.addEventListener("click", (e) => {
+      if (
+        accountDropdown.classList.contains("open") &&
+        !accountDropdown.contains(e.target) &&
+        e.target !== accountBtn
+      ) {
+        accountDropdown.classList.remove("open");
+      }
+    });
 
-  navToggle.addEventListener("click", (e) => {
-    e.stopPropagation();
-    openSideNav();
-  });
+    // --------------------------------------------------
+    // SIDE NAV (☰)
+    // --------------------------------------------------
+    navToggle.addEventListener("click", (e) => {
+      e.stopPropagation();
+      console.log("☰ navToggle clicked");
+      sideNav.classList.add("open");
+    });
 
-  closeNav.addEventListener("click", (e) => {
-    e.stopPropagation();
-    closeSideNav();
+    closeNav.addEventListener("click", (e) => {
+      e.stopPropagation();
+      console.log("❌ closeNav clicked");
+      sideNav.classList.remove("open");
+    });
+
   });
 
 })();
