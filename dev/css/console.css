@@ -151,6 +151,11 @@ header nav a:hover {
   width: 100%;
 }
 
+.page-title-slot .module-title {
+  position: static;
+  margin-left: 32px;
+}
+
 /* ============================================================
    CPM Ticker
    ============================================================ */
