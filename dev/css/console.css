@@ -163,6 +163,21 @@ header nav a:hover {
   margin: 0;              /* kill inherited margins */
 }
 
+/* 🚨 DEBUG FORCE — MUST MOVE THE TITLE */
+.page-title-slot {
+  position: relative !important;
+  background: rgba(255, 0, 0, 0.15) !important;
+  outline: 2px solid red !important;
+}
+
+.page-title-slot .module-title {
+  position: relative !important;
+  left: 0 !important;
+  top: 0 !important;
+  color: red !important;
+  font-size: 24px !important;
+}
+
 /* ============================================================
    CPM Ticker
    ============================================================ */
