@@ -131,11 +131,10 @@ header nav a:hover {
 /*   GOLD CONSOLE FRAME — Monte Blanc Signature Edition          */
 /* ------------------------------------------------------------- */
 
-#workspace-content {
+#workspace {
   width: 100%;
   max-width: 1200px;
   margin: 60px auto;
-  padding: 50px;
 
   /* 🖋️ Ultra-fine Monte Blanc stroke */
   border: 1px solid rgba(191,161,74,0.70);
@@ -330,5 +329,3 @@ button.profile-btn > i {
   letter-spacing: 0.3px;
   opacity: 0.9;
 }
-
-
