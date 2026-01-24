@@ -1,63 +1,49 @@
 (() => {
   "use strict";
 
-  console.log("🧱 console-core.clean.js loaded");
+  console.log("🧱 console-core.js loaded");
 
-  // -----------------------------
-  // ELEMENT REFERENCES
-  // -----------------------------
-  const hamburger = document.getElementById("hamburger");
-  const drawer = document.getElementById("drawer");
-  const closeNav = document.getElementById("closeNav");
-  const workspace = document.getElementById("workspace");
+  // --------------------------------------------------
+  // GLOBAL ELEMENTS (ALWAYS PRESENT IN console.html)
+  // --------------------------------------------------
+  const sideNav = document.getElementById("sideNav");
+  const closeNavBtn = document.getElementById("closeNav");
+  const accountBtn = document.getElementById("accountBtn");
 
-  if (!hamburger || !drawer || !workspace) {
-    console.error("❌ Core elements missing — aborting console core");
+  if (!sideNav) {
+    console.error("❌ sideNav not found");
     return;
   }
 
-  // -----------------------------
-  // HAMBURGER OPEN / CLOSE
-  // -----------------------------
-  hamburger.addEventListener("click", () => {
-    drawer.classList.add("open");
-    console.log("🍔 Drawer opened");
-  });
-
-  if (closeNav) {
-    closeNav.addEventListener("click", () => {
-      drawer.classList.remove("open");
-      console.log("❌ Drawer closed");
-    });
+  // --------------------------------------------------
+  // NAV OPEN / CLOSE
+  // --------------------------------------------------
+  function openNav() {
+    sideNav.classList.add("open");
+    console.log("🍔 Nav opened");
   }
 
-  // -----------------------------
-  // NAVIGATION (WORKSPACE SWAP)
-  // -----------------------------
-  drawer.addEventListener("click", (e) => {
-    const link = e.target.closest("[data-target]");
-    if (!link) return;
+  function closeNav() {
+    sideNav.classList.remove("open");
+    console.log("🍔 Nav closed");
+  }
 
-    e.preventDefault();
+  // --------------------------------------------------
+  // EVENT BINDINGS
+  // --------------------------------------------------
+  if (accountBtn) {
+    accountBtn.addEventListener("click", openNav);
+  }
 
-    const target = link.getAttribute("data-target");
-    if (!target) return;
+  if (closeNavBtn) {
+    closeNavBtn.addEventListener("click", closeNav);
+  }
 
-    console.log(`🧭 Navigating to ${target}`);
-
-    fetch(`/dev/${target}.html`)
-      .then(res => {
-        if (!res.ok) throw new Error("Load failed");
-        return res.text();
-      })
-      .then(html => {
-        workspace.innerHTML = html;
-        drawer.classList.remove("open");
-        console.log(`✅ Loaded ${target}`);
-      })
-      .catch(err => {
-        console.error("❌ Navigation error:", err);
-      });
+  // Optional: click outside nav closes it
+  document.addEventListener("click", (e) => {
+    if (!sideNav.contains(e.target) && !accountBtn?.contains(e.target)) {
+      closeNav();
+    }
   });
 
 })();
