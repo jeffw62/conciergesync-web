@@ -230,7 +230,12 @@
         }
         
         // INJECT CLEANED PAGE CONTENT
-        workspace.innerHTML = temp.innerHTML;
+        const body = document.getElementById("workspace-body");
+        if (!body) {
+          console.error("❌ Router: #workspace-body not found");
+          return;
+        }
+        body.innerHTML = temp.innerHTML;
   
         document.dispatchEvent(
           new CustomEvent("workspace:ready", {
