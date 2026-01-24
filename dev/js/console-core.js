@@ -34,21 +34,6 @@ result in immediate termination of your employment!
   document.addEventListener("DOMContentLoaded", () => {
     console.log("🧱 console-core.js DOM ready");
 
-  /* ==========================================================
-   PAGE TITLE SLOT INJECTION (console-owned)
-   ========================================================== */
-
-    const pageTitle = document.querySelector("[data-page-title]");
-    const titleSlot = document.querySelector(".page-title-slot");
-
-    if (pageTitle && titleSlot) {
-      titleSlot.appendChild(pageTitle);
-      console.log("🟡 Page title injected into slot");
-    } else {
-      if (!pageTitle) console.warn("⚠️ data-page-title not found");
-      if (!titleSlot) console.warn("⚠️ .page-title-slot not found");
-    }
-
     /* -------------------------------------------------
        GLOBAL ELEMENTS (CONSOLE-LEVEL ONLY)
     ------------------------------------------------- */
