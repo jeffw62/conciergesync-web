@@ -8,14 +8,13 @@
 
 .module-title {
   position: absolute;
-  top: 10px;
-  left: 32px;
+  top: -18px;        /* pulls it just under the gold border */
+  left: 0;           /* aligns with left edge of the rail */
   font-family: "Cormorant Garamond", serif;
   font-size: 17px;
   font-weight: 500;
-  letter-spacing: 1px;              /* ← refined spacing */
-  color: rgba(191,161,74,0.48);      /* soft gold */
-  transition: color 0.45s ease;      /* match border glow timing */
+  letter-spacing: 1px;
+  color: rgba(191,161,74,0.48);
   pointer-events: none;
   user-select: none;
 }
