@@ -224,6 +224,7 @@
         if (titleSlot && pageTitle) {
           titleSlot.innerHTML = "";
           titleSlot.appendChild(pageTitle);
+          pageTitle.remove();
           console.log("🟡 Page title injected into slot");
         } else {
           if (!titleSlot) console.warn("⚠️ .page-title-slot not found");
