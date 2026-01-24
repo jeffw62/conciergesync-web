@@ -8,8 +8,9 @@
 
 .module-title {
   position: absolute;
-  top: -18px;        /* pulls it just under the gold border */
-  left: 0;           /* aligns with left edge of the rail */
+  top: 12px;
+  left: 32px;
+
   font-family: "Cormorant Garamond", serif;
   font-size: 17px;
   font-weight: 500;
