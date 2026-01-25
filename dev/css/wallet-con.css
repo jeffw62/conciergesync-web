@@ -38,7 +38,7 @@
 
 #workspace {
   height: calc(100vh - var(--console-header-height, 0px));
-  overflow: hidden; /* 🔑 prevents page scroll */
+  overflow: visible; /* 🔑 prevents page scroll */
 }
 
 /* ================================
@@ -49,7 +49,7 @@
   gap: 32px;
   width: 100%;
   height: 100%;
-  overflow: hidden;
+  overflow: visible;
 }
 
 .wallet-left-rail {
@@ -83,6 +83,12 @@
 .wallet-left-rail,
 .wallet-data-stage {
   overscroll-behavior: contain;
+}
+
+/* Establish a concrete height for the wallet page */
+.workspace-content.wallet-frame {
+  height: calc(100vh - 60px); /* matches workspace margin */
+  overflow: hidden;
 }
 
 /* ================================
