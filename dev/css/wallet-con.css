@@ -7,9 +7,7 @@
    =========================================================== */
 
 .module-title {
-  position: absolute;
-  top: 10px;
-  left: 32px;
+  position: static;        /* ← REJOIN NORMAL FLOW */
   font-family: "Cormorant Garamond", serif;
   font-size: 17px;
   font-weight: 500;
