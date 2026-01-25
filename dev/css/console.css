@@ -122,7 +122,7 @@ header nav a:hover {
     0 0 16px rgba(191,161,74,0.14),
     0 0 36px rgba(191,161,74,0.08);
 
-  padding: 50px;
+  padding: 0 50px 50px 50px;
   background: transparent;
 
   display: flex;
