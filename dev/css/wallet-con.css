@@ -1,123 +1,86 @@
-.wallet-frame {
-  position: relative;
-}
+/* ===========================================================
+   WALLET MODULE — CLEAN BASELINE
+   This file owns ONLY wallet layout + behavior
+   =========================================================== */
 
 /* ===========================================================
-   Module Title
+   MODULE TITLE (page-owned)
    =========================================================== */
 
 .module-title {
-  position: static;        /* ← REJOIN NORMAL FLOW */
   font-family: "Cormorant Garamond", serif;
   font-size: 17px;
   font-weight: 500;
   letter-spacing: 1px;
   color: rgba(191,161,74,0.48);
   transition: color 0.45s ease;
+  margin-bottom: 24px; /* space before content */
   pointer-events: none;
   user-select: none;
 }
 
-/* When frame glows */
+/* Brighten title when workspace glows */
 #workspace:hover .module-title {
-  color: rgba(191,161,74,0.72);      /* just slightly brighter */
+  color: rgba(191,161,74,0.72);
 }
 
-/* ================================
-   WALLET LAYOUT
-   ================================ */
+/* ===========================================================
+   WALLET FRAME (entire injected page)
+   =========================================================== */
 
-/* 🔒 Establish vertical ownership for the wallet module */
-.wallet-frame {
-  height: 100%;
-}
-
-.wallet-layout {
-  height: 100%;
-}
-
-#workspace {
-  height: calc(100vh - var(--console-header-height, 0px));
-  overflow: hidden; /* 🔑 prevents page scroll */
-}
-
-/* ================================
-   WALLET WORKSPACE FRAME & RAIL 
-   ================================ */
 .wallet-frame {
   display: flex;
-  gap: 32px;
-  width: 100%;
+  flex-direction: column;
   height: 100%;
-  overflow: hidden;
+  overflow: hidden; /* critical: no page bleed */
 }
+
+/* ===========================================================
+   WALLET LAYOUT (below title)
+   =========================================================== */
+
+.wallet-layout {
+  display: flex;
+  gap: 32px;
+  flex: 1;          /* fill remaining height */
+  min-height: 0;    /* REQUIRED for child scrolling */
+}
+
+/* ===========================================================
+   LEFT RAIL (cards)
+   =========================================================== */
 
 .wallet-left-rail {
   width: 180px;
   min-width: 180px;
+
   display: flex;
   flex-direction: column;
-  height: 100%;
+
   overflow-y: auto;
   overflow-x: hidden;
-  padding-bottom: 120px;
+
+  padding-bottom: 120px; /* breathing room at bottom */
 
   scrollbar-width: none;
   -ms-overflow-style: none;
 }
 
 .wallet-left-rail::-webkit-scrollbar {
-  width: 0;
-  height: 0;
   display: none;
 }
 
-.wallet-data-stage {
-  padding-top: 48px;
-  height: 100%;
-  overflow-y: auto;
-  overflow-x: hidden;
-}
-
-/* --- Scroll containment (prevent page scroll bleed) --- */
-.wallet-left-rail,
-.wallet-data-stage {
-  overscroll-behavior: contain;
-}
-
-/* ================================
-   WALLET LAYOUT
-   ================================ */
-
-.wallet-layout {
-  display: flex;
-  align-items: flex-start;
-  gap: 32px;
-  width: 100%;
-}
-
-/* ================================
-   LEFT: CARD COLUMN
-   ================================ */
+/* ===========================================================
+   CARD COLUMN
+   =========================================================== */
 
 .wallet-cards-column {
-  width: 180px;
-  flex-shrink: 0;
   display: flex;
   flex-direction: column;
-  gap: 0; /* 🔑 disable uniform spacing */
+  gap: 0; /* spacing controlled by card padding */
 }
 
-.wallet-data-stage {
-  flex: 1;               /* absorbs ALL remaining width */
-  min-width: 0;          /* prevents overflow weirdness */
-}
-
-.wallet-panel {
-  padding-left: 30px; /* start here */
-}
-
-/* Base card surface */
+/* Individual card */
 .wallet-card {
   width: 180px;
   height: 110px;
@@ -125,12 +88,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  position: relative;
 
-  border-radius: 4px; 
+  border-radius: 4px;
   background: rgba(255,255,255,0.92);
-  overflow: hidden; /* locks rounding */
-
+  overflow: hidden;
 }
 
 /* Card image */
@@ -138,20 +99,29 @@
   width: 180px;
   height: 110px;
   display: block;
-  transform: translateY(2px); /* or 2px max */
 }
 
-/* ================================
-   RIGHT: DATA STAGE
-   ================================ */
+/* ===========================================================
+   RIGHT DATA STAGE
+   =========================================================== */
 
 .wallet-data-stage {
-  min-height: 360px;
+  flex: 1;
+  min-width: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
   display: flex;
   align-items: flex-start;
 }
 
-/* Placeholder only */
+/* Placeholder / content wrapper */
+.wallet-panel {
+  padding-left: 30px;
+}
+
+/* Optional empty state */
 .wallet-data-placeholder {
   max-width: 720px;
   padding-left: 70px;
