@@ -145,7 +145,6 @@ header nav a:hover {
    ================================ */
 
 .workspace-header {
-  margin-top: 72px;
   min-height: 35px;        /* ← THIS is the key */
   display: flex;
   justify-content: flex-start;
