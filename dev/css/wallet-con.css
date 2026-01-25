@@ -59,6 +59,7 @@
   flex-direction: column;
   overflow-y: auto;
   overflow-x: hidden;
+  flex: 0 0 auto;
   padding-bottom: 120px;
 
   scrollbar-width: none;
@@ -72,9 +73,10 @@
 }
 
 .wallet-data-stage {
-  padding-top: 48px;
+  lex: 1;                 /* ← THIS replaces height: 100% */
   overflow-y: auto;
   overflow-x: hidden;
+  padding-top: 48px;
 }
 
 /* --- Scroll containment (prevent page scroll bleed) --- */
@@ -95,10 +97,10 @@
 
 .wallet-layout {
   display: flex;
-  align-items: flex-start;
+  align-items: stretch;   /* IMPORTANT */
   gap: 32px;
   width: 100%;
-  flex: 1 1 auto;
+  flex: 1;
   min-height: 0;
   overflow: hidden;
 }
