@@ -15,8 +15,8 @@
   color: rgba(191,161,74,0.48);
   transition: color 0.45s ease;
   position: static;
-  margin-bottom: 24px; /* space before content */
-  margin-left: 24px;
+  margin-bottom: 50px; /* space before content */
+  margin-left: 40px;
   pointer-events: none;
   user-select: none;
 }
@@ -36,7 +36,7 @@
   gap: 32px;
   width: 100%;
   overflow: hidden;
-  padding-top: 36px;
+  padding-top: 4px;
 }
 
 /* ===========================================================
