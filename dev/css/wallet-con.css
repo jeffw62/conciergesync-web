@@ -14,6 +14,7 @@
   letter-spacing: 1px;
   color: rgba(191,161,74,0.48);
   transition: color 0.45s ease;
+  position: static;
   margin-bottom: 24px; /* space before content */
   pointer-events: none;
   user-select: none;
