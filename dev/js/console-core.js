@@ -34,6 +34,19 @@ result in immediate termination of your employment!
   document.addEventListener("DOMContentLoaded", () => {
     console.log("🧱 console-core.js DOM ready");
 
+    // ─────────────────────────────────────────────
+    // Footer Injection (console-owned, global)
+    // ─────────────────────────────────────────────
+    const footerSlot = document.getElementById("footer");
+
+    if (footerSlot) {
+      footerSlot.innerHTML = `
+        <div class="console-footer">
+          © ConciergeSync™
+        </div>
+      `;
+    }
+
     /* -------------------------------------------------
        GLOBAL ELEMENTS (CONSOLE-LEVEL ONLY)
     ------------------------------------------------- */
