@@ -29,11 +29,12 @@
    =========================================================== */
 
 .wallet-frame {
-  padding-top: 36px;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  overflow: hidden; /* critical: no page bleed */
+  gap: 32px;
+  width: 100%;
+  overflow: hidden;
+  padding-top: 36px;
 }
 
 /* ===========================================================
