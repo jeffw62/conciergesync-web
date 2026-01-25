@@ -157,3 +157,10 @@
   padding-left: 70px;
   color: rgba(255,255,255,0.85);
 }
+
+/* TEST — define wallet page height & scroll boundary */
+.workspace-content.wallet-frame {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
