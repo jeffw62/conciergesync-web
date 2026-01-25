@@ -237,6 +237,10 @@
           return;
         }
         body.innerHTML = temp.innerHTML;
+        const dashboard = document.querySelector(".dashboard-container");
+        if (dashboard) {
+          dashboard.style.display = "none";
+        }
   
         document.dispatchEvent(
           new CustomEvent("workspace:ready", {
