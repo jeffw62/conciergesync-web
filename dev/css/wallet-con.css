@@ -16,6 +16,7 @@
   transition: color 0.45s ease;
   position: static;
   margin-bottom: 24px; /* space before content */
+  margin-left: 24px;
   pointer-events: none;
   user-select: none;
 }
