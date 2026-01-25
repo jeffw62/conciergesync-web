@@ -42,7 +42,10 @@ result in immediate termination of your employment!
     if (footerSlot) {
       footerSlot.innerHTML = `
         <div class="console-footer">
-          © ConciergeSync™
+          <div class="footer-brand">© ConciergeSync™</div>
+          <div class="footer-tagline">
+            Solving what matters… <em>Beautifully</em>
+          </div>
         </div>
       `;
     }
