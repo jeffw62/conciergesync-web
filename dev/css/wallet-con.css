@@ -29,6 +29,7 @@
    =========================================================== */
 
 .wallet-frame {
+  padding-top: 36px;
   display: flex;
   flex-direction: column;
   height: 100%;
