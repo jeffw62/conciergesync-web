@@ -38,7 +38,7 @@
 
 #workspace {
   height: calc(100vh - var(--console-header-height, 0px));
-  overflow: visible; /* 🔑 prevents page scroll */
+  overflow: hidden; /* 🔑 prevents page scroll */
 }
 
 /* ================================
@@ -49,7 +49,7 @@
   gap: 32px;
   width: 100%;
   height: 100%;
-  overflow: visible;
+  overflow: hidden;
 }
 
 .wallet-left-rail {
@@ -57,9 +57,9 @@
   min-width: 180px;
   display: flex;
   flex-direction: column;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  flex: 0 0 auto;
   padding-bottom: 120px;
 
   scrollbar-width: none;
@@ -73,10 +73,10 @@
 }
 
 .wallet-data-stage {
-  lex: 1;                 /* ← THIS replaces height: 100% */
+  padding-top: 48px;
+  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
-  padding-top: 48px;
 }
 
 /* --- Scroll containment (prevent page scroll bleed) --- */
@@ -85,24 +85,15 @@
   overscroll-behavior: contain;
 }
 
-/* Establish a concrete height for the wallet page */
-.workspace-content.wallet-frame {
-  height: calc(100vh - 60px); /* matches workspace margin */
-  overflow: hidden;
-}
-
 /* ================================
    WALLET LAYOUT
    ================================ */
 
 .wallet-layout {
   display: flex;
-  align-items: stretch;   /* IMPORTANT */
+  align-items: flex-start;
   gap: 32px;
   width: 100%;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
 }
 
 /* ================================
