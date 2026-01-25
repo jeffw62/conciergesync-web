@@ -308,4 +308,14 @@ button.profile-btn > i {
   letter-spacing: 0.3px;
   opacity: 0.9;
 }
-›
+
+/* ============================================================
+   CONSOLE FOOTER
+   ============================================================ */
+
+.console-footer {
+  padding: 16px 0;
+  text-align: center;
+  font-size: 13px;
+  color: rgba(255, 255, 255, 0.45);
+}
