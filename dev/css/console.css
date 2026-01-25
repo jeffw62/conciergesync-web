@@ -145,37 +145,24 @@ header nav a:hover {
    ================================ */
 
 .workspace-header {
-  flex: 0 0 35px;      /* ← FORCE height reservation */
-  height: 35px;
-  display: flex;
-  align-items: left;
-  margin-bottom: 15px;
-}
-
-.page-title-slot {
+  min-height: 35px;        /* ← THIS is the key */
   display: flex;
   justify-content: flex-start;
-  width: 100%;
-  /* NO position, NO top, NO left */
+  align-items: center;
+  margin-bottom: 15px;
+  flex-shrink: 0;          /* prevent collapse */
 }
 
-.page-title-slot .module-title {
-  margin: 0;              /* kill inherited margins */
-}
-
-/* 🚨 DEBUG FORCE — MUST MOVE THE TITLE */
 .page-title-slot {
-  position: relative !important;
-  background: rgba(255, 0, 0, 0.15) !important;
-  outline: 2px solid red !important;
+  display: flex;
+  align-items: center;        /* vertical centering inside the 35px slot */
+  justify-content: flex-start;/* left-aligned horizontally */
+  width: 100%;
 }
 
 .page-title-slot .module-title {
-  position: relative !important;
-  left: 0 !important;
-  top: 0 !important;
-  color: red !important;
-  font-size: 24px !important;
+  margin: 0;                 /* prevent inherited margin drift */
+  padding: 0;
 }
 
 /* ============================================================
