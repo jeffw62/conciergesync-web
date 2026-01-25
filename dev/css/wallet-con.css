@@ -7,7 +7,7 @@
    MODULE TITLE (page-owned)
    =========================================================== */
 
-.module-title {
+.wallet-frame .module-title {
   font-family: "Cormorant Garamond", serif;
   font-size: 17px;
   font-weight: 500;
@@ -29,7 +29,7 @@
    WALLET FRAME (entire injected page)
    =========================================================== */
 
-.wallet-frame {
+.wallet-frame .wallet-frame {
   display: flex;
   flex-direction: column;
   gap: 32px;
@@ -42,7 +42,7 @@
    WALLET LAYOUT (below title)
    =========================================================== */
 
-.wallet-layout {
+.wallet-frame .wallet-layout {
   display: flex;
   gap: 32px;
   flex: 1;          /* fill remaining height */
@@ -53,7 +53,7 @@
    LEFT RAIL (cards)
    =========================================================== */
 
-.wallet-left-rail {
+.wallet-frame .wallet-left-rail {
   width: 180px;
   min-width: 180px;
 
@@ -69,7 +69,7 @@
   -ms-overflow-style: none;
 }
 
-.wallet-left-rail::-webkit-scrollbar {
+.wallet-frame .wallet-left-rail::-webkit-scrollbar {
   display: none;
 }
 
@@ -77,14 +77,14 @@
    CARD COLUMN
    =========================================================== */
 
-.wallet-cards-column {
+.wallet-frame .wallet-cards-column {
   display: flex;
   flex-direction: column;
   gap: 0; /* spacing controlled by card padding */
 }
 
 /* Individual card */
-.wallet-card {
+.wallet-frame .wallet-card {
   width: 180px;
   height: 110px;
 
@@ -98,7 +98,7 @@
 }
 
 /* Card image */
-.wallet-card img {
+.wallet-frame .wallet-card img {
   width: 180px;
   height: 110px;
   display: block;
@@ -109,7 +109,7 @@
    RIGHT DATA STAGE
    =========================================================== */
 
-.wallet-data-stage {
+.wallet-frame .wallet-data-stage {
   flex: 1;
   min-width: 0;
 
@@ -121,12 +121,12 @@
 }
 
 /* Placeholder / content wrapper */
-.wallet-panel {
+.wallet-frame .wallet-panel {
   padding-left: 30px;
 }
 
 /* Optional empty state */
-.wallet-data-placeholder {
+.wallet-frame .wallet-data-placeholder {
   max-width: 720px;
   padding-left: 70px;
   color: rgba(255,255,255,0.85);
