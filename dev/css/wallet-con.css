@@ -57,7 +57,6 @@
   min-width: 180px;
   display: flex;
   flex-direction: column;
-  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
   padding-bottom: 120px;
@@ -74,7 +73,6 @@
 
 .wallet-data-stage {
   padding-top: 48px;
-  height: 100%;
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -100,6 +98,9 @@
   align-items: flex-start;
   gap: 32px;
   width: 100%;
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow: hidden;
 }
 
 /* ================================
