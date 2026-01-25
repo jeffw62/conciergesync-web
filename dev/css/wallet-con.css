@@ -99,6 +99,7 @@
   width: 180px;
   height: 110px;
   display: block;
+  transform: translateY(2px);
 }
 
 /* ===========================================================
