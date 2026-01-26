@@ -35,7 +35,6 @@
   flex-direction: column;
   gap: 32px;
   width: 100%;
-  overflow: hidden;
   padding-top: 4px;
 }
 
@@ -95,7 +94,6 @@
 
   border-radius: 4px;
   background: rgba(255,255,255,0.92);
-  overflow: hidden;
 }
 
 /* Card image */
