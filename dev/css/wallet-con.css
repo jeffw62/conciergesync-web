@@ -77,7 +77,7 @@
    CARD COLUMN
    =========================================================== */
 
-.wallet-cards-column {
+.wallet-frame .wallet-cards-column {
   display: flex;
   flex-direction: column;
   gap: 0;
