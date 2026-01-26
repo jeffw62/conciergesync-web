@@ -96,7 +96,7 @@
 .wallet-frame .wallet-cards-column {
   display: flex;
   flex-direction: column;
-  gap: 32px;
+  gap: 42px;
 }
 
 /* Individual card */
