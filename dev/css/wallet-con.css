@@ -15,7 +15,7 @@
   color: rgba(191,161,74,0.48);
   transition: color 0.45s ease;
   position: static;
-  margin-bottom: 20px; /* space before content */
+  margin-bottom: 32px; /* space before content */
   margin-left: 40px;
   pointer-events: none;
   user-select: none;
