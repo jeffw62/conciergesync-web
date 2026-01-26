@@ -84,6 +84,12 @@
   display: none;
 }
 
+.wallet-frame .wallet-scroll-gate {
+  height: 24px; /* or whatever your standard card gap is */
+  flex-shrink: 0;
+  pointer-events: none;
+}
+
 /* ===========================================================
    CARD COLUMN
    =========================================================== */
