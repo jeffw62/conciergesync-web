@@ -73,12 +73,12 @@
 }
 
 .wallet-frame .wallet-cards-scroll {
-  flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-
+  display: block;
   padding-top: 0px;    /* space below anchor */
   padding-bottom: 0px; /* breathing room at bottom */
+   
+  overflow-y: auto;
+  overflow-x: hidden;
 
   scrollbar-width: none;
   -ms-overflow-style: none;
@@ -95,14 +95,14 @@
 .wallet-frame .wallet-cards-column {
   display: flex;
   flex-direction: column;
-  gap: 0;
+  gap: 32px;
 }
 
 /* Individual card */
 .wallet-frame .wallet-card {
   width: 180px;
   height: 110px;
-  margin-bottom: 32px;
+  margin: 0;
   display: flex;
   align-items: center;
   justify-content: center;
