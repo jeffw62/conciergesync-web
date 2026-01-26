@@ -77,10 +77,16 @@
    CARD COLUMN
    =========================================================== */
 
-.wallet-frame .wallet-cards-column {
+.wallet-cards-column {
   display: flex;
   flex-direction: column;
-  gap: 0; /* spacing controlled by card padding */
+  gap: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  max-height: 100%;
+  padding-bottom: 120px;
 }
 
 /* Individual card */
