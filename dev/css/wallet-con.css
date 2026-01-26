@@ -55,7 +55,7 @@
    =========================================================== */
 
 .wallet-frame .wallet-rail-anchor {
-  padding-bottom: 32px; /* match normal card spacing */
+  padding-bottom: 48px; /* match normal card spacing */
 }
 
 .wallet-frame .wallet-left-rail {
