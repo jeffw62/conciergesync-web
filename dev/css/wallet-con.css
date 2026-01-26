@@ -54,6 +54,10 @@
    LEFT RAIL (cards)
    =========================================================== */
 
+.wallet-frame .wallet-rail-anchor {
+  padding-bottom: 32px; /* match normal card spacing */
+}
+
 .wallet-frame .wallet-left-rail {
   width: 180px;
   min-width: 180px;
