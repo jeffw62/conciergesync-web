@@ -102,7 +102,7 @@
 .wallet-frame .wallet-card {
   width: 180px;
   height: 110px;
-
+  margin-bottom: 32px;
   display: flex;
   align-items: center;
   justify-content: center;
