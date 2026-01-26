@@ -45,7 +45,7 @@
 
 .wallet-frame .wallet-layout {
   display: flex;
-  gap: 25px;
+  gap: 32px;
   flex: 1;          /* fill remaining height */
   min-height: 20;    /* REQUIRED for child scrolling */
 }
