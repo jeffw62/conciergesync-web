@@ -74,9 +74,10 @@
 
 .wallet-frame .wallet-cards-scroll {
   display: block;
-  padding-top: 0px;    /* space below anchor */
-  padding-bottom: 0px; /* breathing room at bottom */
-   
+
+  padding-top: 32px;   /* ← THIS IS THE FIX */
+  padding-bottom: 0px;
+
   overflow-y: auto;
   overflow-x: hidden;
 
