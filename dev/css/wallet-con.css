@@ -30,7 +30,7 @@
    WALLET FRAME (entire injected page)
    =========================================================== */
 
-.wallet-frame .wallet-frame {
+.wallet-frame {
   display: flex;
   flex-direction: column;
   gap: 32px;
