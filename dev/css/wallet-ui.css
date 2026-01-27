@@ -289,7 +289,7 @@
 
   padding-bottom: 48px; /* future-proof for close button */
 
-  opacity: 0;           /* hidden for now */
+  opacity: 1;           /* hidden for now */
   pointer-events: none; /* inert until wired */
 }
 
