@@ -266,8 +266,16 @@
   cursor: pointer;
 }
 
-.wallet-frame .wallet-transactions-tab:hover {
-  opacity: 0.95;
+.wallet-frame .wallet-transactions-label {
+  transition: 
+    letter-spacing 120ms ease,
+    color 120ms ease;
+}
+
+.wallet-frame .wallet-transactions-tab:hover 
+.wallet-transactions-label {
+  letter-spacing: 0.26em;   /* +0.04em from base */
+  color: rgba(255,255,255,0.72); /* slight lift, not glow */
 }
 
 /* =========================================================
