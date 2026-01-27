@@ -1,3 +1,5 @@
+console.log('wallet-con.js loaded');
+
 document.addEventListener('DOMContentLoaded', () => {
   const walletCards = document.querySelectorAll('.wallet-card');
 
