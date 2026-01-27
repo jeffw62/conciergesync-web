@@ -234,7 +234,6 @@
 
   /* Calm */
   opacity: 0.75;
-  pointer-events: none; /* visual only for now */
 
   transition: opacity 160ms ease;
 }
@@ -290,7 +289,7 @@
   padding-bottom: 48px; /* future-proof for close button */
 
   opacity: 1;           /* hidden for now */
-  pointer-events: none; /* inert until wired */
+  pointer-events: auto; /* inert until wired */
 }
 
 .wallet-frame .wallet-transactions-header {
@@ -300,6 +299,7 @@
 
   color: rgba(255,255,255,0.55);
   margin-bottom: 18px;
+  pointer-events: auto;
 }
 
 .wallet-frame .wallet-transactions-list {
