@@ -343,3 +343,29 @@
   color: rgba(255,255,255,0.45);
   text-align: right;
 }
+
+.wallet-frame .wallet-transactions-header-row,
+.wallet-frame .wallet-transaction-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 140px 140px;
+  align-items: center;
+}
+
+.wallet-frame .wallet-transactions-header-row {
+  margin-bottom: 20px;
+}
+
+.wallet-frame .wallet-transaction-row {
+  padding: 12px 0; /* one-row spacing */
+}
+
+.wallet-frame .tx-amount {
+  text-align: right;
+  font-variant-numeric: tabular-nums;
+}
+
+.wallet-frame .tx-date,
+.wallet-frame .tx-category {
+  color: rgba(255,255,255,0.55);
+}
+
