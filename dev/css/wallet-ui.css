@@ -223,7 +223,7 @@
 .wallet-frame .wallet-transactions-tab::before {
   content: "";
   position: absolute;
-  top: -1px;
+  top: -10px;
   left: 50%;
   transform: translateX(-50%);
 
