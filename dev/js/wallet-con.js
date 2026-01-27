@@ -10,6 +10,12 @@ document.addEventListener("click", (e) => {
 
   const slot = document.querySelector('.wallet-selected-card-slot');
   if (slot) {
-    slot.textContent = cardId;
+    slot.innerHTML = `
+  <img 
+    src="/dev/asset/images/${cardId}-01.svg"
+    alt="${cardId}"
+    class="wallet-selected-card"
+  />
+`;
   }
 });
