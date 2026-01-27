@@ -399,3 +399,17 @@
   letter-spacing: 0.18em; /* tightens */
   font-weight: 600;
 }
+
+.wallet-zone-d {
+  position: relative;
+}
+
+.wallet-close-button {
+  position: sticky;
+
+  top: 40%;                /* vertical float point */
+  margin-left: 24px;       /* space to the right of CATEGORY */
+
+  white-space: nowrap;
+}
+
