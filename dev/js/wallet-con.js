@@ -1,5 +1,19 @@
 console.log("🟡 wallet-con.js loaded");
 
+document.addEventListener("mouseover", (e) => {
+  const card = e.target.closest(".wallet-card");
+  if (!card) return;
+
+  card.classList.add("is-hovered");
+});
+
+document.addEventListener("mouseout", (e) => {
+  const card = e.target.closest(".wallet-card");
+  if (!card) return;
+
+  card.classList.remove("is-hovered");
+});
+
 (function () {
   const workspace = document.getElementById('workspace');
   if (!workspace) return;
