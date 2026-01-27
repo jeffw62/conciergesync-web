@@ -180,6 +180,47 @@
   display: none !important;
 }
 
+.wallet-frame .wallet-transactions-tab {
+  position: relative;
+  margin: 28px auto 0;
+  width: 220px;
+  height: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  /* Shape */
+  clip-path: polygon(
+    6% 0%,
+    94% 0%,
+    100% 100%,
+    0% 100%
+  );
+
+  /* Presence without weight */
+  background: rgba(255, 255, 255, 0.06);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+
+  border-top: 1px solid rgba(255, 255, 255, 0.18);
+
+  /* Calm */
+  opacity: 0.75;
+  pointer-events: none; /* visual only for now */
+
+  transition: opacity 160ms ease;
+}
+
+.wallet-frame .wallet-transactions-label {
+  font-size: 11px;
+  letter-spacing: 0.22em;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.55);
+
+  user-select: none;
+}
+
 /* =========================================================
    ZONE D — TRANSACTIONS
    (INTENTIONALLY EMPTY — TO BE BUILT NEXT)
