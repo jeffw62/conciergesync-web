@@ -123,6 +123,26 @@
 }
 
 /* ===========================================================
+   LEFT RAIL HOVER OVER CARD ENHANCEMENT
+   =========================================================== */
+
+/* Base card (already exists) */
+.wallet-frame .wallet-card {
+  transition: 
+    box-shadow 0.25s ease,
+    border-color 0.25s ease,
+    transform 0.2s ease;
+}
+
+/* Hover enhancement */
+.wallet-frame .wallet-card.is-hovered {
+  box-shadow: 
+    0 0 0 1px rgba(191,161,74,0.9),
+    0 8px 24px rgba(0,0,0,0.35);
+  transform: translateY(-1px);
+}
+
+/* ===========================================================
    RIGHT DATA STAGE
    =========================================================== */
 
