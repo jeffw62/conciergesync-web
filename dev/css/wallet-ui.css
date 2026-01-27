@@ -198,6 +198,14 @@
     0% 100%
   );
 
+  mask-image: linear-gradient(
+    to right,
+    transparent 0%,
+    black 20%,
+    black 80%,
+    transparent 100%
+  );
+
   /* Presence without weight */
   background: rgba(255, 255, 255, 0.06);
   backdrop-filter: blur(6px);
