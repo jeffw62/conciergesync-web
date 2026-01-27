@@ -153,6 +153,7 @@ body::before {
   margin-top: 40px;
   max-width: 640px;
   position: relative;
+  padding-bottom: 20px;
 }
 
 .wallet-frame .wallet-summary-grid {
@@ -206,7 +207,7 @@ body::before {
 .wallet-frame .wallet-transactions-tab {
   position: relative;
   margin: 28px auto 0;
-  margin-top: -6px;
+  margin-top: 12px;
   width: 220px;
   height: 34px;
 
