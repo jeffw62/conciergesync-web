@@ -401,6 +401,10 @@
 }
 
 .wallet-zone-d {
+  display: grid;
+  grid-template-columns: 1fr auto; /* ledger | utility rail */
+  column-gap: 24px;
+
   position: relative;
 }
 
