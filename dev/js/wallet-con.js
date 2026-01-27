@@ -1,15 +1,19 @@
-console.log('wallet-con.js loaded');
+console.log("🟡 wallet-con.js loaded");
 
-document.addEventListener('DOMContentLoaded', () => {
-  const walletCards = document.querySelectorAll('.wallet-card');
+function bindWalletCardHover() {
+  const cards = document.querySelectorAll(
+    ".wallet-frame .wallet-card"
+  );
 
-  walletCards.forEach(card => {
-    card.addEventListener('mouseenter', () => {
-      card.classList.add('is-hovered');
+  console.log("🟡 binding hover to cards:", cards.length);
+
+  cards.forEach(card => {
+    card.addEventListener("mouseenter", () => {
+      card.classList.add("is-hovered");
     });
 
-    card.addEventListener('mouseleave', () => {
-      card.classList.remove('is-hovered');
+    card.addEventListener("mouseleave", () => {
+      card.classList.remove("is-hovered");
     });
   });
-});
+}
