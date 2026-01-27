@@ -1,19 +1,33 @@
 console.log("🟡 wallet-con.js loaded");
 
 function bindWalletCardHover() {
-  const cards = document.querySelectorAll(
-    ".wallet-frame .wallet-card"
-  );
+  const walletCards = document.querySelectorAll('.wallet-card');
 
-  console.log("🟡 binding hover to cards:", cards.length);
+  if (!walletCards.length) return;
 
-  cards.forEach(card => {
-    card.addEventListener("mouseenter", () => {
-      card.classList.add("is-hovered");
+  walletCards.forEach(card => {
+    card.addEventListener('mouseenter', () => {
+      card.classList.add('is-hovered');
     });
 
-    card.addEventListener("mouseleave", () => {
-      card.classList.remove("is-hovered");
+    card.addEventListener('mouseleave', () => {
+      card.classList.remove('is-hovered');
     });
   });
+
+  console.log("✨ Wallet card hover bound");
 }
+
+// Watch for injected wallet content
+const observer = new MutationObserver(() => {
+  const cardsExist = document.querySelector('.wallet-card');
+  if (cardsExist) {
+    bindWalletCardHover();
+    observer.disconnect(); // bind once, then stop
+  }
+});
+
+observer.observe(document.body, {
+  childList: true,
+  subtree: true
+});
