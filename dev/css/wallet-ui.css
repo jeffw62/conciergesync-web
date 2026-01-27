@@ -57,6 +57,13 @@
   color: rgba(255,255,255,0.85);
 }
 
+.wallet-selected-card {
+  width: 135px;     /* 75% of 180 */
+  height: auto;
+  border-radius: 4px;
+  display: block;
+}
+
 /* =========================================================
    ZONE B — PRIMARY METRICS (PORTFOLIO SIGNALS)
    ========================================================= */
