@@ -8,14 +8,17 @@ document.addEventListener("click", (e) => {
   const cardId = card.dataset.cardId;
   console.log("🃏 Card clicked:", cardId);
 
-  const assetBase = `${window.location.origin}/dev/asset/images`;
-
-slot.innerHTML = `
-  <img
-    src="${assetBase}/${cardId}-01.svg"
-    alt="${cardId}"
-    class="wallet-selected-card"
-  />
-`;
+  const slot = document.querySelector(".wallet-selected-card-slot");
+  if (!slot) {
+    console.warn("⚠️ wallet-selected-card-slot not found");
+    return;
   }
+
+  slot.innerHTML = `
+    <img
+      src="/dev/asset/images/${cardId}_biz_plat-01.svg"
+      alt="${cardId}"
+      class="wallet-selected-card"
+    />
+  `;
 });
