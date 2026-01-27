@@ -8,11 +8,11 @@ document.addEventListener("click", (e) => {
   const cardId = card.dataset.cardId;
   console.log("🃏 Card clicked:", cardId);
 
-  const slot = document.querySelector('.wallet-selected-card-slot');
-  if (slot) {
-    slot.innerHTML = `
-  <img 
-    src="/dev/asset/images/${cardId}-01.svg"
+  const assetBase = `${window.location.origin}/dev/asset/images`;
+
+slot.innerHTML = `
+  <img
+    src="${assetBase}/${cardId}-01.svg"
     alt="${cardId}"
     class="wallet-selected-card"
   />
