@@ -383,19 +383,19 @@
   background: rgba(255,255,255,0.06);
   backdrop-filter: blur(6px);
 
-  padding: 10px 18px;
-  border-radius: 12px;
-
+  padding: 12px 20px;
+  border-radius: 14px;
+  border: none;
   cursor: pointer;
 
   transition:
+    color 120ms ease,
     letter-spacing 120ms ease,
-    font-weight 120ms ease,
-    color 120ms ease;
+    font-weight 120ms ease;
 }
 
 .wallet-close-button:hover {
+  color: rgba(255,255,255,0.92);
   letter-spacing: 0.18em; /* tightens */
   font-weight: 600;
-  color: rgba(255,255,255,0.9);
 }
