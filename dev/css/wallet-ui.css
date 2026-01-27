@@ -192,8 +192,8 @@
 
   /* Shape */
   clip-path: polygon(
-    6% 0%,
-    94% 0%,
+    4% 0%,
+    96% 0%,
     100% 100%,
     0% 100%
   );
@@ -210,6 +210,20 @@
   pointer-events: none; /* visual only for now */
 
   transition: opacity 160ms ease;
+}
+
+.wallet-frame .wallet-transactions-tab::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 100vw;
+  height: 1px;
+
+  background: rgba(255, 255, 255, 0.12);
+  pointer-events: none;
 }
 
 .wallet-frame .wallet-transactions-label {
