@@ -9,7 +9,7 @@
    RIGHT TRAY — STAGE CONTAINER
    ========================================================= */
 
-.wallet-data-stage {
+.wallet-frame .wallet-data-stage {
   display: flex;
   flex-direction: column;
   padding-left: 96px; /* intentional breathing room from card rail */
@@ -20,66 +20,87 @@
    ZONE A — OVERVIEW IDENTITY
    ========================================================= */
 
-.wallet-zone-a {
+.wallet-frame .wallet-zone-a {
   padding: 40px 0 24px 0;
 }
 
-.zone-a-inner {
+.wallet-frame .zone-a-inner {
   max-width: 640px;
 }
 
-.zone-a-title {
+.wallet-frame .zone-a-title {
   font-size: 28px;
   font-weight: 600;
   letter-spacing: 0.3px;
   color: #ffffff;
 }
 
-.zone-a-subtitle {
+.wallet-frame .zone-a-subtitle {
   margin-top: 8px;
   font-size: 14px;
   letter-spacing: 0.4px;
   color: rgba(255,255,255,0.65);
 }
 
-.zone-a-meta {
+.wallet-frame .zone-a-meta {
   margin-top: 14px;
   display: flex;
   gap: 10px;
   font-size: 13px;
 }
 
-.zone-a-meta .label {
+.wallet-frame .zone-a-meta .label {
   color: rgba(255,255,255,0.55);
 }
 
-.zone-a-meta .value {
+.wallet-frame .zone-a-meta .value {
   color: rgba(255,255,255,0.85);
 }
 
-.wallet-selected-card {
-  width: 135px;     /* 75% of 180 */
+/* Zone A layout */
+.wallet-frame .wallet-zone-a .zone-a-inner {
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+
+/* Left text block */
+.wallet-frame .wallet-zone-a .zone-a-text {
+  flex: 1;
+}
+
+/* Selected card badge */
+.wallet-frame .wallet-selected-card-slot {
+  width: 135px;   /* ~75% of 180 */
+  height: 82px;   /* ~75% of 110 */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* Selected card image */
+.wallet-frame .wallet-selected-card {
+  width: 100%;
   height: auto;
   border-radius: 4px;
-  display: block;
 }
 
 /* =========================================================
    ZONE B — PRIMARY METRICS (PORTFOLIO SIGNALS)
    ========================================================= */
 
-.wallet-zone-b {
+.wallet-frame .wallet-zone-b {
   padding: 40px 0 24px 0;
 }
 
-.wallet-primary-metrics {
+.wallet-frame .wallet-primary-metrics {
   display: grid;
   grid-template-columns: repeat(2, minmax(240px, 1fr));
   gap: 32px;
   max-width: 640px;
 }
 
-.metric-slot {
+.wallet-frame .metric-slot {
   padding: 24px 22px;
   border-radius: 12px;
   border: 1px dashed rgba(191,161,74,0.35);
@@ -88,14 +109,14 @@
 
 /* === Zone B metric hierarchy (inner content only) === */
 
-.metric-slot .metric-title {
+.wallet-frame .metric-slot .metric-title {
   font-size: 15px;
   letter-spacing: 0.4px;
   color: rgba(255,255,255,0.75);
   margin-bottom: 14px;
 }
 
-.metric-slot .metric-value {
+.wallet-frame .metric-slot .metric-value {
   font-size: 34px;
   font-weight: 500;
   color: #ffffff;
@@ -103,7 +124,7 @@
   margin-bottom: 12px;
 }
 
-.metric-slot .metric-subtext {
+.wallet-frame .metric-slot .metric-subtext {
   font-size: 13px;
   color: rgba(255,255,255,0.55);
 }
@@ -118,12 +139,12 @@
    ZONE C — SUPPORTING SUMMARY LEDGER
    ========================================================= */
 
-.wallet-zone-c {
+.wallet-frame .wallet-zone-c {
   margin-top: 40px;
   max-width: 640px;
 }
 
-.wallet-summary-grid {
+.wallet-frame .wallet-summary-grid {
   display: grid;
   row-gap: 22px;
 }
@@ -131,24 +152,24 @@
 
 /* --- Two-column summary rows --- */
 
-.summary-row {
+.wallet-frame .summary-row {
   display: grid;
   grid-template-columns: 1fr 1fr;
   column-gap: 64px;
 }
 
-.summary-item {
+.wallet-frame .summary-item {
   padding-bottom: 12px;
   border-bottom: 1px solid rgba(191,161,74,0.22);
 }
 
-.summary-item .label {
+.wallet-frame .summary-item .label {
   font-size: 14px;
   letter-spacing: 0.3px;
   color: rgba(255,255,255,0.65);
 }
 
-.summary-item .value {
+.wallet-frame .summary-item .value {
   margin-left: 12px;
   font-size: 18px;
   font-weight: 500;
@@ -165,6 +186,6 @@
    ========================================================= */
 
 /* Placeholder only — do not implement yet */
-.wallet-zone-d {
+.wallet-frame .wallet-zone-d {
   margin-top: 28px;
 }
