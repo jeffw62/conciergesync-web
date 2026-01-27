@@ -283,7 +283,63 @@
    (INTENTIONALLY EMPTY — TO BE BUILT NEXT)
    ========================================================= */
 
-/* Placeholder only — do not implement yet */
 .wallet-frame .wallet-zone-d {
-  margin-top: 28px;
+  max-width: 640px;
+  margin: 36px auto 0;
+
+  padding-bottom: 48px; /* future-proof for close button */
+
+  opacity: 0;           /* hidden for now */
+  pointer-events: none; /* inert until wired */
+}
+
+.wallet-frame .wallet-transactions-header {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+
+  color: rgba(255,255,255,0.55);
+  margin-bottom: 18px;
+}
+
+.wallet-frame .wallet-transactions-list {
+  display: grid;
+  row-gap: 14px;
+}
+
+.wallet-frame .wallet-transaction-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 14px 0;
+}
+
+.wallet-frame .tx-left,
+.wallet-frame .tx-right {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.wallet-frame .tx-merchant {
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
+}
+
+.wallet-frame .tx-date {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+}
+
+.wallet-frame .tx-amount {
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
+  text-align: right;
+}
+
+.wallet-frame .tx-category {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  text-align: right;
 }
