@@ -112,11 +112,6 @@
   overflow: hidden;
   border-radius: 4px;
   background: rgba(255,255,255,0.92);
-
-  transition: 
-    box-shadow 0.25s ease,
-    border-color 0.25s ease,
-    transform 0.2s ease;
 }
 
 /* Card image */
@@ -125,17 +120,6 @@
   height: 110px;
   display: block;
   transform: translateY(2px);
-}
-
-/* ===========================================================
-   LEFT RAIL HOVER OVER CARD ENHANCEMENT
-   =========================================================== */
-
-/* Hover enhancement */
-.wallet-frame .wallet-card.is-hovered {
-  box-shadow: 
-    0 0 0 1px rgba(191,161,74,0.9),
-    0 8px 24px rgba(0,0,0,0.35);
 }
 
 /* ===========================================================
