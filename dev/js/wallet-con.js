@@ -16,7 +16,7 @@ document.addEventListener("click", (e) => {
 
   slot.innerHTML = `
     <img
-      src="/dev/asset/images/${cardId}_biz_plat-01.svg"
+      src="/dev/asset/images/amex_biz_plat-01.svg"
       alt="${cardId}"
       class="wallet-selected-card"
     />
