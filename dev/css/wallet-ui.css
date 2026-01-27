@@ -138,6 +138,16 @@
 /* =========================================================
    ZONE C — SUPPORTING SUMMARY LEDGER
    ========================================================= */
+body::before {
+  content: "";
+  position: fixed;
+  top: 70%;
+  left: 0;
+  width: 100vw;
+  height: 3px;
+  background: red;
+  z-index: 999999;
+}
 
 .wallet-frame .wallet-zone-c {
   margin-top: 40px;
