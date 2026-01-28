@@ -243,6 +243,17 @@
 .wallet-frame .wallet-transactions-list {
   display: grid;
   row-gap: 14px;
+
+  overflow-y: auto;
+  /* Firefox */
+  scrollbar-width: none;
+  /* IE / Edge (legacy) */
+  -ms-overflow-style: none;
+}
+
+/* WebKit (Chrome, Safari) */
+.wallet-frame .wallet-transactions-list::-webkit-scrollbar {
+  display: none;
 }
 
 .wallet-frame .wallet-transaction-row {
