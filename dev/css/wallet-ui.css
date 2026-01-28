@@ -305,12 +305,15 @@
    END OF TRANSACTIONS
    ========================================================= */
 
-.wallet-frame .ledger-end-text {
+.wallet-frame .wallet-transactions-end-row {
+  display: grid;
+  grid-template-columns: 120px 1fr 140px 140px;
+  align-items: center;
+
   margin-top: 32px;
-  padding-top: 1px;
+}
 
+.wallet-frame .wallet-transactions-end-row .tx-merchant {
   font-size: 13px;
-  letter-spacing: 0.04em;
-
   color: rgba(255, 255, 255, 0.55);
 }
