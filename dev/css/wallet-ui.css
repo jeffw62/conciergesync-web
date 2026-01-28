@@ -241,7 +241,7 @@
 
 .wallet-frame .wallet-transactions-list {
   display: grid;
-  row-gap: 6px;
+  row-gap: 2px;
 }
 
 .wallet-frame .wallet-transaction-row {
@@ -249,7 +249,7 @@
   justify-content: space-between;
   align-items: center;
 
-  padding: 4px 0;
+  padding: 2px 0;
 }
 
 .wallet-frame .tx-left,
