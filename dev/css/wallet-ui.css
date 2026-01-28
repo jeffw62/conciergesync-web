@@ -198,6 +198,7 @@
   display: none !important;
 }
 
+/* --- TRANSACTION Toggle +/- --- */
 .wallet-frame .wallet-transactions-label {
   font-size: 14px;
   letter-spacing: 0.22em;
@@ -205,6 +206,31 @@
   color: rgba(255, 255, 255, 0.55);
 
   user-select: none;
+}
+
+.wallet-frame .wallet-transactions-toggle {
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,0.55);
+
+  margin-top: 32px;
+  margin-bottom: 24px;
+
+  cursor: pointer;
+  user-select: none;
+}
+
+.wallet-frame .wallet-transactions-toggle .toggle-indicator {
+  margin-left: 6px;
+}
+
+.wallet-frame .wallet-zone-d.is-collapsed {
+  display: none;
+}
+
+.wallet-frame .wallet-zone-d.is-expanded {
+  display: block;
 }
 
 /* =========================================================
