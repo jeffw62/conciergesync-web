@@ -17,15 +17,6 @@
   padding-left: 96px; /* intentional breathing room from card rail */
 }
 
-/* Hide OS scrollbar but preserve page scroll */
-html {
-  scrollbar-width: none;        /* Firefox */
-}
-
-html::-webkit-scrollbar {
-  display: none;                /* Chrome, Safari */
-}
-
 /* =========================================================
    ZONE A — OVERVIEW IDENTITY
    ========================================================= */
@@ -223,7 +214,6 @@ html::-webkit-scrollbar {
 
 .wallet-frame .wallet-ledger {
   position: relative;
-  max-height: 60vh;          /* or whatever feels right */
 }
 
 .wallet-frame .wallet-zone-d {
