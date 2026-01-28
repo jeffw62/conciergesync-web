@@ -221,6 +221,9 @@
 
   cursor: pointer;
   user-select: none;
+
+  justify-self: start;   /* prevents full-row hit area */
+  width: fit-content;   /* shrink to text */
 }
 
 .wallet-frame .wallet-transactions-toggle .toggle-indicator {
