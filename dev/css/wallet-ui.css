@@ -302,6 +302,15 @@
 }
 
 /* =========================================================
-   FLOATING CLOSE BUTTON
+   END OF TRANSACTIONS
    ========================================================= */
 
+.wallet-frame .ledger-end-text {
+  margin-top: 32px;
+  padding-top: 12px;
+
+  font-size: 13px;
+  letter-spacing: 0.04em;
+
+  color: rgba(255, 255, 255, 0.55);
+}
