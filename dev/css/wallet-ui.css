@@ -165,7 +165,6 @@
     rgba(0,0,0,0.0),
     rgba(0,0,0,0.22)
   );
-  pointer-events: none;
 }
 
 /* --- Two-column summary rows --- */
@@ -198,60 +197,6 @@
   display: none !important;
 }
 
-.wallet-frame .wallet-transactions-tab {
-  position: relative;
-  margin: 28px auto 0;
-  margin-top: 12px;
-  width: 220px;
-  height: 34px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  /* Shape */
-  clip-path: polygon(
-    4% 0%,
-    96% 0%,
-    100% 100%,
-    0% 100%
-  );
-
-  mask-image: linear-gradient(
-     to right,
-     transparent 0%,
-     black 30%,
-     black 70%,
-     transparent 100%
-   );
-
-  /* Presence without weight */
-  background: rgba(255, 255, 255, 0.06);
-  backdrop-filter: blur(6px);
-  -webkit-backdrop-filter: blur(6px);
-
-  border-top: 1px solid rgba(255, 255, 255, 0.18);
-
-  /* Calm */
-  opacity: 0.75;
-
-  transition: opacity 160ms ease;
-}
-
-.wallet-frame .wallet-transactions-tab::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 50%;
-  transform: translateX(-50%);
-
-  width: 100vw;
-  height: 1px;
-
-  background: rgba(255, 255, 255, 0.16);
-  pointer-events: none;
-}
-
 .wallet-frame .wallet-transactions-label {
   font-size: 11px;
   letter-spacing: 0.22em;
@@ -259,22 +204,6 @@
   color: rgba(255, 255, 255, 0.55);
 
   user-select: none;
-}
-
-.wallet-frame .wallet-transactions-tab {
-  cursor: pointer;
-}
-
-.wallet-frame .wallet-transactions-label {
-  transition: 
-    letter-spacing 120ms ease,
-    color 120ms ease;
-}
-
-.wallet-frame .wallet-transactions-tab:hover 
-.wallet-transactions-label {
-  letter-spacing: 0.26em;   /* +0.04em from base */
-  color: rgba(255,255,255,0.72); /* slight lift, not glow */
 }
 
 /* =========================================================
@@ -300,7 +229,6 @@
   position: relative;
 
   opacity: 1;
-  pointer-events: auto;
 }
 
 .wallet-frame .wallet-transactions-header {
@@ -310,7 +238,6 @@
 
   color: rgba(255,255,255,0.55);
   margin-bottom: 18px;
-  pointer-events: auto;
 }
 
 .wallet-frame .wallet-transactions-list {
@@ -383,42 +310,4 @@
 /* =========================================================
    FLOATING CLOSE BUTTON
    ========================================================= */
-
-.wallet-frame .wallet-close-button {
-  font-size: 12px;
-  letter-spacing: 0.22em;
-  font-weight: 500;
-
-  color: rgba(255,255,255,0.75);
-
-  background: rgba(255,255,255,0.06);
-  backdrop-filter: blur(6px);
-
-  padding: 12px 20px;
-  border-radius: 14px;
-  border: none;
-  cursor: pointer;
-  position: sticky;
-  top: 40%;
-
-  transition:
-    color 120ms ease,
-    letter-spacing 120ms ease,
-    font-weight 120ms ease;
-}
-
-.wallet-frame .wallet-close-button:hover {
-  color: rgba(255,255,255,0.92);
-  letter-spacing: 0.18em; /* tightens */
-  font-weight: 600;
-}
-
-.wallet-frame .wallet-close-button {
-  position: sticky;
-
-  top: 40%;                /* vertical float point */
-  margin-left: 24px;       /* space to the right of CATEGORY */
-
-  white-space: nowrap;
-}
 
