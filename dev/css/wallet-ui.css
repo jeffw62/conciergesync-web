@@ -259,30 +259,25 @@
   gap: 4px;
 }
 
-.wallet-frame .tx-date,
-.wallet-frame .tx-category {
-  color: rgba(255,255,255,0.85);
-}
-
 .wallet-frame .tx-date {
-  font-size: 14px;
-  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
 }
 
 .wallet-frame .tx-amount {
-  font-size: 14px;
-  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
   text-align: right;
 }
 
 .wallet-frame .tx-merchant {
-  font-size: 14px;
-  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
 }
 
 .wallet-frame .tx-category {
-  font-size: 14px;
-  color: rgba(255,255,255,0.85);
+  font-size: 13px;
+  color: rgba(255,255,255,0.55);
   text-align: right;
 }
 
@@ -294,16 +289,16 @@
 }
 
 .wallet-frame .wallet-transactions-header-row {
+  font-size: 14px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: rgba(255, 255, 255, 0.85);
+
   margin-bottom: 20px;
 }
 
 .wallet-frame .wallet-transaction-row {
-  padding: 12px 0; /* one-row spacing */
-}
-
-.wallet-frame .tx-amount {
-  text-align: right;
-  font-variant-numeric: tabular-nums;
+  padding: 10px 0; /* one-row spacing */
 }
 
 /* =========================================================
