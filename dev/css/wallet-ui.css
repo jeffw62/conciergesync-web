@@ -209,6 +209,8 @@
 }
 
 .wallet-frame .wallet-transactions-toggle {
+  display: inline-flex;
+  align-items: center;
   font-size: 12px;
   letter-spacing: 0.18em;
   text-transform: uppercase;
