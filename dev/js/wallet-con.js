@@ -28,16 +28,16 @@ document.addEventListener("click", (e) => {
   // Show transactions toggle
   const toggle = document.getElementById("transactionsToggle");
   if (toggle) {
-    toggle.classList.remove("hidden");
+    toggle.removeAttribute("hidden");
   }
-
+  
   // Reset transactions state on every card click
   const zoneD = document.getElementById("wallet-zone-d");
   if (zoneD) {
     zoneD.classList.remove("is-expanded");
     zoneD.classList.add("is-collapsed");
   }
-
+  
   // Reset indicator to +
   const indicator = toggle?.querySelector(".toggle-indicator");
   if (indicator) {
