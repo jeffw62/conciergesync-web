@@ -1,6 +1,8 @@
 console.log("wallet-con.js loaded");
 
-// Click delegation for injected wallet cards
+// ===============================
+// WALLET CARD SELECTION
+// ===============================
 document.addEventListener("click", (e) => {
   const card = e.target.closest(".wallet-card");
   if (!card) return;
@@ -21,4 +23,22 @@ document.addEventListener("click", (e) => {
       class="wallet-selected-card"
     />
   `;
+});
+
+// ===============================
+// TRANSACTIONS TOGGLE
+// ===============================
+document.addEventListener('DOMContentLoaded', () => {
+  const toggle = document.getElementById('transactionsToggle');
+  const zoneD = document.getElementById('wallet-zone-d');
+
+  if (!toggle || !zoneD) return;
+
+  const indicator = toggle.querySelector('.toggle-indicator');
+
+  toggle.addEventListener('click', () => {
+    const expanded = zoneD.classList.toggle('is-expanded');
+    zoneD.classList.toggle('is-collapsed', !expanded);
+    indicator.textContent = expanded ? '−' : '+';
+  });
 });
