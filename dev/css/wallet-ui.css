@@ -259,8 +259,8 @@
   gap: 4px;
 }
 
-.wallet-frame .tx-merchant {
-  font-size: 14px;
+.wallet-frame .tx-date,
+.wallet-frame .tx-category {
   color: rgba(255,255,255,0.85);
 }
 
@@ -273,6 +273,11 @@
   font-size: 14px;
   color: rgba(255,255,255,0.85);
   text-align: right;
+}
+
+.wallet-frame .tx-merchant {
+  font-size: 14px;
+  color: rgba(255,255,255,0.85);
 }
 
 .wallet-frame .tx-category {
@@ -299,11 +304,6 @@
 .wallet-frame .tx-amount {
   text-align: right;
   font-variant-numeric: tabular-nums;
-}
-
-.wallet-frame .tx-date,
-.wallet-frame .tx-category {
-  color: rgba(255,255,255,0.55);
 }
 
 /* =========================================================
