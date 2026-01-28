@@ -283,6 +283,7 @@
    ========================================================= */
 
 .wallet-frame .wallet-ledger {
+  position: relative;
   max-height: 60vh;          /* or whatever feels right */
   overflow-y: auto;
 }
@@ -295,10 +296,11 @@
   grid-template-columns: minmax(0, 1fr) auto;
   column-gap: 32px;
 
-  padding-bottom: 48px; /* future-proof for close button */
+  padding-bottom: 48px;
+  position: relative;
 
-  opacity: 1;           /* hidden for now */
-  pointer-events: auto; /* inert until wired */
+  opacity: 1;
+  pointer-events: auto;
 }
 
 .wallet-frame .wallet-transactions-header {
@@ -409,14 +411,6 @@
   color: rgba(255,255,255,0.92);
   letter-spacing: 0.18em; /* tightens */
   font-weight: 600;
-}
-
-.wallet-frame .wallet-zone-d {
-  display: grid;
-  grid-template-columns: 1fr auto; /* ledger | utility rail */
-  column-gap: 24px;
-
-  position: relative;
 }
 
 .wallet-frame .wallet-close-button {
