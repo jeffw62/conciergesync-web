@@ -240,22 +240,21 @@
    (INTENTIONALLY EMPTY — TO BE BUILT NEXT)
    ========================================================= */
 
-.wallet-frame .wallet-ledger {
-  position: relative;
-}
-
 .wallet-frame .wallet-zone-d {
   max-width: 640px;
   margin: 48px 0 0 0;
 
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  column-gap: 32px;
+  display: block;
+}
 
-  padding-bottom: 24px;
-  position: relative;
+/* Collapsed state */
+.wallet-frame .wallet-zone-d.is-collapsed {
+  display: none;
+}
 
-  opacity: 1;
+/* Expanded state */
+.wallet-frame .wallet-zone-d.is-expanded {
+  display: block;
 }
 
 .wallet-frame .wallet-transactions-header {
