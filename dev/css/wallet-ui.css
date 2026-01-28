@@ -307,7 +307,7 @@
 
 .wallet-frame .ledger-end-text {
   margin-top: 32px;
-  padding-top: 12px;
+  padding-top: 1px;
 
   font-size: 13px;
   letter-spacing: 0.04em;
